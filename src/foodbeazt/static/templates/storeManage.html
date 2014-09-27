@@ -1,0 +1,41 @@
+<div class="col-md-3">
+    <form class="form" role="form">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input ng-model="model.name" type="text" class="form-control" maxlength="100" id="name" name="name"/>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea ng-model="model.description" type="text" class="form-control" id="description"
+                      name="description"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="type">Type</label>
+            <select ng-model="model.type" class="form-control" id="type" name="type">
+                <option>Veg</option>
+                <option>Veg/Non-Veg</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Address</label>
+            <textarea ng-model="model.address" type="text" class="form-control" id="address" name="address"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="landmark">Landmark</label>
+            <input ng-model="model.landmark" type="text" class="form-control" id="landmark" name="landmark"></input>
+        </div>
+
+        <div class="form-group">
+            <label for="expected_delivery_time">Expected Delivery Time</label>
+            <input ng-model="model.expected_delivery_time" type="number" class="form-control"
+                   id="expected_delivery_time" name="expected_delivery_time"></input>
+        </div>
+
+        <button type="submit" ng-click="saveStore(this)" class="btn btn-success" name="submit">Submit</button>
+        <a class="btn btn-default" href="#/store">Cancel</a>
+    </form>
+</div>

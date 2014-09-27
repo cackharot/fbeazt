@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FoodBeazt</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/angular-route.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/angular-cookies.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/angular-resource.min.js') }}"></script>
+    {% block scripts %}
+    {% endblock %}
+</head>
+<body>
+<div class=page>
+    <div class=metanav>
+        <a href="{{url_for('home')}}">Home</a>
+        {% if not session['user_id'] %}
+        <a href="/login">login</a>
+        {% else %}
+        <span>Hi {{session.get('name')}}</span>
+        {% endif %}
+    </div>
+    {% for message in get_flashed_messages() %}
+    <div class=flash>{{ message }}</div>
+    {% endfor %}
+    <nav>
+        <ul>
+            <li><a href='{{url_for(' store.index')}}'>Restaurants</a></li>
+        </ul>
+    </nav>
+
+
+    {% block body %}{% endblock %}
+
+</div>
+</body>
+</html>
