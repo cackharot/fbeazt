@@ -1,11 +1,12 @@
-from flask import Flask, session, render_template, make_response
+from flask import Flask, session, render_template, make_response, request
 from flask.ext.pymongo import PyMongo
-from flask.ext.restful import Api
+from flask.ext.restful import Api, Resource
 from pymongo import Connection
 from bson import json_util
 import json
 from datetime import datetime
 from flask_googleauth import GoogleAuth
+from fbeazt.service.SubscriptionService import SubscriptionService, InvalidEmailFormatException, DuplicateEmailException
 
 app = Flask(__name__)
 app.secret_key = "Amdk134/20Sdf1#@$2sdjd"
@@ -23,7 +24,7 @@ Store(app, api)
 
 @app.before_first_request
 def recreate_db():
-    print('Droping database....\n')
+    print('Dropping database....\n')
     c = Connection()
     c.drop_database('foodbeaztDb')
 
@@ -34,8 +35,14 @@ def setup_test_users():
     pass
 
 
-@app.before_first_request
+def valid_url():
+    return not request.path.startswith('/static')
+
+
+@app.before_request
 def setup_login_user():
+    if not valid_url():
+        return
     if not 'user_id' in session:
         if 'openid' in session:
             user = get_or_create_user(session['openid'])
@@ -73,3 +80,27 @@ def home():
     return render_template('home.html', name=name)
 
 
+class SubscriptionListApi(Resource):
+    def get(self):
+        service = SubscriptionService(mongo.db)
+        return service.search()
+
+
+class SubscriptionApi(Resource):
+    def post(self, email):
+        if email is None or len(email) < 3:
+            return {"status": "error", "message": "Invalid email address. Kindly check again!"}, 400
+        try:
+            item = {'email': email, 'created_at': datetime.now(), 'ip': request.remote_addr,
+                    'user_agent': request.user_agent.string}
+            service = SubscriptionService(mongo.db)
+            _id = service.add(item)
+            return {"status": "success", "data": _id}
+        except InvalidEmailFormatException as ex:
+            return {"status": "error", "message": "Invalid email address. Kindly check again!"}, 400
+        except DuplicateEmailException as ex:
+            return {"status": "error", "message": email + " has been already subscribed!"}, 400
+
+
+api.add_resource(SubscriptionApi, '/api/subscribe/<string:email>')
+api.add_resource(SubscriptionListApi, '/api/subscriptions')

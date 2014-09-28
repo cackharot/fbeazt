@@ -1,4 +1,38 @@
 {% extends 'layout.html'%}
 {% block body %}
-<h1>Welcome</h1>
+<div class="row" ng-app="subscriptionApp">
+    <div class="col-md-8 col-md-offset-2" ng-controller="subscribeWithEmail">
+        <h3 class="subtitle">Give us your email address, we will let you know when we are ready!</h3>
+
+        <form novalidate name="subscribeForm" class="signup" role="form">
+            <div class="form-group">
+                <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                        </span>
+                    <input type="email" ng-model="email" class="form-control" id="email"
+                           placeholder="Enter your email address" required>
+                </div>
+            </div>
+            <button type="submit" ng-click="subscribe()" ng-disabled="subscribeForm.$invalid" class="btn btn-theme">
+                Subscribe
+            </button>
+            <br/>
+            <br/>
+            <div ng-show="error_msg.length > 0" class="alert alert-danger">
+                {% raw %}
+                {{error_msg}}
+                {% endraw %}
+            </div>
+            <div ng-show="success_msg.length > 0" class="alert alert-success">
+                {% raw %}
+                {{success_msg}}
+                {% endraw %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/subscriptionApp.js') }}"></script>
 {% endblock %}

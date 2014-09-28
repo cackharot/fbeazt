@@ -1,42 +1,300 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FoodBeazt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>FoodBeazt - What you want! When you want!!</title>
+
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/angular-route.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/angular-cookies.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/angular-resource.min.js') }}"></script>
-    {% block scripts %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Fonts -->
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet"
+          type="text/css">
+    <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet"/>
+    <!-- Squad theme CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/default.css') }}" rel="stylesheet">
+    {% block head_scripts %}
     {% endblock %}
 </head>
-<body>
-<div class=page>
-    <div class=metanav>
-        <a href="{{url_for('home')}}">Home</a>
-        {% if not session['user_id'] %}
-        <a href="/login">login</a>
-        {% else %}
-        <span>Hi {{session.get('name')}}</span>
-        {% endif %}
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-custom">
+<!-- Preloader -->
+<div id="preloader">
+    <div id="load"></div>
+</div>
+
+<nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="{{url_for('home')}}">
+                <img src="{{url_for('static',filename='img/LOGO.png')}}" style="height:100px; width: 175px;"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#intro">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#howitworks">How it Works</a></li>
+                <li><a href="#service">Service</a></li>
+                {% if session['name'] %}
+                <li><a href="#"><span>Hi {{session.get('name')}}</span></a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
     </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Section: intro -->
+<section id="intro" class="intro">
+
+    <div class="slogan">
+        <p>
+        <h2 style="line-height:50px;text-transform: toggle;">We deliver foods from your favorite</span><strong
+                style="color:#000;font-family:arial black"> restaurants </strong>at your place
+        </h2>
+        </p>
+        {% block body %}{% endblock %}
+    </div>
+    <div class="page-scroll">
+        <a href="#service" class="btn btn-circle">
+            <i class="fa fa-angle-double-down animated"></i>
+        </a>
+    </div>
+
+</section>
+<!-- /Section: intro -->
+
+<!-- Section: about -->
+<section id="about" class="home-section text-center">
+    <div class="heading-about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="wow bounceInDown" data-wow-delay="0.4s">
+                        <div class="section-heading">
+                            <h2>About us</h2>
+                            <i class="fa fa-2x fa-angle-down"></i>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-2 col-lg-offset-5">
+                <hr class="marginbot-50">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-9 col-sm-7 col-md-6">
+                <div class="wow bounceInUp" data-wow-delay="0.2s">
+                    <div class="team boxed-grey">
+                        <div class="inner">
+                            <h5>Who is foodbeazt Pondicherry?</h5>
+
+                            <p class="subtitle">
+                                We are a small team of problem solvers, designers, thinkers and tinkers, working around
+                                the clock to make foodbeazt the most powerful online and offline tool for food delivery
+                                in Pondicherry. We believe that ordering food should be easy, fast and definitely fun!
+                                We wanted something simpler, so we made it.
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-9 col-sm-7 col-md-6">
+                <div class="wow bounceInUp" data-wow-delay="0.8s">
+                    <div class="team boxed-grey">
+                        <div class="inner">
+                            <h5>Foodbeazt Food Delivery</h5>
+
+                            <p class="subtitle">
+                                Staying in the office for lunch? Tired of the same takeaways? No more wondering what is
+                                available near you. foodbeazt has offline menus from the staggering selection of
+                                delivery restaurants around you. Simply call us and make an order by providing the
+                                information like cuisine type, restaurants or even price range. We will provide you the
+                                restaurant index also includes address and delivery hours. No online or offline food
+                                delivery is too difficult for foodbeazt! Food delivery service has never been made
+                                easier!
+
+                                Do you have any questions? Let us know!</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /Section: about -->
+
+<!-- Section: howitworks -->
+<section id="howitworks" class="home-section text-center">
+    <div class="heading-about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="wow bounceInDown" data-wow-delay="0.4s">
+                        <div class="section-heading">
+                            <h2>How it works</h2>
+                            <i class="fa fa-2x fa-angle-down"></i>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-2 col-lg-offset-5">
+                <hr class="marginbot-50">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-11">
+                <div class="wow bounceInUp" data-wow-delay="0.8s">
+                    <img src="{{url_for('static',filename='img/howitworks.jpg')}}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /Section: howitworks -->
+
+<!-- Section: services -->
+<section id="service" class="home-section text-center bg-gray">
+
+    <div class="heading-about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="wow bounceInDown" data-wow-delay="0.4s">
+                        <div class="section-heading">
+                            <h2>Our Services</h2>
+                            <i class="fa fa-2x fa-angle-down"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2 col-lg-offset-5">
+                <hr class="marginbot-50">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 col-md-4">
+                <div class="wow fadeInLeft" data-wow-delay="0.2s">
+                    <div class="service-box">
+                        <div class="service-icon">
+                            <img src="{{url_for('static',filename='img/icons/phoneorder.png')}}" alt=""/>
+                        </div>
+                        <div class="service-desc">
+                            <h5>Order by Call</h5>
+
+                            <p style="text-align:justify;">We receive orders through phone call <b>(73 73 73 04 84 /
+                                81)</b> to delivery your favorite food from your favorite restaurant / Hotels / Fastfood
+                                to you.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="service-box">
+                        <div class="service-icon">
+                            <img src="{{url_for('static',filename='img/icons/homedelivery.png')}}" alt=""/>
+                        </div>
+                        <div class="service-desc">
+                            <h5>Home Delivery</h5>
+
+                            <p style="text-align:justify;">We deliver your favorite foods at your door step with <b>free
+                                delivery</b> charge for the order above 200 otherwise we charge the minimum delivery fee
+                                as Rs. 20/-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="service-box">
+                        <div class="service-icon">
+                            <img src="{{url_for('static',filename='img/icons/cashondelivery.png')}}" alt=""/>
+                        </div>
+                        <div class="service-desc">
+                            <h5>Cash on Delivery</h5>
+
+                            <p style="text-align:justify;">With Cash on Delivery you can pay in cash at the time of
+                                actual delivery of the product at your doorstep, without requiring you to make any
+                                advance payment online.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /Section: services -->
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <div class="wow shake" data-wow-delay="0.4s">
+                    <div class="page-scroll marginbot-30">
+                        <a href="#intro" id="totop" class="btn btn-circle">
+                            <i class="fa fa-angle-double-up animated"></i>
+                        </a>
+                    </div>
+                </div>
+                <p>&copy;Copyright 2014 - foodbeazt. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div class="row">
     {% for message in get_flashed_messages() %}
     <div class=flash>{{ message }}</div>
     {% endfor %}
-    <nav>
-        <ul>
-            <li><a href='{{url_for('store.index')}}'>Restaurants</a></li>
-        </ul>
-    </nav>
-
-
-    {% block body %}{% endblock %}
-
 </div>
+
+
+<!-- Core JavaScript Files -->
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-route.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-cookies.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-resource.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-messages.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.easing.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.scrollTo.js') }}"></script>
+<script src="{{ url_for('static', filename='js/wow.min.js') }}"></script>
+<!-- Custom Theme JavaScript -->
+<script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+{% block scripts %}
+{% endblock %}
 </body>
+
 </html>

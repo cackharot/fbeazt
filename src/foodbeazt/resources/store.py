@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask import Blueprint, render_template, abort, request, g, session, url_for, make_response
 from foodbeazt import mongo
 from flask.ext.restful import Resource
@@ -6,6 +7,7 @@ from flask.ext.restful import Resource
 class Store(object):
     def __init__(self, app=None, api=None, url_prefix='/store'):
         self.app = app
+        self.url_prefix = url_prefix
         self.blueprint = Blueprint('store', __name__)
         a = self.blueprint
         a.add_url_rule('/', 'index', self._index, methods=["GET"])
@@ -34,7 +36,7 @@ class StoreListApi(Resource):
 
 class StoreApi(Resource):
     def get(self, id):
-        return None
+        return mongo.db.stores.find_one({'_id': ObjectId(id)})
 
     def put(self, id):
         return None, 204

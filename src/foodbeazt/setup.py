@@ -6,8 +6,8 @@ setup(
     packages=[''],
     package_dir={'': 'tests'},
     url='www.foodbeazt.in',
-    license='',
+    license='Apache License 2.0',
     author='cackharot',
     author_email='cackharot@gmail.com',
-    description=''
+    description='food delivery service and online ordering'
 )
