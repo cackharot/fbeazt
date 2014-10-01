@@ -1,55 +1,48 @@
-from flask import Flask, session, render_template, make_response, request
+from flask import Flask, session, render_template, make_response, request, redirect
 from flask.ext.pymongo import PyMongo
 from flask.ext.restful import Api, Resource
 from pymongo import Connection
 from bson import json_util
 import json
 from datetime import datetime
-from flask_googleauth import GoogleAuth
+from flask_googleauth import GoogleAuth, login, logout
 from fbeazt.service.SubscriptionService import SubscriptionService, InvalidEmailFormatException, DuplicateEmailException
+from flask.ext.mail import Mail, Message
 
-app = Flask(__name__)
-app.secret_key = "Amdk134/20Sdf1#@$2sdjd"
-
-app.config["MONGO_DBNAME"] = "foodbeaztDb"
+app = Flask(__name__, instance_relative_config=False)
+app.config.from_pyfile('foodbeazt.cfg', silent=False)
 
 mongo = PyMongo(app)
 
 api = Api(app)
+mail = Mail(app)
 
 from resources.store import Store
 
 Store(app, api)
 
 
-@app.before_first_request
-def recreate_db():
-    print('Dropping database....\n')
-    c = Connection()
-    c.drop_database('foodbeaztDb')
-
-
-@app.before_first_request
-def setup_test_users():
-    print('\nCreating Test data...')
+def google_logout(sender, user=None):
+    print('logout called.....')
+    if request and 'user_id' in session:
+        session.pop('user_id')
+        session.pop('name')
+        session.pop('email')
+        session.pop('roles')
     pass
 
 
-def valid_url():
-    return not request.path.startswith('/static')
+def google_login(sender, user=None):
+    if request and 'openid' in session:
+        user = get_or_create_user(session['openid'])
+        session['user_id'] = str(user['_id'])
+        session['name'] = user['name']
+        session['email'] = user['email']
+        session['roles'] = user['roles']
 
 
-@app.before_request
-def setup_login_user():
-    if not valid_url():
-        return
-    if not 'user_id' in session:
-        if 'openid' in session:
-            user = get_or_create_user(session['openid'])
-            session['user_id'] = str(user['_id'])
-            session['name'] = user['name']
-            session['email'] = user['email']
-            session['roles'] = user['roles']
+login.connect(google_login)
+logout.connect(google_logout)
 
 
 def get_or_create_user(item):
@@ -79,6 +72,19 @@ def home():
     name = session.get('name', None)
     return render_template('home.html', name=name)
 
+@app.route("/home")
+# @auth.required
+def home1():
+    name = session.get('name', None)
+    return render_template('home.html', name=name)
+
+@app.route("/recreatedb")
+def recreate_db():
+    print('Dropping database('+app.config['MONGO_DBNAME']+')....\n')
+    c = Connection()
+    c.drop_database(app.config['MONGO_DBNAME'])
+    return redirect('/')
+
 
 class SubscriptionListApi(Resource):
     def get(self):
@@ -95,7 +101,18 @@ class SubscriptionApi(Resource):
                     'user_agent': request.user_agent.string}
             service = SubscriptionService(mongo.db)
             _id = service.add(item)
-            return {"status": "success", "data": _id}
+            try:
+                msg = Message("Welcome to FoodBeazt",
+                              sender=(app.config['MAIL_SENDER_NAME'], app.config['MAIL_SENDER']),
+                              recipients=[email])
+                with app.open_resource("templates/welcome_mail_template.html") as f:
+                    msg.html = f.read()
+                mail.send(msg)
+                return {"status": "success", "data": _id}
+            except Exception as e:
+                print(e)
+                service.delete_by_email(email)
+                return {"status": "error", "message": "Oops! Unable to register you now. Kindly check again later!"}, 400
         except InvalidEmailFormatException as ex:
             return {"status": "error", "message": "Invalid email address. Kindly check again!"}, 400
         except DuplicateEmailException as ex:

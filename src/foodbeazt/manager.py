@@ -16,5 +16,13 @@ manager.add_command("run", Server(
     port=4000)
 )
 
+# Turn on debugger by default and reloader
+manager.add_command("prod", Server(
+    use_debugger=False,
+    use_reloader=False,
+    host='127.0.0.1',
+    port=80)
+)
+
 if __name__ == "__main__":
     manager.run()
