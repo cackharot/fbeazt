@@ -1,0 +1,1 @@
+sudo uwsgi -s /tmp/uwsgi.sock -w wsgi:app --chown=www-data:www-data
