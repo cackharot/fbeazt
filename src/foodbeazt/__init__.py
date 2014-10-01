@@ -107,7 +107,7 @@ class SubscriptionApi(Resource):
                               recipients=[email])
                 with app.open_resource("templates/welcome_mail_template.html") as f:
                     msg.html = f.read()
-                mail.send(msg)
+                #mail.send(msg)
                 return {"status": "success", "data": _id}
             except Exception as e:
                 print(e)
