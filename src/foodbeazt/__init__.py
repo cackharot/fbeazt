@@ -102,12 +102,12 @@ class SubscriptionApi(Resource):
             service = SubscriptionService(mongo.db)
             _id = service.add(item)
             try:
-                msg = Message("Welcome to FoodBeazt",
+                msg = Message("Thank you for your subscription",
                               sender=(app.config['MAIL_SENDER_NAME'], app.config['MAIL_SENDER']),
                               recipients=[email])
                 with app.open_resource("templates/welcome_mail_template.html") as f:
                     msg.html = f.read()
-                #mail.send(msg)
+                mail.send(msg)
                 return {"status": "success", "data": _id}
             except Exception as e:
                 print(e)
