@@ -1,0 +1,38 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false"
+     ng-controller="tenantListCtrl">
+    <h3>
+        <div class="pull-right">
+            <a href="#/tenant/-1" class="btn btn-success" title="Create new tenant"><em class="fa fa-plus"></em>&nbsp;New</a>
+        </div>
+        Tenant Management
+        <small>Add restaurants, hotels, super-markets, etc</small>
+    </h3>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <th>Name</th>
+                        <th>Contact Name</th>
+                        <th>Contact Email</th>
+                        <th>Contact Phone</th>
+                        <th>Registered Date</th>
+                        <th>Action</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in tenants">
+                                <td><a href="#/tenant/{{item._id.$oid}}" title="Click to edit this tenant!">{{item.name}}</a></td>
+                                <td>{{item.contact.name}}</td>
+                                <td>{{item.contact.email}}</td>
+                                <td>{{item.contact.phone}}</td>
+                                <td>{{item.created_at | datetime}}</td>
+                                <td><a href="#/store">View Stores</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

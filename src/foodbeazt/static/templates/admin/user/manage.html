@@ -1,0 +1,153 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false"
+     ng-controller="userDetailCtrl">
+    <h3>
+        <div class="pull-right">
+            <a href="#/user" class="btn btn-default" title="Go back"><em class="fa fa-arrow-left"></em>&nbsp;Back</a>
+            <button class="btn btn-primary" type="submit" ng-click="save()" ng-disabled="frmUser.$invalid"><em class="fa fa-save"></em>&nbsp;Save
+            </button>
+        </div>
+        <span ng-if="model._id.$oid == '-1'">Add New User</span>
+        <span ng-if="model._id.$oid != '-1'">Edit User Details</span>
+    </h3>
+    <div class="row">
+        <form role="form" name="frmUser" id="frmUser" novalidate ng-submit="save()">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label" for="name">Name</label>
+                        <input class="form-control" type="text" name="name" id="name" ng-minlength="4"
+                               ng-class="{ 'parsley-error' : frmUser.name.$invalid && !frmUser.name.$pristine }"
+                               ng-model="model.name" required/>
+
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmUser.name.$dirty && frmUser.name.$invalid">
+                            <li class="parsley-required" ng-show="frmUser.name.$error.required">Tenant name is
+                                required
+                            </li>
+                            <li class="parsley-required" ng-show="frmUser.name.$error.minlength">Tenant name is should
+                                be at-least 4 characters
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="5" cols="60"
+                                  ng-model="model.description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="url">Login Url</label>
+                        <input class="form-control" type="url" id="url" name="url"
+                               ng-class="{ 'parsley-error' : frmUser.url.$invalid && !frmUser.url.$pristine }"
+                               ng-model="model.url"/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmUser.url.$dirty && frmUser.url.$invalid">
+                            <li class="parsley-required">Enter an unique tenant login url</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="website">Website</label>
+                        <input class="form-control" type="url" id="website" name="website"
+                               ng-model="model.website"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="type">Type</label>
+                        <select name="type" class="form-control" id="type" ng-if="model.type != 'super_admin'"
+                                ng-class="{ 'parsley-error' : frmUser.type.$invalid && !frmUser.type.$pristine }"
+                                ng-model="model.type" required>
+                            <option value="small">Small</option>
+                            <option value="medium">Medium</option>
+                            <option value="star">Star</option>
+                        </select>
+                        <input class="form-control" ng-if="model.type == 'super_admin'" value="Super Admin" disabled/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmUser.type.$dirty && frmUser.type.$invalid">
+                            <li class="parsley-required" ng-show="frmUser.type.$error.required">Tenant type is
+                                required
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="contact_name">Contact Person Name</label>
+                        <input class="form-control" type="text" id="contact_name" name="contact_name"
+                               ng-minlength="4"
+                               ng-class="{ 'parsley-error' : frmUser.contact_name.$invalid && !frmUser.contact_name.$pristine }"
+                               ng-model="model.contact.name" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmUser.contact_name.$dirty && frmUser.contact_name.$invalid">
+                            <li class="parsley-required" ng-show="frmUser.contact_name.$error.required">Contact name
+                                is required
+                            </li>
+                            <li class="parsley-required" ng-show="frmUser.contact_name.$error.minlength">Contact name
+                                should be at-least 4 characters long
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="contact_email">Email</label>
+                        <input class="form-control" type="email" id="contact_email" name="contact_email"
+                               ng-class="{ 'parsley-error' : frmUser.email.$invalid && !frmUser.email.$pristine }"
+                               ng-model="model.contact.email" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmUser.email.$dirty && frmUser.email.$invalid">
+                            <li class="parsley-required">Email is required</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="contact_phone">Phone</label>
+                        <input class="form-control" type="text" id="contact_phone" ng-maxlength="10"
+                               name="contact_phone"
+                               ng-class="{ 'parsley-error' : frmUser.contact_phone.$invalid && !frmUser.contact_phone.$pristine }"
+                               ng-minlength="10" maxlength="10" ng-model="model.contact.phone" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmUser.contact_phone.$dirty && frmUser.contact_phone.$invalid">
+                            <li class="parsley-required" ng-show="frmUser.contact_phone.$error.required">Phone number
+                                is required
+                            </li>
+                            <li class="parsley-required" ng-show="frmUser.contact_phone.$error.minlength">Should be
+                                exactly 10 digits
+                            </li>
+                            <li class="parsley-required" ng-show="frmUser.contact_phone.$error.maxlength">Should be
+                                exactly 10 digits
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="address">Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="5" cols="60"
+                                  ng-model="model.address.address"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="zipcode">Zipcode</label>
+                        <input class="form-control" type="text" id="zipcode" name="zipcode" ng-maxlength="6"
+                               ng-class="{ 'parsley-error' : frmUser.zipcode.$invalid && !frmUser.zipcode.$pristine }"
+                               ng-minlength="6" maxlength="6" ng-model="model.address.zipcode" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmUser.zipcode.$dirty && frmUser.zipcode.$invalid">
+                            <li class="parsley-required" ng-show="frmUser.zipcode.$error.required">Zipcode is
+                                required
+                            </li>
+                            <li class="parsley-required" ng-show="frmUser.zipcode.$error.minlength">Should be exactly
+                                6 digits
+                            </li>
+                            <li class="parsley-required" ng-show="frmUser.zipcode.$error.maxlength">Should be exactly
+                                6 digits
+                            </li>
+                        </ul>
+                    </div>
+                    <input type="hidden" value="India" ng-model="model.address.country" name="country"/>
+                    <input type="hidden" value="Puducherry" ng-model="model.address.state" name="state"/>
+                </div>
+                <div class="panel-footer">
+                    <div class="clearfix">
+                        <div class="pull-left"></div>
+                        <div class="pull-right">
+                            <a class="btn btn-default" href="#/user" title="Go back!">Cancel</a>
+                            <button class="btn btn-primary" type="submit" ng-disabled="frmUser.$invalid"><em class="fa fa-save"></em>&nbsp;Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

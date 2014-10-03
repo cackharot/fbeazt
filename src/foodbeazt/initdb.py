@@ -19,18 +19,22 @@ def setup():
     user_service = UserService(db)
     if not tenant_service.check_name_exists(None, "FoodBeazt"):
         print("Creating admin tenant")
-        item = {"name": "FoodBeazt", "description": "super admin tenant", "website": "www.foodbeazt.in",
-                "url": "www.foodbeazt.in", "type": "super_admin", "logo": "foodbeazt_logo.png",
+        item = {"name": "FoodBeazt", "description": "super admin tenant", "website": "http://www.foodbeazt.in",
+                "url": "http://www.foodbeazt.in", "type": "super_admin", "logo": "foodbeazt_logo.png",
                 "contact": {"name": "admin", "email": "admin@foodbeazt.in", "phone": "+91 7373730484"},
+                "registered_ip": "10.0.0.1",
                 "address": {"address": "Puducherry", "zipcode": "605001", "country": "INDIA", "state": "Puducherry"}}
         tenant_id = tenant_service.create(item)
 
-        user = {"name": "foodbeazt", "username": "foodbeazt@gmail.com", "email": "foodbeazt@gmail.com",
+        item['tenant_id'] = tenant_id
+        tenant_service.update(item)
+
+        user = {"name": "admin", "username": "foodbeazt@gmail.com", "email": "foodbeazt@gmail.com",
                 "auth_type": "google", "tenant_id": tenant_id, "registered_ip": "10.0.0.1", "roles": ["super_admin"]}
         user_service.create(user)
 
     tenant = tenant_service.get_by_name("FoodBeazt")
-    print(json.dumps(tenant,default=json_util.default))
+    print(json.dumps(tenant, default=json_util.default))
 
     user = user_service.get_by_email("foodbeazt@gmail.com")
     print(json.dumps(user, default=json_util.default))

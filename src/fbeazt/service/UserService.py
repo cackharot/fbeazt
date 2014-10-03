@@ -22,8 +22,11 @@ class UserService(object):
     def get_by_email(self, email):
         return self.users.find_one({"email": email})
 
-    def search(self):
-        return [x for x in self.users.find()]
+    def search(self, tenant_id=None):
+        query = {}
+        if tenant_id:
+            query['tenant_id'] = ObjectId(tenant_id)
+        return [x for x in self.users.find(query)]
 
     def delete(self, id):
         return self.users.remove({"_id": ObjectId(id)})

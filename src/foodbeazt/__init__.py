@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, make_response, request, redirect
+from flask import Flask, session, render_template, make_response, request, redirect, g
 from flask_mail import Mail
 from flask_pymongo import PyMongo
 from flask_restful import Api
@@ -20,6 +20,9 @@ mail = Mail(app)
 
 Store(app, api, mongo)
 
+# Setup Google Federated Auth
+auth = GoogleAuth(app)
+
 
 def google_logout(sender, user=None):
     if request and 'user_id' in session:
@@ -34,6 +37,7 @@ def google_login(sender, user=None):
     if request and 'openid' in session:
         user = get_or_create_user(session['openid'])
         session['user_id'] = str(user['_id'])
+        session['tenant_id'] = str(user['tenant_id'])
         session['name'] = user['name']
         session['email'] = user['email']
         session['roles'] = user.get('roles', ['member'])
@@ -41,6 +45,27 @@ def google_login(sender, user=None):
 
 login.connect(google_login)
 logout.connect(google_logout)
+
+
+class User(object):
+    def __init__(self, user_id=None, tenant_id=None, name=None, email=None, roles=[], user_tenant_id=None,
+                 identity=None):
+        self.user_id = user_id
+        self.tenant_id = tenant_id
+        self.name = name
+        self.email = email
+        self.roles = roles
+        self.user_tenant_id = user_tenant_id
+        self.identity = identity
+
+
+@app.before_request
+def set_user_on_request_g():
+    if 'user_id' not in session:
+        return
+    setattr(g, 'user',
+            User(session['user_id'], session['tenant_id'], session['name'], session['email'], session['roles'],
+                 session.get('user_tenant_id', None), session.get('identity', None)))
 
 
 def get_or_create_user(item):
@@ -58,12 +83,10 @@ def get_or_create_user(item):
 
 @api.representation('application/json')
 def mjson(data, code, headers=None):
-    resp = make_response(json.dumps(data, default=json_util.default), code)
+    d = json.dumps(data, default=json_util.default)
+    resp = make_response(d, code)
     resp.headers.extend(headers or {})
     return resp
-
-# Setup Google Federated Auth
-auth = GoogleAuth(app)
 
 
 @app.route("/")
@@ -88,6 +111,14 @@ def recreate_db():
 
 
 from foodbeazt.resources.subscription import SubscriptionApi, SubscriptionListApi
+from foodbeazt.resources.tenant import TenantListApi, TenantApi
+from foodbeazt.resources.user import UserApi, UserListApi
 
 api.add_resource(SubscriptionApi, '/api/subscribe/<string:email>')
 api.add_resource(SubscriptionListApi, '/api/subscriptions')
+
+api.add_resource(TenantApi, '/api/tenant/<string:_id>')
+api.add_resource(TenantListApi, '/api/tenants')
+
+api.add_resource(UserApi, '/api/user/<string:_id>')
+api.add_resource(UserListApi, '/api/users')

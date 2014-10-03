@@ -11,8 +11,12 @@
 </head>
 
 <body data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.layout.isCollapsed }">
-    <div ng-view data-autoscroll="false" data-ng-class="mainViewAnimation" class="wrapper">
-
+    <div data-autoscroll="false" data-ng-class="mainViewAnimation" class="wrapper" ng-controller="mainCtrl">
+        <div ng-include="app.layout.top_nav_url"></div>
+        <aside class="aside" ng-include="app.layout.aside_nav_url"></aside>
+        <section>
+            <div ng-include="app.layout.content_url"></div>
+        </section>
     </div>
 
     <!-- Core JavaScript Files -->
@@ -25,7 +29,14 @@
     <script src="{{ url_for('static', filename='js/angular-messages.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.easing.min.js') }}"></script>
     <script src="{{url_for('static',filename='js/ga.js')}}"></script>
+    <script src="{{url_for('static',filename='js/filters.js')}}"></script>
     <script src="{{url_for('static',filename='js/admin_app.js')}}"></script>
+    <script>
+        app_user = {};
+        app_user.id = "{{session.get('user_id')}}";
+        app_user.name = "{{session.get('name')}}";
+        window.app_user = app_user;
+    </script>
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 from datetime import datetime
 from bson import ObjectId
+from fbeazt.service.UserService import UserService
 
 
 class DuplicateTenantNameException(Exception):
@@ -14,6 +15,7 @@ class TenantService(object):
     def __init__(self, db):
         self.db = db
         self.tenants = self.db.tenant_collection
+        self.user_service = UserService(db)
 
     def create(self, item):
         if self.check_name_exists(None, item['name']):
@@ -22,9 +24,19 @@ class TenantService(object):
         if self.check_url_exists(None, item['url']):
             raise DuplicateTenantUrlException()
 
+        item.pop("_id", None)
         item['created_at'] = datetime.now()
         item['status'] = True
-        return self.tenants.insert(item)
+        _id = self.tenants.insert(item)
+
+        user = {"name": item['contact']['name'], "username": item['contact']['email'],
+                "email": item['contact']['email'],
+                "auth_type": "google", "tenant_id": _id, "registered_ip": item['registered_ip'],
+                "roles": ["tenant_admin"]}
+
+        self.user_service.create(user)
+
+        return _id
 
     def update(self, item):
         if item['_id'] is None:
@@ -54,3 +66,13 @@ class TenantService(object):
 
     def get_by_url(self, url):
         return self.tenants.find_one({'url': url})
+
+    def search(self, tenant_id = None):
+        query = {}
+        if tenant_id:
+            query['tenant_id'] = ObjectId(tenant_id)
+
+        return [x for x in self.tenants.find(query)]
+
+    def get_by_id(self, _id):
+        return self.tenants.find_one({'_id': ObjectId(_id)})
