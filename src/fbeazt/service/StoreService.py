@@ -37,7 +37,7 @@ class StoreService(object):
         return False
 
     def check_duplicate_name(self, name, id):
-        query = self.stores.find({'name': name})
+        query = {'name': name}
         if id:
-            query = query.find({'_id': -ObjectId(id)})
-        return query.count() > 0
+            query['_id'] = {"$ne": ObjectId(id)}
+        return self.stores.find(query).count() > 0

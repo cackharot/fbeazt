@@ -1,0 +1,52 @@
+<nav class="navbar topnavbar ng-scope" role="navigation">
+    <!--START navbar header-->
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#/">
+            <div class="brand-logo">
+                <img class="img-responsive" alt="App Logo" src="static/img/logo1.png"/>
+            </div>
+            <div class="brand-logo-collapsed">
+                <img class="img-responsive" alt="App Logo" src="static/img/logo.png"/>
+            </div>
+        </a>
+    </div>
+    <!-- END navbar header-->
+    <!-- START Nav wrapper -->
+    <div class="nav-wrapper">
+        <ul class="nav navbar-nav">
+            <li>
+                <a class="hidden-xs" ng-click="app.layout.isCollapsed = !app.layout.isCollapsed" href="#">
+                    <em class="fa fa-bars"></em>
+                </a>
+                <a class="visible-xs sidebar-toggle" no-persist="no-persist" toggle-state="aside-toggled" href="#"></a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a search-open="search-open" href="#">
+                    <em class="fa fa-search"></em>
+                </a>
+            </li>
+            <li class="dropdown dropdown-list">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
+                    <em class="fa fa-bell"></em>
+                    <div class="label label-danger">11</div>
+                </a>
+                <ul class="dropdown-menu animated flipInX">
+                    <li>
+                        <div class="list-group">
+                            <a class="list-group-item" href="#">
+                                <div class="media"></div>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a title="Sing out of admin area" href="/logout">
+                    <em class="fa fa-sign-out"></em>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

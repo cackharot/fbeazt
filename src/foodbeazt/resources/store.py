@@ -1,11 +1,13 @@
 from bson import ObjectId
 from flask import Blueprint, render_template, abort, request, g, session, url_for, make_response
-from foodbeazt import mongo
 from flask.ext.restful import Resource
 
+mongo = None
 
 class Store(object):
-    def __init__(self, app=None, api=None, url_prefix='/store'):
+    def __init__(self, app=None, api=None, mongo_client=None, url_prefix='/store'):
+        global mongo
+        mongo = mongo_client
         self.app = app
         self.url_prefix = url_prefix
         self.blueprint = Blueprint('store', __name__)

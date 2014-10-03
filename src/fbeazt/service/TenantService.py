@@ -38,16 +38,16 @@ class TenantService(object):
         return self.tenants.save(item)
 
     def check_name_exists(self, id, name):
-        query = self.tenants.find({'name': name})
+        query = {'name': name}
         if id:
-            query = query.find({'_id': -ObjectId(id)})
-        return query.count() > 0
+            query['_id'] = {"$ne": ObjectId(id)}
+        return self.tenants.find(query).count() > 0
 
     def check_url_exists(self, id, url):
-        query = self.tenants.find({'url': url})
+        query = {'url': url}
         if id:
-            query = query.find({'_id': -ObjectId(id)})
-        return query.count() > 0
+            query['_id'] = {"$ne": ObjectId(id)}
+        return self.tenants.find(query).count() > 0
 
     def get_by_name(self, name):
         return self.tenants.find_one({'name': name})

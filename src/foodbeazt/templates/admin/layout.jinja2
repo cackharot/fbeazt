@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="fbeaztAdmin">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title data-ng-bind="pageTitle()">FoodBeazt Admin</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/admin.css')}}">
+    <!-- Fonts -->
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+</head>
+
+<body data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.layout.isCollapsed }">
+    <div ng-view data-autoscroll="false" data-ng-class="mainViewAnimation" class="wrapper">
+
+    </div>
+
+    <!-- Core JavaScript Files -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/angular-route.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/angular-cookies.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/angular-resource.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/angular-messages.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.easing.min.js') }}"></script>
+    <script src="{{url_for('static',filename='js/ga.js')}}"></script>
+    <script src="{{url_for('static',filename='js/admin_app.js')}}"></script>
+</body>
+
+</html>

@@ -1,13 +1,14 @@
 from flask import Flask, session, render_template, make_response, request, redirect
-from flask.ext.pymongo import PyMongo
-from flask.ext.restful import Api, Resource
+from flask_mail import Mail
+from flask_pymongo import PyMongo
+from flask_restful import Api
 from pymongo import Connection
 from bson import json_util
-import json
-from datetime import datetime
 from flask_googleauth import GoogleAuth, login, logout
-from fbeazt.service.SubscriptionService import SubscriptionService, InvalidEmailFormatException, DuplicateEmailException
-from flask.ext.mail import Mail, Message
+from fbeazt.service.TenantService import TenantService
+from fbeazt.service.UserService import UserService
+from foodbeazt.resources.store import Store
+import json
 
 app = Flask(__name__, instance_relative_config=False)
 app.config.from_pyfile('foodbeazt.cfg', silent=False)
@@ -17,13 +18,10 @@ mongo = PyMongo(app)
 api = Api(app)
 mail = Mail(app)
 
-from resources.store import Store
-
-Store(app, api)
+Store(app, api, mongo)
 
 
 def google_logout(sender, user=None):
-    print('logout called.....')
     if request and 'user_id' in session:
         session.pop('user_id')
         session.pop('name')
@@ -38,7 +36,7 @@ def google_login(sender, user=None):
         session['user_id'] = str(user['_id'])
         session['name'] = user['name']
         session['email'] = user['email']
-        session['roles'] = user['roles']
+        session['roles'] = user.get('roles', ['member'])
 
 
 login.connect(google_login)
@@ -46,13 +44,15 @@ logout.connect(google_logout)
 
 
 def get_or_create_user(item):
-    prev = mongo.db.users.find_one({'email': item['email']})
+    service = UserService(mongo.db)
+    prev = service.get_by_email(item['email'])
     if prev:
         return prev
     print('Creating new user...')
+    tenant_id = TenantService(mongo.db).get_by_name("FoodBeazt")['_id']
     user = {'username': item['email'], 'email': item['email'], 'name': item['name'], 'auth_type': 'google',
-            'created_at': datetime.now(), 'status': True, 'roles': ['member']}
-    mongo.db.users.save(user)
+            'tenant_id': tenant_id, 'roles': ['member'], 'identity': item['identity']}
+    service.create(user)
     return user
 
 
@@ -70,54 +70,24 @@ auth = GoogleAuth(app)
 # @auth.required
 def home():
     name = session.get('name', None)
-    return render_template('home.html', name=name)
+    return render_template('launch_home.jinja2', name=name)
 
-@app.route("/home")
-# @auth.required
-def home1():
-    name = session.get('name', None)
-    return render_template('home.html', name=name)
+
+@app.route("/admin")
+@auth.required
+def admin_home():
+    return render_template('admin/index.jinja2')
+
 
 @app.route("/recreatedb")
 def recreate_db():
-    print('Dropping database('+app.config['MONGO_DBNAME']+')....\n')
+    print('Dropping database(' + app.config['MONGO_DBNAME'] + ')....\n')
     c = Connection()
     c.drop_database(app.config['MONGO_DBNAME'])
     return redirect('/')
 
 
-class SubscriptionListApi(Resource):
-    def get(self):
-        service = SubscriptionService(mongo.db)
-        return service.search()
-
-
-class SubscriptionApi(Resource):
-    def post(self, email):
-        if email is None or len(email) < 3:
-            return {"status": "error", "message": "Invalid email address. Kindly check again!"}, 400
-        try:
-            item = {'email': email, 'created_at': datetime.now(), 'ip': request.remote_addr,
-                    'user_agent': request.user_agent.string}
-            service = SubscriptionService(mongo.db)
-            _id = service.add(item)
-            try:
-                msg = Message("Thank you for your subscription",
-                              sender=(app.config['MAIL_SENDER_NAME'], app.config['MAIL_SENDER']),
-                              recipients=[email])
-                with app.open_resource("templates/welcome_mail_template.html") as f:
-                    msg.html = f.read()
-                mail.send(msg)
-                return {"status": "success", "data": _id}
-            except Exception as e:
-                print(e)
-                service.delete_by_email(email)
-                return {"status": "error", "message": "Oops! Unable to register you now. Kindly check again later!"}, 400
-        except InvalidEmailFormatException as ex:
-            return {"status": "error", "message": "Invalid email address. Kindly check again!"}, 400
-        except DuplicateEmailException as ex:
-            return {"status": "error", "message": email + " has been already subscribed!"}, 400
-
+from foodbeazt.resources.subscription import SubscriptionApi, SubscriptionListApi
 
 api.add_resource(SubscriptionApi, '/api/subscribe/<string:email>')
 api.add_resource(SubscriptionListApi, '/api/subscriptions')

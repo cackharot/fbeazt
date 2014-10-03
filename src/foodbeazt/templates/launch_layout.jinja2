@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
+    <meta name="description" content="food, restaurants, puducherry, briyani, pizza, online food at pondy, online food"/>
+    <meta name="author" content="foodbeazt.in"/>
+
+    <title>FoodBeazt.in :: Launching Soon....</title>
+
+    <link href="{{ url_for('static', filename='css/coming-soon.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+
+    <link href='http://fonts.googleapis.com/css?family=Grand+Hotel' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+
+<div class="main" style="background-image: url('/static/images/site_background.jpg')">
+    <div class="cover black" data-color="black"></div>
+    <div class="container">
+        <h1 class="logo cursive">
+            <img src="/static/images/logo1.png"/>
+        </h1>
+
+        <div class="content">
+            <h1 style="color:#fff;text-align:center;text-shadow: -3px -3px 10px #FFF;">Launching Soon...at
+                Puducherry</h1><br><h4 class="motto">In the mean time<br> order with us through <b
+                style="font-size:32px;color:#fee76f; text-shadow: -1px -1px 25px #FFF;">737373 0484 / 81</b> <br>We
+            deliver foods from <b style="font-size:32px;color:#fee76f;text-shadow: -1px -1px 25px #FFF;">your favorite
+                restaurants</b> at your place</h4>
+
+            <div class="subscribe">
+                <h5 class="info-text" style="line-height:50px;">
+                    We are building something very cool. Stay tuned and be patient. Your patience will be well paid.
+                    <br>Give us your email address, we will let you know when we are ready!
+                </h5>
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="container">
+            <a href="https://plus.google.com/u/0/s/foodbeazt">
+                <img src="/static/images/g+.png"/>
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=100008044785480">
+                <img src="/static/images/fb.png"/>
+            </a>
+
+            <br>Copyright @ 2014
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-route.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-cookies.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-resource.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-messages.min.js') }}"></script>
+<script src="{{url_for('static',filename='js/ga.js')}}"></script>
+{% block scripts %}
+{% endblock %}
+</html>

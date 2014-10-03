@@ -2,19 +2,18 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
+    <meta name="description" content="food, restaurants, puducherry, briyani, pizza, online food at pondy, online food"/>
+    <meta name="author" content="foodbeazt.in"/>
 
     <title>FoodBeazt - What you want! When you want!!</title>
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <!-- Fonts -->
-    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet"
-          type="text/css">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/animate.css') }}" rel="stylesheet"/>
-    <!-- Squad theme CSS -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/default.css') }}" rel="stylesheet">
     {% block head_scripts %}
@@ -46,7 +45,10 @@
                 <li><a href="#howitworks">How it Works</a></li>
                 <li><a href="#service">Service</a></li>
                 {% if session['name'] %}
+                <li><a href="/admin">Admin</a></li>
                 <li><a href="#"><span>Hi {{session.get('name')}}</span></a></li>
+                {% else %}
+                <li><a href="/login">Login</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -292,17 +294,9 @@
 <script src="{{ url_for('static', filename='js/wow.min.js') }}"></script>
 <!-- Custom Theme JavaScript -->
 <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+<script src="{{url_for('static',filename='js/ga.js')}}"></script>
 {% block scripts %}
 {% endblock %}
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-55326493-1', 'auto');
-  ga('send', 'pageview');
-</script>
 </body>
 
 </html>

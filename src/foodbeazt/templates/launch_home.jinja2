@@ -1,0 +1,32 @@
+{% extends 'launch_layout.jinja2'%}
+{% block body %}
+<div class="row" ng-app="subscriptionApp">
+    <div class="col-md-8 col-md-offset-2 col-sm6-6 col-sm-offset-2" ng-controller="subscribeWithEmail">
+        <form name="subscribeForm" role="form" class="form-inline">
+            <div class="form-group">
+                <label class="sr-only" for="email">Email address</label>
+                <input type="email" ng-model="email" id="email" name="email" class="form-control transparent"
+                       placeholder="Your email here..." autocomplete="off">
+            </div>
+            <button type="submit" ng-click="subscribe()" ng-disabled="subscribeForm.$invalid"
+                    class="btn btn-warning btn-fill">Notify Me
+            </button>
+            <br/>
+            <br/>
+            <div ng-show="error_msg.length > 0" class="alert alert-danger">
+                {% raw %}
+                {{error_msg}}
+                {% endraw %}
+            </div>
+            <div ng-show="success_msg.length > 0" class="alert alert-success">
+                {% raw %}
+                {{success_msg}}
+                {% endraw %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/subscriptionApp.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,12 @@
+<nav class="sidebar">
+    <ul class="nav">
+        <li class="" ng-class="{'active': !item.heading && location.path==item.url, 'nav-heading': item.heading}" ng-repeat="item in menuItems">
+            <span ng-if="item.heading">
+                {{item.title}}
+            </span>
+            <a ng-if="!item.heading" href="{{item.url}}" title="{{item.description}}">
+                <em class="{{item.icon}}" ng-hide="inSubmenu"></em> {{item.title}}
+            </a>
+        </li>
+    </ul>
+</nav>
