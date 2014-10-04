@@ -1,0 +1,123 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false"
+     ng-controller="productDetailCtrl">
+    <h3>
+        <div class="pull-right">
+            <a href="#/product?store_id={{store_id}}" class="btn btn-default" title="Go back"><em
+                    class="fa fa-arrow-left"></em>&nbsp;Back</a>
+            <button class="btn btn-primary" type="submit" ng-click="save()" ng-disabled="frmProduct.$invalid"><em
+                    class="fa fa-save"></em>&nbsp;Save
+            </button>
+        </div>
+        <span ng-if="model._id.$oid == '-1'">Add New Product</span>
+        <span ng-if="model._id.$oid != '-1'">Edit Product Details</span>
+    </h3>
+    <div class="row">
+        <form role="form" name="frmProduct" id="frmProduct" novalidate ng-submit="save()">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label" for="barcode">Barcode</label>
+                        <input class="form-control" type="text" name="barcode" id="barcode"
+                               ng-class="{ 'parsley-error' : frmProduct.barcode.$invalid && !frmProduct.barcode.$pristine }"
+                               ng-model="model.barcode" required/>
+
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmProduct.barcode.$dirty && frmProduct.barcode.$invalid">
+                            <li class="parsley-required" ng-show="frmProduct.barcode.$error.required">Barcode is required
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="name">Name</label>
+                        <input class="form-control" type="text" name="name" id="name" ng-minlength="4"
+                               ng-class="{ 'parsley-error' : frmProduct.name.$invalid && !frmProduct.name.$pristine }"
+                               ng-model="model.name" required/>
+
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmProduct.name.$dirty && frmProduct.name.$invalid">
+                            <li class="parsley-required" ng-show="frmProduct.name.$error.required">Name is required
+                            </li>
+                            <li class="parsley-required" ng-show="frmProduct.name.$error.minlength">Name is should be
+                                at-least 4 characters
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Food Types</label><br/>
+                        <label ng-repeat="type in food_types">
+                            <input type="checkbox" checklist-model="model.food_type" checklist-value="type.id">
+                            {{type.text}}
+                            <span style="margin-left:15px;"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="cuisine">Cuisine</label>
+                        <input type="text" class="form-control" id="cuisine" name="cuisine"
+                                  ng-class="{ 'parsley-error' : frmProduct.cuisine.$invalid && !frmProduct.cuisine.$pristine }"
+                                  ng-model="model.cuisine" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmProduct.cuisine.$dirty && frmProduct.cuisine.$invalid">
+                            <li class="parsley-required">Cuisine is required</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="open_time">Open Time</label>
+                        <input class="form-control" type="number" id="open_time" name="open_time"
+                               ng-class="{ 'parsley-error' : frmProduct.open_time.$invalid && !frmProduct.open_time.$pristine }"
+                               ng-model="model.open_time" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmProduct.open_time.$dirty && frmProduct.open_time.$invalid">
+                            <li class="parsley-required" ng-show="frmProduct.open_time.$error.required">
+                                Enter store open time
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="close_time">Close Time</label>
+                        <input class="form-control" type="number" id="close_time" name="close_time"
+                               ng-class="{ 'parsley-error' : frmProduct.close_time.$invalid && !frmProduct.close_time.$pristine }"
+                               ng-model="model.close_time" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmProduct.close_time.$dirty && frmProduct.close_time.$invalid">
+                            <li class="parsley-required" ng-show="frmProduct.close_time.$error.required">
+                                Enter store close time
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="buy_price">Cost of ingredients</label>
+                        <input class="form-control" type="text" id="buy_price" name="buy_price" ng-model="model.buy_price"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="discount">Discount</label>
+                        <input class="form-control" type="text" id="discount" name="discount" ng-model="model.discount"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="sell_price">Sell Price</label>
+                        <input class="form-control" type="text" id="sell_price" name="sell_price"
+                               ng-class="{ 'parsley-error' : frmProduct.sell_price.$invalid && !frmProduct.sell_price.$pristine }"
+                               ng-model="model.sell_price" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmProduct.sell_price.$dirty && frmProduct.sell_price.$invalid">
+                            <li class="parsley-required" ng-show="frmProduct.sell_price.$error.required">
+                                Enter a valid price
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="clearfix">
+                        <div class="pull-left"></div>
+                        <div class="pull-right">
+                            <a class="btn btn-default" href="#/product?store_id={{store_id}}"
+                               title="Go back!">Cancel</a>
+                            <button class="btn btn-primary" type="submit" ng-disabled="frmProduct.$invalid"><em
+                                    class="fa fa-save"></em>&nbsp;Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

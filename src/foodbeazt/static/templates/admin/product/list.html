@@ -1,0 +1,58 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false"
+     ng-controller="productListCtrl">
+    <h3>
+        <div class="pull-right">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    {{selected_store_name}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right animated fadeInUpShort" role="menu">
+                    <li ng-repeat="item in stores">
+                        <a href="#/product?store_id={{selected_store}}"
+                           ng-click="setStore(item._id.$oid)"><span ng-bind-html="item._id.$oid | show_check_mark: selected_store"></span> {{item.name}}</a>
+                    </li>
+                </ul>
+            </div>
+            <a href="#/product/{{selected_store}}/-1" class="btn btn-success" title="Create new product"><em
+                    class="fa fa-plus"></em>&nbsp;New</a>
+        </div>
+        Product Management
+        <small>Add food items, rice, idly, pizza, etc.,</small>
+    </h3>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <th>Barcode</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Timings</th>
+                        <th>Veg/Non-Veg</th>
+                        <th class="text-center">Action</th>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in products" ng-class="{'text-danger': !item.status}">
+                            <td><a href="#/product/{{item.store_id.$oid}}/{{item._id.$oid}}" title="Click to edit this item!">{{item.barcode}}</a></td>
+                            <td>{{item.name}}</td>
+                            <td><span ng-bind-html="item.sell_price | currency"></span></td>
+                            <td>
+                                <span>Open: {{item.open_time}} AM</span>
+                                <span>Close: {{item.close_time}} PM</span>
+                            </td>
+                            <td><span ng-bind-html="item.food_type | show_food_type"></span></td>
+                            <td class="text-center">
+                                <a ng-if="item.status" href="#/product?store_id={{selected_store}}" ng-click="deactivateProduct(item._id.$oid)" title="Click to deactivate"><em
+                                        class="fa fa-ban"></em></a>
+                                <a ng-if="!item.status" href="#/product?store_id={{selected_store}}" ng-click="activateProduct(item._id.$oid)" title="Click to activate"><em
+                                        class="fa fa-check"></em></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

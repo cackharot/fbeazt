@@ -5,7 +5,6 @@ storeApp.controller('storeListCtrl', function($scope,$http){
 
 	$scope.reloadStore = function(){
         $http.get('/api/stores').success(function(d){
-            console.log(d)
             $scope.stores = d
         }).error(function(e){
             alert(e)

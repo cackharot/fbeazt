@@ -12,13 +12,14 @@ class test_product_service(unittest.TestCase):
         self.db.product_collection.drop()
         self.service = ProductService(self.db)
         self.tenant_id = ObjectId()
+        self.store_id = ObjectId()
         pass
 
     def get_model(self, name):
         item = {'name': name, 'description': 'some desc abt product',
                 'barcode': '1234', 'status': True, 'type': 'veg', 'discount': 0.0,
                 'sell_price': 130.0, 'buy_price': 80.0, 'tenant_id': self.tenant_id,
-                'image_url': '/static/images/product/1.png', 'tags': 'food'}
+                'store_id': self.store_id, 'image_url': '/static/images/product/1.png', 'tags': 'food'}
         return item
 
     def test_create_product(self):
@@ -59,7 +60,7 @@ class test_product_service(unittest.TestCase):
 
     def test_get_all_products(self):
         self.test_create_product()
-        stores = self.service.search(tenant_id=str(self.tenant_id))
+        stores = self.service.search(tenant_id=str(self.tenant_id), store_id=str(self.store_id))
         assert len(stores) >= 1
 
     def test_delete_product_by_id(self):
