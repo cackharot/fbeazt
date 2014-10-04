@@ -2,7 +2,8 @@
      ng-controller="userListCtrl">
     <h3>
         <div class="pull-right">
-            <a href="#/user/-1" class="btn btn-success" title="Create new user"><em class="fa fa-plus"></em>&nbsp;New</a>
+            <a href="#/user/-1" class="btn btn-success" title="Create new user"><em
+                    class="fa fa-plus"></em>&nbsp;New</a>
         </div>
         User Management
         <small>Add/Edit users</small>
@@ -21,14 +22,17 @@
                         <th class="text-center">Delete</th>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="item in users">
-                                <td><a href="#/user/{{item._id.$oid}}" title="Click to edit this user!">{{item.name}}</a></td>
-                                <td>{{item.email}}</td>
-                                <td>{{item.phone}}</td>
-                                <td>{{",".join(item.roles)}}</td>
-                                <td>{{item.created_at | datetime}}</td>
-                                <td class="text-center"><a href="#/deleteuser/{{item._id.$oid}}"><em class="fa fa-times"></em></a></td>
-                            </tr>
+                        <tr ng-repeat="item in users">
+                            <td><a href="#/user/{{item._id.$oid}}" title="Click to edit this user!">{{item.name}}</a>
+                            </td>
+                            <td>{{item.email}}</td>
+                            <td>{{item.phone}}</td>
+                            <td>{{",".join(item.roles)}}</td>
+                            <td>{{item.created_at | datetime}}</td>
+                            <td class="text-center">
+                                <a href="#/user" ng-click="deleteUser(item._id.$oid)"><em class="fa fa-times"></em></a>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>

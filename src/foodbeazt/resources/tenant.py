@@ -1,7 +1,8 @@
-from bson import json_util
+from bson import json_util, ObjectId
 from flask import request, session, g
 from flask_restful import Resource
 from fbeazt.service.TenantService import TenantService, DuplicateTenantNameException, DuplicateTenantUrlException
+from fbeazt.service.UserService import DuplicateUserException
 from foodbeazt import mongo
 
 
@@ -25,13 +26,15 @@ class TenantApi(Resource):
     def put(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))
         tenant_id = session.get('tenant_id', None)
-        item['tenant_id'] = tenant_id
+        item['tenant_id'] = ObjectId(tenant_id)
         try:
             self.service.update(item)
             return {"status": "success",  "data": item}
         except DuplicateTenantNameException as e:
+            print(e)
             return {"status": "error", "message": "Tenant name already exists."}
         except DuplicateTenantUrlException as e:
+            print(e)
             return {"status": "error", "message": "Tenant url already exists."}
         except Exception as e:
             print(e)
@@ -41,16 +44,22 @@ class TenantApi(Resource):
     def post(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))
         tenant_id = session.get('tenant_id', None)
-        item['tenant_id'] = tenant_id
+        item['tenant_id'] = ObjectId(tenant_id)
         item['registered_ip'] = request.remote_addr
         try:
             _id = self.service.create(item)
             return {"status": "success", "location": "/api/tenant/" + str(_id)}
         except DuplicateTenantNameException as e:
+            print(e)
             return {"status": "error", "message": "Tenant name already exists."}
         except DuplicateTenantUrlException as e:
+            print(e)
             return {"status": "error", "message": "Tenant url already exists."}
+        except DuplicateUserException as e:
+            print(e)
+            return {"status": "error", "message": "Contact Email already exists."}
         except Exception as e:
+            print(e)
             return dict(status="error",
                         message="Oops! Error while trying to save tenant details! Please try again later")
 

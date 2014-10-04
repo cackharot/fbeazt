@@ -1,0 +1,130 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false"
+     ng-controller="storeDetailCtrl">
+    <h3>
+        <div class="pull-right">
+            <a href="#/store" class="btn btn-default" title="Go back"><em class="fa fa-arrow-left"></em>&nbsp;Back</a>
+            <button class="btn btn-primary" type="submit" ng-click="save()" ng-disabled="frmStore.$invalid"><em
+                    class="fa fa-save"></em>&nbsp;Save
+            </button>
+        </div>
+        <span ng-if="model._id.$oid == '-1'">Add New Store</span>
+        <span ng-if="model._id.$oid != '-1'">Edit Store Details</span>
+    </h3>
+    <div class="row">
+        <form role="form" name="frmStore" id="frmStore" novalidate ng-submit="save()">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label" for="name">Name</label>
+                        <input class="form-control" type="text" name="name" id="name" ng-minlength="4"
+                               ng-class="{ 'parsley-error' : frmStore.name.$invalid && !frmStore.name.$pristine }"
+                               ng-model="model.name" required/>
+
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmStore.name.$dirty && frmStore.name.$invalid">
+                            <li class="parsley-required" ng-show="frmStore.name.$error.required">Store Name is
+                                required
+                            </li>
+                            <li class="parsley-required" ng-show="frmStore.name.$error.minlength">Store Name is should
+                                be at-least 4 characters
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="address">Address</label>
+                        <textarea class="form-control" id="address" name="address"
+                               ng-class="{ 'parsley-error' : frmStore.address.$invalid && !frmStore.address.$pristine }"
+                               ng-model="model.address" required></textarea>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmStore.address.$dirty && frmStore.address.$invalid">
+                            <li class="parsley-required">Address is required</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="phone">Phone</label>
+                        <input class="form-control" type="text" id="phone" ng-maxlength="10"
+                               name="phone"
+                               ng-class="{ 'parsley-error' : frmStore.phone.$invalid && !frmStore.phone.$pristine }"
+                               ng-minlength="10" maxlength="10" ng-model="model.phone" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmStore.phone.$dirty && frmStore.phone.$invalid">
+                            <li class="parsley-required" ng-show="frmStore.phone.$error.required">Phone number
+                                is required
+                            </li>
+                            <li class="parsley-required" ng-show="frmStore.phone.$error.minlength">Should be
+                                exactly 10 digits
+                            </li>
+                            <li class="parsley-required" ng-show="frmStore.phone.$error.maxlength">Should be
+                                exactly 10 digits
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Food Types</label><br/>
+                        <label ng-repeat="type in food_types">
+                            <input type="checkbox" checklist-model="model.food_type" checklist-value="type.id"> {{type.text}}
+                            <span style="margin-left:15px;"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="cuisine">Cuisines</label>
+                        <textarea class="form-control" id="cuisine" name="cuisine"
+                                  ng-class="{ 'parsley-error' : frmStore.cuisine.$invalid && !frmStore.cuisine.$pristine }"
+                                  ng-model="model.cuisine" required></textarea>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmStore.cuisine.$dirty && frmStore.cuisine.$invalid">
+                            <li class="parsley-required">Cuisine is required</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="open_time">Open Time</label>
+                        <input class="form-control" type="number" id="open_time" name="open_time"
+                               ng-class="{ 'parsley-error' : frmStore.open_time.$invalid && !frmStore.open_time.$pristine }"
+                               ng-model="model.open_time" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmStore.open_time.$dirty && frmStore.open_time.$invalid">
+                            <li class="parsley-required" ng-show="frmStore.open_time.$error.required">
+                                Enter store open time
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="close_time">Close Time</label>
+                        <input class="form-control" type="number" id="close_time" name="close_time"
+                               ng-class="{ 'parsley-error' : frmStore.close_time.$invalid && !frmStore.close_time.$pristine }"
+                               ng-model="model.close_time" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmStore.close_time.$dirty && frmStore.close_time.$invalid">
+                            <li class="parsley-required" ng-show="frmStore.close_time.$error.required">
+                                Enter store close time
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="deliver_time">Expected Delivery Time</label>
+                        <input class="form-control" type="number" id="deliver_time" name="deliver_time"
+                               ng-class="{ 'parsley-error' : frmStore.deliver_time.$invalid && !frmStore.deliver_time.$pristine }"
+                               ng-model="model.expected_delivery_time" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmStore.deliver_time.$dirty && frmStore.deliver_time.$invalid">
+                            <li class="parsley-required" ng-show="frmStore.deliver_time.$error.required">
+                                Enter expected delivery time in minutes
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="clearfix">
+                        <div class="pull-left"></div>
+                        <div class="pull-right">
+                            <a class="btn btn-default" href="#/user" title="Go back!">Cancel</a>
+                            <button class="btn btn-primary" type="submit" ng-disabled="frmStore.$invalid"><em
+                                    class="fa fa-save"></em>&nbsp;Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

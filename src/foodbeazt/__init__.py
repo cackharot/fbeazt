@@ -7,7 +7,6 @@ from bson import json_util
 from flask_googleauth import GoogleAuth, login, logout
 from fbeazt.service.TenantService import TenantService
 from fbeazt.service.UserService import UserService
-from foodbeazt.resources.store import Store
 import json
 
 app = Flask(__name__, instance_relative_config=False)
@@ -17,8 +16,6 @@ mongo = PyMongo(app)
 
 api = Api(app)
 mail = Mail(app)
-
-Store(app, api, mongo)
 
 # Setup Google Federated Auth
 auth = GoogleAuth(app)
@@ -113,6 +110,7 @@ def recreate_db():
 from foodbeazt.resources.subscription import SubscriptionApi, SubscriptionListApi
 from foodbeazt.resources.tenant import TenantListApi, TenantApi
 from foodbeazt.resources.user import UserApi, UserListApi
+from foodbeazt.resources.store import StoreApi, StoreListApi
 
 api.add_resource(SubscriptionApi, '/api/subscribe/<string:email>')
 api.add_resource(SubscriptionListApi, '/api/subscriptions')
@@ -122,3 +120,6 @@ api.add_resource(TenantListApi, '/api/tenants')
 
 api.add_resource(UserApi, '/api/user/<string:_id>')
 api.add_resource(UserListApi, '/api/users')
+
+api.add_resource(StoreApi, '/api/store/<string:_id>')
+api.add_resource(StoreListApi, '/api/stores')

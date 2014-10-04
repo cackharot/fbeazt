@@ -1,70 +1,72 @@
-var storeApp = angular.module('storeApp',['ngRoute', 'ngCookies'])
+var storeApp = angular.module('fbeaztAdmin')
 
-storeApp.config(['$routeProvider', function($routeProvider){
-	$routeProvider.
-	when('/store',{
-		controller: 'lstCtrl',
-		templateUrl: '/static/templates/storeList.html'
-	}).
-	when('/store/:id',{
-		controller: 'detailCtrl',
-		templateUrl: '/static/templates/storeManage.html'
-	}).
-	otherwise({
-		redirectTo: '/store'
-	})
-}])
-
-storeApp.run(function($rootScope,$location,$cookieStore,$http){
-	var auth_data = $cookieStore.get('auth_data')
-	//console.log(auth_data)
-	if(auth_data){
-		$http.defaults.headers.common['Authorization'] = 'Basic ' + auth_data
-	}
-})
-
-storeApp.controller('lstCtrl', function($scope,$http){
+storeApp.controller('storeListCtrl', function($scope,$http){
 	$scope.stores = []
-	$http.get('/api/stores').success(function(d){
-		console.log(d)
-		$scope.stores = d
-	})
+
+	$scope.reloadStore = function(){
+        $http.get('/api/stores').success(function(d){
+            console.log(d)
+            $scope.stores = d
+        }).error(function(e){
+            alert(e)
+        })
+	}
+
+	$scope.reloadStore()
 
 	$scope.deleteStore = function(id){
 		if(id && id != "-1"){
 			$http.delete('/api/store/'+id).success(function(d){
+	            $scope.reloadStore()
 			}).error(function(e){
-				console.log("error:" + e)
+				alert(e)
+				$scope.reloadStore()
 			})
-			return false
 		}
 	}
 })
 
-storeApp.controller('detailCtrl', function($scope, $routeParams, $location, $http){
+storeApp.controller('storeDetailCtrl', function($scope, $routeParams, $location, $http){
 	var id = $routeParams.id || -1;
 	
 	$scope.model = {}
-	
-	$http.get('/api/store/' + id).success(function(d){
-		console.log(d)
-		if(d)
-			$scope.model = d
-	})
-	
-	$scope.saveStore = function(e){
-		var item = $scope.model;
-		if(item._id){		
-			$http.post('/api/store/' + item._id, item).success(function(d){
-				console.log(d)
-			})	
-		}else{			
-			$http.put('/api/store/' + item._id, item).success(function(d){
-				console.log(d)
-			})
-		}
-		
-		$location.path('/store')
-		return false
-	}
+    $scope.food_types = [{'id': 'veg', 'text': 'Vegetarian'},
+                        {'id': 'non-veg', 'text': 'Non-Vegetarian'}]
+
+    $http.get('/api/store/'+ id).success(function(d){
+        if(!d._id || !d._id.$oid)
+            d._id = { "$oid": "-1" }
+        $scope.model = d
+    }).error(function(e){
+        alert('Error while fetching store details')
+        $location.path('/store')
+    })
+
+    $scope.save = function(){
+        if($scope.frmStore.$invalid){
+            alert("Form contains invalid data\n\nPlease check the form and submit again")
+            return
+        }
+
+        var item = angular.copy($scope.model)
+
+        if(item._id.$oid == "-1"){
+            item._id = null
+            res = $http.post('/api/store/-1', item)
+        }else{
+            res = $http.put('/api/store/'+ item._id.$oid, item)
+        }
+
+        res.success(function(data){
+               if(data.status == "success"){
+                   $location.path('/store')
+               }else{
+                   alert(data.message)
+               }
+           })
+           .error(function(e){
+               alert(e)
+               console.log(e)
+           })
+    }
 })

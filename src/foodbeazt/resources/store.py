@@ -1,50 +1,58 @@
-from bson import ObjectId
-from flask import Blueprint, render_template, abort, request, g, session, url_for, make_response
-from flask.ext.restful import Resource
-
-mongo = None
-
-class Store(object):
-    def __init__(self, app=None, api=None, mongo_client=None, url_prefix='/store'):
-        global mongo
-        mongo = mongo_client
-        self.app = app
-        self.url_prefix = url_prefix
-        self.blueprint = Blueprint('store', __name__)
-        a = self.blueprint
-        a.add_url_rule('/', 'index', self._index, methods=["GET"])
-
-        self.init_app(app, api, url_prefix)
-
-
-    def init_app(self, app, api, url_prefix='/store'):
-        self.app = app
-        self.url_prefix = url_prefix
-        self.app.register_blueprint(self.blueprint, url_prefix=url_prefix)
-
-        api.add_resource(StoreListApi, '/api/stores')
-        api.add_resource(StoreApi, '/api/store/<id>')
-
-    def _index(self):
-        model = []
-        return render_template('stores.html', model=model)
+from bson import ObjectId, json_util
+from flask import g, request
+from flask_restful import Resource
+from fbeazt.service.StoreService import StoreService, DuplicateStoreNameException
+from foodbeazt import mongo
 
 
 class StoreListApi(Resource):
+    def __init__(self):
+        self.service = StoreService(mongo.db)
+
     def get(self):
-        lst = [x for x in mongo.db.stores.find()]
+        lst = self.service.search(tenant_id=g.user.tenant_id)
         return lst
 
 
 class StoreApi(Resource):
-    def get(self, id):
-        return mongo.db.stores.find_one({'_id': ObjectId(id)})
+    def __init__(self):
+        self.service = StoreService(mongo.db)
 
-    def put(self, id):
-        return None, 204
+    def get(self, _id):
+        if _id == "-1":
+            return {}
+        return self.service.get_by_id(_id)
 
-    def post(self, id):
-        return None
+    def put(self, _id):
+        item = json_util.loads(request.data.decode('utf-8'))
+        tenant_id = g.user.tenant_id
+        item['tenant_id'] = ObjectId(tenant_id)
+        try:
+            self.service.save(item)
+            return {"status": "success", "data": item}
+        except DuplicateStoreNameException as e:
+            print(e)
+            return {"status": "error", "message": "Store name already exists."}
+        except Exception as e:
+            print(e)
+            return dict(status="error",
+                        message="Oops! Error while trying to save store details! Please try again later")
 
-    def delete(self, id):
+    def post(self, _id):
+        item = json_util.loads(request.data.decode('utf-8'))
+        tenant_id = g.user.tenant_id
+        item['tenant_id'] = ObjectId(tenant_id)
+        try:
+            _id = self.service.save(item)
+            return {"status": "success", "location": "/api/store/" + str(_id)}
+        except DuplicateStoreNameException as e:
+            print(e)
+            return {"status": "error", "message": "Store name already exists."}
+        except Exception as e:
+            print(e)
+            return dict(status="error",
+                        message="Oops! Error while trying to save store details! Please try again later")
+
+    def delete(self, _id):
+        self.service.delete(_id)
         return None, 204

@@ -3,7 +3,18 @@ from bson import ObjectId
 
 
 class DuplicateUserException(Exception):
+    def __init__(self, message='User name/email already exits'):
+        Exception.__init__(self, message)
     pass
+
+
+class UserServiceException(Exception):
+    def __init__(self, message=None):
+        Exception.__init__(self, message)
+
+    @classmethod
+    def cannot_delete_super_admin(cls):
+        return UserServiceException("Cannot delete super admin user!")
 
 
 class UserService(object):
@@ -14,9 +25,11 @@ class UserService(object):
     def create(self, item):
         if self.user_exists(item['email']):
             raise DuplicateUserException()
-
+        item.pop('_id', None)
         item['created_at'] = datetime.now()
         item['status'] = True
+        if 'roles' not in item or item['roles'] is None or len(item['roles']) == 0:
+            item['roles'] = ['member']
         return self.users.insert(item)
 
     def get_by_email(self, email):
@@ -29,6 +42,11 @@ class UserService(object):
         return [x for x in self.users.find(query)]
 
     def delete(self, id):
+        item = self.get_by_id(id)
+
+        if item and 'roles' in item and item['roles'] is not None and 'super_admin' in item['roles']:
+            raise UserServiceException.cannot_delete_super_admin()
+
         return self.users.remove({"_id": ObjectId(id)})
 
     def get_by_id(self, id):

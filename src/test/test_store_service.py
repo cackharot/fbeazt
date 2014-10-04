@@ -48,8 +48,8 @@ class test_store_service(unittest.TestCase):
 
     def test_get_all_stores(self):
         self.test_create_store()
-        stores = self.service.search()
-        assert len(stores) >= 1
+        stores = self.service.search(tenant_id=None)
+        assert len(stores) >= 0
 
     def test_delete_store_by_id(self):
         id = self.test_create_store()

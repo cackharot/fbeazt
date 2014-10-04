@@ -13,8 +13,8 @@ class test_tenant_service(unittest.TestCase):
 
     def get_model(self, name):
         item = {"name": name, "description": "some desc", "website": "www.testtenant.com",
-                "url": name + ".foodbeazt.in", "type": "smb", "logo": "logo1.png",
-                "contact": {"name": "testname", "email": "testname@somemail.com", "phone": "1234567"},
+                "url": name + ".foodbeazt.in", "type": "smb", "logo": "logo1.png", 'registered_ip': '10.0.0.1',
+                "contact": {"name": "admin"+name, "email": name+"@somemail.com", "phone": "1234567"},
                 "address": {"address": "some address", "zipcode": "1234", "country": "INDIA", "state": "Tamil Nadu"}}
         return item
 
