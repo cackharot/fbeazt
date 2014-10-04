@@ -1,5 +1,6 @@
 import random
 import unittest
+from bson import ObjectId
 from pymongo import MongoClient
 from fbeazt.service.StoreService import StoreService, DuplicateStoreNameException
 
@@ -10,10 +11,12 @@ class test_store_service(unittest.TestCase):
         self.db = self.dbClient.test_foodbeazt_database
         self.db.store_collection.drop()
         self.service = StoreService(self.db)
+        self.tenant_id = ObjectId()
         pass
 
     def get_model(self, name):
         store_item = {'name': name, 'description': 'some desc', 'address': 'some address',
+                      'tenant_id': self.tenant_id,
                       'contact_name': 'contact person name', 'contact_email': 'contact person email',
                       'contact_phone': 'contact person phone', 'website': 'website'}
         return store_item
@@ -35,7 +38,7 @@ class test_store_service(unittest.TestCase):
             item = self.get_model(name)
             self.service.save(item)
             assert False
-        except DuplicateStoreNameException as e:
+        except DuplicateStoreNameException:
             assert True
 
     def test_get_store_by_name(self):
@@ -48,8 +51,8 @@ class test_store_service(unittest.TestCase):
 
     def test_get_all_stores(self):
         self.test_create_store()
-        stores = self.service.search(tenant_id=None)
-        assert len(stores) >= 0
+        stores = self.service.search(tenant_id=self.tenant_id)
+        assert len(stores) > 0
 
     def test_delete_store_by_id(self):
         id = self.test_create_store()
