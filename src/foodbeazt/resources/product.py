@@ -58,7 +58,7 @@ class ProductApi(Resource):
         item['tenant_id'] = ObjectId(tenant_id)
         try:
             _id = self.service.create(item)
-            return {"status": "success", "location": "/api/product/" + str(store_id) + "/" + str(_id)}
+            return {"status": "success", "location": "/api/product/" + str(store_id) + "/" + str(_id), "data": item}
         except Exception as e:
             print(e)
             return dict(status="error",

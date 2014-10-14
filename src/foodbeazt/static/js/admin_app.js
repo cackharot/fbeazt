@@ -1,4 +1,4 @@
-var fbeaztAdmin = angular.module('fbeaztAdmin',['ngRoute', 'ngSanitize', 'ngCookies', 'checklist-model', 'fbFilters'])
+var fbeaztAdmin = angular.module('fbeaztAdmin',['ngRoute', 'ngSanitize', 'ngCookies', 'checklist-model', 'fbFilters', 'angularFileUpload'])
 
 var menuItems = []
 menuItems.push({"title": "Main", "heading": true })

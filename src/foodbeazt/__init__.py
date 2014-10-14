@@ -1,3 +1,5 @@
+import os
+from uuid import uuid4
 from flask import Flask, session, render_template, make_response, request, redirect, g
 from flask_mail import Mail
 from flask_pymongo import PyMongo
@@ -5,6 +7,8 @@ from flask_restful import Api
 from pymongo import Connection
 from bson import json_util
 from flask_googleauth import GoogleAuth, login, logout
+from werkzeug.utils import secure_filename
+from fbeazt.service.ProductService import ProductService
 from fbeazt.service.TenantService import TenantService
 from fbeazt.service.UserService import UserService
 import json
@@ -111,6 +115,30 @@ def recreate_db():
     c.drop_database(app.config['MONGO_DBNAME'])
     return redirect('/')
 
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+upload_folder = os.path.join(APP_ROOT, 'static/images/products/')
+
+def allowed_files(filename):
+    return '.' in filename and filename.split('.')[1] in ['jpg', 'png', 'gif', 'jpeg', 'bmp']
+
+@app.route("/api/upload_product_image/<string:_id>", methods=['GET', 'POST'])
+def upload_product_image(_id):
+    service = ProductService(mongo.db)
+    item = service.get_by_id(_id)
+    if item and request.files and len(request.files) > 0 and request.files['file']:
+        if 'image_url' in item and item['image_url']:
+            fname = os.path.join(upload_folder, item['image_url'])
+            if os.path.isfile(fname):
+                os.remove(fname)
+
+        file_body = request.files['file']
+        if allowed_files(secure_filename(file_body.filename)):
+            filename = secure_filename(str(uuid4()) + "." + file_body.filename.split('.')[1])
+            item['image_url'] = filename
+            file_body.save(os.path.join(upload_folder, filename))
+            service.update(item)
+            return json.dumps({"status": "success", "id": _id, "filename": filename})
+    return '', 404
 
 from foodbeazt.resources.subscription import SubscriptionApi, SubscriptionListApi
 from foodbeazt.resources.tenant import TenantListApi, TenantApi

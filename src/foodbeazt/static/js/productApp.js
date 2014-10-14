@@ -22,6 +22,10 @@ productApp.controller('productListCtrl', function($scope, $http, $routeParams){
                 $scope.setStore($routeParams.store_id)
             else if($scope.stores && $scope.stores.length > 0)
                 $scope.setStore($scope.stores[0]._id.$oid)
+            if(!$scope.stores || $scope.stores.length == 0) {
+                $scope.stores = []
+                $scope.stores.push({'_id': {"$oid": ''}, 'name': 'No stores available!'})
+            }
 
             $scope.reloadProduct()
         }).error(function(e){
@@ -32,7 +36,7 @@ productApp.controller('productListCtrl', function($scope, $http, $routeParams){
     $scope.reloadStore()
 
     $scope.setStore = function(store_id){
-        if(!store_id) return
+        if(!store_id || store_id == '-1' || store_id == '') return
          $scope.selected_store = store_id
 
          for(var i=0; i < $scope.stores.length; ++i){
@@ -71,9 +75,26 @@ productApp.controller('productListCtrl', function($scope, $http, $routeParams){
 	}
 })
 
-productApp.controller('productDetailCtrl', function($scope, $routeParams, $location, $http){
-	var id = $routeParams.id || -1;
-	$scope.store_id = $routeParams.store_id || -1;
+productApp.controller('productDetailCtrl', function($scope, $routeParams, $location, $http, FileUploader){
+    var uploader = $scope.uploader = new FileUploader()
+
+    uploader.filters.push({
+        name: 'imageFilter',
+        fn: function(item /*{File|FileLikeObject}*/, options) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
+
+    uploader.onSuccessItem  = function() {
+        $location.path('/product')
+    };
+    uploader.onErrorItem = function(fileItem, response, status, headers) {
+        console.info('onErrorItem', fileItem, response, status, headers)
+    };
+
+	var id = $routeParams.id || -1
+	$scope.store_id = $routeParams.store_id || -1
 
 	$scope.model = {}
     $scope.food_types = [{'id': 'veg', 'text': 'Vegetarian'},
@@ -105,7 +126,15 @@ productApp.controller('productDetailCtrl', function($scope, $routeParams, $locat
 
         res.success(function(data){
                if(data.status == "success"){
-                   $location.path('/product')
+                    var product_id = data.data._id.$oid.toString() || $scope.model._id.$oid.toString()
+                    var url = '/api/upload_product_image/' + product_id
+                    uploader.url = url
+                    if(uploader.queue.length > 0){
+                        uploader.queue[0].url = url
+                        uploader.queue[0].upload()
+                    }else{
+                        $location.path('/product')
+                    }
                }else{
                    alert(data.message)
                }

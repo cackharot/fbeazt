@@ -58,3 +58,5 @@ target/
 
 activate.bat
 .idea/workspace.xml
+src/foodbeazt/static/images/products/*
+!src/foodbeazt/static/images/products/.gitkeep
