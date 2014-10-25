@@ -33,3 +33,8 @@ angular.module('fbFilters', [])
       return input == compare_input ? check_html : ""
     }
 })
+.filter('default_product_img', function(){
+    return function(input) {
+      return input || '/static/images/na-product.jpg'
+    }
+})

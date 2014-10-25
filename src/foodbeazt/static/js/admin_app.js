@@ -33,7 +33,7 @@ fbeaztAdmin.config(['$routeProvider', function($routeProvider){
 	    var title = $route.current ? $route.current.title : null
 	    return title || "FoodBeazt :: Admin :: Home"
 	}
-    $rootScope.location = $location;
+    $rootScope.location = $location
 	$rootScope.$on('$routeChangeSuccess', function( event, current, previous ){
     })
 })

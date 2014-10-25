@@ -1,0 +1,70 @@
+.summary {
+    position: relative;
+}
+
+.bubble {
+    position: relative;
+    margin-left: 15px;
+    background: none repeat scroll 0% 0% #333;
+    min-height: 100px;
+    border-bottom: 3px solid #FE5815;
+    color:#fff;
+}
+
+.summary .bubble h3 {
+    color: #FE5815;
+    font-size: 1.063em;
+    font-weight: bold;
+    border-bottom: 1px solid #6A6869;
+    padding: 10px 0px 8px 13px;
+}
+
+.summary .bubble div.section {
+    border-bottom: 1px solid #6A6869;
+    padding: 10px 15px;
+}
+
+.summary .bubble .section {
+    margin-bottom: 0px;
+}
+
+.summary .bubble div.total {
+    border-bottom: 0px none;
+    padding: 6px 15px;
+}
+
+.summary .bubble .section ul {
+    list-style: outside none none;
+}
+
+.summary .bubble .section li.currency {
+    color: #FFF;
+    font-size: 0.888em;
+    font-weight: bold;
+}
+
+.summary .bubble .section li.price {
+    color: #FE5815;
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+.summary .bubble .section li {
+    text-align: right;
+}
+
+.summary .bubble div.items-list {
+/*    border-top: 1px solid #6A6869;*/
+}
+
+.summary .bubble table {
+    width: 100%;
+}
+
+.summary .bubble .section thead th {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.275em;
+    color: #FFF;
+    padding-bottom: 5px;
+}

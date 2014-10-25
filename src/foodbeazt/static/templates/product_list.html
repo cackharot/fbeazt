@@ -1,0 +1,16 @@
+<div ng-show="items.length == 0" class="alert alert-info">
+    <p>Oops! No items found for this search. Kindly modify your search</p>
+</div>
+<div ng-show="items.length > 0">
+    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 block" ng-repeat="item in items | limitTo: 12">
+        <div class="img-wrap">
+            <a href="#/detail/{{item._id.$oid}}" title="Click to view '{{item.name}}' details">
+                <img class="img-responsive" width="175" ng-src="{{item.image_url | default_product_img}}"/>
+            </a>
+            <h4>{{item.name}}</h4>
+            <h4 ng-bind-html="item.sell_price | currency"></h4>
+            <button type="button" class="btn btn-info" ng-click="addToCart(item._id.$oid)" title="Add to cart"><i class="fa fa-plus"></i>&nbsp;Add
+            </button>
+        </div>
+    </div>
+</div>

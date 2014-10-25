@@ -23,7 +23,8 @@
 
                         <ul class="parsley-errors-list filled"
                             ng-show="frmProduct.barcode.$dirty && frmProduct.barcode.$invalid">
-                            <li class="parsley-required" ng-show="frmProduct.barcode.$error.required">Barcode is required
+                            <li class="parsley-required" ng-show="frmProduct.barcode.$error.required">Barcode is
+                                required
                             </li>
                         </ul>
                     </div>
@@ -43,6 +44,14 @@
                         </ul>
                     </div>
                     <div class="form-group">
+                        <label class="control-label" for="category">Category</label>
+                        <select class="form-control" id="category" name="category" ng-model="model.category">
+                            <option value="starter">Starter</option>
+                            <option value="main course">Main Course</option>
+                            <option value="deserts">Deserts</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label">Food Types</label><br/>
                         <label ng-repeat="type in food_types">
                             <input type="checkbox" checklist-model="model.food_type" checklist-value="type.id">
@@ -53,8 +62,8 @@
                     <div class="form-group">
                         <label class="control-label" for="cuisine">Cuisine</label>
                         <input type="text" class="form-control" id="cuisine" name="cuisine"
-                                  ng-class="{ 'parsley-error' : frmProduct.cuisine.$invalid && !frmProduct.cuisine.$pristine }"
-                                  ng-model="model.cuisine" required/>
+                               ng-class="{ 'parsley-error' : frmProduct.cuisine.$invalid && !frmProduct.cuisine.$pristine }"
+                               ng-model="model.cuisine" required/>
                         <ul class="parsley-errors-list filled"
                             ng-show="frmProduct.cuisine.$dirty && frmProduct.cuisine.$invalid">
                             <li class="parsley-required">Cuisine is required</li>
@@ -86,11 +95,13 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="buy_price">Cost of ingredients</label>
-                        <input class="form-control" type="text" id="buy_price" name="buy_price" ng-model="model.buy_price"/>
+                        <input class="form-control" type="text" id="buy_price" name="buy_price"
+                               ng-model="model.buy_price"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="discount">Discount</label>
-                        <input class="form-control" type="text" id="discount" name="discount" ng-model="model.discount"/>
+                        <input class="form-control" type="text" id="discount" name="discount"
+                               ng-model="model.discount"/>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="sell_price">Sell Price</label>

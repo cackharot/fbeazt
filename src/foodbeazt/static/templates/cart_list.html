@@ -1,0 +1,26 @@
+<div class="summary" ng-controller="cartCtrl">
+    <div class="bubble">
+        <h3>Order Summary</h3>
+        <div class="section items-list">
+            <table>
+                <thead>
+                <tr>
+                    <th colspan="2">Items</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in cart.items">
+                    <td>{{item.name}}</td>
+                    <td class="text-right">{{item.quantity}} x {{item.sell_price}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="section total">
+            <ul>
+                <li class="currency">Total</li>
+                <li class="price"><span ng-bind-html="cart.total | currency"></span></li>
+            </ul>
+        </div>
+    </div>
+</div>

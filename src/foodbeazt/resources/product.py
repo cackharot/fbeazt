@@ -9,7 +9,9 @@ class ProductListApi(Resource):
     def __init__(self):
         self.service = ProductService(mongo.db)
 
-    def get(self, store_id):
+    def get(self, store_id=None):
+        if store_id == '-1' or store_id == -1:
+            store_id = None
         lst = self.service.search(tenant_id=g.user.tenant_id, store_id=store_id)
         return lst
 

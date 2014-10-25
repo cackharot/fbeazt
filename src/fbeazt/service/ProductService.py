@@ -26,7 +26,11 @@ class ProductService(object):
         return [x for x in self.products.find({'name': name})]
 
     def search(self, tenant_id, store_id):
-        query = {'tenant_id': ObjectId(tenant_id), 'store_id': ObjectId(store_id)}
+        query = {}
+        if tenant_id:
+            query['tenant_id'] = ObjectId(tenant_id)
+        if store_id:
+            query['store_id'] = ObjectId(store_id)
         return [x for x in self.products.find(query)]
 
     def delete(self, _id):

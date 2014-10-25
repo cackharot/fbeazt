@@ -93,6 +93,11 @@ def home():
     return render_template('launch_home.jinja2', name=name)
 
 
+@app.route("/beta")
+def beta_home():
+    return render_template('home.jinja2')
+
+
 @app.route("/admin")
 @auth.required
 def admin_home():
