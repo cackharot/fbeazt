@@ -1,17 +1,23 @@
 <div class="summary" ng-controller="cartCtrl">
     <div class="bubble">
         <h3>Order Summary</h3>
+
         <div class="section items-list">
             <table>
                 <thead>
                 <tr>
-                    <th colspan="2">Items</td>
+                    <th colspan="2">Items</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="item in cart.items">
-                    <td>{{item.name}}</td>
-                    <td class="text-right">{{item.quantity}} x {{item.sell_price}}</td>
+                    <td>
+                        <a href class="text-danger" ng-click="removeItem(item._id.$oid)"
+                           title="Click to remove this item"><i
+                                class="fa fa-minus-square"></i></a>
+                        {{item.name}}
+                    </td>
+                    <td class="text-right">{{item.quantity}}x&nbsp;&nbsp;&nbsp;&nbsp;{{item.sell_price}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -21,6 +27,11 @@
                 <li class="currency">Total</li>
                 <li class="price"><span ng-bind-html="cart.total | currency"></span></li>
             </ul>
+        </div>
+        <div class="session continue" ng-show="canShowContinueBtn()">
+            <button class="btn btn-success" ng-click="continueOrder()" type="button" title="Click to continue with this order summary">Continue
+                >>
+            </button>
         </div>
     </div>
 </div>

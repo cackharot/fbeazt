@@ -1,0 +1,7 @@
+<div ng-show="!item" class="alert alert-info">
+    <p>Oops! No items found for this search. Kindly modify your search</p>
+</div>
+<div ng-show="item" class="row">
+    <h4>{{item.name}}</h4>
+    <h4 ng-bind-html="item.sell_price | currency"></h4>
+</div>

@@ -1,10 +1,10 @@
 <div ng-show="items.length == 0" class="alert alert-info">
     <p>Oops! No items found for this search. Kindly modify your search</p>
 </div>
-<div ng-show="items.length > 0">
+<div ng-show="items.length > 0" class="row thumbnails">
     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 block" ng-repeat="item in items | limitTo: 12">
         <div class="img-wrap">
-            <a href="#/detail/{{item._id.$oid}}" title="Click to view '{{item.name}}' details">
+            <a href="#/detail/{{item.store_id.$oid}}/{{item._id.$oid}}" title="Click to view '{{item.name}}' details">
                 <img class="img-responsive" width="175" ng-src="{{item.image_url | default_product_img}}"/>
             </a>
             <h4>{{item.name}}</h4>

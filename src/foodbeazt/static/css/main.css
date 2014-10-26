@@ -4,7 +4,6 @@
 
 .bubble {
     position: relative;
-    margin-left: 15px;
     background: none repeat scroll 0% 0% #333;
     min-height: 100px;
     border-bottom: 3px solid #FE5815;
@@ -17,6 +16,7 @@
     font-weight: bold;
     border-bottom: 1px solid #6A6869;
     padding: 10px 0px 8px 13px;
+    margin:0;
 }
 
 .summary .bubble div.section {
@@ -31,6 +31,11 @@
 .summary .bubble div.total {
     border-bottom: 0px none;
     padding: 6px 15px;
+}
+
+.summary .bubble div.continue {
+    padding: 6px 15px;
+    text-align: right;
 }
 
 .summary .bubble .section ul {

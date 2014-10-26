@@ -1,13 +1,10 @@
 {% extends 'layout.jinja2'%}
 {% block body %}
 <div ng-app="fbeaztApp">
-    <div class="col-xs-9 col-sm-8 col-md-9 col-lg-10" >
-        <div class="row thumbnails">
-            <div ng-view></div>
-        </div>
+    <div class="pull-left col-md-9">
+        <div ng-view></div>
     </div>
-    <div id="shop-cart" class="col-xs-3 col-sm-4 col-md-3 col-lg-2"
-         ng-include="'/static/templates/cart_list.html'"></div>
+    <div class="pull-right col-md-3" ng-include="'/static/templates/cart_list.html'"></div>
 </div>
 {% endblock %}
 {% block scripts %}

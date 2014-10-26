@@ -6,9 +6,13 @@ fbeastApp.config(['$routeProvider', function($routeProvider){
             templateUrl: '/static/templates/product_list.html',
             controller: 'mainCtrl'
           }).
-          when('/detail/:id', {
+          when('/detail/:store_id/:id', {
             templateUrl: '/static/templates/product_detail.html',
             controller: 'detailCtrl'
+          }).
+          when('/confirm_order', {
+            templateUrl: '/static/templates/confirm_order.html',
+            controller: 'confirmOrderCtrl'
           }).
           otherwise({
             redirectTo: '/'
@@ -57,10 +61,10 @@ fbeastApp.controller('mainCtrl', function($route, $scope, $http, $log, eventBus)
 
 fbeastApp.controller('detailCtrl', function($route, $scope, $http, $routeParams, eventBus){
     $scope.item = {}
-    url = '/api/product/'
+    url = '/api/product/'+ $routeParams.store_id + "/" + $routeParams.id
 
-    retrieve = $scope.retrieve = function(id) {
-        $http.get(url + id).success(function(data){
+    retrieve = $scope.retrieve = function() {
+        $http.get(url).success(function(data){
             if(data) {
                 $scope.item = data
             }
@@ -76,20 +80,35 @@ fbeastApp.controller('detailCtrl', function($route, $scope, $http, $routeParams,
     retrieve()
 })
 
-fbeastApp.controller('cartCtrl', function($route, $scope, $http, $routeParams, $log, eventBus){
-    cart = $scope.cart = {}
-    cart.items = []
-    cart.created_at = new Date()
-    cart.total = 0
+fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $routeParams, $log, $cookieStore, eventBus){
+    cart = { 'items': [], 'created_at': new Date(), 'total': 0.0 }
+
+    try {
+        cart = $cookieStore.get('__tmpCart') || { 'items': [], 'created_at': new Date(), 'total': 0.0 }
+    }catch(e){
+
+    }
+
+    $scope.cart = cart
 
     calculateCartTotals = function(){
-        this.cart.total = _.chain(this.cart.items)
+        if(this.cart.items.length == 0){
+            this.cart.total = 0.0
+            return
+        }
+
+        this.cart.total = parseFloat(_.chain(this.cart.items)
                             .map(function(x){
                                    return x.quantity*x.sell_price
                             })
                             .reduce(function(total, x){
                                 return total+x
-                            }).value()
+                            }).value())
+    }
+
+    $scope.removeItem = function(id){
+        var item = _.remove(this.cart.items, function(x) { return x._id.$oid == id })
+        return false
     }
 
     $scope.$on('subscribeToAddToCart', function(){
@@ -99,11 +118,44 @@ fbeastApp.controller('cartCtrl', function($route, $scope, $http, $routeParams, $
 
         if(data){
             data.quantity++
+            this.calculateCartTotals()
+            $cookieStore.put('__tmpCart', this.cart)
         }else{
             item.quantity = 1
             this.cart.items.push(item)
         }
-
-        this.calculateCartTotals()
     })
+
+    $scope.$watchCollection('cart.items', function(newValue, oldValue) {
+        this.calculateCartTotals()
+        $cookieStore.put('__tmpCart', this.cart)
+    });
+
+    $scope.continueOrder = function(){
+        $location.path('/confirm_order')
+    }
+
+    $scope.canShowContinueBtn = function(){
+        return $location.path() != '/confirm_order'
+    }
+})
+
+fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $routeParams, $log, $cookieStore, eventBus){
+    cart = $scope.cart = $cookieStore.get('__tmpCart')
+
+    if(!cart || cart.items.length == 0) {
+        $location.path('/')
+    }
+
+    if(!cart.customer || !cart.customer.name){
+        cart.customer = $cookieStore.get('__tmpCustomer') || {}
+    }
+
+    $scope.confirmOrder = function() {
+        // validate customer data
+        // submit the cart to service to generate order tracking id
+        // and show success message
+        $cookieStore.put('__tmpCart', this.cart)
+        $cookieStore.put('__tmpCustomer', this.cart.customer)
+    }
 })
