@@ -73,10 +73,6 @@ def setup():
         item['tenant_id'] = tenant_id
         tenant_service.update(item)
 
-        user = {"name": "admin", "username": "foodbeazt@gmail.com", "email": "foodbeazt@gmail.com",
-                "auth_type": "google", "tenant_id": tenant_id, "registered_ip": "10.0.0.1", "roles": ["super_admin"]}
-        user_service.create(user)
-
     print('\nTenant:')
     tenant = tenant_service.get_by_name("FoodBeazt")
     print(json.dumps(tenant, default=json_util.default))
