@@ -1,5 +1,9 @@
 var fbeastApp = angular.module('fbeaztApp',['ngRoute', 'ngSanitize', 'ngCookies', 'checklist-model', 'fbFilters'])
 
+var MINIMUM_FREE_DELIVERY_ORDER_AMOUNT = 500.0
+var DEFAULT_DELIVERY_CHARGES = 30.0
+var DEFAULT_CART = { 'items': [], 'created_at': new Date(), 'total': 0.0, 'delivery_charges': DEFAULT_DELIVERY_CHARGES }
+
 fbeastApp.config(['$routeProvider', function($routeProvider){
     $routeProvider.
           when('/', {
@@ -81,15 +85,20 @@ fbeastApp.controller('detailCtrl', function($route, $scope, $http, $routeParams,
 })
 
 fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $routeParams, $log, $cookieStore, eventBus){
-    cart = { 'items': [], 'created_at': new Date(), 'total': 0.0 }
+    cart = DEFAULT_CART
 
     try {
-        cart = $cookieStore.get('__tmpCart') || { 'items': [], 'created_at': new Date(), 'total': 0.0 }
+        cart = $cookieStore.get('__tmpCart') || DEFAULT_CART
     }catch(e){
 
     }
 
     $scope.cart = cart
+    $scope.min_order_amount = MINIMUM_FREE_DELIVERY_ORDER_AMOUNT
+
+    calculateDeliveryCharges = function(total){
+        return total < MINIMUM_FREE_DELIVERY_ORDER_AMOUNT ? DEFAULT_DELIVERY_CHARGES : 0.0
+    }
 
     calculateCartTotals = function(){
         if(this.cart.items.length == 0){
@@ -97,13 +106,16 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
             return
         }
 
-        this.cart.total = parseFloat(_.chain(this.cart.items)
+        var tmpTotal = parseFloat(_.chain(this.cart.items)
                             .map(function(x){
                                    return x.quantity*x.sell_price
                             })
                             .reduce(function(total, x){
                                 return total+x
                             }).value())
+
+        this.cart.delivery_charges = calculateDeliveryCharges(tmpTotal)
+        this.cart.total = tmpTotal + this.cart.delivery_charges
     }
 
     $scope.removeItem = function(id){
@@ -137,6 +149,12 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
 
     $scope.canShowContinueBtn = function(){
         return $location.path() != '/confirm_order'
+    }
+
+    $scope.resetOrder = function(){
+        console.log(this.cart)
+        this.cart = DEFAULT_CART
+        $cookieStore.remove('__tmpCart')
     }
 })
 

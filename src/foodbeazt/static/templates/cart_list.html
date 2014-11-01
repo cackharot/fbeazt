@@ -2,6 +2,12 @@
     <div class="bubble">
         <h3>Order Summary</h3>
 
+        <div class="pull-right" style="position:absolute;right:5px;top:2px;">
+            <a href title="Click to reset this order" ng-click="resetOrder()">
+                <i class="fa fa-times-circle"></i>
+            </a>
+        </div>
+
         <div class="section items-list">
             <table>
                 <thead>
@@ -22,14 +28,31 @@
                 </tbody>
             </table>
         </div>
+        <div class="section items-list" ng-show="cart.items.length > 0">
+            <table>
+                <tbody>
+                <tr>
+                    <td>Delivery charges
+                        <a href data-toggle="tooltip" id="deliveryTooltip"
+                           data-placement="bottom"
+                           title="Free delivery if the order amount is greater than {{min_order_amount}}">
+                            <i class="fa fa-info-circle text-info"></i>
+                        </a>
+                    </td>
+                    <td class="text-right"><span ng-bind-html="cart.delivery_charges | currency"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="section total">
             <ul>
-                <li class="currency">Total</li>
+                <li>Total</li>
                 <li class="price"><span ng-bind-html="cart.total | currency"></span></li>
             </ul>
         </div>
         <div class="session continue" ng-show="canShowContinueBtn()">
-            <button class="btn btn-success" ng-click="continueOrder()" type="button" title="Click to continue with this order summary">Continue
+            <button class="btn btn-success" ng-click="continueOrder()" type="button"
+                    title="Click to continue with this order summary">Continue
                 >>
             </button>
         </div>
