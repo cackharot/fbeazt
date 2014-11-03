@@ -31,7 +31,7 @@ class ProductService(object):
             query['tenant_id'] = ObjectId(tenant_id)
         if store_id:
             query['store_id'] = ObjectId(store_id)
-        return [x for x in self.products.find(query)]
+        return [x for x in self.products.find(query).sort("created_at", -1)]
 
     def delete(self, _id):
         self.products.remove({'_id': ObjectId(_id)})

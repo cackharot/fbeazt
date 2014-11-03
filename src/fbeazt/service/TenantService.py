@@ -80,7 +80,7 @@ class TenantService(object):
         if tenant_id:
             query['tenant_id'] = ObjectId(tenant_id)
 
-        return [x for x in self.tenants.find(query)]
+        return [x for x in self.tenants.find(query).sort("created_at", -1)]
 
     def get_by_id(self, _id):
         return self.tenants.find_one({'_id': ObjectId(_id)})

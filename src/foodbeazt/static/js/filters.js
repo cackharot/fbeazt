@@ -35,6 +35,6 @@ angular.module('fbFilters', [])
 })
 .filter('default_product_img', function(){
     return function(input) {
-      return input || '/static/images/na-product.jpg'
+      return input ? ('/static/images/products/' + input) : '/static/images/na-product.jpg'
     }
 })

@@ -39,7 +39,7 @@ class UserService(object):
         query = {}
         if tenant_id:
             query['tenant_id'] = ObjectId(tenant_id)
-        return [x for x in self.users.find(query)]
+        return [x for x in self.users.find(query).sort("created_at", -1)]
 
     def delete(self, id):
         item = self.get_by_id(id)

@@ -14,7 +14,7 @@ class StoreService(object):
 
     def search(self, tenant_id):
         query = {"tenant_id": ObjectId(tenant_id)}
-        return [x for x in self.stores.find(query)]
+        return [x for x in self.stores.find(query).sort("created_at", -1)]
 
     def save(self, store_item):
         if '_id' not in store_item or store_item['_id'] is None or store_item['_id'] == "-1":
