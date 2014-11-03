@@ -4,7 +4,7 @@
 
         <div class="pull-right" style="position:absolute;right:5px;top:2px;">
             <a href title="Click to reset this order" ng-click="resetOrder()">
-                <i class="fa fa-times-circle"></i>
+                <i class="fa fa-refresh"></i>
             </a>
         </div>
 
@@ -33,9 +33,7 @@
                 <tbody>
                 <tr>
                     <td>Delivery charges
-                        <a href data-toggle="tooltip" id="deliveryTooltip"
-                           data-placement="bottom"
-                           title="Free delivery if the order amount is greater than {{min_order_amount}}">
+                        <a href title="Free delivery if the order amount is greater than Rs.500">
                             <i class="fa fa-info-circle text-info"></i>
                         </a>
                     </td>

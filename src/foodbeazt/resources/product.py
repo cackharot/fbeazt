@@ -10,10 +10,20 @@ class ProductListApi(Resource):
         self.service = ProductService(mongo.db)
 
     def get(self, store_id=None):
+        tenant_id = g.user.tenant_id
+
         if store_id == '-1' or store_id == -1:
             store_id = None
-        lst = self.service.search(tenant_id=g.user.tenant_id, store_id=store_id)
-        return lst
+            tenant_id = None
+
+        page_no = int(request.args.get('page_no', 1))
+        page_size = int(request.args.get('page_size', 24))
+        filter_text = request.args.get('filter_text', None)
+
+        items, total = self.service.search(tenant_id=tenant_id, store_id=store_id, page_no=page_no,
+                                           page_size=page_size,
+                                           filter_text=filter_text)
+        return {'items': items, 'total': total}
 
 
 class ProductActivateApi(Resource):

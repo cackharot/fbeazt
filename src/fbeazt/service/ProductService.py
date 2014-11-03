@@ -1,6 +1,6 @@
 from datetime import datetime
 from bson import ObjectId
-
+import re
 
 class ProductService(object):
     def __init__(self, db):
@@ -25,13 +25,21 @@ class ProductService(object):
     def get_by_name(self, name):
         return [x for x in self.products.find({'name': name})]
 
-    def search(self, tenant_id, store_id):
+    def search(self, tenant_id, store_id, page_no=1, page_size=16, filter_text=None):
         query = {}
         if tenant_id:
             query['tenant_id'] = ObjectId(tenant_id)
         if store_id:
             query['store_id'] = ObjectId(store_id)
-        return [x for x in self.products.find(query).sort("created_at", -1)]
+
+        if filter_text and len(filter_text) > 2:
+            query['name'] = re.compile(filter_text, re.IGNORECASE)
+
+        skip_records = (page_no - 1) * page_size
+        if skip_records < 0:
+            skip_records = 0
+        lst = self.products.find(query)
+        return [x for x in lst.sort("created_at", -1).skip(skip_records).limit(page_size)], lst.count()
 
     def delete(self, _id):
         self.products.remove({'_id': ObjectId(_id)})

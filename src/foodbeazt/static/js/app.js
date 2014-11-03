@@ -41,23 +41,45 @@ fbeastApp.factory('eventBus', function($rootScope) {
 });
 
 fbeastApp.controller('mainCtrl', function($route, $scope, $http, $log, eventBus){
+    total = $scope.total = 0
+    page_no = $scope.page_no = 1
+    page_size = $scope.page_size = 12
+    filter_text = $scope.filter_text = ''
+
     items = $scope.items = []
     url = '/api/products/-1'
 
-    search = $scope.search = function() {
-        args = {}
-        $http.get(url, args).success(function(data){
-            if(data) {
-                $scope.items = data
-            }
+    var getData = function(args, cb){
+        $http.get(url, {params: args}).success(function(data){
+            cb(data)
         }).error(function(err){
             console.log(err)
+        })
+    }
+
+    search = $scope.search = function(reset_page_data) {
+        if(reset_page_data){
+            this.page_no = 1
+        }
+        var args = { 'page_no': this.page_no, 'page_size': this.page_size, 'filter_text': this.filter_text }
+        getData(args, function(data){
+            $scope.total = data.total
+            $scope.items = data.items
         })
     }
 
     $scope.addToCart = function(id){
         var data = _.find(this.items, function(x) { return x._id.$oid == id; })
         eventBus.send(data)
+    }
+
+    $scope.loadMore = function(){
+        $scope.page_no = $scope.page_no + 1
+        var args = { 'page_no': this.page_no, 'page_size': this.page_size, 'filter_text': this.filter_text }
+        getData(args, function(data){
+            $scope.total = data.total
+            $scope.items = $scope.items.concat(data.items)
+        })
     }
 
     search()

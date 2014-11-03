@@ -73,3 +73,7 @@
     color: #FFF;
     padding-bottom: 5px;
 }
+
+.img-wrap img.img-responsive {
+    height:133.33px;
+}
