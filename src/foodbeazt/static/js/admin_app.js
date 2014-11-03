@@ -6,6 +6,7 @@ menuItems.push({"title": "Tenant", "heading": false, "url": "/tenant", "icon": "
 menuItems.push({"title": "User", "heading": false, "url": "/user", "icon": "fa fa-user", "templateUrl": '/static/templates/admin/user/list.html'})
 menuItems.push({"title": "Store", "heading": false, "url": "/store", "icon": "fa fa-building", "templateUrl": '/static/templates/admin/store/list.html'})
 menuItems.push({"title": "Product", "heading": false, "url": "/product", "icon": "fa fa-apple", "templateUrl": '/static/templates/admin/product/list.html'})
+menuItems.push({"title": "Orders", "heading": false, "url": "/order", "icon": "fa fa-list", "templateUrl": '/static/templates/admin/order/list.html'})
 
 var custom_routes = []
 custom_routes.push({"title": "Manage Tenant", "heading": false, "url": "/tenant/:id", "templateUrl": '/static/templates/admin/tenant/manage.html'})

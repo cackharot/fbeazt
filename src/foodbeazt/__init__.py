@@ -145,6 +145,7 @@ from foodbeazt.resources.tenant import TenantListApi, TenantApi
 from foodbeazt.resources.user import UserApi, UserListApi
 from foodbeazt.resources.store import StoreApi, StoreListApi
 from foodbeazt.resources.product import ProductApi, ProductListApi, ProductActivateApi
+from foodbeazt.resources.order import OrderApi, OrderListApi
 
 api.add_resource(SubscriptionApi, '/api/subscribe/<string:email>')
 api.add_resource(SubscriptionListApi, '/api/subscriptions')
@@ -161,3 +162,6 @@ api.add_resource(StoreListApi, '/api/stores')
 api.add_resource(ProductApi, '/api/product/<string:store_id>/<string:_id>')
 api.add_resource(ProductActivateApi, '/api/product/activate/<string:store_id>/<string:_id>')
 api.add_resource(ProductListApi, '/api/products/<string:store_id>')
+
+api.add_resource(OrderApi, '/api/order/<string:_id>')
+api.add_resource(OrderListApi, '/api/orders/')

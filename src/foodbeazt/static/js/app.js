@@ -18,6 +18,14 @@ fbeastApp.config(['$routeProvider', function($routeProvider){
             templateUrl: '/static/templates/confirm_order.html',
             controller: 'confirmOrderCtrl'
           }).
+          when('/order_success', {
+            templateUrl: '/static/templates/order_success.html',
+            controller: 'orderSuccessCtrl'
+          }).
+          when('/processing', {
+            templateUrl: '/static/templates/processing.html',
+            controller: 'confirmOrderCtrl'
+          }).
           otherwise({
             redirectTo: '/'
           });
@@ -34,7 +42,7 @@ fbeastApp.factory('eventBus', function($rootScope) {
     };
 
     eventBus.broadcastItem = function() {
-        $rootScope.$broadcast('subscribeToAddToCart');
+        $rootScope.$broadcast('itemAddedToCart');
     };
 
     return eventBus;
@@ -145,7 +153,7 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
         return false
     }
 
-    $scope.$on('subscribeToAddToCart', function(){
+    $scope.$on('itemAddedToCart', function(){
         var item = eventBus.data
 
         var data = _.find(this.cart.items, function(x) { return x._id.$oid == item._id.$oid })
@@ -170,7 +178,7 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
     }
 
     $scope.canShowContinueBtn = function(){
-        return $location.path() != '/confirm_order'
+        return ($location.path() != '/confirm_order' && $location.path() != '/order_success') && this.cart.total > 0
     }
 
     $scope.resetOrder = function(){
@@ -181,7 +189,8 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
 })
 
 fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $routeParams, $log, $cookieStore, eventBus){
-    cart = $scope.cart = $cookieStore.get('__tmpCart')
+    $scope.location = $location
+    cart = $scope.cart = $cookieStore.get('__tmpCart') || {}
 
     if(!cart || cart.items.length == 0) {
         $location.path('/')
@@ -195,7 +204,23 @@ fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $rou
         // validate customer data
         // submit the cart to service to generate order tracking id
         // and show success message
-        $cookieStore.put('__tmpCart', this.cart)
-        $cookieStore.put('__tmpCustomer', this.cart.customer)
+        $location.path('/processing')
+
+        var url = '/api/order/-1'
+        $http.post(url, this.cart).success(function(data){
+            if(data && data.data)
+                this.cart.order_no = data.data.order_no
+            $cookieStore.put('__tmpCart', this.cart)
+            $location.path('/order_success')
+        }).error(function(e){
+            alert(e)
+            $location.path('/confirm_order')
+        })
     }
+})
+
+fbeastApp.controller('orderSuccessCtrl', function($location, $scope, $cookieStore){
+    $scope.cart = $cookieStore.get('__tmpCart')
+    console.log($scope.cart)
+    $cookieStore.remove('__tmpCart')
 })
