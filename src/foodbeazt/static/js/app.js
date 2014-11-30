@@ -10,6 +10,10 @@ fbeastApp.config(['$routeProvider', function($routeProvider){
             templateUrl: '/static/templates/product_list.html',
             controller: 'mainCtrl'
           }).
+          when('/search/:category', {
+            templateUrl: '/static/templates/product_list.html',
+            controller: 'mainCtrl'
+          }).
           when('/detail/:store_id/:id', {
             templateUrl: '/static/templates/product_detail.html',
             controller: 'detailCtrl'
@@ -48,11 +52,12 @@ fbeastApp.factory('eventBus', function($rootScope) {
     return eventBus;
 });
 
-fbeastApp.controller('mainCtrl', function($route, $scope, $http, $log, eventBus){
+fbeastApp.controller('mainCtrl', function($route, $scope, $http, $log, eventBus, $routeParams){
     total = $scope.total = 0
     page_no = $scope.page_no = 1
     page_size = $scope.page_size = 12
     filter_text = $scope.filter_text = ''
+    category = $routeParams.category || ''
 
     items = $scope.items = []
     url = '/api/products/-1'
@@ -65,11 +70,16 @@ fbeastApp.controller('mainCtrl', function($route, $scope, $http, $log, eventBus)
         })
     }
 
+    getArgs = function(){
+        return { 'page_no': this.page_no, 'page_size': this.page_size,
+            'filter_text': this.filter_text, 'category': this.category }
+    }
+
     search = $scope.search = function(reset_page_data) {
         if(reset_page_data){
             this.page_no = 1
         }
-        var args = { 'page_no': this.page_no, 'page_size': this.page_size, 'filter_text': this.filter_text }
+        var args = this.getArgs()
         getData(args, function(data){
             $scope.total = data.total
             $scope.items = data.items
@@ -83,7 +93,7 @@ fbeastApp.controller('mainCtrl', function($route, $scope, $http, $log, eventBus)
 
     $scope.loadMore = function(){
         $scope.page_no = $scope.page_no + 1
-        var args = { 'page_no': this.page_no, 'page_size': this.page_size, 'filter_text': this.filter_text }
+        var args = this.getArgs()
         getData(args, function(data){
             $scope.total = data.total
             $scope.items = $scope.items.concat(data.items)
@@ -221,6 +231,6 @@ fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $rou
 
 fbeastApp.controller('orderSuccessCtrl', function($location, $scope, $cookieStore){
     $scope.cart = $cookieStore.get('__tmpCart')
-    console.log($scope.cart)
+    $cookieStore.put('__tmpCart', null)
     $cookieStore.remove('__tmpCart')
 })

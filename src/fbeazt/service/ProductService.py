@@ -25,7 +25,7 @@ class ProductService(object):
     def get_by_name(self, name):
         return [x for x in self.products.find({'name': name})]
 
-    def search(self, tenant_id, store_id, page_no=1, page_size=16, filter_text=None):
+    def search(self, tenant_id, store_id, page_no=1, page_size=16, category=None, filter_text=None):
         query = {}
         if tenant_id:
             query['tenant_id'] = ObjectId(tenant_id)
@@ -34,6 +34,9 @@ class ProductService(object):
 
         if filter_text and len(filter_text) > 2:
             query['name'] = re.compile(filter_text, re.IGNORECASE)
+
+        if category and len(category) > 2:
+            query['category'] = re.compile(category, re.IGNORECASE)
 
         skip_records = (page_no - 1) * page_size
         if skip_records < 0:

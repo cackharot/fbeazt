@@ -35,15 +35,16 @@ def create_sample_data(db, tenant_id):
         print('100 products already added!')
         return
 
-    category = ['starter', 'main course', 'deserts']
+    category = ['starter', 'maincourse', 'deserts', 'specials']
     food_types = ['veg', 'non-veg']
 
     print('\nProducts:')
     for i in range(0, 100):
         no = str(random.randint(100, 12563))
         price = random.randint(10, 500)
-        item = {'tenant_id': tenant_id, 'name': 'Item ' + no, 'barcode': '1256' + no, 'food_type': [food_types[i%2]],
-                'cuisine': 'indian', 'store_id': store_id, 'category': category[i % 3],
+        item = {'tenant_id': tenant_id, 'name': 'Item ' + no, 'barcode': '1256' + no,
+                'food_type': [food_types[i % len(food_types)]],
+                'cuisine': 'indian', 'store_id': store_id, 'category': category[i % len(category)],
                 'open_time': 8, 'close_time': 11, 'deliver_time': 45, 'buy_price': price - 10.0,
                 'sell_price': price,
                 'discount': 0.0}

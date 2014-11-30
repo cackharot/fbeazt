@@ -1,8 +1,13 @@
 from bson import ObjectId, json_util
 from flask import g, request
+from flask_mail import Message
 from flask_restful import Resource
 from fbeazt.service.OrderService import OrderService
-from foodbeazt import mongo
+from foodbeazt import mongo, app, mail
+from jinja2 import Environment, FileSystemLoader
+
+jinja2_env = Environment(loader=FileSystemLoader('templates'))
+order_created_template = jinja2_env.get_template('order_created.html')
 
 
 class OrderListApi(Resource):
@@ -30,10 +35,14 @@ class OrderApi(Resource):
     def __init__(self):
         self.service = OrderService(mongo.db)
 
-    def get(self, store_id, _id):
+    def get(self, _id):
         if _id == "-1":
             return {}
-        return self.service.get_by_id(_id)
+        item = self.service.get_by_id(_id)
+        #order_created_template = jinja2_env.get_template('order_created.html')
+        #html = order_created_template.render(order=item)
+        #item['html'] = html
+        return item
 
     def post(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))
@@ -41,13 +50,25 @@ class OrderApi(Resource):
         item['tenant_id'] = ObjectId(tenant_id)
         try:
             _id = self.service.save(item)
+
+            email = item['customer'].get('email', 'None')
+
+            if email and len(email) > 3:
+                msg = Message("Order confirmation <%s>" % (item['order_no']),
+                              sender=(app.config['MAIL_SENDER_NAME'], app.config['MAIL_SENDER']),
+                              recipients=[email])
+                msg.html = order_created_template.render(order=item)
+                try:
+                    mail.send(msg)
+                except Exception as e:
+                    print(e)
             return {"status": "success", "location": "/api/order/" + str(_id), "data": item}
         except Exception as e:
             print(e)
             return dict(status="error",
                         message="Oops! Error while trying to save order details! Please try again later")
 
-    def delete(self, store_id, _id):
+    def delete(self, _id):
         item = self.service.get_by_id(_id)
         if item is None:
             return None, 404
