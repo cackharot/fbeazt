@@ -9,7 +9,8 @@ productApp.controller('productListCtrl', function($scope, $http, $routeParams){
 	$scope.reloadProduct = function(){
 	    if(!$scope.selected_store) return
         $http.get('/api/products/'+$scope.selected_store).success(function(d){
-            $scope.products = d
+            $scope.products = d.items
+            $scope.total = d.total
         }).error(function(e){
             alert(e)
         })

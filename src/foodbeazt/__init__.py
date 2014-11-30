@@ -1,4 +1,5 @@
 import os
+from urllib.parse import unquote
 from uuid import uuid4
 from flask import Flask, session, render_template, make_response, request, redirect, g
 from flask_mail import Mail
@@ -64,8 +65,14 @@ class User(object):
 def set_user_on_request_g():
     if 'user_id' not in session:
         return
+    tenant_id = request.cookies.get('tenant_id', None)
+    if not tenant_id:
+        tenant_id = session.get('tenant_id', None)
+    else:
+        tenant_id = unquote(tenant_id).replace('"', '')
+
     setattr(g, 'user',
-            User(session['user_id'], session['tenant_id'], session['name'], session['email'], session['roles'],
+            User(session['user_id'], tenant_id, session['name'], session['email'], session['roles'],
                  session.get('user_tenant_id', None), session.get('identity', None)))
 
 
@@ -115,11 +122,14 @@ def recreate_db():
     c.drop_database(app.config['MONGO_DBNAME'])
     return redirect('/')
 
+
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 upload_folder = os.path.join(APP_ROOT, 'static/images/products/')
 
+
 def allowed_files(filename):
     return '.' in filename and filename.split('.')[1] in ['jpg', 'png', 'gif', 'jpeg', 'bmp']
+
 
 @app.route("/api/upload_product_image/<string:_id>", methods=['GET', 'POST'])
 def upload_product_image(_id):
@@ -139,6 +149,7 @@ def upload_product_image(_id):
             service.update(item)
             return json.dumps({"status": "success", "id": _id, "filename": filename})
     return '', 404
+
 
 from foodbeazt.resources.subscription import SubscriptionApi, SubscriptionListApi
 from foodbeazt.resources.tenant import TenantListApi, TenantApi

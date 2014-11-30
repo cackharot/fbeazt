@@ -40,7 +40,7 @@ fbeaztAdmin.config(['$routeProvider', function($routeProvider){
 })
 
 
-fbeaztAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams){
+fbeaztAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams, $cookieStore){
 	$scope.app = {}
 	$scope.app.viewAnimation = true
 	$scope.app.page = {}
@@ -56,6 +56,23 @@ fbeaztAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams)
 	render = function($currentRoute){
 	    var content_url = $route.current.action
 	    $scope.app.layout.content_url = content_url
+	}
+
+	$http.get('/api/tenants').success(function(data){
+	    $scope.app.tenants = data;
+	    if(!$cookieStore.get('tenant_id')){
+	        $scope.setTenant(data[0]._id.$oid, data[0].name)
+	    }else{
+	        id = $cookieStore.get('tenant_id')
+	        name = _.find(data, function(item){ return id == item._id.$oid }).name;
+	        $scope.setTenant(id, name)
+	    }
+	})
+
+	$scope.setTenant = function(id, name){
+	    $scope.app.selected_tenant = id
+	    $scope.app.selected_tenant_name = name
+	    $cookieStore.put('tenant_id', id.toString())
 	}
 
 	$scope.$on("$routeChangeSuccess", function( $currentRoute, $previousRoute ){
