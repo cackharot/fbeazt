@@ -1,13 +1,14 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name='foodbeazt',
     version='0.1',
-    packages=['test', 'fbeazt', 'fbeazt.service', 'foodbeazt', 'foodbeazt.views', 'foodbeazt.resources'],
-    package_dir={'': 'src'},
+    packages=find_packages(),
     url='www.foodbeazt.in',
     license='Apache License 2.0',
     author='cackharot',
     author_email='cackharot@gmail.com',
-    description='online food ordering app'
+    long_description='online food ordering app',
+    zip_safe=False,
+    install_requires=['Flask']
 )

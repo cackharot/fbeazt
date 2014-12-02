@@ -1,7 +1,7 @@
 import random
 import unittest
 from pymongo import MongoClient
-from fbeazt.service.TenantService import TenantService, DuplicateTenantNameException, DuplicateTenantUrlException
+from service.TenantService import TenantService, DuplicateTenantNameException, DuplicateTenantUrlException
 
 
 class test_tenant_service(unittest.TestCase):

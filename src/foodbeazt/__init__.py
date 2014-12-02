@@ -1,21 +1,24 @@
 import os
-from urllib.parse import unquote
+from urllib import unquote
 from uuid import uuid4
-from flask import Flask, session, render_template, make_response, request, redirect, g
+from flask import Flask, session, render_template, make_response, request, redirect, g, url_for
+from flask_login import login_required, UserMixin, login_user, logout_user, current_user
 from flask_mail import Mail
 from flask_pymongo import PyMongo
 from flask_restful import Api
 from pymongo import Connection
 from bson import json_util
-from flask_googleauth import GoogleAuth, login, logout
 from werkzeug.utils import secure_filename
-from fbeazt.service.ProductService import ProductService
-from fbeazt.service.TenantService import TenantService
-from fbeazt.service.UserService import UserService
+from service.ProductService import ProductService
+from service.TenantService import TenantService
+from service.UserService import UserService
 import json
+from foodbeazt.libs.flask_googlelogin import GoogleLogin
 
 app = Flask(__name__, instance_relative_config=False)
 app.config.from_pyfile('foodbeazt.cfg', silent=False)
+if os.environ.get('FOODBEAZT_CONFIG', None):
+    app.config.from_envvar('FOODBEAZT_CONFIG')
 
 mongo = PyMongo(app)
 
@@ -23,35 +26,45 @@ api = Api(app)
 mail = Mail(app)
 
 # Setup Google Federated Auth
-auth = GoogleAuth(app)
+auth = GoogleLogin(app)
 
 
-def google_logout(sender, user=None):
-    if request and 'user_id' in session:
-        session.pop('user_id')
-        session.pop('name')
-        session.pop('email')
-        session.pop('roles')
-    pass
+@app.route('/oauth2callback')
+@auth.oauth2callback
+def create_or_update_user(token, userinfo, **params):
+    user = get_or_create_user(userinfo)
+    usermixin = getUserMixin(user)
+    login_user(usermixin)
+    session['user_id'] = str(user['_id'])
+    session['tenant_id'] = str(user['tenant_id'])
+    session['name'] = user['name']
+    session['email'] = user['email']
+    session['roles'] = user.get('roles', ['member'])
+    return redirect('/admin')
 
 
-def google_login(sender, user=None):
-    if request and 'openid' in session:
-        user = get_or_create_user(session['openid'])
-        session['user_id'] = str(user['_id'])
-        session['tenant_id'] = str(user['tenant_id'])
-        session['name'] = user['name']
-        session['email'] = user['email']
-        session['roles'] = user.get('roles', ['member'])
+def getUserMixin(user):
+    tenant_id = request.cookies.get('tenant_id', None)
+    if not tenant_id:
+        tenant_id = user.get('tenant_id', None)
+    else:
+        tenant_id = unquote(tenant_id).replace('"', '')
+
+    return User(user['_id'], tenant_id, user['name'], user['email'], user['roles'],
+                user.get('tenant_id', None), user.get('identity', None))
 
 
-login.connect(google_login)
-logout.connect(google_logout)
+@auth.user_loader
+def get_user(userid):
+    service = UserService(mongo.db)
+    user = service.get_by_id(userid)
+    return getUserMixin(user)
 
 
-class User(object):
+class User(UserMixin):
     def __init__(self, user_id=None, tenant_id=None, name=None, email=None, roles=[], user_tenant_id=None,
                  identity=None):
+        self.id = user_id
         self.user_id = user_id
         self.tenant_id = tenant_id
         self.name = name
@@ -60,20 +73,8 @@ class User(object):
         self.user_tenant_id = user_tenant_id
         self.identity = identity
 
-
-@app.before_request
-def set_user_on_request_g():
-    if 'user_id' not in session:
-        return
-    tenant_id = request.cookies.get('tenant_id', None)
-    if not tenant_id:
-        tenant_id = session.get('tenant_id', None)
-    else:
-        tenant_id = unquote(tenant_id).replace('"', '')
-
-    setattr(g, 'user',
-            User(session['user_id'], tenant_id, session['name'], session['email'], session['roles'],
-                 session.get('user_tenant_id', None), session.get('identity', None)))
+    def is_authenticated(self):
+        return self.id is not None
 
 
 def get_or_create_user(item):
@@ -84,9 +85,14 @@ def get_or_create_user(item):
     print('Creating new user...')
     tenant_id = TenantService(mongo.db).get_by_name("FoodBeazt")['_id']
     user = {'username': item['email'], 'email': item['email'], 'name': item['name'], 'auth_type': 'google',
-            'tenant_id': tenant_id, 'roles': ['member'], 'identity': item['identity']}
+            'tenant_id': tenant_id, 'roles': ['member'], 'identity': item['id']}
     service.create(user)
     return user
+
+
+@app.before_request
+def set_user_on_request_g():
+    setattr(g, 'user', current_user)
 
 
 @api.representation('application/json')
@@ -110,9 +116,17 @@ def beta_home():
 
 
 @app.route("/admin")
-@auth.required
+@login_required
 def admin_home():
     return render_template('admin/index.jinja2')
+
+
+@app.route('/logout')
+@app.route('/logout/')
+def app_logout():
+    logout_user()
+    session.clear()
+    return redirect('/admin')
 
 
 @app.route("/recreatedb")

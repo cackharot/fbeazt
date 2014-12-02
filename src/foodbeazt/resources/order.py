@@ -2,7 +2,7 @@ from bson import ObjectId, json_util
 from flask import g, request
 from flask_mail import Message
 from flask_restful import Resource
-from fbeazt.service.OrderService import OrderService
+from service.OrderService import OrderService
 from foodbeazt import mongo, app, mail
 from jinja2 import Environment, FileSystemLoader
 

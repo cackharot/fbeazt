@@ -1,7 +1,7 @@
 from bson import ObjectId, json_util
 from flask import g, request
 from flask_restful import Resource
-from fbeazt.service.ProductService import ProductService
+from service.ProductService import ProductService
 from foodbeazt import mongo
 
 

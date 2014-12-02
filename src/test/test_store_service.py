@@ -2,7 +2,7 @@ import random
 import unittest
 from bson import ObjectId
 from pymongo import MongoClient
-from fbeazt.service.StoreService import StoreService, DuplicateStoreNameException
+from service.StoreService import StoreService, DuplicateStoreNameException
 
 
 class test_store_service(unittest.TestCase):

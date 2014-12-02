@@ -1,7 +1,7 @@
 import random
 import unittest
 from pymongo import MongoClient
-from fbeazt.service.UserService import UserService, DuplicateUserException
+from service.UserService import UserService, DuplicateUserException
 
 
 class test_user_service(unittest.TestCase):

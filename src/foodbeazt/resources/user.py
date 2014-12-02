@@ -1,7 +1,7 @@
 from bson import json_util, ObjectId
 from flask import request, session, g
 from flask_restful import Resource
-from fbeazt.service.UserService import UserService, DuplicateUserException, UserServiceException
+from service.UserService import UserService, DuplicateUserException, UserServiceException
 from foodbeazt import mongo
 
 

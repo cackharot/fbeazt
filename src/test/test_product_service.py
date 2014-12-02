@@ -2,7 +2,7 @@ import random
 import unittest
 from bson import ObjectId
 from pymongo import MongoClient
-from fbeazt.service.ProductService import ProductService
+from service.ProductService import ProductService
 
 
 class test_product_service(unittest.TestCase):

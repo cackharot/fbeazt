@@ -1,6 +1,6 @@
 from datetime import datetime
 from bson import ObjectId
-from fbeazt.service.UserService import UserService, DuplicateUserException
+from service.UserService import UserService, DuplicateUserException
 
 
 class DuplicateTenantNameException(Exception):

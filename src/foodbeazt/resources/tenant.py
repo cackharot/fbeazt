@@ -1,8 +1,8 @@
 from bson import json_util, ObjectId
 from flask import request, session, g
 from flask_restful import Resource
-from fbeazt.service.TenantService import TenantService, DuplicateTenantNameException, DuplicateTenantUrlException
-from fbeazt.service.UserService import DuplicateUserException
+from service.TenantService import TenantService, DuplicateTenantNameException, DuplicateTenantUrlException
+from service.UserService import DuplicateUserException
 from foodbeazt import mongo
 
 

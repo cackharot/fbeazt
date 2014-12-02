@@ -2,7 +2,7 @@ from datetime import datetime
 import random
 import unittest
 from pymongo import MongoClient
-from fbeazt.service.SubscriptionService import DuplicateEmailException, SubscriptionService
+from service.SubscriptionService import DuplicateEmailException, SubscriptionService
 
 
 class test_subscription(unittest.TestCase):

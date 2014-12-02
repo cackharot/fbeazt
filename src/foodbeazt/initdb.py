@@ -8,10 +8,10 @@ import json
 import random
 from bson import json_util
 from pymongo import MongoClient
-from fbeazt.service.TenantService import TenantService
-from fbeazt.service.UserService import UserService
-from fbeazt.service.ProductService import ProductService
-from fbeazt.service.StoreService import StoreService
+from service.TenantService import TenantService
+from service.UserService import UserService
+from service.ProductService import ProductService
+from service.StoreService import StoreService
 
 
 def create_sample_data(db, tenant_id):
