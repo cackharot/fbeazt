@@ -25,6 +25,7 @@ def deploy():
             # now setup the package with our virtual environment's
             # python interpreter
             run('/home/ubuntu/fbeazt/venv/bin/python setup.py install')
+            run('/home/ubuntu/fbeazt/venv/bin/pip install -r /home/ubuntu/fbeazt/src/foodbeazt/requirements.txt')
     # now that all is set up, delete the folder again
     run('rm -rf /tmp/foodbeazt /tmp/foodbeazt.tar.gz')
     # and finally touch the .wsgi file so that mod_wsgi triggers

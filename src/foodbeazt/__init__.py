@@ -111,6 +111,7 @@ def home():
 
 
 @app.route("/beta")
+@login_required
 def beta_home():
     return render_template('home.jinja2')
 
