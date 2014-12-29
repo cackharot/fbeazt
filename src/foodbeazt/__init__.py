@@ -1,7 +1,7 @@
 import os
 from urllib import unquote
 from uuid import uuid4
-from flask import Flask, session, render_template, make_response, request, redirect, g, url_for
+from flask import Flask, session, render_template, make_response, request, redirect, g, current_app
 from flask_login import login_required, UserMixin, login_user, logout_user, current_user
 from flask_mail import Mail
 from flask_pymongo import PyMongo
@@ -14,6 +14,8 @@ from service.TenantService import TenantService
 from service.UserService import UserService
 import json
 from foodbeazt.libs.flask_googlelogin import GoogleLogin
+from flask_principal import Principal, Permission, Identity, AnonymousIdentity
+from flask_principal import identity_loaded, identity_changed, RoleNeed, UserNeed
 
 app = Flask(__name__, instance_relative_config=False)
 app.config.from_pyfile('foodbeazt.cfg', silent=False)
@@ -29,16 +31,41 @@ mail = Mail(app)
 auth = GoogleLogin(app)
 
 
+# load the extension
+principals = Principal(app)
+
+# Create a permission with a single Need, in this case a RoleNeed.
+admin_permission = Permission(RoleNeed('tenant_admin'))
+
+
 @app.route('/oauth2callback')
 @auth.oauth2callback
 def outhCallback(token, userinfo, **params):
     return create_or_update_user(userinfo)
 
 
+@identity_loaded.connect_via(app)
+def on_identity_loaded(sender, identity):
+    # Set the identity user object
+    identity.user = current_user
+
+    # Add the UserNeed to the identity
+    if hasattr(current_user, 'id'):
+        identity.provides.add(UserNeed(current_user.id))
+
+    # Assuming the User model has a list of roles, update the
+    # identity with the roles that the user provides
+    if hasattr(current_user, 'roles'):
+        for role in current_user.roles:
+            identity.provides.add(RoleNeed(role))
+
+
 def create_or_update_user(user_info):
     user = get_or_create_user(user_info)
     user_mixin = getUserMixin(user)
     login_user(user_mixin)
+    # Tell Flask-Principal the identity changed
+    identity_changed.send(current_app._get_current_object(), identity=Identity(str(user_mixin.id)))
     session['user_id'] = str(user['_id'])
     session['tenant_id'] = str(user['tenant_id'])
     session['name'] = user['name']
@@ -100,8 +127,6 @@ def get_or_create_user(item):
 
 @app.before_request
 def set_user_on_request_g():
-    if not current_user.is_authenticated():
-        create_or_update_user({'email': 'guest@foodbeazt.in', 'name': 'Guest', 'id': 'guest@foodbeazt.in'})
     setattr(g, 'user', current_user)
 
 
@@ -114,31 +139,39 @@ def mjson(data, code, headers=None):
 
 
 @app.route("/")
-# @auth.required
 def home():
     name = session.get('name', None)
     return render_template('launch_home.jinja2', name=name)
 
 
 @app.route("/beta")
-# @login_required
 def beta_home():
+    if not current_user.is_authenticated():
+        create_or_update_user({'email': 'guest@foodbeazt.in', 'name': 'Guest', 'id': 'guest@foodbeazt.in'})
+        return redirect('/beta')
     return render_template('home.jinja2')
 
 
 @app.route("/admin")
 @login_required
 def admin_home():
+    if not admin_permission.can():
+        doLogout()
+        return redirect('/admin')
     return render_template('admin/index.jinja2')
 
 
 @app.route('/logout')
 @app.route('/logout/')
 def app_logout():
-    logout_user()
-    session.clear()
+    doLogout()
     return redirect('/admin')
 
+def doLogout():
+    logout_user()
+    # Tell Flask-Principal the user is anonymous
+    identity_changed.send(current_app._get_current_object(), identity=AnonymousIdentity())
+    session.clear()
 
 @app.route("/recreatedb")
 def recreate_db():

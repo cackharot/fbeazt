@@ -27,7 +27,7 @@
                             </td>
                             <td>{{item.email}}</td>
                             <td>{{item.phone}}</td>
-                            <td>{{",".join(item.roles)}}</td>
+                            <td>{{item.roles.join(",")}}</td>
                             <td>{{item.created_at | datetime}}</td>
                             <td class="text-center">
                                 <a href="#/user" ng-click="deleteUser(item._id.$oid)"><em class="fa fa-times"></em></a>

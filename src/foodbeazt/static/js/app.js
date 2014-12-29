@@ -251,8 +251,16 @@ fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $rou
 })
 
 fbeastApp.controller('orderProcessingCtrl', function($location, $scope, $cookieStore, $http){
-    $scope.cart = $cookieStore.get('__tmpCart')
+    cart = $scope.cart = $cookieStore.get('__tmpCart')
     var url = '/api/order/-1'
+
+    if(!cart || !cart.customer || cart.customer.name == '' || cart.customer.email == ''
+    || cart.customer.phone == '' || cart.customer.address  == ''){
+        alert('Enter your details')
+        $location.path('/confirm_order')
+        return
+    }
+
     $http.post(url, $scope.cart).success(function(data){
         if(data && data.data)
             this.cart.order_no = data.data.order_no
