@@ -7,7 +7,7 @@ var DEFAULT_CART = { 'items': [], 'created_at': new Date(), 'total': 0.0, 'deliv
 fbeastApp.config(['$routeProvider', function($routeProvider){
     $routeProvider.
           when('/', {
-            templateUrl: '/static/templates/product_list.html',
+            templateUrl: '/static/templates/search_form.html',
             controller: 'mainCtrl'
           }).
           when('/search/:category', {
@@ -28,7 +28,7 @@ fbeastApp.config(['$routeProvider', function($routeProvider){
           }).
           when('/processing', {
             templateUrl: '/static/templates/processing.html',
-            controller: 'confirmOrderCtrl'
+            controller: 'orderProcessingCtrl'
           }).
           otherwise({
             redirectTo: '/'
@@ -39,27 +39,45 @@ fbeastApp.factory('eventBus', function($rootScope) {
     var eventBus = {};
 
     eventBus.data = {};
+    eventBus.search_data = {};
 
     eventBus.send = function(data) {
         this.data = data;
-        this.broadcastItem();
-    };
-
-    eventBus.broadcastItem = function() {
         $rootScope.$broadcast('itemAddedToCart');
     };
+
+    eventBus.searchEvent = function(data) {
+        this.search_data = data;
+        $rootScope.$broadcast('itemSearch');
+    };
+
+    eventBus.resetOrder = function(){
+        $rootScope.$broadcast('resetOrder');
+    }
 
     return eventBus;
 });
 
 fbeastApp.controller('mainCtrl', function($route, $scope, $http, $log, eventBus, $routeParams){
-    total = $scope.total = 0
-    page_no = $scope.page_no = 1
-    page_size = $scope.page_size = 12
-    filter_text = $scope.filter_text = ''
-    category = $routeParams.category || ''
+    $scope.filter_text = $routeParams.filter_text || ''
 
-    items = $scope.items = []
+    $scope.search = function(reset_page_data) {
+        eventBus.searchEvent({
+            'reset_page_data': reset_page_data,
+            'filter_text': $scope.filter_text,
+            'category': ''
+        })
+    }
+
+    $scope.search()
+})
+
+fbeastApp.controller('searchResultCtrl', function($route, $scope, $http, eventBus){
+    $scope.total = 0
+    $scope.page_no = 1
+    $scope.page_size = 12
+
+    $scope.items = []
     url = '/api/products/-1'
 
     var getData = function(args, cb){
@@ -70,20 +88,9 @@ fbeastApp.controller('mainCtrl', function($route, $scope, $http, $log, eventBus,
         })
     }
 
-    getArgs = function(){
-        return { 'page_no': this.page_no, 'page_size': this.page_size,
-            'filter_text': this.filter_text, 'category': this.category }
-    }
-
-    search = $scope.search = function(reset_page_data) {
-        if(reset_page_data){
-            this.page_no = 1
-        }
-        var args = this.getArgs()
-        getData(args, function(data){
-            $scope.total = data.total
-            $scope.items = data.items
-        })
+    getArgs = function(filter_text, category){
+        return { 'page_no': $scope.page_no, 'page_size': $scope.page_size,
+            'filter_text': filter_text, 'category': category }
     }
 
     $scope.addToCart = function(id){
@@ -93,14 +100,33 @@ fbeastApp.controller('mainCtrl', function($route, $scope, $http, $log, eventBus,
 
     $scope.loadMore = function(){
         $scope.page_no = $scope.page_no + 1
-        var args = this.getArgs()
+        var args = getArgs()
         getData(args, function(data){
             $scope.total = data.total
             $scope.items = $scope.items.concat(data.items)
         })
     }
 
-    search()
+    var search = function(){
+         var options = $.extend({
+                               'reset_page_data': true,
+                               'filter_text': '',
+                               'category': ''
+                            },
+                            eventBus.search_data);
+
+         if(options.reset_page_data){
+             $scope.page_no = 1
+         }
+         var args = getArgs(options.filter_text, options.category)
+         getData(args, function(searchResultData){
+             $scope.total = searchResultData.total
+             $scope.items = searchResultData.items
+         })
+     };
+
+    $scope.$on('itemSearch', search)
+    search();
 })
 
 fbeastApp.controller('detailCtrl', function($route, $scope, $http, $routeParams, eventBus){
@@ -163,6 +189,26 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
         return false
     }
 
+    $scope.$watchCollection('cart.items', function(newValue, oldValue) {
+        this.calculateCartTotals()
+        $cookieStore.put('__tmpCart', this.cart)
+    });
+
+    $scope.continueOrder = function(){
+        $location.path('/confirm_order')
+    }
+
+    $scope.canShowContinueBtn = function(){
+        return ($location.path() != '/confirm_order' && $location.path() != '/order_success') && this.cart.total > 0
+    }
+
+    $scope.resetOrder = function(){
+        this.cart = DEFAULT_CART
+        this.cart.items = []
+        $cookieStore.remove('__tmpCart')
+        console.log(this.cart)
+    }
+
     $scope.$on('itemAddedToCart', function(){
         var item = eventBus.data
 
@@ -178,36 +224,20 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
         }
     })
 
-    $scope.$watchCollection('cart.items', function(newValue, oldValue) {
-        this.calculateCartTotals()
-        $cookieStore.put('__tmpCart', this.cart)
-    });
-
-    $scope.continueOrder = function(){
-        $location.path('/confirm_order')
-    }
-
-    $scope.canShowContinueBtn = function(){
-        return ($location.path() != '/confirm_order' && $location.path() != '/order_success') && this.cart.total > 0
-    }
-
-    $scope.resetOrder = function(){
-        console.log(this.cart)
-        this.cart = DEFAULT_CART
-        $cookieStore.remove('__tmpCart')
-    }
+    $scope.$on('resetOrder', $scope.resetOrder);
 })
 
 fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $routeParams, $log, $cookieStore, eventBus){
     $scope.location = $location
-    cart = $scope.cart = $cookieStore.get('__tmpCart') || {}
+    $scope.cart = $cookieStore.get('__tmpCart') || {}
 
-    if(!cart || cart.items.length == 0) {
+    if(!$scope.cart || $scope.cart.items.length == 0) {
         $location.path('/')
+        return;
     }
 
-    if(!cart.customer || !cart.customer.name){
-        cart.customer = $cookieStore.get('__tmpCustomer') || {}
+    if(!$scope.cart.customer || !$scope.cart.customer.name){
+        $scope.cart.customer = $cookieStore.get('__tmpCustomer') || {}
     }
 
     $scope.confirmOrder = function() {
@@ -215,22 +245,23 @@ fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $rou
         // submit the cart to service to generate order tracking id
         // and show success message
         $location.path('/processing')
-
-        var url = '/api/order/-1'
-        $http.post(url, this.cart).success(function(data){
-            if(data && data.data)
-                this.cart.order_no = data.data.order_no
-            $cookieStore.put('__tmpCart', this.cart)
-            $location.path('/order_success')
-        }).error(function(e){
-            alert(e)
-            $location.path('/confirm_order')
-        })
     }
 })
 
-fbeastApp.controller('orderSuccessCtrl', function($location, $scope, $cookieStore){
+fbeastApp.controller('orderProcessingCtrl', function($location, $scope, $cookieStore, $http){
     $scope.cart = $cookieStore.get('__tmpCart')
-    $cookieStore.put('__tmpCart', null)
-    $cookieStore.remove('__tmpCart')
+    var url = '/api/order/-1'
+    $http.post(url, $scope.cart).success(function(data){
+        if(data && data.data)
+            this.cart.order_no = data.data.order_no
+        $cookieStore.put('__tmpCart', $scope.cart)
+        $location.path('/order_success')
+    }).error(function(e){
+        alert(e)
+        $location.path('/confirm_order')
+    })
+})
+
+fbeastApp.controller('orderSuccessCtrl', function($location, $scope, eventBus, $cookieStore){
+    eventBus.resetOrder();
 })

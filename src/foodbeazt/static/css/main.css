@@ -1,3 +1,54 @@
+/*!
+ * Start Bootstrap - Heroic Features HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+body {
+    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+	font-family:'Century Gothic';
+}
+
+footer {
+    margin: 50px 0;
+}
+
+.navbar{
+    background-color:#644a8c;
+    -moz-box-shadow: 20px 20px 15px #e0441c;
+    border:0px;
+}
+.navbar-inverse .navbar-brand {
+    color: #FFF;
+}
+.navbar-inverse .navbar-nav > li > a {
+    color: #FFF;
+}
+
+.btn-info{
+	background-color:#644a8c;
+	border-color:#76457c;
+}
+
+.jumbotron{
+	-webkit-box-shadow: 3px 4px 5px 0px rgba(100, 74, 140, 0.5);
+	-moz-box-shadow:    3px 4px 5px 0px rgba(100, 74, 140, 0.5);
+	box-shadow:         3px 4px 10px 0px rgba(100, 74, 140, 0.5);
+	border: 1px solid #644a8c;
+}
+
+.thumbnail{
+	text-align:center;
+	text-decoration:none;
+	letter-spacing:2px;
+	border:0px;
+}
+
+.thumbnail:hover{
+	text-decoration:none;
+	font-weight:bold;
+}
+
 .summary {
     position: relative;
 }
@@ -72,6 +123,10 @@
     font-size: 1.275em;
     color: #FFF;
     padding-bottom: 5px;
+}
+
+.img-wrap{
+    margin: 10px 0;
 }
 
 .img-wrap img.img-responsive {

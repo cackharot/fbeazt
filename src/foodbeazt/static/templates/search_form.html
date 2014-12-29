@@ -1,0 +1,13 @@
+<div class="row">
+    <form role="form" ng-submit="search(true)">
+        <div class="jumbotron">
+            <div class="col-md-9">
+                <input type="text" class="form-control" name="search" ng-model="filter_text"
+                       placeholder="What do you like to have?"/>
+            </div>
+            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i>&nbsp;Search
+            </button>
+        </div>
+    </form>
+</div>
+<div class="row" ng-include="'/static/templates/product_list.html'"></div>
