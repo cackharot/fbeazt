@@ -31,10 +31,14 @@ auth = GoogleLogin(app)
 
 @app.route('/oauth2callback')
 @auth.oauth2callback
-def create_or_update_user(token, userinfo, **params):
-    user = get_or_create_user(userinfo)
-    usermixin = getUserMixin(user)
-    login_user(usermixin)
+def outhCallback(token, userinfo, **params):
+    return create_or_update_user(userinfo)
+
+
+def create_or_update_user(user_info):
+    user = get_or_create_user(user_info)
+    user_mixin = getUserMixin(user)
+    login_user(user_mixin)
     session['user_id'] = str(user['_id'])
     session['tenant_id'] = str(user['tenant_id'])
     session['name'] = user['name']
@@ -76,8 +80,12 @@ class User(UserMixin):
     def is_authenticated(self):
         return self.id is not None
 
+    def is_anonymous(self):
+        return self.email == 'guest@foodbeazt.in' or self.email is None
+
 
 def get_or_create_user(item):
+    print(item)
     service = UserService(mongo.db)
     prev = service.get_by_email(item['email'])
     if prev:
@@ -92,6 +100,8 @@ def get_or_create_user(item):
 
 @app.before_request
 def set_user_on_request_g():
+    if not current_user.is_authenticated():
+        create_or_update_user({'email': 'guest@foodbeazt.in', 'name': 'Guest', 'id': 'guest@foodbeazt.in'})
     setattr(g, 'user', current_user)
 
 
@@ -111,7 +121,7 @@ def home():
 
 
 @app.route("/beta")
-@login_required
+# @login_required
 def beta_home():
     return render_template('home.jinja2')
 

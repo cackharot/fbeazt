@@ -244,6 +244,8 @@ fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $rou
         // validate customer data
         // submit the cart to service to generate order tracking id
         // and show success message
+        $cookieStore.put('__tmpCart', $scope.cart)
+        $cookieStore.put('__tmpCustomer', $scope.cart.customer)
         $location.path('/processing')
     }
 })
