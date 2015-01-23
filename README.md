@@ -1,7 +1,5 @@
-fbeazt
-======
-
-h3. Requirements
+Requirements
+------------
 
 Below are one time setup
 
@@ -13,7 +11,8 @@ Below are one time setup
 * Run `pip install -r requirements.txt`
 
 
-h3. Running the application
+Running the application
+-----------------------
 
 * cd ./fbeazt/src/foodbeazt/
 * python manager.py run
