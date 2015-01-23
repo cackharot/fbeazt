@@ -5,6 +5,7 @@ Below are one time setup
 
 * Install Python 3
 * Install pip
+* Install MongoDb for windows
 * cd to your project folder or any empty folder
 * git clone https://github.com/cackharot/fbeazt
 * cd ./fbeazt/src/foodbeazt/
@@ -13,8 +14,10 @@ Below are one time setup
 
 Running the application
 -----------------------
-
-* cd ./fbeazt/src/foodbeazt/
+* Open command prompt
+* Run mongodb.exe (See documentation for MongoDb for how to)
+* Open another command prompt
+* cd fbeazt/src/foodbeazt/
 * python manager.py run
 * Open your browser http://localhost:4000/
 
