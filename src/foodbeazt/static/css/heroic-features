@@ -1,0 +1,349 @@
+/*!
+ * Start Bootstrap - Heroic Features HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+body {
+    
+	padding-top: 0px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */	
+	Font-family:"Segoe UI Semilight","Open Sans",Arial,sans-serif,Frutiger,"Frutiger Linotype","Dejavu Sans","Helvetica Neue","STHeiti Light",STXihei,STHeiti,"Apple LiGothic Medium",微軟正黑體,"Microsoft JhengHei";
+	font-weight:lighter;
+	font-size:14px;
+	background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMUlEQVQYlWNgQAPv3r79jy6GIYlOY9WILoDVZFzWoYjjdROxiomyniTf4zWNJJOxAQDSX0uNMcz97QAAAABJRU5ErkJggg==");
+	/*background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAKUlEQVQYlWNgQAOfvnz7jy6GIoGLxmkCQQUY4jjdQKxC8t1E0Hf4PAEAKVdNHf8ljX4AAAAASUVORK5CYII=");*/
+	
+	color:#2d3033;
+}
+label{
+	Font-family:"Segoe UI Semilight","Open Sans",Arial,sans-serif,Frutiger,"Frutiger Linotype","Dejavu Sans","Helvetica Neue","STHeiti Light",STXihei,STHeiti,"Apple LiGothic Medium",微軟正黑體,"Microsoft JhengHei";
+}
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 300;
+  src: local("Open Sans Light"), local("OpenSans-Light"), url("http://fonts.gstatic.com/s/opensans/v10/DXI1ORHCpsQm3Vp6mXoaTegdm0LZdjqr5-oayXSOefg.woff2") format("woff2"), url("http://fonts.gstatic.com/s/opensans/v10/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff") format("woff");
+}
+td{
+	Font-family:"Segoe UI Semilight","Open Sans",Arial,sans-serif,Frutiger,"Frutiger Linotype","Dejavu Sans","Helvetica Neue","STHeiti Light",STXihei,STHeiti,"Apple LiGothic Medium",微軟正黑體,"Microsoft JhengHei";
+	font-weight:lighter;	
+	padding:5px;
+}
+h2{
+margin-top: 10px;
+font-size: 2.3em;
+letter-spacing: 0.1px;
+line-height: 1.3;
+}
+li{
+color:#2d3033;
+Font-family:"Segoe UI Semilight","Open Sans",Arial,sans-serif,Frutiger,"Frutiger Linotype","Dejavu Sans","Helvetica Neue","STHeiti Light",STXihei,STHeiti,"Apple LiGothic Medium",微軟正黑體,"Microsoft JhengHei";
+padding: 0px 5px 0px 5px;
+}
+.navbar-default .navbar-nav > li > a{
+color: #2d3033;
+font-size:1.1em;
+Font-family:"Segoe UI Semilight","Open Sans",Arial,sans-serif,Frutiger,"Frutiger Linotype","Dejavu Sans","Helvetica Neue","STHeiti Light",STXihei,STHeiti,"Apple LiGothic Medium",微軟正黑體,"Microsoft JhengHei";
+}
+p{
+Font-family:"Segoe UI Semilight","Open Sans",Arial,sans-serif,Frutiger,"Frutiger Linotype","Dejavu Sans","Helvetica Neue","STHeiti Light",STXihei,STHeiti,"Apple LiGothic Medium",微軟正黑體,"Microsoft JhengHei";
+font-size:1em;
+color:#2d3033;
+text-align: center;
+}
+
+table{
+	width:100%;
+}
+.hero-spacer {
+    margin-top: 50px;
+}
+
+.hero-feature {
+    margin-bottom: 30px;
+}
+@media screen and (min-width:768px){
+    .navbar-brand-centered {
+        position: absolute;
+        left: 50%;
+        display: block;
+        width: 250px;
+        text-align: center;        
+    }
+    .navbar>.container .navbar-brand-centered, 
+    .navbar>.container-fluid .navbar-brand-centered {
+        margin-left: -80px;
+		height:50px;
+		width:200px;
+    }
+}
+
+
+.navbar-default{
+	border:0px;
+	margin:0px;	
+	background-color:#0c98cf;
+	border-radius:0px;
+
+}
+hr {
+  height: 1px;
+  margin: 0;  
+  background: -webkit-gradient(linear, 0 0, 100% 0, from(rgba(0,0,0,0)), color-stop(0.5, #FFF), to(rgba(0,0,0,0)));
+  background: -webkit-linear-gradient(left, rgba(0,0,0,0), #FFF, rgba(0,0,0,0));
+  background: -moz-linear-gradient(left, rgba(0,0,0,0), #FFF, rgba(0,0,0,0));
+  background: -o-linear-gradient(left, rgba(0,0,0,0), #FFF, rgba(0,0,0,0));
+  background: linear-gradient(left, rgba(0,0,0,0), #FFF, rgba(0,0,0,0));
+  border: 0;  
+}
+.btn-info{
+	background-color:#ff4c65;
+	border-color:#ff4c65;
+}
+
+
+.jumbotron{		
+	background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMUlEQVQYlWNgQAPv3r79jy6GIYlOY9WILoDVZFzWoYjjdROxiomyniTf4zWNJJOxAQDSX0uNMcz97QAAAABJRU5ErkJggg==");
+	background-color:#fff;
+	padding-top:25px;
+	padding-bottom:25px;
+	border-bottom:1px solid #ededec;
+	box-shadow: 0px 0px 30px rgba(0,0,0, .2);
+}
+
+}
+/* Makes images fully responsive */
+
+.img-responsive,
+.thumbnail > img,
+.thumbnail a > img,
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+
+
+
+/*Footer*/
+footer {
+    background-color:#2d3033;
+	Font-family:"Segoe UI Semilight","Open Sans",Arial,sans-serif,Frutiger,"Frutiger Linotype","Dejavu Sans","Helvetica Neue","STHeiti Light",STXihei,STHeiti,"Apple LiGothic Medium",微軟正黑體,"Microsoft JhengHei";
+	color:#6c6e70;
+}
+
+ul{
+	list-style:none;
+	color:#59c4c5;
+}
+
+a:hover{
+text-decoration:none;
+color:#59c4c5;
+}
+
+.btn-default{
+color:#fff;
+background-color:#0c98cf;
+border-radius:0px;
+font-size:14px;
+Font-family:"Segoe UI Semilight","Open Sans",Arial,sans-serif,Frutiger,"Frutiger Linotype","Dejavu Sans","Helvetica Neue","STHeiti Light",STXihei,STHeiti,"Apple LiGothic Medium",微軟正黑體,"Microsoft JhengHei";
+}
+
+.btn-default:hover{
+	background-color:#fff568;
+	border-color:#fff568;
+}
+.btn-lg, .btn-group-lg > .btn{
+border-radius:0px;
+}
+
+.btn-success{
+	background-color: #0c98cf;
+}
+.btn-success:hover{
+	background-color:#fff568;
+	color:#2d3033;
+}
+.form-control{
+color:#2d3134;
+}
+.col-lg-12 {
+padding:10px;
+}
+
+.display_item{
+width: 310px;
+float: left;
+border-width: 1px 1px 0px;
+border-style: solid solid none;
+border-color: #CCC #CCC -moz-use-text-color;
+-moz-border-top-colors: none;
+-moz-border-right-colors: none;
+-moz-border-bottom-colors: none;
+-moz-border-left-colors: none;
+border-image: none;
+padding: 0px;
+margin: 10px;
+position: relative;
+}
+@import url("http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css");
+@import url("http://fonts.googleapis.com/css?family=Roboto:400,300,700italic,700,500&subset=latin,latin-ext");
+
+	
+	/* COMMON PRICING STYLES */
+		.panel.price,
+		.panel.price>.panel-heading{
+			border-radius:0px;
+			 -moz-transition: all .3s ease;
+			-o-transition:  all .3s ease;
+			-webkit-transition:  all .3s ease;
+		}
+		.panel.price:hover{
+			box-shadow: 0px 0px 30px rgba(0,0,0, .2);
+		}
+		.panel.price:hover>.panel-heading{
+			box-shadow: 0px 0px 30px rgba(0,0,0, .2) inset;
+		}
+		
+				
+		.panel.price>.panel-heading{
+			box-shadow: 0px 5px 0px rgba(50,50,50, .2) inset;
+			text-shadow:0px 3px 0px rgba(50,50,50, .6);
+		}
+			
+		.price .list-group-item{
+			border-bottom-:1px solid rgba(250,250,250, .5);
+			
+		}
+		
+		.panel.price .list-group-item:last-child {
+			border-bottom-right-radius: 0px;
+			border-bottom-left-radius: 0px;
+		}
+		.panel.price .list-group-item:first-child {
+			border-top-right-radius: 0px;
+			border-top-left-radius: 0px;
+		}
+		
+		.price .panel-footer {
+			color: #fff;
+			border-bottom:0px;
+			background-color:  rgba(0,0,0, .1);
+			box-shadow: 0px 3px 0px rgba(0,0,0, .3);
+		}
+		
+		
+		.panel.price .btn{
+			box-shadow: 0 -1px 0px rgba(50,50,50, .2) inset;
+			border:0px;
+		}
+		
+	/* green panel */
+	
+		
+		.price.panel-green>.panel-heading {
+			color: #fff;
+			background-color: #57AC57;
+			border-color: #71DF71;
+			border-bottom: 1px solid #71DF71;
+		}
+		
+			
+		.price.panel-green>.panel-body {
+			color: #fff;
+			background-color: #65C965;
+		}
+				
+		
+		.price.panel-green>.panel-body .lead{
+				text-shadow: 0px 3px 0px rgba(50,50,50, .3);
+		}
+		
+		.price.panel-green .list-group-item {
+			color: #333;
+			background-color: rgba(50,50,50, .01);
+			font-weight:600;
+			text-shadow: 0px 1px 0px rgba(250,250,250, .75);
+			Font-family:"Segoe UI Semilight","Open Sans",Arial,sans-serif,Frutiger,"Frutiger Linotype","Dejavu Sans","Helvetica Neue","STHeiti Light",STXihei,STHeiti,"Apple LiGothic Medium",微軟正黑體,"Microsoft JhengHei";
+		}
+		
+		/* blue panel */
+	
+		
+		.price.panel-blue>.panel-heading {
+			color: #fff;
+			background-color: #2d3033;
+			border-color: #78AEE1;
+			border-bottom: 1px solid #78AEE1;
+		}
+		
+			
+		.price.panel-blue>.panel-body {
+			color: #fff;
+			background-color: #2d3033;
+		}
+				
+		
+		.price.panel-blue>.panel-body .lead{
+				text-shadow: 0px 3px 0px rgba(50,50,50, .3);
+		}
+		
+		.price.panel-blue .list-group-item {
+			color: #333;
+			background-color: rgba(50,50,50, .01);			
+			text-shadow: 0px 1px 0px rgba(250,250,250, .75);
+			Font-family:"Segoe UI Semilight","Open Sans",Arial,sans-serif,Frutiger,"Frutiger Linotype","Dejavu Sans","Helvetica Neue","STHeiti Light",STXihei,STHeiti,"Apple LiGothic Medium",微軟正黑體,"Microsoft JhengHei";
+		}
+		
+		
+		/* white price */
+		
+	
+		.price.panel-white>.panel-heading {
+			color: #333;
+			background-color: #f9f9f9;
+			border-color: #ccc;
+			border-bottom: 1px solid #ccc;			
+			text-shadow: 0px 2px 0px rgba(250,250,250, .9);
+			box-shadow: 0px 0px 30px rgba(0,0,0, .05) inset;
+			color:#333;
+		}
+		
+		.panel.panel-white.price:hover>.panel-heading{
+			box-shadow: 0px 0px 30px rgba(0,0,0, .05) inset;
+		}
+			
+		.price.panel-white>.panel-body {
+			color: #fff;
+			background-color: #fff568;
+			
+		}
+				
+		.price.panel-white>.panel-body .lead{
+				text-shadow: 0px 2px 0px rgba(250,250,250, .8);
+				color:#666;
+		}
+		
+		.price:hover.panel-white>.panel-body .lead{
+				text-shadow: 0px 2px 0px rgba(250,250,250, .9);
+				color:#333;
+		}
+		
+		.price.panel-white .list-group-item {
+			color: #333;
+			background-color: rgba(50,50,50, .01);			
+			text-shadow: 0px 1px 0px rgba(250,250,250, .75);
+			Font-family:"Segoe UI Semilight","Open Sans",Arial,sans-serif,Frutiger,"Frutiger Linotype","Dejavu Sans","Helvetica Neue","STHeiti Light",STXihei,STHeiti,"Apple LiGothic Medium",微軟正黑體,"Microsoft JhengHei";
+		}
+		
+		
+
+	
+	/* Checkout Form Style*/
+	
+.col-md-offset-6 {
+    margin-left: 10%;
+}
