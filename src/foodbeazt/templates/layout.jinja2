@@ -21,56 +21,71 @@
 </head>
 
 <body>
-<!-- Navigation -->
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#/"><img src="{{ url_for('static', filename='img/logo.png') }}" style="margin-top:-07px;"/> </a>
-        </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Restaurants
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#/search/starter">Veg</a></li>
-                        <li><a href="#/search/starter">Non-Veg</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#/restaurants/3star">3-Star Restaurants</a></li>
-                        <li><a href="#/restaurants/3star">2-Star Restaurants</a></li>
-                        <li><a href="#/restaurants/moderate">Moderate Restaurants</a></li>
-                        <li><a href="#/restaurants/normal">Normal Restaurants</a></li>
-                        <li><a href="#/restaurants/fastfood">Fast Food</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#/bakery">Bakery</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">About</a>
-                </li>
-                <li>
-                    <a href="#">Services</a>
-                </li>
-                <li>
-                    <a href="#">Contact</a>
-                </li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-    <!-- /.container -->
-</nav>
+<nav class="navbar navbar-default" role="navigation">
+    	  <div class="container">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header">
+		      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-brand-centered">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		      <div class="navbar-brand" > <img src="{{ url_for('static', filename='img/logo.png') }}" style="margin:-14px;"/> </div>
+		    </div>
+
+		    <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="navbar-brand-centered">
+		      <ul class="nav navbar-nav">
+                    <!--
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						   Restaurants 
+						   <b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+						   <li><a href="#">Veg</a></li>
+						   <li><a href="#">Non-Veg</a></li>               
+						   <li class="divider"></li>
+						   <li><a href="#">3-Star Restaurants</a></li>
+						   <li><a href="#">2-Star Restaurants</a></li>
+						   <li><a href="#">Moderate Restaurants</a></li>
+						   <li><a href="#">Normal Restaurants</a></li>
+						   <li><a href="#">Fast Food</a></li>
+						   <li class="divider"></li>
+						   <li><a href="#">Bakery</a></li>
+						</ul>
+					</li>-->
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						   Cuisines 
+						   <b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+						   <li><a href="#">North Indian</a></li>
+						   <li><a href="#">South Indian</a></li>               						   
+						   <li><a href="#">Chinese</a></li>
+						   <li><a href="#">Italian </a></li>
+						   <li><a href="#">Tandoori</a></li>
+						   <li><a href="#">Desserts</a></li>
+						   <li><a href="#">Briyani</a></li>
+						   <li><a href="#">Pizza</a></li>		
+						</ul>
+					</li>					
+                </ul>
+		      <!-- <ul class="nav navbar-nav navbar-right">
+		        <li><a href="#">Register</a></li>
+		        <li><a href="#">Login</a></li>		        
+		      </ul>-->
+		    </div><!-- /.navbar-collapse -->
+		  </div><!-- /.container-fluid -->
+		</nav>
+    
+	
+  <!-- HEADER 
+=================================-->
+
+
 
 <div class="container">
     {% block body %}
