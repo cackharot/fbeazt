@@ -1,5 +1,5 @@
 import os
-from urllib import unquote
+from urllib.parse import unquote
 from uuid import uuid4
 from flask import Flask, session, render_template, make_response, request, redirect, g, current_app
 from flask_login import login_required, UserMixin, login_user, logout_user, current_user

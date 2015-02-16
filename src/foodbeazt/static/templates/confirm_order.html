@@ -1,38 +1,99 @@
-<div class="col-md-10" ng-controller="confirmOrderCtrl">
-    <div class="header">
-        <h3>Order Summary</h3>
 
-        <div class="pull-left">
-            <a href="#/"><i class="fa fa-arrow-left"></i></a>
+<div class="container" ng-controller="confirmOrderCtrl">
+    <div class="row">
+        <div class="col col-lg-9 col-sm-9"  style="border:1px solid #ededec;">
+            <div class="row">
+                <div class="col col-lg-12 col-sm-12" style="background-color:#2d3033;margin-bottom:10px;color:#fff;text-align:center;padding:10px;">
+                    <h4>CHECKOUT DETAILS</h4>
+                </div>
+                <div class="col-md-6 col-md-offset-6" style="width:75%">
+                    <form role="form" name="frmCustomerDetails" ng-submit="confirmOrder()" class="form-horizontal">
+
+                        <legend>Personal Details</legend>
+                        <h5><span style="color:#ca171b;">*</span> Mandatory Field </h5>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="textinput">Name <span style="color:#ca171b;">*</span> </label>
+                            <div class="col-sm-8">
+                                <input class="form-control" type="text" name="name" id="name"
+                                       ng-class="{ 'danger' : frmCustomerDetails.name.$invalid && !frmCustomerDetails.name.$pristine }"
+                                       ng-model="cart.customer.name" required/>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="textinput">E-Mail ID <span style="color:#ca171b;">*</span> </label>
+                            <div class="col-sm-8">
+                                <input class="form-control" type="email" name="email" id="email" ng-model="cart.customer.email"
+                                       required/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="textinput">Phone No. <span style="color:#ca171b;">*</span> </label>
+                            <div class="col-sm-8">
+                                <input class="form-control" type="text" maxlength="10" name="phone" id="phone"
+                                       ng-model="cart.customer.phone" required/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="textinput">Mobile No.</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" type="text" maxlength="10" name="phone" id="phone"
+                                       ng-model="cart.customer.mobile" />
+                            </div>
+                        </div>
+                        <fieldset>
+
+                            <!-- Form Name -->
+                            <legend>Address Details</legend>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="textinput">Door No. & Street. Name <span style="color:#ca171b;">*</span> </label>
+                                <div class="col-sm-8">
+                                    <input type="text" placeholder="Door No.with Street Name" class="form-control" ng-model="cart.customer.street" required/>
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="textinput">Area <span style="color:#ca171b;">*</span> </label>
+                                <div class="col-sm-8">
+                                    <input type="text" placeholder="Area" class="form-control" ng-model="cart.customer.area" required/>
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="textinput">Landmark</label>
+                                <div class="col-sm-8">
+                                    <input type="text" placeholder="Nearest Landmark from your Home" class="form-control" ng-model="cart.customer.landmark">
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="textinput">Pincode <span style="color:#ca171b;">*</span> </label>
+                                <div class="col-sm-8">
+                                    <input type="text" placeholder="Pincode" class="form-control" ng-model="cart.customer.pincode" required/>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <div class="pull-right">
+
+                                        <button type="submit" class="btn btn-default">Back to Shopping</button>
+                                        <button type="submit" class="btn btn-default" title="Click to confirm this order">Place Order</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div><!-- /.col-lg-12 -->
+            </div><!-- /.row -->
         </div>
-    </div>
-    <section class="session customer">
-        <form role="form" name="frmCustomerDetails" ng-submit="confirmOrder()">
-            <div class="form-group">
-                <label class="control-label" for="name">Name</label>
-                <input class="form-control" type="text" name="name" id="name"
-                       ng-class="{ 'danger' : frmCustomerDetails.name.$invalid && !frmCustomerDetails.name.$pristine }"
-                       ng-model="cart.customer.name" required/>
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="email">Email</label>
-                <input class="form-control" type="email" name="email" id="email" ng-model="cart.customer.email"
-                       required/>
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="phone">Phone</label>
-                <input class="form-control" type="text" maxlength="10" name="phone" id="phone"
-                       ng-model="cart.customer.phone" required/>
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="address">Delivery address</label>
-                <textarea class="form-control" name="address" id="address" ng-model="cart.customer.address"
-                          required></textarea>
-            </div>
-            <div class="session continue">
-                <button class="btn btn-success" type="submit" title="Click to confirm this order">Order Now
-                </button>
-            </div>
-        </form>
-    </section>
-</div>
+
+
+

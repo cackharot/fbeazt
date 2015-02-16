@@ -4,8 +4,7 @@ Flask-GoogleLogin
 
 from base64 import (urlsafe_b64encode as b64encode,
                     urlsafe_b64decode as b64decode)
-from urllib import urlencode
-from urlparse import parse_qsl
+from urllib.parse import urlencode, parse_qsl
 from functools import wraps
 
 from flask import request, redirect, abort, current_app, url_for
@@ -80,10 +79,10 @@ class GoogleLogin(object):
 
     def sign_params(self, params):
         return b64encode(urlencode(dict(sig=make_secure_token(**params),
-                                        **params)))
+                                        **params)).encode())
 
     def parse_state(self, state):
-        return dict(parse_qsl(b64decode(str(state))))
+        return dict(parse_qsl(b64decode(str(state)).decode()))
 
     def login_url(self, params=None, **kwargs):
         """

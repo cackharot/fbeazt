@@ -1,58 +1,53 @@
-<div class="summary" ng-controller="cartCtrl">
-    <div class="bubble">
-        <h3>Order Summary</h3>
+<div  ng-controller="cartCtrl">
+    <!-- PRICE ITEM -->
 
-        <div class="pull-right" style="position:absolute;right:5px;top:2px;">
+    <div class="panel price panel-blue" style="box-shadow: 0px 0px 30px rgba(0,0,0, .2);">
+        <div class="panel-heading arrow_box text-center">
+            <h4>FOOD CART</h4>
+        </div>
+        <div class="pull-right" style="position:absolute;right20px;top:2px;">
             <a href title="Click to reset this order" ng-click="resetOrder()">
                 <i class="fa fa-refresh"></i>
             </a>
         </div>
+        <ul class="list-group list-group-flush text-center" ng-repeat="item in cart.items">
 
-        <div class="section items-list">
+            <li class="list-group-item"><i class="icon-ok text-success"></i>
+                <a href class="text-danger" ng-click="removeItem(item._id.$oid)"
+                   title="Click to remove this item"><i
+                        class="fa fa-minus-square"></i></a>
+                {{item.name}}
+                <br>
+                {{item.quantity}}x&nbsp;&nbsp;&nbsp;&nbsp;{{item.sell_price}}
+            </li>
+
+        </ul>
+        <div class="panel-body" style="text-align:left;font-weight:600;">
             <table>
-                <thead>
-                <tr>
-                    <th colspan="2">Items</th>
+                <!--<tr style="text-align:right;">
+                    <td>Item Total :</td>
+                    <td>&#x20B9; 00.00</td>
+                </tr>-->
+                <tr style="text-align:right;">
+                    <td> Delivery Charge:</td>
+                    <td>&#x20B9; 30.00</td>
                 </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="item in cart.items">
-                    <td>
-                        <a href class="text-danger" ng-click="removeItem(item._id.$oid)"
-                           title="Click to remove this item"><i
-                                class="fa fa-minus-square"></i></a>
-                        {{item.name}}
-                    </td>
-                    <td class="text-right">{{item.quantity}}x&nbsp;&nbsp;&nbsp;&nbsp;{{item.sell_price}}</td>
+
+                <tr style="text-align:right;">
+                    <td> Grand Total :</td>
+                    <td><span ng-bind-html="cart.total | currency"></td>
                 </tr>
-                </tbody>
             </table>
         </div>
-        <div class="section items-list" ng-show="cart.items.length > 0">
-            <table>
-                <tbody>
-                <tr>
-                    <td>Delivery charges
-                        <a href title="Free delivery if the order amount is greater than Rs.500">
-                            <i class="fa fa-info-circle text-info"></i>
-                        </a>
-                    </td>
-                    <td class="text-right"><span ng-bind-html="cart.delivery_charges | currency"></span></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="section total">
-            <ul>
-                <li>Total</li>
-                <li class="price"><span ng-bind-html="cart.total | currency"></span></li>
-            </ul>
-        </div>
-        <div class="session continue" ng-show="canShowContinueBtn()">
-            <button class="btn btn-success" ng-click="continueOrder()" type="button"
-                    title="Click to continue with this order summary">Continue
-                >>
-            </button>
+        <div class="panel-footer">
+            <div class="session continue" ng-show="canShowContinueBtn()">
+                <button class="btn btn-lg btn-block btn-success" ng-click="continueOrder()" type="button"
+                        title="Click to continue with this order summary">Checkout
+                </button>
+            </div>
+
+
         </div>
     </div>
+    <!-- /PRICE ITEM -->
 </div>

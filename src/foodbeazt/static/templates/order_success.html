@@ -1,10 +1,108 @@
-<div class="row text-center" ng-controller="orderSuccessCtrl">
-    <div class="col-md-6 col-md-offset-3">
-        <h3><i class="fa fa-up"></i> Your order <b>{{cart.order_no}}</b> is confirmed and under processing</h3>
 
-        <p>You will receive the order in 40 minutes and will be notified via SMS and email.</p>
-    </div>
-    <div class="col-md-6 col-md-offset-3">
-        <a href="/beta" class="btn btn-default">Place new order</a>
-    </div>
-</div>
+<div class="container" style="margin-top:20px;">
+    <div class="row">
+        <div class="col col-lg-9 col-sm-9" >
+            <div class="row">
+                <div class="col col-lg-12 col-sm-12" style="text-align:center;">
+                    <h3> Thank you for ordering !</h3>
+                    <h4>Your order is confirmed and its under processing</h4>
+                    <h5>( A copy of your order summary is sent to << Customer mail ID>> for your kind reference )</h5>
+                </div>
+            </div><!-- /.row -->
+            <div class="row">
+                <!--<div class="col col-lg-6 col-sm-6">
+                    <div class="row">
+                     <div class="col col-lg-12 col-sm-12" style="background-color:#2d3033;margin-bottom:10px;color:#fff;text-align:center;padding:10px 0px 10px 0px;">
+                            <h4>YOUR VALUABLE FEEDBACK </h4>
+                        </div>
+                        <div class="col col-lg-12 col-sm-12" >
+                            <form class="form-horizontal" role="form">
+                                <h4> How do you know us?</h4>
+                                <div class="checkbox">
+                                    <ul>
+                                        <li> <input name="TV_Advertisement" type="checkbox" value="TV_Advertisement"> TV Advertisement </li>
+                                        <li> <input name="Flyers" type="checkbox" value="Flyers"> Flyers</li>
+                                        <li> <input name="Newspapers" type="checkbox" value="Newspapers"> Newspapers</li>
+                                        <li> <input name="Facebook" type="checkbox" value="Facebook"> Facebook</li>
+                                        <li> <input name="Google" type="checkbox" value="Google"> Google</li>
+                                        <li> <input name="Friends" type="checkbox" value="Friends"> Friends</li>
+                                        <li> <input name="Others" type="checkbox" value="Others">Others</li>
+                                        <li> <input type="text" placeholder="Specify here" class="form-control"></li>
+                                    </ul>
+                                </div>
+                                <div class="row">
+                                    <div class="col col-lg-12 col-sm-12" >
+
+                                        <h4> Your Valuable Suggestions here </h4>
+                                        <textarea class="form-control" rows="3" id="comment"></textarea>
+
+                                    </div>
+                                    <div class="col col-lg-12 col-sm-12" >
+                                        <a class="btn btn-lg btn-block btn-default" href="#">Submit</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>-->
+                <div class="col col-lg-9 col-sm-9" style="border-left:1px solid #ededec;">
+                    <div class="row" >
+                        <div class="col col-lg-12 col-sm-12" style="background-color:#2d3033;margin-bottom:10px;color:#fff;text-align:center;padding:10px 0px 10px 0px;">
+                            <h4>SUMMARY OF YOUR ORDER</h4>
+                        </div>
+                        <div class="col col-lg-12 col-sm-12" style="margin-bottom:10px;padding:10px;" ng-controller="orderSuccessCtrl">
+                            <table>
+                                <tr>
+                                    <td> Order ID </td>
+                                    <td> : <b>{{cart.order_no}}</b></td>
+                                </tr>
+                                <tr>
+                                    <td> Date & Time</td>
+                                    <td> :</td>
+                                </tr>
+                                <tr>
+                                    <td> Total No. of Items</td>
+                                    <td> :</td>
+                                </tr>
+                                <tr>
+                                    <td> Total Amount</td>
+                                    <td> :fffffffffffffffffffffffffffffffff</td>
+                                </tr>
+                                <tr>
+                                    <td> Payment mode</td>
+                                    <td> : COD</td>
+                                </tr>
+                                <tr>
+                                    <td> Expected Delivery Time</td>
+                                    <td> : </td>
+                                </tr>
+                                <tr>
+                                    <td> Customer Name</td>
+                                    <td> : </td>
+                                </tr>
+
+                                <tr>
+                                    <td> Delivery Address</td>
+                                    <td> : </td>
+                                </tr>
+                                <tr>
+                                    <td> Phone No.</td>
+                                    <td> : </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col col-lg-12 col-sm-12" style="background-color:#2d3033;margin-bottom:10px;color:#fff;text-align:center;padding:10px 0px 10px 0px;">
+                            <h5><b>Note:</b> for cancellation, call us within 10 min from the order time.<h5>
+                                <hr>
+                                <h5>For any queries free to call us on <b>737373 0484 / 737373 0481</b></h5>
+                        </div>
+                        <div class="col col-lg-12 col-sm-12" >
+                            <a class="btn btn-lg btn-block btn-default" href="\beta">Place new order</a>
+                        </div>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+            </div>
+
+        </div>
