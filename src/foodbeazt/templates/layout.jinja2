@@ -13,137 +13,65 @@
 
     <title>FoodBeazt</title>
 
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/normalize.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/heroic-features.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/app.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
     {% block head_scripts %}
     {% endblock %}
 </head>
 
 <body>
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-brand-centered">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <div class="navbar-brand" ><a href="/beta"> <img src="{{ url_for('static', filename='img/logo.png') }}" style="margin:-14px;"/> </a></div>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="navbar-brand-centered">
-            <ul class="nav navbar-nav">
-                <!--
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                       Restaurants
-                       <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                       <li><a href="#">Veg</a></li>
-                       <li><a href="#">Non-Veg</a></li>
-                       <li class="divider"></li>
-                       <li><a href="#">3-Star Restaurants</a></li>
-                       <li><a href="#">2-Star Restaurants</a></li>
-                       <li><a href="#">Moderate Restaurants</a></li>
-                       <li><a href="#">Normal Restaurants</a></li>
-                       <li><a href="#">Fast Food</a></li>
-                       <li class="divider"></li>
-                       <li><a href="#">Bakery</a></li>
-                    </ul>
-                </li>-->
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Cuisines
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">North Indian</a></li>
-                        <li><a href="#">South Indian</a></li>
-                        <li><a href="#">Chinese</a></li>
-                        <li><a href="#">Italian </a></li>
-                        <li><a href="#">Tandoori</a></li>
-                        <li><a href="#">Desserts</a></li>
-                        <li><a href="#">Briyani</a></li>
-                        <li><a href="#">Pizza</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <!-- <ul class="nav navbar-nav navbar-right">
-              <li><a href="#">Register</a></li>
-              <li><a href="#">Login</a></li>
-            </ul>-->
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-</nav>
-
-  <!-- HEADER
-=================================-->
-<div class="jumbotron text-center">
-    <div class="container">
+<div class="wrapper" ng-app="fbeaztApp">
+    <header class="banner">
         <div class="row">
-            <div class="col col-lg-12 col-sm-12">
-                <h2 style="color:#2d3033;">Order food online from various restaurants in Puducherry</h2>
-                <form role="form" ng-submit="search(true)">
-                    <div class="col-xs-8 col-xs-offset-2">
-                        <div class="input-group">
-                            <div class="input-group-btn search-panel">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span id="search_concept">Select Category </span> <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#restaurants">North Indian Meals</a></li>
-                                    <li><a href="#cuisines">South Indian Meals</a></li>
-                                    <li><a href="#home_delivery">Briyani</a></li>
-                                    <li><a href="#pickup">Fried Rice</a></li>
-                                    <li><a href="#pickup">Noodles</a></li>
-                                    <li><a href="#pickup">Starters</a></li>
-                                </ul>
-                            </div>
-                            <input type="hidden" name="search_param" value="all" id="search_param">
-                            <input type="text" class="form-control" ng-model="filter_text" name="x" placeholder="Search term...">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                </span>
-                        </div>
-                    </div>
-
+            <div class="medium-10 columns">
+                <a href="/beta">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}"/>
+                </a>
+            </div>
+            <div class="medium-2 columns shopping_cart_header">
+                <span ng-bind-html="cart.total | currency"></span>
             </div>
         </div>
-    </div>
-</div>
-<!-- /header container-->
+        <div class="row shopping_cart">
+            <div class="medium-3 columns">&nbsp;</div>
+            <div class="medium-4 columns">{{_("Your Cart")}}</div>
+            <div class="medium-5 columns" ng-include="'/static/templates/cart_list.html'"></div>
+        </div>
+    </header>
 
-
-<div class="container">
-    {% block body %}
-    {% endblock %}
-</div>
-
-<footer>
-    <div class="row">
-        <div class="col-lg-12">
-            <p>Copyright &copy; FoodBeazt 2014</p>
+    <div class="breadcrumbs__bg">
+        <div class="row">
+            <ul class="breadcrumbs">
+                <li>{{_("Starters")}}</li>
+                <li>{{_("Main Course")}}</li>
+                <li>{{_("Deserts")}}</li>
+            </ul>
         </div>
     </div>
-</footer>
 
+    <div class="row">
+        <div class="medium-12 columns">
+            {% block body %}
+            {% endblock %}
+        </div>
+    </div>
+
+</div>
 <!-- Core JavaScript Files -->
-<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/angular-route.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/angular-cookies.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/angular-sanitize.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/angular-resource.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/angular-messages.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/checklist-model.js') }}"></script>
-<script src="{{ url_for('static', filename='js/jquery.easing.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/lodash.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/jquery.cookie.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/foundation.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/angular.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/angular-route.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/angular-cookies.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/angular-sanitize.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/angular-resource.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/angular-messages.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/checklist-model.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/jquery.easing.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/lodash.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/ga.js') }}"></script>
 <script src="{{ url_for('static', filename='js/filters.js') }}"></script>
 {% block scripts %}

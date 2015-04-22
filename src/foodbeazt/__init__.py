@@ -6,6 +6,7 @@ from flask_login import login_required, UserMixin, login_user, logout_user, curr
 from flask_mail import Mail
 from flask_pymongo import PyMongo
 from flask_restful import Api
+from flask_babel import Babel
 from pymongo import Connection
 from bson import json_util
 from werkzeug.utils import secure_filename
@@ -37,6 +38,13 @@ principals = Principal(app)
 # Create a permission with a single Need, in this case a RoleNeed.
 admin_permission = Permission(RoleNeed('tenant_admin'))
 
+
+# localization
+babel = Babel(app)
+
+@babel.localeselector
+def get_locale():
+    return g.get('current_lang', 'en')
 
 @app.route('/oauth2callback')
 @auth.oauth2callback

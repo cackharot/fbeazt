@@ -1,53 +1,38 @@
-<div  ng-controller="cartCtrl">
-    <!-- PRICE ITEM -->
-
-    <div class="panel price panel-blue" style="box-shadow: 0px 0px 30px rgba(0,0,0, .2);">
-        <div class="panel-heading arrow_box text-center">
-            <h4>FOOD CART</h4>
-        </div>
-        <div class="pull-right" style="position:absolute;right20px;top:2px;">
-            <a href title="Click to reset this order" ng-click="resetOrder()">
-                <i class="fa fa-refresh"></i>
-            </a>
-        </div>
-        <ul class="list-group list-group-flush text-center" ng-repeat="item in cart.items">
-
-            <li class="list-group-item"><i class="icon-ok text-success"></i>
-                <a href class="text-danger" ng-click="removeItem(item._id.$oid)"
-                   title="Click to remove this item"><i
+<div ng-controller="cartCtrl">
+    <div ng-repeat="item in cart.items">
+        <div class="row">
+            <div class="medium-8 columns">
+                <a href class="text-danger" ng-click="removeItem(item._id.$oid)" title="Click to remove this item"><i
                         class="fa fa-minus-square"></i></a>
                 {{item.name}}
-                <br>
-                {{item.quantity}}x&nbsp;&nbsp;&nbsp;&nbsp;{{item.sell_price}}
-            </li>
-
-        </ul>
-        <div class="panel-body" style="text-align:left;font-weight:600;">
-            <table>
-                <!--<tr style="text-align:right;">
-                    <td>Item Total :</td>
-                    <td>&#x20B9; 00.00</td>
-                </tr>-->
-                <tr style="text-align:right;">
-                    <td> Delivery Charge:</td>
-                    <td>&#x20B9; 30.00</td>
-                </tr>
-
-                <tr style="text-align:right;">
-                    <td> Grand Total :</td>
-                    <td><span ng-bind-html="cart.total | currency"></td>
-                </tr>
-            </table>
+            </div>
+            <div class="medium-1 columns text-right">{{item.quantity}}x</div>
+            <div class="medium-3 columns text-right">
+                <span ng-bind-html="item.sell_price | currency"></span>
+            </div>
         </div>
-        <div class="panel-footer">
+    </div>
+    <div class="row">
+        <div class="medium-8 columns">
+            Delivery Charge
+        </div>
+        <div class="medium-1 columns text-right"></div>
+        <div class="medium-3 columns text-right" ng-bind-html="30.00 | currency"></div>
+    </div>
+    <div class="row">
+        <div class="medium-8 columns">
+            Total
+        </div>
+        <div class="medium-1 columns text-right"></div>
+        <div class="medium-3 columns text-right" ng-bind-html="cart.total | currency"></div>
+    </div>
+    <div class="row">
+        <div class="medium-4 columns end text-right">
             <div class="session continue" ng-show="canShowContinueBtn()">
-                <button class="btn btn-lg btn-block btn-success" ng-click="continueOrder()" type="button"
+                <button class="button success" ng-click="continueOrder()" type="button"
                         title="Click to continue with this order summary">Checkout
                 </button>
             </div>
-
-
         </div>
     </div>
-    <!-- /PRICE ITEM -->
 </div>
