@@ -24,7 +24,7 @@
 
 <body>
 <div class="wrapper" ng-app="fbeaztApp">
-     <header class="header">
+     <header class="header" ng-controller="cartCtrl">
         <div class="row">
             <div class="medium-3 columns">
                 <a href="/beta">
@@ -35,9 +35,10 @@
                 <div id="js-shopping-cart-header" class="header__total js-shopping-cart-total">
                     <span class="icon__shopping_cart">
                         <i class="fa fa-shopping-cart"></i>
-                        <div class="cart_items alert round label">4</div>
+                        <div class="cart_items alert round label" ng-bind-html="cart.items.length"></div>
                     </span>
-                    <span ng-bind-html="1000.33 | currency"></span>
+                    <span ng-show="cart.items.length > 0" ng-bind-html="cart.total | currency"></span>
+                    <span ng-show="cart.items.length == 0">{{_("Cart is empty!")}}</span>
                 </div>
             </div>
         </div>
@@ -53,7 +54,7 @@
 
         <nav class="header__progress" aria-label="breadcrumb" role="navigation">
             <div class="row">
-                <div class="large-12 columns">
+                <div class="medium-10 columns">
                     <ul class="header__progress-steps">
                         <li class="current select">
                            <a href="#">{{_("Select")}}</a>
@@ -65,6 +66,14 @@
                             <a href="#">{{_("Review &amp; Confirm")}}</a>
                         </li>
                     </ul>
+                </div>
+                <div class="medium-2 columns">
+                    <div class="checkout__button session continue" ng-show="canShowContinueBtn()">
+                        <a ng-click="continueOrder()" href="#" onclick="return false;">
+                            <i class="fa fa-check"></i>
+                            {{_("Checkout")}}
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>

@@ -1,6 +1,6 @@
 var fbeastApp = angular.module('fbeaztApp',['ngRoute', 'ngSanitize', 'ngCookies', 'checklist-model', 'fbFilters'])
 
-var MINIMUM_FREE_DELIVERY_ORDER_AMOUNT = 500.0
+var MINIMUM_FREE_DELIVERY_ORDER_AMOUNT = 10000.0
 var DEFAULT_DELIVERY_CHARGES = 30.0
 var DEFAULT_CART = { 'items': [], 'created_at': new Date(), 'total': 0.0, 'delivery_charges': DEFAULT_DELIVERY_CHARGES }
 
@@ -168,6 +168,7 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
 
     calculateCartTotals = function(){
         if(this.cart.items.length == 0){
+            this.cart.delivery_charges = 0.0
             this.cart.total = 0.0
             return
         }
