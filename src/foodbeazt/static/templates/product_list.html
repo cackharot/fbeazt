@@ -1,23 +1,25 @@
 <div ng-controller="searchResultCtrl">
-    <div ng-show="items.length == 0" class="alert alert-info">
+    <!--<div ng-show="items.length == 0" class="alert-box alert-info">
         <p>Oops! No items found for this search. Kindly modify your search</p>
-    </div>
+    </div>-->
     <div class="row" ng-show="items.length > 0">
-        <div class="medium-3 columns text-center" ng-repeat="item in items">
-            <h4>{{item.name}}</h4>
-            <a href="#/detail/{{item.store_id.$oid}}/{{item._id.$oid}}"
-               title="Click to view '{{item.name}}' details">
-                <img class="thumbnail img-responsive" width="175"
-                     ng-src="{{item.image_url | default_product_img}}"/>
-            </a>
-            <h4 ng-bind-html="item.sell_price | currency"></h4>
-            <button type="button" class="btn btn-lg btn-block btn-default" ng-click="addToCart(item._id.$oid)"
-                    title="Add to cart">
+        <div class="medium-3 columns text-center product-item" ng-repeat="item in items">
+            <div class="product-image">
+                <a href="#/detail/{{item.store_id.$oid}}/{{item._id.$oid}}"
+                   title="Click to view '{{item.name}}' details">
+                    <img class="thumbnail img-responsive" ng-src="{{item.image_url | default_product_img}}"/>
+                </a>
+            </div>
+            <h4 class="product-name">{{item.name}}</h4>
+            <div class="product-price" ng-bind-html="item.sell_price | currency"></div>
+            <button type="button" class="button expand" ng-click="addToCart(item._id.$oid)">
                 <i class="fa fa-plus"></i>&nbsp;Add to cart
             </button>
         </div>
     </div>
-    <div class="row">
-        <button type="button" class="button" ng-click="loadMore()">Load more...</button>
+    <div class="row text-right" ng-show="items.length > 0">
+        <div class="medium-12 columns">
+            <button type="button" class="button info small" ng-click="loadMore()">Load more...</button>
+        </div>
     </div>
 </div>

@@ -26,8 +26,8 @@
         <div class="medium-1 columns text-right"></div>
         <div class="medium-3 columns text-right" ng-bind-html="cart.total | currency"></div>
     </div>
-    <div class="row">
-        <div class="medium-4 columns end text-right">
+    <div class="row cart__service-message">
+        <div class="medium-5 medium-offset-7 columns text-right">
             <div class="session continue" ng-show="canShowContinueBtn()">
                 <button class="button success" ng-click="continueOrder()" type="button"
                         title="Click to continue with this order summary">Checkout

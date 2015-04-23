@@ -1,7 +1,26 @@
-<div ng-show="!item" class="alert alert-info">
-    <p>Oops! No items found for this search. Kindly modify your search</p>
+<div ng-show="!item" class="alert-box alert-info">
+	<p>Oops! No items found for this search. Kindly modify your search</p>
 </div>
 <div ng-show="item" class="row">
-    <h4>{{item.name}}</h4>
-    <h4 ng-bind-html="item.sell_price | currency"></h4>
+	<div class="medium-4 columns">
+		<div class="product-image">
+			<a href="#/detail/{{item.store_id.$oid}}/{{item._id.$oid}}"
+			   title="Click to view '{{item.name}}' details">
+				<img class="thumbnail img-responsive" ng-src="{{item.image_url | default_product_img}}"/>
+			</a>
+		</div>
+	</div>
+	<div class="medium-8 columns">
+		<h4 class="product-name">
+			{{item.name}}
+			<div class="back__button">
+				<a href="#" onclick="window.history.back();return false;">&lt; Back</a>
+			</div>
+		</h4>
+		<p>{{item.description}}</p>
+		<div class="product-price" ng-bind-html="item.sell_price | currency"></div>
+		<button type="button" class="button" ng-click="addToCart(item._id.$oid)">
+			<i class="fa fa-plus"></i>&nbsp;Add to cart
+		</button>
+	</div>
 </div>

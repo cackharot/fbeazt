@@ -16,6 +16,7 @@
     <link href="{{ url_for('static', filename='css/normalize.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/app.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
     {% block head_scripts %}
     {% endblock %}
@@ -23,40 +24,54 @@
 
 <body>
 <div class="wrapper" ng-app="fbeaztApp">
-    <header class="banner">
+     <header class="header">
         <div class="row">
-            <div class="medium-10 columns">
+            <div class="medium-3 columns">
                 <a href="/beta">
                     <img src="{{ url_for('static', filename='img/logo.png') }}"/>
                 </a>
             </div>
-            <div class="medium-2 columns shopping_cart_header">
-                <span ng-bind-html="cart.total | currency"></span>
+            <div class="medium-9 columns text-right">
+                <div id="js-shopping-cart-header" class="header__total js-shopping-cart-total">
+                    <span class="icon__shopping_cart">
+                        <i class="fa fa-shopping-cart"></i>
+                        <div class="cart_items alert round label">4</div>
+                    </span>
+                    <span ng-bind-html="1000.33 | currency"></span>
+                </div>
             </div>
         </div>
-        <div class="row shopping_cart">
-            <div class="medium-3 columns">&nbsp;</div>
-            <div class="medium-4 columns">{{_("Your Cart")}}</div>
-            <div class="medium-5 columns" ng-include="'/static/templates/cart_list.html'"></div>
+
+        <div class="header__cart hide" id="js-shopping-cart-details">
+            <div class="row">
+                <div class="medium-3 columns cart__title">
+                    {{_("Your cart")}}
+                </div>
+                <div class="medium-9 columns cart__line-items" ng-include="'/static/templates/cart_list.html'"></div>
+            </div>
         </div>
+
+        <nav class="header__progress" aria-label="breadcrumb" role="navigation">
+            <div class="row">
+                <div class="large-12 columns">
+                    <ul class="header__progress-steps">
+                        <li class="current select">
+                           <a href="#">{{_("Select")}}</a>
+                        </li>
+                        <li class="disabled delivery-details">
+                            <a href="#">{{_("Delivery Details")}}</a>
+                        </li>
+                        <li class="disabled review-confirm">
+                            <a href="#">{{_("Review &amp; Confirm")}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </header>
 
-    <div class="breadcrumbs__bg">
-        <div class="row">
-            <ul class="breadcrumbs">
-                <li>{{_("Starters")}}</li>
-                <li>{{_("Main Course")}}</li>
-                <li>{{_("Deserts")}}</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="medium-12 columns">
-            {% block body %}
-            {% endblock %}
-        </div>
-    </div>
+    {% block body %}
+    {% endblock %}
 
 </div>
 <!-- Core JavaScript Files -->
@@ -74,6 +89,14 @@
 <script src="{{ url_for('static', filename='js/vendor/lodash.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/ga.js') }}"></script>
 <script src="{{ url_for('static', filename='js/filters.js') }}"></script>
+<script>
+$(function(){
+    $("#js-shopping-cart-header").click(function(){
+        $(this).toggleClass("active");
+        $("#js-shopping-cart-details").toggleClass("hide");
+    });
+});
+</script>
 {% block scripts %}
 {% endblock %}
 </body>
