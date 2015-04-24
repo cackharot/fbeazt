@@ -5063,7 +5063,7 @@ nav.header__progress {
   .header__progress-steps > .past a:hover {
     border-bottom: 1px solid #ffffff;
     padding-bottom: 1px; }
-  .header__progress-steps > .past.flights, .header__progress-steps > .past.bags, .header__progress-steps > .past.options, .header__progress-steps > .past.passengers, .header__progress-steps > .past.payment {
+  .header__progress-steps > .past.select, .header__progress-steps > .past.delivery__details, .header__progress-steps > .past.review__confirm, .header__progress-steps > .past.passengers, .header__progress-steps > .past.payment {
     background-image: url('/static/Images/Icons/Icon-Progress_bar-tick.svg'); }
 
 table.expand {

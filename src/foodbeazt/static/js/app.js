@@ -18,9 +18,13 @@ fbeastApp.config(['$routeProvider', function($routeProvider){
             templateUrl: '/static/templates/product_detail.html',
             controller: 'detailCtrl'
           }).
-          when('/confirm_order', {
-            templateUrl: '/static/templates/confirm_order.html',
+          when('/delivery_details', {
+            templateUrl: '/static/templates/delivery_details.html',
             controller: 'confirmOrderCtrl'
+          }).
+           when('/review', {
+            templateUrl: '/static/templates/review.html',
+            controller: 'reviewCtrl'
           }).
           when('/order_success', {
             templateUrl: '/static/templates/order_success.html',
@@ -196,11 +200,20 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
     });
 
     $scope.continueOrder = function(){
-        $location.path('/confirm_order')
+        $location.path('/delivery_details')
     }
 
     $scope.canShowContinueBtn = function(){
-        return ($location.path() != '/confirm_order' && $location.path() != '/order_success') && this.cart.total > 0
+        var curr_path = $location.path()
+        return (curr_path != '/delivery_details' 
+                && curr_path != '/order_success'
+                && curr_path != '/review') 
+                && this.cart.total > 0
+    }
+
+    $scope.canShowCartHeader = function(){
+        var curr_path = $location.path()
+        return (curr_path != '/review')
     }
 
     $scope.resetOrder = function(){
@@ -241,12 +254,20 @@ fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $rou
         $scope.cart.customer = $cookieStore.get('__tmpCustomer') || {}
     }
 
-    $scope.confirmOrder = function() {
+    $scope.continueContactDetails = function() {
         // validate customer data
         // submit the cart to service to generate order tracking id
         // and show success message
         $cookieStore.put('__tmpCart', $scope.cart)
         $cookieStore.put('__tmpCustomer', $scope.cart.customer)
+        $location.path('/review')
+    }
+})
+
+fbeastApp.controller('reviewCtrl', function($location, $scope, $cookieStore, $http){
+    $scope.cart = $cookieStore.get('__tmpCart')
+
+    $scope.confirmOrder = function() {
         $location.path('/processing')
     }
 })
@@ -257,8 +278,8 @@ fbeastApp.controller('orderProcessingCtrl', function($location, $scope, $cookieS
 
     if(!cart || !cart.customer || cart.customer.name == '' || cart.customer.email == ''
     || cart.customer.phone == '' || cart.customer.address  == ''){
-        alert('Enter your details')
-        $location.path('/confirm_order')
+        alert('Enter your delivery details')
+        $location.path('/delivery_details')
         return
     }
 
@@ -268,8 +289,8 @@ fbeastApp.controller('orderProcessingCtrl', function($location, $scope, $cookieS
         $cookieStore.put('__tmpCart', $scope.cart)
         $location.path('/order_success')
     }).error(function(e){
-        alert(e)
-        $location.path('/confirm_order')
+        console.log(e)
+        $location.path('/delivery_details')
     })
 })
 

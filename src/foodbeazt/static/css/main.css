@@ -55,3 +55,26 @@
 .checkout__button .fa-check{
     color: #38AB00;
 }
+
+.review__item{
+  margin-top: 10px !important;
+  padding-bottom: 10px;
+  border-bottom:1px solid rgba(22, 135, 197, 0.56);
+}
+
+.review__item__price{
+  font-size: 1.24em;
+}
+
+.review__item__total{
+  font-size: 1.8em;
+}
+
+.order__total__label{
+  font-size: 1.24em;
+  line-height: 2.2em;
+}
+
+.header__logo{
+  height: 75px;
+}

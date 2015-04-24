@@ -1,29 +1,28 @@
-<div>
-    <div ng-repeat="item in cart.items">
-        <div class="row">
-            <div class="medium-8 columns">
-                <a href class="text-danger" ng-click="removeItem(item._id.$oid)" title="Click to remove this item"><i
-                        class="fa fa-minus-square"></i></a>
-                {{item.name}}
-            </div>
-            <div class="medium-1 columns text-right">{{item.quantity}}x</div>
-            <div class="medium-3 columns text-right">
-                <span ng-bind-html="item.sell_price | currency"></span>
-            </div>
-        </div>
-    </div>
+<div ng-repeat="item in cart.items">
     <div class="row">
         <div class="medium-8 columns">
-            Delivery Charge
+            <a href class="text-danger" ng-click="removeItem(item._id.$oid)">
+                <i class="fa fa-remove"></i>
+            </a>
+            {{item.name}}
         </div>
-        <div class="medium-1 columns text-right"></div>
-        <div class="medium-3 columns text-right" ng-bind-html="cart.delivery_charges | currency"></div>
-    </div>
-    <div class="row">
-        <div class="medium-8 columns">
-            Total
+        <div class="medium-1 columns text-right">{{item.quantity}}x</div>
+        <div class="medium-3 columns text-right">
+            <span ng-bind-html="item.sell_price | currency"></span>
         </div>
-        <div class="medium-1 columns text-right"></div>
-        <div class="medium-3 columns text-right" ng-bind-html="cart.total | currency"></div>
     </div>
+</div>
+<div class="row">
+    <div class="medium-8 columns">
+        Delivery Charge
+    </div>
+    <div class="medium-1 columns text-right"></div>
+    <div class="medium-3 columns text-right" ng-bind-html="cart.delivery_charges | currency"></div>
+</div>
+<div class="row">
+    <div class="medium-8 columns">
+        Total
+    </div>
+    <div class="medium-1 columns text-right"></div>
+    <div class="medium-3 columns text-right" ng-bind-html="cart.total | currency"></div>
 </div>

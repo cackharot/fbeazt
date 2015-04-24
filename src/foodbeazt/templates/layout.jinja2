@@ -26,13 +26,13 @@
 <div class="wrapper" ng-app="fbeaztApp">
      <header class="header" ng-controller="cartCtrl">
         <div class="row">
-            <div class="medium-3 columns">
+            <div class="medium-3 columns header__logo">
                 <a href="/beta">
                     <img src="{{ url_for('static', filename='img/logo.png') }}"/>
                 </a>
             </div>
             <div class="medium-9 columns text-right">
-                <div id="js-shopping-cart-header" class="header__total js-shopping-cart-total">
+                <div id="js-shopping-cart-header" class="header__total js-shopping-cart-total" ng-show="canShowCartHeader()">
                     <span class="icon__shopping_cart">
                         <i class="fa fa-shopping-cart"></i>
                         <div class="cart_items alert round label" ng-bind-html="cart.items.length"></div>
@@ -59,10 +59,10 @@
                         <li class="current select">
                            <a href="#">{{_("Select")}}</a>
                         </li>
-                        <li class="disabled delivery-details">
+                        <li class="disabled delivery__details">
                             <a href="#">{{_("Delivery Details")}}</a>
                         </li>
-                        <li class="disabled review-confirm">
+                        <li class="disabled review__confirm">
                             <a href="#">{{_("Review &amp; Confirm")}}</a>
                         </li>
                     </ul>

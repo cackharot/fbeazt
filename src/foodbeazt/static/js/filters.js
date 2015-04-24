@@ -23,7 +23,7 @@ angular.module('fbFilters', [])
 })
 .filter('currency', function(){
     return function(input) {
-      var symbol = "<i class='fa fa-rupee'></i>"
+      var symbol = "&#8377;"
       return symbol + parseFloat(input).toFixed(2).toString()
     }
 })

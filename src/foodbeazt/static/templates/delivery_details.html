@@ -1,7 +1,7 @@
 <div class="container" ng-controller="confirmOrderCtrl">
     <h2>Delivery Details</h2>
 
-    <form role="form" name="frmCustomerDetails" ng-submit="confirmOrder()" class="form-horizontal">
+    <form role="form" name="frmCustomerDetails" ng-submit="continueContactDetails()" class="form-horizontal">
 
         <h4>Contact</h4>
 
@@ -37,7 +37,7 @@
 
         <div class="row">
             <div class="medium-6 columns">
-                <label for="street">Door No. & Street. Name
+                <label for="street">Door No. &amp; Street. Name
                     <input type="text" class="form-control" id="street"
                     ng-model="cart.customer.street" required/>
                 </label>
@@ -75,7 +75,7 @@
         </div>
 
         <a href="#/" class="button">Back to Shopping</a>
-        <button type="submit" class="button success" title="Click to confirm this order">
+        <button type="submit" class="button success">
             Continue
         </button>
     </form>

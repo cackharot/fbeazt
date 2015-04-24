@@ -1,0 +1,72 @@
+<div ng-controller="reviewCtrl">
+    <h2>Review &amp; Confirm</h2>
+
+    <div ng-repeat="item in cart.items">
+        <div class="row review__item">
+            <div class="medium-3 columns">
+                <a href="#/detail/{{item.store_id.$oid}}/{{item._id.$oid}}"
+                   title="Click to view '{{item.name}}' details">
+                    <img class="thumbnail img-responsive" ng-src="{{item.image_url | default_product_img}}"/>
+                </a>
+            </div>
+            <div class="medium-4 columns">
+                {{item.name}}
+            </div>        
+            <div class="medium-1 columns text-right">
+                <input type="text" ng-model="item.quantity"/>
+            </div>
+            <div class="medium-1 columns">
+                <a href class="text-danger" ng-click="removeItem(item._id.$oid)">
+                    Remove
+                </a>
+            </div>
+            <div class="medium-3 columns text-right review__item__price">
+                <span ng-bind-html="item.sell_price | currency"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row review__item">
+        <div class="medium-7 columns">&nbsp;</div>
+        <div class="medium-3 columns">
+            Delivery Charge
+        </div>
+        <div class="medium-2 columns text-right review__item__price" ng-bind-html="cart.delivery_charges | currency"></div>
+    </div>
+
+    <div class="row review__item order__total">
+        <div class="medium-7 columns">&nbsp;</div>
+        <div class="medium-3 columns order__total__label">
+            Total
+        </div>
+        <div class="medium-2 columns text-right review__item__total" ng-bind-html="cart.total | currency"></div>
+    </div>
+
+    <h3>Delivery details</h3>
+    <div class="row">
+        <div class="medium-3 columns">
+            <p>Name: {{cart.customer.name}}</p>
+            <p>Email: {{cart.customer.email}}</p>
+            <p>Mobile: {{cart.customer.mobile}}</p>
+        </div>
+        <div class="medium-3 columns end">
+            <p>
+            Address: <br/>
+            {{cart.customer.street}},<br/>
+            {{cart.customer.area}},<br/>
+            {{cart.customer.landmark}},<br/>
+            {{cart.customer.pincode}}<br/>
+            </p>
+        </div>
+    </div>
+
+    <br/>
+    <div class="row">
+        <div class="medium-6 columns text-right">
+            <a href="#/" class="button info">Back to Shopping</a>
+        </div>
+        <div class="medium-6 columns">
+            <button type="button" class="button">Place order</button>
+        </div>
+    </div>
+</div>
