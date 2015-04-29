@@ -1,4 +1,7 @@
 var fbeastApp = angular.module('fbeaztApp',['ngRoute', 'ngSanitize', 'ngCookies', 'checklist-model', 'fbFilters'])
+                       .run(function($rootScope, $location) {
+                            $rootScope.location = $location;
+                       })
 
 var MINIMUM_FREE_DELIVERY_ORDER_AMOUNT = 10000.0
 var DEFAULT_DELIVERY_CHARGES = 30.0
@@ -57,6 +60,10 @@ fbeastApp.factory('eventBus', function($rootScope) {
 
     eventBus.resetOrder = function(){
         $rootScope.$broadcast('resetOrder');
+    }
+
+    eventBus.updateCart = function(){
+        $rootScope.$broadcast('updateCart');
     }
 
     return eventBus;
@@ -195,7 +202,7 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
     }
 
     $scope.$watchCollection('cart.items', function(newValue, oldValue) {
-        this.calculateCartTotals()
+        calculateCartTotals()
         $cookieStore.put('__tmpCart', this.cart)
     });
 
@@ -213,15 +220,22 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
 
     $scope.canShowCartHeader = function(){
         var curr_path = $location.path()
-        return (curr_path != '/review')
+        return (curr_path != '/review' && curr_path != '/order_success' && curr_path != '/processing')
     }
 
     $scope.resetOrder = function(){
-        this.cart = DEFAULT_CART
-        this.cart.items = []
+        cart = DEFAULT_CART
+        cart.items = []
+        $scope.cart = cart
+        calculateCartTotals()
         $cookieStore.remove('__tmpCart')
-        console.log(this.cart)
     }
+
+    $scope.$on('updateCart', function(){
+        cart = $cookieStore.get('__tmpCart')
+        $scope.cart = cart
+        calculateCartTotals()
+    })
 
     $scope.$on('itemAddedToCart', function(){
         var item = eventBus.data
@@ -264,8 +278,42 @@ fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $rou
     }
 })
 
-fbeastApp.controller('reviewCtrl', function($location, $scope, $cookieStore, $http){
+fbeastApp.controller('reviewCtrl', function($location, $scope, $cookieStore, $http, eventBus){
     $scope.cart = $cookieStore.get('__tmpCart')
+
+    $scope.removeItem = function(id){
+        var item = _.remove($scope.cart.items, function(x) { return x._id.$oid == id })
+        return false
+    }
+
+    $scope.calculateDeliveryCharges = function(total){
+        return total < MINIMUM_FREE_DELIVERY_ORDER_AMOUNT ? DEFAULT_DELIVERY_CHARGES : 0.0
+    }
+
+    $scope.calculateCartTotals = function(){
+        if($scope.cart.items.length == 0){
+            $scope.cart.delivery_charges = 0.0
+            $scope.cart.total = 0.0
+            return
+        }
+
+        var tmpTotal = parseFloat(_.chain($scope.cart.items)
+                            .map(function(x){
+                                   return x.quantity*x.sell_price
+                            })
+                            .reduce(function(total, x){
+                                return total+x
+                            }).value())
+
+        $scope.cart.delivery_charges = $scope.calculateDeliveryCharges(tmpTotal)
+        $scope.cart.total = tmpTotal + $scope.cart.delivery_charges
+    }
+
+    $scope.$watchCollection('cart.items', function(newValue, oldValue) {
+        $scope.calculateCartTotals()
+        $cookieStore.put('__tmpCart', $scope.cart)
+        eventBus.updateCart();
+    });
 
     $scope.confirmOrder = function() {
         $location.path('/processing')

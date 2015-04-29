@@ -1,6 +1,11 @@
 <div ng-controller="reviewCtrl">
     <h2>Review &amp; Confirm</h2>
 
+    <div class="row" ng-show="cart.items.length == 0">
+        <div class="medium-12 columns alert-box warning">
+            No items in your cart.
+        </div>
+    </div>
     <div ng-repeat="item in cart.items">
         <div class="row review__item">
             <div class="medium-3 columns">
@@ -13,7 +18,7 @@
                 {{item.name}}
             </div>        
             <div class="medium-1 columns text-right">
-                <input type="text" ng-model="item.quantity"/>
+                <input type="text" ng-model="item.quantity" disabled="disabled" />
             </div>
             <div class="medium-1 columns">
                 <a href class="text-danger" ng-click="removeItem(item._id.$oid)">
@@ -63,10 +68,10 @@
     <br/>
     <div class="row">
         <div class="medium-6 columns text-right">
-            <a href="#/" class="button info">Back to Shopping</a>
+            <a href="#/" ng-click="location.path('/')" class="button info">Back to Shopping</a>
         </div>
         <div class="medium-6 columns">
-            <button type="button" class="button">Place order</button>
+            <button type="button" class="button" ng-click="confirmOrder()" ng-disabled="cart.items.length == 0">Place order</button>
         </div>
     </div>
 </div>

@@ -54,18 +54,7 @@
 
         <nav class="header__progress" aria-label="breadcrumb" role="navigation">
             <div class="row">
-                <div class="large-10 medium-9 small-7 columns">
-                    <ul class="header__progress-steps">
-                        <li class="current select">
-                           <a href="#" onclick="return false;">{{_("Select")}}</a>
-                        </li>
-                        <li class="disabled delivery__details">
-                            <a href="#" onclick="return false;">{{_("Delivery Details")}}</a>
-                        </li>
-                        <li class="disabled review__confirm">
-                            <a href="#" onclick="return false;">{{_("Review &amp; Confirm")}}</a>
-                        </li>
-                    </ul>
+                <div class="large-10 medium-9 small-7 columns" ng-include="'/static/templates/progress_bar.html'">                    
                 </div>
                 <div class="large-2 medium-3 small-5 columns end">
                     <div class="checkout__button session continue" ng-show="canShowContinueBtn()">

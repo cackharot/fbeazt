@@ -1,0 +1,11 @@
+<ul class="header__progress-steps">
+    <li ng-class="{select: true, current: location.path()=='/', past: location.path() != '/'}">
+       <a href="#" onclick="return false;">Select</a>
+    </li>
+    <li ng-class="{delivery__details: true, current: location.path()=='/delivery_details', past: location.path() == '/review'}">
+        <a href="#" onclick="return false;">Delivery Details</a>
+    </li>
+    <li ng-class="{review__confirm: true, current: location.path()=='/review', past: location.path() == '/order_success'}">
+        <a href="#" onclick="return false;">Review &amp; Confirm</a>
+    </li>
+</ul>
