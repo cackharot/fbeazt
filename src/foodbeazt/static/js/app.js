@@ -214,7 +214,8 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
         var curr_path = $location.path()
         return (curr_path != '/delivery_details' 
                 && curr_path != '/order_success'
-                && curr_path != '/review') 
+                && curr_path != '/review'
+                && curr_path != '/processing') 
                 && this.cart.total > 0
     }
 
@@ -331,6 +332,11 @@ fbeastApp.controller('orderProcessingCtrl', function($location, $scope, $cookieS
         return
     }
 
+    if(cart.order_no && cart.order_no.length > 0){
+        $location.path('/order_success')
+        return
+    }
+
     $http.post(url, $scope.cart).success(function(data){
         if(data && data.data)
             this.cart.order_no = data.data.order_no
@@ -343,5 +349,10 @@ fbeastApp.controller('orderProcessingCtrl', function($location, $scope, $cookieS
 })
 
 fbeastApp.controller('orderSuccessCtrl', function($location, $scope, eventBus, $cookieStore){
-    eventBus.resetOrder();
+    $scope.confirmed_cart = $cookieStore.get('__tmpCart')
+    if(!$scope.confirmed_cart || !$scope.confirmed_cart.items || $scope.confirmed_cart.items.length == 0){
+        $location.path("/")
+        return
+    }
+    eventBus.resetOrder()
 })

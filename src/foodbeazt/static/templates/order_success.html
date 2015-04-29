@@ -1,7 +1,15 @@
-<div class="row">
+<div class="row" id="order__success__container">
     <div class="medium-12 columns">
-        <h3> Thank you for ordering !</h3>
-        <h4>Your order is confirmed and its under processing</h4>
-        <h5>( A copy of your order summary is sent to << Customer mail ID>> for your kind reference )</h5>
+    	<div class="alert-box success">
+    		<h2>Thanks {{confirmed_cart.customer.name}}</h1>
+    		<span class="confirm__order__label">Order no:</span> <span class="confirm__order__no">{{confirmed_cart.order_no}}</span>
+    	</div>
+        <h4>Your order is confirmed and under processing</h4>
+        <h5>A copy of your order summary is sent to <span class="confirm__customer__email">{{confirmed_cart.customer.email}}</span> for your kind reference</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="medium-12 columns text-center">
+        <a href="#/" class="button">Return to Home page</a>
     </div>
 </div>

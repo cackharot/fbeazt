@@ -2,6 +2,11 @@ h2{
   font-family: "ITC Avant Garde Gothic W01";
 }
 
+.alert-box.success {
+  background-color: #DEFFE3;
+  border-color: #3a945b;
+}
+
 .icon__shopping_cart{
     color: #00B2FF;
     padding-right: 15px;
@@ -87,4 +92,25 @@ h2{
 
 .header__logo{
   height: 75px;
+}
+
+#order__success__container h2{
+  margin-bottom: 0px;
+}
+
+.confirm__customer__email{
+  color: rgb(255, 68, 0);
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.confirm__order__no{
+  font-weight: bold;
+  font-size: 1.1em; 
+  letter-spacing: 3px;
+  background-color: lightyellow;
+}
+
+.processing__logo{
+  padding-top: 20%;
 }
