@@ -36,13 +36,21 @@
                         <tr ng-repeat="item in orders" ng-class="{'text-danger': item.status == 'CANCELLED'}">
                             <td><a href="#/order/{{item._id.$oid}}" title="Click to edit this item!">{{item.order_no}}</a></td>
                             <td>{{item.customer.name}}</td>
-                            <td>{{item.customer.phone}}</td>
-                            <td>{{item.customer.address}}</td>
+                            <td>{{item.customer.mobile}}</td>
+                            <td>
+                                {{item.customer.street}}<br/>
+                                {{item.customer.area}}<br/>
+                                {{item.customer.landmark}}<br/>
+                                {{item.customer.pincode}}
+                            </td>
                             <td>{{item.created_at | datetime}}</td>
                             <td><span ng-bind-html="item.total | currency"></span></td>
-                            <td>{{item.status}}</td>
+                            <td>
+                                <span class="info">
+                                    {{item.status}}
+                                </span>
+                            </td>
                             <td class="text-center">
-
                             </td>
                         </tr>
                         </tbody>
