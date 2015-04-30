@@ -4,10 +4,8 @@ from flask_mail import Message
 from flask_restful import Resource
 from service.OrderService import OrderService
 from foodbeazt import mongo, app, mail
-from jinja2 import Environment, FileSystemLoader
 
-jinja2_env = Environment(loader=FileSystemLoader('templates'))
-order_created_template = jinja2_env.get_template('order_created.html')
+order_created_template = app.jinja_env.get_template('order_created.html')
 
 
 class OrderListApi(Resource):
