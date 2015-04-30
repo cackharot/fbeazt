@@ -1,4 +1,4 @@
-var fbeastApp = angular.module('fbeaztApp',['ngRoute', 'ngSanitize', 'ngCookies', 'checklist-model', 'fbFilters'])
+var fbeastApp = angular.module('fbeaztApp',['ngRoute', 'ngSanitize', 'ngCookies', 'checklist-model', 'fbFilters', 'ngAnimate'])
                        .run(function($rootScope, $location) {
                             $rootScope.location = $location;
                        })
