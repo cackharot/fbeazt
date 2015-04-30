@@ -74,6 +74,7 @@
 </div>
 <!-- Core JavaScript Files -->
 <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/jquery-ui.js') }}"></script>
 <script src="{{ url_for('static', filename='js/vendor/jquery.cookie.js') }}"></script>
 <script src="{{ url_for('static', filename='js/vendor/foundation.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/vendor/angular.min.js') }}"></script>
@@ -92,6 +93,47 @@ $(function(){
     $("#js-shopping-cart-header").click(function(){
         $(this).toggleClass("active");
         $("#js-shopping-cart-details").toggleClass("hide");
+    });
+
+    $(document).on('click', '.add-to-cart', function () {
+        var cart = $('.icon__shopping_cart');
+        var imgtodrag = $(this).parent('.product-item').find("img").eq(0);
+        if (imgtodrag) {
+            var imgclone = imgtodrag.clone()
+            .offset({
+                top: imgtodrag.offset().top,
+                left: imgtodrag.offset().left
+            })
+            .css({
+                'opacity': '0.5',
+                'position': 'absolute',
+                'height': '150px',
+                'width': '150px',
+                'z-index': '100'
+            })
+            .appendTo($('body'))
+            .animate({
+                'top': cart.offset().top + 10,
+                'left': cart.offset().left + 10,
+                'width': 75,
+                'height': 75
+            }, 700, 'easeInOutExpo');
+
+            setTimeout(function () {
+                cart.effect("pulsate", {
+                    times: 2
+                }, 100, function(){
+                    cart.fadeIn();
+                });
+            }, 900);
+
+            imgclone.animate({
+                'width': 0,
+                'height': 0
+            }, function () {
+                $(this).detach();
+            });
+        }
     });
 });
 </script>

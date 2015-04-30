@@ -9,15 +9,17 @@ h2{
 
 .icon__shopping_cart{
     color: #00B2FF;
-    padding-right: 15px;
+    padding-right: 35px !important;
     position: relative;
     background-image: none !important;
+    width: 24px;
+    height: 24px;
 }
 
 .cart_items{
   position: absolute;
   top: -8px;
-  right: 5px;
+  right: 0px;
 }
 
 .product-item{

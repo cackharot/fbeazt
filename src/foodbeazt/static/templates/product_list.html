@@ -12,7 +12,7 @@
             </div>
             <h4 class="product-name">{{item.name}}</h4>
             <div class="product-price" ng-bind-html="item.sell_price | currency"></div>
-            <button type="button" class="button expand" ng-click="addToCart(item._id.$oid)">
+            <button type="button" class="button expand add-to-cart" ng-click="addToCart(item._id.$oid)">
                 <i class="fa fa-plus"></i>&nbsp;Add to cart
             </button>
         </div>
