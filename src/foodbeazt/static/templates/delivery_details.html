@@ -1,35 +1,45 @@
 <div class="container" ng-controller="confirmOrderCtrl">
     <h2>Delivery Details</h2>
 
-    <form role="form" name="frmCustomerDetails" ng-submit="continueContactDetails()" class="form-horizontal">
+    <form role="form" name="form" ng-submit="continueContactDetails()" novalidate class="form-horizontal">
 
         <h4>Contact</h4>
 
         <div class="row">
             <div class="medium-6 columns">
-                <label for="name">Name
-                    <input class="form-control" type="text" name="name" id="name"
-                    ng-class="{ 'danger' : frmCustomerDetails.name.$invalid && !frmCustomerDetails.name.$pristine }"
-                    ng-model="cart.customer.name" required/>
+                <label for="name" ng-class="{ 'error' : form.name.$invalid }">Name
+                    <input class="form-control" type="text" name="name" id="name" ng-model="cart.customer.name" required minlength="4" maxlength="30" />
                 </label>
+                <div ng-show="form.$submitted || form.name.$touched">
+                  <small class="error" ng-show="form.name.$error.required">Tell us your name</small>
+                  <small class="error" ng-show="form.name.$error.minlength">You can tell your full name</small>
+                  <small class="error" ng-show="form.name.$error.maxlength">You can tell your full name</small>
+                </div>
             </div>
         </div>
 
         <div class="row">
             <div class="medium-6 columns">
-                <label for="email">Email
+                <label for="email" ng-class="{ 'error' : form.email.$invalid }">Email
                     <input class="form-control" type="email" name="email" id="email" ng-model="cart.customer.email"
                     required/>
                 </label>
+                <div ng-show="form.$submitted || form.email.$touched">
+                  <small class="error" ng-show="form.email.$error.required">Tell us your email</small>
+                  <small class="error" ng-show="form.email.$error.email">The email is not valid</small>
+                </div>
             </div>
         </div>
 
         <div class="row">
             <div class="medium-6 columns">
-                <label for="mobile">Mobile
-                    <input class="form-control" type="text" maxlength="10" name="mobile" id="mobile"
-                    ng-model="cart.customer.mobile"/>
+                <label for="mobile" ng-class="{ 'error' : form.mobile.$invalid }">Mobile
+                    <input class="form-control" type="text" maxlength="10" name="mobile" id="mobile" required ng-model="cart.customer.mobile" ng-pattern="/^[7-9]\d{9}$/g"/>
                 </label>
+                <div ng-show="form.$submitted || form.mobile.$touched">
+                  <small class="error" ng-show="form.mobile.$error.required">Tell us your mobile</small>
+                  <small class="error" ng-show="form.mobile.$error.pattern">The mobile number must be 10 digits</small>
+                </div>
             </div>
         </div>
 
@@ -37,49 +47,60 @@
 
         <div class="row">
             <div class="medium-6 columns">
-                <label for="street">Door No. &amp; Street. Name
-                    <input type="text" class="form-control" id="street"
-                    ng-model="cart.customer.street" required/>
+                <label for="street" ng-class="{ 'error' : form.street.$invalid }">Door No. &amp; Street name
+                    <input type="text" class="form-control" id="street" name="street" 
+                    ng-model="cart.customer.street" required maxlength="150" />
                 </label>
+                <div ng-show="form.$submitted || form.street.$touched">
+                  <small class="error" ng-show="form.street.$error.required">Tell us your street name with door number</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="medium-6 columns" ng-class="{ 'error' : form.area.$invalid }">
+                <label for="area" ng-class="{ 'error' : form.street.$invalid }">Area
+                    <input type="text" id="area" name="area" class="form-control"
+                    ng-model="cart.customer.area" required  maxlength="50"/>
+                </label>
+                <div ng-show="form.$submitted || form.area.$touched">
+                  <small class="error" ng-show="form.area.$error.required">Tell us your area</small>
+                </div>
             </div>
         </div>
 
         <div class="row">
             <div class="medium-6 columns">
-                <label for="area">Area
-                    <input type="text" id="area" class="form-control"
-                    ng-model="cart.customer.area"
-                    required/>
+                <label for="landmark" ng-class="{ 'error' : form.landmark.$invalid }">Landmark
+                    <input type="text" id="landmark" name="landmark" class="form-control"
+                    ng-model="cart.customer.landmark"  maxlength="50"/>
                 </label>
+                <div ng-show="form.$submitted || form.landmark.$touched">
+                  <small class="error" ng-show="form.landmark.$error.required">Tell us a landmark near your area</small>
+                </div>
             </div>
         </div>
 
         <div class="row">
             <div class="medium-6 columns">
-                <label for="landmark">Landmark
-                    <input type="text" id="landmark" class="form-control"
-                    ng-model="cart.customer.landmark"
-                    required/>
+                <label for="pincode" ng-class="{ 'error' : form.pincode.$invalid }">Pincode
+                    <input type="text" id="pincode" name="pincode" class="form-control"  maxlength="6"
+                    ng-model="cart.customer.pincode" required ng-pattern="/^6\d{5}$/g"/>
                 </label>
+                <div ng-show="form.$submitted || form.pincode.$touched">
+                  <small class="error" ng-show="form.pincode.$error.required">Tell us your pincode</small>
+                  <small class="error" ng-show="form.pincode.$error.pattern">The pincode must be 6 digits starting on digit 6</small>
+                </div>
             </div>
         </div>
-
+        <br/>
         <div class="row">
             <div class="medium-6 columns">
-                <label for="pincode">Pincode
-                    <input type="text" id="pincode" class="form-control"
-                    ng-model="cart.customer.pincode"
-                    required/>
-                </label>
+                <a href="#/" class="button">Back to Shopping</a>
+                <button type="submit" class="button success" ng-disabled="form.$invalid">
+                    Continue
+                </button>
             </div>
         </div>
-
-        <a href="#/" class="button">Back to Shopping</a>
-        <button type="submit" class="button success">
-            Continue
-        </button>
     </form>
 </div>
-
-
-
