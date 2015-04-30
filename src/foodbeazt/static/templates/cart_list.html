@@ -8,7 +8,7 @@
         </div>
         <div class="medium-1 columns text-right">{{item.quantity}}x</div>
         <div class="medium-3 columns text-right">
-            <span ng-bind-html="item.sell_price | currency"></span>
+            <span ng-bind-html="item.sell_price*item.quantity | currency"></span>
         </div>
     </div>
 </div>

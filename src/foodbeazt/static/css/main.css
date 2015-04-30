@@ -65,7 +65,7 @@ h2{
     color: #38AB00;
 }
 
-.review__item{
+.review__item {
   margin-top: 10px !important;
   padding-bottom: 10px;
   border-bottom:1px solid rgba(22, 135, 197, 0.56);
@@ -77,17 +77,18 @@ h2{
 }
 
 .review__item__price{
-  font-size: 1.24em;
+  font-size: 1.764em;
 }
 
 .review__item__total{
-  font-size: 1.8em;
+  font-size: 2.2em;
   font-weight: bold;
 }
 
-.order__total__label{
-  font-size: 1.24em;
-  line-height: 2.2em;
+.review__item__label{
+  font-size: 1.124em;
+  line-height: 15px;
+  margin-top: 15px;
 }
 
 .header__logo{
@@ -102,6 +103,11 @@ h2{
   color: rgb(255, 68, 0);
   font-weight: bold;
   font-size: 1.1em;
+}
+
+.review__customer__email{
+  color: #38607E;
+  font-weight: bold;
 }
 
 .confirm__order__no{
