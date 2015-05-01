@@ -5025,8 +5025,7 @@ header.header {
 
 nav.header__progress {
   background: #2d333f;
-  color: #ffffff;
-  margin-bottom: 25px; }
+  color: #ffffff; }
   nav.header__progress > .row .columns:first-of-type {
     padding-left: 0; }
 

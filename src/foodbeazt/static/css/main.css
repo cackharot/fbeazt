@@ -1,3 +1,14 @@
+.header{
+  position: fixed;
+  top:0;
+  width: 100%;
+  z-index: 100000;
+}
+
+#main_wrapper{
+    margin-top: 150px;
+}
+
 h2{
   font-family: "ITC Avant Garde Gothic W01";
 }
