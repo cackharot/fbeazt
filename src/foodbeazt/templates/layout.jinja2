@@ -103,6 +103,12 @@ $(function(){
 
     $(document).on('click', '.add-to-cart', function () {
         var cart = $('.icon__shopping_cart');
+        var offsetTop = 160;
+        
+        if($("#main_wrapper").hasClass("active")){
+            offsetTop = 380;
+        }
+
         var imgtodrag = $(this).parent('.product-item').find("img").eq(0);
         if (imgtodrag) {
             var imgclone = imgtodrag.clone()
@@ -119,7 +125,7 @@ $(function(){
             })
             .appendTo($('body'))
             .animate({
-                'top': cart.offset().top + 10,
+                'top': cart.offset().top - offsetTop,
                 'left': cart.offset().left + 10,
                 'width': 75,
                 'height': 75
