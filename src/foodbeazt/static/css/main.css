@@ -54,6 +54,11 @@ h2{
   right: 15px;
 }
 
+.cart-empty-msg{
+  font-size: 14px;
+  font-style: normal;
+}
+
 .checkout__button{
   padding: 12px 0;
 }
@@ -123,13 +128,24 @@ h2{
   padding-top: 20%;
 }
 
-
-.animate-enter {
-  -webkit-transition: 1s linear all; /* Chrome */
-  transition: 1s linear all;
-  opacity: 0;
+.delivery__container input[type=text],
+.delivery__container input[type=email]{
+  border: none;
+  border-bottom: 1px solid #a3a3a3;
+  box-shadow: none;
 }
 
-.animate-enter.animate-enter-active {
-  opacity: 1;
+.delivery__container input[type=text]:focus,
+.delivery__container input[type=email]:focus{
+  border-bottom: 1px solid #4CCBFE;
+}
+
+span.error, small.error {
+  background: #F37560 none repeat scroll 0% 0%;
+  color: #FFF;
+}
+
+label.error > input[type=text],
+label.error > input[type=email]{
+  background: rgba(243, 117, 96, 0.22) none repeat scroll 0% 0%;
 }

@@ -33,13 +33,13 @@
                 </a>
             </div>
             <div class="medium-9 small-8 columns text-right end">
-                <div id="js-shopping-cart-header" class="header__total js-shopping-cart-total" ng-show="canShowCartHeader()">
+                <div id="js-shopping-cart-header" class="header__total" ng-show="canShowCartHeader()">
                     <span class="icon__shopping_cart">
                         <i class="fa fa-shopping-cart"></i>
                         <div class="cart_items alert round label" ng-bind-html="cart.items.length"></div>
                     </span>
                     <span ng-show="cart.items.length > 0" ng-bind-html="cart.total | currency"></span>
-                    <span ng-show="cart.items.length == 0">{{_("Cart is empty!")}}</span>
+                    <span class="cart-empty-msg" ng-show="cart.items.length == 0">{{_("Cart is empty!")}}</span>
                 </div>
             </div>
         </div>
