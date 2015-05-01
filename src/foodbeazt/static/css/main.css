@@ -9,6 +9,10 @@
     margin-top: 150px;
 }
 
+#main_wrapper.active{
+    margin-top: 370px;
+}
+
 h2{
   font-family: "ITC Avant Garde Gothic W01";
 }
