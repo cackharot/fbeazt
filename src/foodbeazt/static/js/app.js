@@ -1,4 +1,4 @@
-var fbeastApp = angular.module('fbeaztApp',['ngRoute', 'ngSanitize', 'ngCookies', 'checklist-model', 'fbFilters', 'ngAnimate'])
+var fbeastApp = angular.module('fbeaztApp',['ngRoute', 'ngSanitize', 'ngCookies', 'ngStorage', 'checklist-model', 'fbFilters', 'ngAnimate'])
                        .run(function($rootScope, $location) {
                             $rootScope.location = $location;
                        })
@@ -161,11 +161,11 @@ fbeastApp.controller('detailCtrl', function($route, $scope, $http, $routeParams,
     retrieve()
 })
 
-fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $routeParams, $log, $cookieStore, eventBus){
+fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $routeParams, $log, $localStorage, eventBus){
     cart = DEFAULT_CART
 
     try {
-        cart = $cookieStore.get('__tmpCart') || DEFAULT_CART
+        cart = $localStorage.tmpCart || DEFAULT_CART
     }catch(e){
 
     }
@@ -178,13 +178,13 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
     }
 
     calculateCartTotals = function(){
-        if(this.cart.items.length == 0){
-            this.cart.delivery_charges = 0.0
-            this.cart.total = 0.0
+        if(cart.items.length == 0){
+            cart.delivery_charges = 0.0
+            cart.total = 0.0
             return
         }
 
-        var tmpTotal = parseFloat(_.chain(this.cart.items)
+        var tmpTotal = parseFloat(_.chain(cart.items)
                             .map(function(x){
                                    return x.quantity*x.sell_price
                             })
@@ -192,18 +192,18 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
                                 return total+x
                             }).value())
 
-        this.cart.delivery_charges = calculateDeliveryCharges(tmpTotal)
-        this.cart.total = tmpTotal + this.cart.delivery_charges
+        cart.delivery_charges = calculateDeliveryCharges(tmpTotal)
+        cart.total = tmpTotal + cart.delivery_charges
     }
 
     $scope.removeItem = function(id){
-        var item = _.remove(this.cart.items, function(x) { return x._id.$oid == id })
+        var item = _.remove(cart.items, function(x) { return x._id.$oid == id })
         return false
     }
 
     $scope.$watchCollection('cart.items', function(newValue, oldValue) {
         calculateCartTotals()
-        $cookieStore.put('__tmpCart', this.cart)
+        $localStorage.tmpCart = $scope.cart
     });
 
     $scope.continueOrder = function(){
@@ -216,7 +216,7 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
                 && curr_path != '/order_success'
                 && curr_path != '/review'
                 && curr_path != '/processing') 
-                && this.cart.total > 0
+                && cart.total > 0
     }
 
     $scope.canShowCartHeader = function(){
@@ -229,11 +229,11 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
         cart.items = []
         $scope.cart = cart
         calculateCartTotals()
-        $cookieStore.remove('__tmpCart')
+        $localStorage.$reset()
     }
 
     $scope.$on('updateCart', function(){
-        cart = $cookieStore.get('__tmpCart')
+        cart = $localStorage.tmpCart
         $scope.cart = cart
         calculateCartTotals()
     })
@@ -241,24 +241,24 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
     $scope.$on('itemAddedToCart', function(){
         var item = eventBus.data
 
-        var data = _.find(this.cart.items, function(x) { return x._id.$oid == item._id.$oid })
+        var data = _.find($scope.cart.items, function(x) { return x._id.$oid == item._id.$oid })
 
         if(data){
             data.quantity++
-            this.calculateCartTotals()
-            $cookieStore.put('__tmpCart', this.cart)
+            calculateCartTotals()
+            $localStorage.tmpCart = $scope.cart
         }else{
             item.quantity = 1
-            this.cart.items.push(item)
+            $scope.cart.items.push(item)
         }
     })
 
     $scope.$on('resetOrder', $scope.resetOrder);
 })
 
-fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $routeParams, $log, $cookieStore, eventBus){
+fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $routeParams, $log, $localStorage, eventBus){
     $scope.location = $location
-    $scope.cart = $cookieStore.get('__tmpCart') || {}
+    $scope.cart = $localStorage.tmpCart
 
     if(!$scope.cart || $scope.cart.items.length == 0) {
         $location.path('/')
@@ -266,21 +266,21 @@ fbeastApp.controller('confirmOrderCtrl', function($location, $scope, $http, $rou
     }
 
     if(!$scope.cart.customer || !$scope.cart.customer.name){
-        $scope.cart.customer = $cookieStore.get('__tmpCustomer') || {}
+        $scope.cart.customer = $localStorage.tmpCustomer || {}
     }
 
     $scope.continueContactDetails = function() {
         // validate customer data
         // submit the cart to service to generate order tracking id
         // and show success message
-        $cookieStore.put('__tmpCart', $scope.cart)
-        $cookieStore.put('__tmpCustomer', $scope.cart.customer)
+        $localStorage.tmpCart = $scope.cart
+        $localStorage.tmpCustomer = $scope.cart.customer
         $location.path('/review')
     }
 })
 
-fbeastApp.controller('reviewCtrl', function($location, $scope, $cookieStore, $http, eventBus){
-    $scope.cart = $cookieStore.get('__tmpCart')
+fbeastApp.controller('reviewCtrl', function($location, $scope, $localStorage, $http, eventBus){
+    $scope.cart = $localStorage.tmpCart
 
     $scope.removeItem = function(id){
         var item = _.remove($scope.cart.items, function(x) { return x._id.$oid == id })
@@ -312,21 +312,22 @@ fbeastApp.controller('reviewCtrl', function($location, $scope, $cookieStore, $ht
 
     $scope.$watchCollection('cart.items', function(newValue, oldValue) {
         $scope.calculateCartTotals()
-        $cookieStore.put('__tmpCart', $scope.cart)
+        $localStorage.tmpCart = $scope.cart
         eventBus.updateCart();
     });
 
     $scope.confirmOrder = function() {
+        $localStorage.tmpCart = $scope.cart
         $location.path('/processing')
     }
 })
 
-fbeastApp.controller('orderProcessingCtrl', function($location, $scope, $cookieStore, $http){
-    cart = $scope.cart = $cookieStore.get('__tmpCart')
+fbeastApp.controller('orderProcessingCtrl', function($location, $scope, $localStorage, $http){
+    cart = $scope.cart = $localStorage.tmpCart
     var url = '/api/order/-1'
 
     if(!cart || !cart.customer || cart.customer.name == '' || cart.customer.email == ''
-    || cart.customer.phone == '' || cart.customer.address  == ''){
+    || cart.customer.mobile == '' || cart.customer.street  == ''){
         alert('Enter your delivery details')
         $location.path('/delivery_details')
         return
@@ -339,8 +340,8 @@ fbeastApp.controller('orderProcessingCtrl', function($location, $scope, $cookieS
 
     $http.post(url, $scope.cart).success(function(data){
         if(data && data.data)
-            this.cart.order_no = data.data.order_no
-        $cookieStore.put('__tmpCart', $scope.cart)
+            cart.order_no = data.data.order_no
+        $localStorage.tmpCart = $scope.cart
         $location.path('/order_success')
     }).error(function(e){
         console.log(e)
@@ -348,8 +349,8 @@ fbeastApp.controller('orderProcessingCtrl', function($location, $scope, $cookieS
     })
 })
 
-fbeastApp.controller('orderSuccessCtrl', function($location, $scope, eventBus, $cookieStore){
-    $scope.confirmed_cart = $cookieStore.get('__tmpCart')
+fbeastApp.controller('orderSuccessCtrl', function($location, $scope, eventBus, $localStorage){
+    $scope.confirmed_cart = $localStorage.tmpCart
     if(!$scope.confirmed_cart || !$scope.confirmed_cart.items || $scope.confirmed_cart.items.length == 0){
         $location.path("/")
         return

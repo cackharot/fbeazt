@@ -13,6 +13,11 @@
     margin-top: 370px;
 }
 
+.header__cart .cart__line-items{
+  max-height: 210px;
+  overflow-y: auto;
+}
+
 h2{
   font-family: "ITC Avant Garde Gothic W01";
 }

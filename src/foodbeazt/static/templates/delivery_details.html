@@ -7,7 +7,7 @@
 
 		<div class="row">
 			<div class="medium-6 columns">
-				<label for="name" ng-class="{ 'error' : form.name.$invalid }">Name
+				<label for="name" ng-class="{ 'error' : form.name.$touched && form.name.$invalid }">Name
 					<input class="form-control" type="text" name="name" id="name" ng-model="cart.customer.name" required minlength="4" maxlength="30" />
 				</label>
 				<div ng-show="form.$submitted || form.name.$touched">
@@ -18,7 +18,7 @@
 			</div>
 		
 			<div class="medium-6 columns">
-				<label for="email" ng-class="{ 'error' : form.email.$invalid }">Email
+				<label for="email" ng-class="{ 'error' : form.email.$touched && form.email.$invalid }">Email
 					<input class="form-control" type="email" name="email" id="email" ng-model="cart.customer.email"
 					required/>
 				</label>
@@ -31,7 +31,7 @@
 
 		<div class="row">
 			<div class="medium-6 columns">
-				<label for="mobile" ng-class="{ 'error' : form.mobile.$invalid }">Mobile
+				<label for="mobile" ng-class="{ 'error' : form.mobile.$touched && form.mobile.$invalid }">Mobile
 					<input class="form-control" type="text" maxlength="10" name="mobile" id="mobile" required ng-model="cart.customer.mobile" ng-pattern="/^[7-9]\d{9}$/g"/>
 				</label>
 				<div ng-show="form.$submitted || form.mobile.$touched">
@@ -45,7 +45,7 @@
 
 		<div class="row">
 			<div class="medium-6 columns">
-				<label for="street" ng-class="{ 'error' : form.street.$invalid }">Door No. &amp; Street name
+				<label for="street" ng-class="{ 'error' : form.street.$touched && form.street.$invalid }">Door No. &amp; Street name
 					<input type="text" class="form-control" id="street" name="street" 
 					ng-model="cart.customer.street" required maxlength="150" />
 				</label>
@@ -55,7 +55,7 @@
 			</div>
 		
 			<div class="medium-6 columns">
-				<label for="area" ng-class="{ 'error' : form.area.$invalid }">Area
+				<label for="area" ng-class="{ 'error' : form.area.$touched && form.area.$invalid }">Area
 					<input type="text" id="area" name="area" class="form-control"
 					ng-model="cart.customer.area" required  maxlength="50"/>
 				</label>
@@ -67,7 +67,7 @@
 
 		<div class="row">
 			<div class="medium-6 columns">
-				<label for="landmark" ng-class="{ 'error' : form.landmark.$invalid }">Landmark
+				<label for="landmark" ng-class="{ 'error' : form.landmark.$touched && form.landmark.$invalid }">Landmark
 					<input type="text" id="landmark" name="landmark" class="form-control"
 					ng-model="cart.customer.landmark"  maxlength="50"/>
 				</label>
@@ -77,7 +77,7 @@
 			</div>
 		
 			<div class="medium-6 columns">
-				<label for="pincode" ng-class="{ 'error' : form.pincode.$invalid }">Pincode
+				<label for="pincode" ng-class="{ 'error' : form.pincode.$touched && form.pincode.$invalid }">Pincode
 					<input type="text" id="pincode" name="pincode" class="form-control"  maxlength="6"
 					ng-model="cart.customer.pincode" required ng-pattern="/^6\d{5}$/g"/>
 				</label>
