@@ -148,8 +148,9 @@ def mjson(data, code, headers=None):
 
 @app.route("/")
 def home():
-    name = session.get('name', None)
-    return render_template('launch_home.jinja2', name=name)
+    return redirect('/beta')
+    #name = session.get('name', None)
+    #return render_template('launch_home.jinja2', name=name)
 
 
 @app.route("/beta")

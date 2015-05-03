@@ -37,6 +37,15 @@ fbeastApp.config(['$routeProvider', function($routeProvider){
             templateUrl: '/static/templates/processing.html',
             controller: 'orderProcessingCtrl'
           }).
+          when('/about', {
+            templateUrl: '/static/templates/about.html'
+          }).
+          when('/terms', {
+            templateUrl: '/static/templates/terms.html'
+          }).
+          when('/faq', {
+            templateUrl: '/static/templates/faq.html'
+          }).
           otherwise({
             redirectTo: '/'
           });
