@@ -8,7 +8,7 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
     <meta name="description" content="Online food delivery network at Puducherry"/>
     <meta name="metatags"
-          content="puducherry, food, dinner, lunch, breakfast, restaurants, cooking, recipes, briyani, pizza, online food at pondy, online food"/>
+    content="puducherry, food, dinner, lunch, breakfast, restaurants, cooking, recipes, briyani, pizza, online food at pondy, online food"/>
     <meta name="author" content="foodbeazt.in"/>
 
     <title>FoodBeazt</title>
@@ -24,12 +24,13 @@
 </head>
 
 <body>
-<div class="wrapper" ng-app="fbeaztApp">
-     <header class="header" ng-controller="cartCtrl">
+    <div class="wrapper" ng-app="fbeaztApp">
+       <header class="header" ng-controller="cartCtrl">
         <div class="row">
             <div class="medium-3 small-4 columns header__logo">
                 <a href="/beta">
-                    <img src="{{ url_for('static', filename='img/logo.png') }}"/>
+                    <!-- <img src="{{ url_for('static', filename='img/logo.png') }}"/> -->
+                    Food<span>Beazt</span>
                 </a>
             </div>
             <div class="medium-9 small-8 columns text-right end">
@@ -40,6 +41,27 @@
                     </span>
                     <span ng-show="cart.items.length > 0" ng-bind-html="cart.total | currency"></span>
                     <span class="cart-empty-msg" ng-show="cart.items.length == 0">{{_("Cart is empty!")}}</span>
+                </div>
+                <div class="header__help">
+                    <span>Help</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header__cart hide" id="js-help-details">
+            <div class="row">
+                <div class="medium-3 columns cart__title">
+                    Help
+                </div>
+                <div class="medium-9 columns">
+                    <p>You can order your favourite foods by following the below 3 easy steps</p>
+                    <ol>
+                        <li>Search &amp; <b>Choose</b> your items from the available menus</li>
+                        <li>Click <b>Checkout</b> button and enter your contact and delivery details</li>
+                        <li>Click <b>Continue</b> and <b>Confirm</b> your order</li>
+                    </ol>
+                    <p>We deliver the items at the earliest possible time. In case if some items are not avaiable, we will contact you via mobile to arrange for an alternate item or adjust your billing.</p>
+                    <p><b>Pay cash on delivery</b> of the order</p>
                 </div>
             </div>
         </div>
@@ -75,6 +97,35 @@
     </div>
 
 </div>
+
+<footer>
+    <div class="row">
+        <div class="medium-4 columns">
+            <ul>
+                <li>
+                    <a href="/about">About</a>
+                </li>
+                <li>
+                    <a href="/terms">Terms of use</a>
+                </li>
+                <li>
+                    <a href="/faq">FAQ</a>
+                </li>
+            </ul>
+        </div>
+        <div class="medium-8 columns text-right">
+            <ul>
+                <li>
+                    &copy;2015 foodbeazt.in
+                </li>
+                <li>
+                    Keep in touch: 
+                </li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
 <!-- Core JavaScript Files -->
 <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
 <script src="{{ url_for('static', filename='js/vendor/jquery-ui.js') }}"></script>
@@ -94,59 +145,65 @@
 <script src="{{ url_for('static', filename='js/ga.js') }}"></script>
 <script src="{{ url_for('static', filename='js/filters.js') }}"></script>
 <script>
-$(function(){
-    $("#js-shopping-cart-header").click(function(){
-        $(this).toggleClass("active");
-        $("#main_wrapper").toggleClass("active");
-        $("#js-shopping-cart-details").toggleClass("hide");
-    });
+    $(function(){
+        $("#js-shopping-cart-header").click(function(){
+            $(this).toggleClass("active");
+            $("#main_wrapper").toggleClass("active");
+            $("#js-shopping-cart-details").toggleClass("hide");
+        });
 
-    $(document).on('click', '.add-to-cart', function () {
-        var cart = $('.icon__shopping_cart');
-        var offsetTop = 160;
-        
-        if($("#main_wrapper").hasClass("active")){
-            offsetTop = 380;
-        }
+        $(".header__help").click(function(){
+            $(this).toggleClass("active");
+            $("#main_wrapper").toggleClass("active");
+            $("#js-help-details").toggleClass("hide");
+        });
 
-        var imgtodrag = $(this).parent('.product-item').find("img").eq(0);
-        if (imgtodrag) {
-            var imgclone = imgtodrag.clone()
-            .offset({
-                top: imgtodrag.offset().top,
-                left: imgtodrag.offset().left
-            })
-            .css({
-                'opacity': '0.5',
-                'position': 'absolute',
-                'height': '150px',
-                'width': '150px',
-                'z-index': '100'
-            })
-            .appendTo($('body'))
-            .animate({
-                'top': cart.offset().top - offsetTop,
-                'left': cart.offset().left + 10,
-                'width': 75,
-                'height': 75
-            }, 700, 'easeInOutExpo');
+        $(document).on('click', '.add-to-cart', function () {
+            var cart = $('.icon__shopping_cart');
+            var offsetTop = 160;
 
-            setTimeout(function () {
-                cart.effect("pulsate", {
-                    times: 2
-                }, 100, function(){
-                    cart.fadeIn();
+            if($("#main_wrapper").hasClass("active")){
+                offsetTop = 380;
+            }
+
+            var imgtodrag = $(this).parent('.product-item').find("img").eq(0);
+            if (imgtodrag) {
+                var imgclone = imgtodrag.clone()
+                .offset({
+                    top: imgtodrag.offset().top,
+                    left: imgtodrag.offset().left
+                })
+                .css({
+                    'opacity': '0.5',
+                    'position': 'absolute',
+                    'height': '150px',
+                    'width': '150px',
+                    'z-index': '100'
+                })
+                .appendTo($('body'))
+                .animate({
+                    'top': cart.offset().top - offsetTop,
+                    'left': cart.offset().left + 10,
+                    'width': 75,
+                    'height': 75
+                }, 700, 'easeInOutExpo');
+
+                setTimeout(function () {
+                    cart.effect("pulsate", {
+                        times: 2
+                    }, 100, function(){
+                        cart.fadeIn();
+                    });
+                }, 900);
+
+                imgclone.animate({
+                    'width': 0,
+                    'height': 0
+                }, function () {
+                    $(this).detach();
                 });
-            }, 900);
-
-            imgclone.animate({
-                'width': 0,
-                'height': 0
-            }, function () {
-                $(this).detach();
-            });
-        }
-    });
+            }
+        });
 });
 </script>
 {% block scripts %}

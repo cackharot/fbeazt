@@ -155,7 +155,7 @@ fbeastApp.controller('detailCtrl', function($route, $scope, $http, $routeParams,
     }
 
     $scope.addToCart = function(id){
-        eventBus.send({'_id': id})
+        eventBus.send($scope.item)
     }
 
     retrieve()

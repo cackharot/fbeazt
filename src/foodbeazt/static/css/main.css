@@ -1,8 +1,33 @@
+.wrapper {
+    display: block;
+    min-height: 100%;
+    width: auto;
+}
+
 .header{
   position: fixed;
   top:0;
   width: 100%;
   z-index: 99;
+}
+
+.header__logo a {
+    font-size: 2em;
+    font-weight: bold;
+    color: #fff;
+}
+
+.header__help{
+  cursor: pointer;
+  padding: 2rem 1rem 1.1rem 1.5rem;
+}
+
+.header__help.active {
+    background: #2D374B none repeat scroll 0% 0%;
+}
+
+.header__help.active > span {
+    background-image: url("/static/Images/Icons/icons_Icon-Header-Chevron-up.svg");
 }
 
 #main_wrapper{
@@ -13,10 +38,41 @@
     margin-top: 370px;
 }
 
+.header__cart{
+  min-height: 240px;
+}
+
 .header__cart .cart__line-items{
   max-height: 210px;
   overflow-y: auto;
 }
+
+footer{
+  background: #2D374B none repeat scroll 0% 0%;
+  line-height: 1.5rem;
+  padding: 1rem 0rem;
+  color: #fff;
+}
+
+footer ul{
+  margin: 0px;
+}
+
+footer li{
+  list-style: none;
+  display: inline-block;;
+  padding: 0rem 1rem;
+}
+
+footer a{
+  color:#99D8F3;
+}
+
+footer a:hover,
+footer a:focus{
+  color:#00B2FF;
+}
+
 
 h2{
   font-family: "ITC Avant Garde Gothic W01";
