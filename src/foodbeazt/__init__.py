@@ -1,7 +1,7 @@
 import os
 from urllib.parse import unquote
 from uuid import uuid4
-from flask import Flask, session, render_template, make_response, request, redirect, g, current_app
+from flask import Flask, session, render_template, make_response, request, redirect, g, current_app, flash
 from flask_login import login_required, UserMixin, login_user, logout_user, current_user
 from flask_mail import Mail
 from flask_pymongo import PyMongo
@@ -120,15 +120,20 @@ class User(UserMixin):
 
 
 def get_or_create_user(item):
-    print(item)
     service = UserService(mongo.db)
     prev = service.get_by_email(item['email'])
     if prev:
+        print(prev)
         return prev
     print('Creating new user...')
     tenant_id = TenantService(mongo.db).get_by_name("FoodBeazt")['_id']
-    user = {'username': item['email'], 'email': item['email'], 'name': item['name'], 'auth_type': 'google',
-            'tenant_id': tenant_id, 'roles': ['member'], 'identity': item['id']}
+    email = item['email']
+    if email == "cacharot@gmail.com":
+        roles = ["tenant_admin", 'member']
+    else:
+        roles = ["member"]
+    user = {'username': item['email'], 'email': email, 'name': item['name'], 'auth_type': 'google',
+            'tenant_id': tenant_id, 'roles': roles, 'identity': item['id']}
     service.create(user)
     return user
 
@@ -165,6 +170,7 @@ def beta_home():
 @login_required
 def admin_home():
     if not admin_permission.can():
+        print("admin permission required")
         doLogout()
         return redirect('/admin')
     return render_template('admin/index.jinja2')
@@ -174,7 +180,7 @@ def admin_home():
 @app.route('/logout/')
 def app_logout():
     doLogout()
-    return redirect('/admin')
+    return redirect('/')
 
 def doLogout():
     logout_user()

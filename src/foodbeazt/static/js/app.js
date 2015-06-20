@@ -175,6 +175,7 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
 
     try {
         cart = $localStorage.tmpCart || DEFAULT_CART
+        cart.order_no = ''
     }catch(e){
 
     }
@@ -216,6 +217,7 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
     });
 
     $scope.continueOrder = function(){
+        $localStorage.tmpCart = $scope.cart
         $location.path('/delivery_details')
     }
 
@@ -237,6 +239,7 @@ fbeastApp.controller('cartCtrl', function($route, $location, $scope, $http, $rou
         cart = DEFAULT_CART
         cart.items = []
         $scope.cart = cart
+        $localStorage.tmpCart = $scope.cart
         calculateCartTotals()
         $localStorage.$reset()
     }
@@ -332,24 +335,24 @@ fbeastApp.controller('reviewCtrl', function($location, $scope, $localStorage, $h
 })
 
 fbeastApp.controller('orderProcessingCtrl', function($location, $scope, $localStorage, $http){
-    cart = $scope.cart = $localStorage.tmpCart
+    $scope.cart = $localStorage.tmpCart
     var url = '/api/order/-1'
 
-    if(!cart || !cart.customer || cart.customer.name == '' || cart.customer.email == ''
-    || cart.customer.mobile == '' || cart.customer.street  == ''){
+    if(!$scope.cart || !$scope.cart.customer || $scope.cart.customer.name == '' || $scope.cart.customer.email == ''
+    || $scope.cart.customer.mobile == '' || $scope.cart.customer.street  == ''){
         alert('Enter your delivery details')
         $location.path('/delivery_details')
         return
     }
 
-    if(cart.order_no && cart.order_no.length > 0){
+    if($scope.cart.order_no && $scope.cart.order_no.length > 0){
         $location.path('/order_success')
         return
     }
 
     $http.post(url, $scope.cart).success(function(data){
         if(data && data.data)
-            cart.order_no = data.data.order_no
+            $scope.cart.order_no = data.data.order_no
         $localStorage.tmpCart = $scope.cart
         $location.path('/order_success')
     }).error(function(e){
