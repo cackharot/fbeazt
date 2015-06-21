@@ -66,7 +66,7 @@ def setup():
         print("Creating admin tenant")
         item = {"name": "FoodBeazt", "description": "super admin tenant", "website": "http://www.foodbeazt.in",
                 "url": "http://www.foodbeazt.in", "type": "super_admin", "logo": "foodbeazt_logo.png",
-                "contact": {"name": "admin", "email": "admin@foodbeazt.in", "phone": "+91 7373730484"},
+                "contact": {"name": "admin", "email": "foodbeazt@gmail.com", "phone": "+91 7373730484"},
                 "registered_ip": "10.0.0.1",
                 "address": {"address": "Puducherry", "zipcode": "605001", "country": "INDIA", "state": "Puducherry"}}
         tenant_id = tenant_service.create(item)

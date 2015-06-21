@@ -123,12 +123,11 @@ def get_or_create_user(item):
     service = UserService(mongo.db)
     prev = service.get_by_email(item['email'])
     if prev:
-        print(prev)
         return prev
     print('Creating new user...')
     tenant_id = TenantService(mongo.db).get_by_name("FoodBeazt")['_id']
     email = item['email']
-    if email == "cacharot@gmail.com":
+    if email == "cackharot@gmail.com":
         roles = ["tenant_admin", 'member']
     else:
         roles = ["member"]
@@ -170,7 +169,6 @@ def beta_home():
 @login_required
 def admin_home():
     if not admin_permission.can():
-        print("admin permission required")
         doLogout()
         return redirect('/admin')
     return render_template('admin/index.jinja2')
