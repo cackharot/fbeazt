@@ -27,7 +27,7 @@
 }
 
 .header__help.active > span {
-    background-image: url("/static/Images/Icons/icons_Icon-Header-Chevron-up.svg");
+    background-image: url("/static/images/icons/icons_Icon-Header-Chevron-up.svg");
 }
 
 #main_wrapper{
