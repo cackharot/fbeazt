@@ -1,0 +1,41 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false"
+     ng-controller="dataManageCtrl">
+    <h3>
+        <div class="pull-right">
+            <a href="#/manage_data" ng-click="exportData()" class="btn btn-success" title="Export current data"><em
+                    class="fa fa-plus"></em>&nbsp;Export</a>
+        </div>
+        Data Management
+        <small>Manage import and export of data</small>
+    </h3>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <th>Download</th>
+                        <th>Table count</th>
+                        <th>Size</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in model" ng-class="{'text-danger': item.status == 'CANCELLED'}">
+                            <td><a href="{{item.url}}">{{item.url}}</a></td>
+                            <td>{{item.table_count}}</td>
+                            <td>{{item.size}}</td>
+                            <td>{{item.created_at | datetime}}</td>
+                            <td>
+                                <span class="info">
+                                    {{item.status}}
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

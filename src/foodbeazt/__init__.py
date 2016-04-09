@@ -186,15 +186,17 @@ def doLogout():
     identity_changed.send(current_app._get_current_object(), identity=AnonymousIdentity())
     session.clear()
 
-@app.route("/recreatedb")
-def recreate_db():
-    print('Dropping database(' + app.config['MONGO_DBNAME'] + ')....\n')
-    c = Connection()
-    c.drop_database(app.config['MONGO_DBNAME'])
-    return redirect('/')
+# @app.route("/recreatedb")
+# def recreate_db():
+#     print('Dropping database(' + app.config['MONGO_DBNAME'] + ')....\n')
+#     c = Connection()
+#     c.drop_database(app.config['MONGO_DBNAME'])
+#     return redirect('/')
 
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+export_data_folder = os.path.join(APP_ROOT, 'uploads/export')
+import_data_folder = os.path.join(APP_ROOT, 'uploads/import')
 upload_folder = os.path.join(APP_ROOT, 'static/images/products/')
 
 
@@ -228,6 +230,9 @@ from foodbeazt.resources.user import UserApi, UserListApi
 from foodbeazt.resources.store import StoreApi, StoreListApi
 from foodbeazt.resources.product import ProductApi, ProductListApi, ProductActivateApi
 from foodbeazt.resources.order import OrderApi, OrderListApi
+from foodbeazt.resources.export_data import ExportDataApi
+
+api.add_resource(ExportDataApi, '/api/data_manage')
 
 api.add_resource(SubscriptionApi, '/api/subscribe/<string:email>')
 api.add_resource(SubscriptionListApi, '/api/subscriptions')
