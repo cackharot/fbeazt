@@ -1,1 +1,21 @@
-<div class="row" ng-include="'/static/templates/product_list.html'"></div>
+<div class="row" ng-controller="mainCtrl">
+  <div class="medium-12 columns">
+    <form class="form-search" id="addressForm" name="addressForm" ng-submit="search(true)">
+      <input placeholder="Enter address or pincode" value=""
+        ng-minlength="3" ng-maxlength="250"
+        ng-required="required"
+        name="address" id="address"
+        class="input-large search-query" 
+        id="txtAddress" name="txtAddress" ng-model="address"/>
+      <select name="sltCity" id="sltCity" ng-model="city">
+        <option value="puducherry">Puducherry</option>
+      </select>
+      <button type="submit">GO</button>
+      <p ng-show="submitted && addressForm.address.$invalid 
+                  && !addressForm.address.$pristine" 
+        class="help-block">Your current address/pincode is required.</p>
+    </form>
+  </div>
+</div>
+<!--<div class="row" ng-include="'/static/templates/product_list.html'"></div>-->
+<div class="row" ng-include="'/static/templates/store_list.html'"></div>

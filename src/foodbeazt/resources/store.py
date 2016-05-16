@@ -10,7 +10,8 @@ class StoreListApi(Resource):
         self.service = StoreService(mongo.db)
 
     def get(self):
-        lst = self.service.search(tenant_id=g.user.tenant_id)
+        tenant_id = g.user.tenant_id
+        lst = self.service.search(tenant_id=tenant_id)
         return lst
 
 

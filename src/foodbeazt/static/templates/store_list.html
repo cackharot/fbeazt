@@ -1,0 +1,35 @@
+<div ng-controller="storeSearchResultCtrl">
+  <div ng-show="submitted && items.length == 0" class="alert-box alert-info">
+    <p>Oops! No restaurants found for your search word.</p>
+  </div>
+  <div class="row" ng-show="items.length > 0">
+    <div class="medium-12 columns store-item" ng-repeat="item in items">
+      <div class="store-image">
+        <a href="#/restaurant/{{item._id.$oid}}"
+            title="Click to view '{{item.name}}' menu">
+            <img class="thumbnail img-responsive" ng-src="{{item.image_url | default_store_img}}"/>
+        </a>
+      </div>
+      <a href="#/restaurant/{{item._id.$oid}}">
+        <h4 class="store-name">{{item.name}}</h4>
+      </a>
+      <div class="store-foodtype">
+        <span ng-bind="store.food_type.join()"></span>
+      </div>
+      <div class="store-address" ng-bind-html="item.address"></div>
+      <div class="store-timings">
+        Open: <span ng-bind="item.open_time"></span>
+        Close: <span ng-bind="item.close_time"></span>
+      </div>
+      <div class="store-cusines">
+        Cusines: <span ng-bind="item.cuisine"></span>
+      </div>
+      <div class="store-phone">
+        Phone: <span ng-bind="item.phone"></span>
+      </div>
+      <a href="#/restaurant/{{item._id.$oid}}" class="button view-menu">
+        <i class="fa fa-view"></i>&nbsp;View Menu
+      </a>
+    </div>
+  </div>
+</div>

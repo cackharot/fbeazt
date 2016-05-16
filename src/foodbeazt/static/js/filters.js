@@ -38,3 +38,8 @@ angular.module('fbFilters', [])
       return input ? ('/static/images/products/' + input) : '/static/images/na-product.jpg'
     }
 })
+.filter('default_store_img', function(){
+    return function(input) {
+      return input ? ('/static/images/resturants/' + input) : '/static/images/na-resturant.jpg'
+    }
+})
