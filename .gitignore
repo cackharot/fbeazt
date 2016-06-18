@@ -67,3 +67,6 @@ src/foodbeazt/static/images/products/*
 uploads
 src/foodbeazt/uploads
 src/foodbeazt/static/uploads
+
+*.sublime-project
+*.sublime-workspace

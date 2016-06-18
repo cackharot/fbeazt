@@ -195,8 +195,8 @@ def doLogout():
 
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-export_data_folder = os.path.join(APP_ROOT, 'uploads/export')
-import_data_folder = os.path.join(APP_ROOT, 'uploads/import')
+export_data_folder = os.path.join(APP_ROOT, 'uploads', 'export')
+import_data_folder = os.path.join(APP_ROOT, 'uploads', 'import')
 upload_folder = os.path.join(APP_ROOT, 'static/images/products/')
 
 

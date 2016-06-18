@@ -13,7 +13,7 @@ fbeastApp.config(['$routeProvider', function($routeProvider){
             templateUrl: '/static/templates/search_form.html',
             controller: 'mainCtrl'
           }).
-					when('/restaurant/:id', {
+          when('/restaurant/:id', {
             templateUrl: '/static/templates/product_list.html',
             controller: 'searchResultCtrl'
           }).
@@ -70,7 +70,7 @@ fbeastApp.factory('eventBus', function($rootScope) {
         this.search_data = data;
         $rootScope.$broadcast('itemSearch');
     };
-		
+    
     eventBus.storeSearchEvent = function(data) {
         this.search_data = data;
         $rootScope.$broadcast('storeSearch');
@@ -88,116 +88,148 @@ fbeastApp.factory('eventBus', function($rootScope) {
 });
 
 fbeastApp.controller('mainCtrl', function($route, $scope, $http, $log, eventBus, $routeParams){
-	$scope.city = "puducherry"
-	$scope.address = ''
-	$scope.category = ''
+  $scope.city = "puducherry"
+  $scope.address = ''
+  $scope.category = ''
 
-	$scope.search = function() {
-		$scope.submitted = true
-		if($scope.addressForm.$valid === false || $scope.address.length == 0){
-			return
-		}
-		
-		try{
-			pincode = parseInt($scope.address)
-			if($scope.address.length != 6){
-				addressForm.address.$error.pincode = true
-				return
-			}
-		}catch(ignored){}
-		
-		$scope.city = "puducherry"
-		eventBus.storeSearchEvent({
-				'category': $scope.category,
-				'address': $scope.address,
-				'city': $scope.city
-		})
-	}
+  $scope.search = function() {
+    $scope.submitted = true
+    if($scope.addressForm.$valid === false || $scope.address.length == 0){
+      return
+    }
+    
+    try{
+      pincode = parseInt($scope.address)
+      if($scope.address.length != 6){
+        addressForm.address.$error.pincode = true
+        return
+      }
+    }catch(ignored){}
+    
+    $scope.city = "puducherry"
+    eventBus.storeSearchEvent({
+        'category': $scope.category,
+        'address': $scope.address,
+        'city': $scope.city
+    })
+  }
 })
 
 fbeastApp.controller('storeSearchResultCtrl', function($route,$scope,$http,eventBus){
-	$scope.items = []
-	var url = '/api/stores'
-	
-	var search = function(){
-		$scope.submitted = true
-		var options = $.extend({}, eventBus.search_data);
-		
-		$http.get(url, {params:options}).success(function(data){
-			$scope.items = data
-		}).error(function(err){
-			console.log(err)
-		})
-	};
-	
-	$scope.$on('storeSearch', search);	
+  $scope.items = []
+  var url = '/api/stores'
+  
+  var search = function(){
+    $scope.submitted = true
+    var options = $.extend({}, eventBus.search_data);
+    
+    $http.get(url, {params:options}).success(function(data){
+      $scope.items = data
+    }).error(function(err){
+      console.log(err)
+    })
+  };
+  
+  $scope.$on('storeSearch', search);  
 })
 
 fbeastApp.controller('searchResultCtrl', function($route, $scope, $http, $routeParams, eventBus){
-	$scope.total = 0
-	$scope.page_no = 1
-	$scope.page_size = 12
+  $scope.total = 0
+  $scope.page_no = 1
+  $scope.page_size = 12
 
-	$scope.store = null
-	$scope.items = []
-	var store_id = $routeParams.id || '-1'
-	var url = '/api/products/' + store_id
-	
-	$http.get('/api/store/'+store_id).success(function(store_data){
-		$scope.store = store_data
-	}).error(function(err){
-		console.log(err)
-	})
+  $scope.store = null
+  $scope.items = []
+  $scope.categories = []
+  $scope.category_names = []
+  var store_id = $routeParams.id || '-1'
+  var url = '/api/products/' + store_id
+  
+  $http.get('/api/store/'+store_id).success(function(store_data){
+    $scope.store = store_data
+  }).error(function(err){
+    console.log(err)
+  })
 
-	var getData = function(args, cb){
-		$http.get(url, {params: args}).success(function(data){
-			cb(data)
-		}).error(function(err){
-			console.log(err)
-		})
-	}
+  var getData = function(args, cb){
+    $http.get(url, {params: args}).success(function(data){
+      cb(data)
+    }).error(function(err){
+      console.log(err)
+    })
+  }
 
-	getArgs = function(filter_text, category){
-		return { 'page_no': $scope.page_no, 'page_size': $scope.page_size,
-					'filter_text': filter_text, 'category': category }
-	}
+  getArgs = function(filter_text, category){
+    return { 'page_no': $scope.page_no, 'page_size': $scope.page_size,
+          'filter_text': filter_text, 'category': category }
+  }
 
-	$scope.addToCart = function(id){
-		var data = _.find(this.items, function(x) { return x._id.$oid == id; })
-		eventBus.send(data)
-	}
+  $scope.addToCart = function(id){
+    var data = _.find(this.items, function(x) { return x._id.$oid == id; })
+    eventBus.send(data)
+  }
 
-	$scope.loadMore = function(){
-		$scope.page_no = $scope.page_no + 1
-		var args = getArgs()
-		getData(args, function(data){
-			$scope.total = data.total
-			$scope.items = $scope.items.concat(data.items)
-		})
-	}
+  $scope.loadMore = function(){
+    $scope.page_no = $scope.page_no + 1
+    var args = getArgs()
+    getData(args, function(data){
+      $scope.total = data.total
+      $scope.items = $scope.items.concat(data.items)
+    })
+  }
+  
+  var groupCategories = function(items){
+    if(items == null || items.length == 0){
+      return []
+    }
+    var categories=[]
+    for(var i=0; i < items.length; ++i){
+      var cur_item = items[i]
+      var found_item = categories.find(function(d){ return cur_item.category == d.name })
+      if(found_item && found_item.items){
+        found_item['items'].push(cur_item)
+      }else{
+        categories.push({'name': cur_item.category, 'items': [cur_item]})
+      }
+    }
+    return categories
+  }
+  
+  var getCategoryNames = function(categories){
+    if(categories == null || categories.length == 0){
+      return []
+    }
+    var names=[]
+    for(var i=0; i < categories.length; ++i){
+      names.push(categories[i].name)
+    }
+    return names
+  }
 
-	var search = function(){
-			var options = $.extend({
-														'reset_page_data': true,
-														'filter_text': '',
-														'category': ''
-												},
-												eventBus.search_data);
+  var search = function(){
+      var options = $.extend({
+                            'reset_page_data': true,
+                            'filter_text': '',
+                            'category': ''
+                        },
+                        eventBus.search_data);
 
-			if(options.reset_page_data){
-				$scope.page_no = 1
-			}
-			var args = getArgs(options.filter_text, options.category)
-			getData(args, function(searchResultData){
-				$scope.total = searchResultData.total
-				$scope.items = searchResultData.items
-			})
-		};
+      if(options.reset_page_data){
+        $scope.page_no = 1
+      }
+      var args = getArgs(options.filter_text, options.category)
+      getData(args, function(searchResultData){
+        $scope.total = searchResultData.total
+        $scope.items = searchResultData.items
+        $scope.categories = groupCategories($scope.items)
+        $scope.category_names = getCategoryNames($scope.categories)
+      })
+    };
 
-	$scope.$on('itemSearch', search)
-	if(store_id != '-1'){	
-		search()
-	}
+  $scope.$on('itemSearch', search)
+  if(store_id != '-1'){ 
+    search()
+  }
 })
 
 fbeastApp.controller('detailCtrl', function($route, $scope, $http, $routeParams, eventBus){

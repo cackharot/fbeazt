@@ -27,7 +27,17 @@
       </div>
     </div>
   </div>
+  <div class="row" ng-show="items.length == 0">
+    <div class="alert-box alert-info">
+      <p>Oops! No food items available for this restaurant.</p>
+    </div>
+  </div>
   <div class="row" ng-show="items.length > 0">
+    <div class="medium-12 columns" ng-show="category_names.length > 0">
+      <ul ng-repeat="cn in category_names">
+        <li>{{cn}}</li>
+      </ul>
+    </div>
     <div class="medium-3 columns text-center product-item" ng-repeat="item in items">
       <div class="product-image">
         <a href="#/detail/{{item.store_id.$oid}}/{{item._id.$oid}}"
