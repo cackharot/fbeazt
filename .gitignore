@@ -70,3 +70,8 @@ src/foodbeazt/static/uploads
 
 *.sublime-project
 *.sublime-workspace
+
+node_modules/
+bower_components/
+tmp/
+.tmp/
