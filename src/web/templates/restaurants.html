@@ -1,0 +1,25 @@
+<h2>Restaurants</h2>
+<ul class="restaurants">
+  <li *ngFor="let item of restaurants"
+    [class.selected]="item === selectedRestaurant"
+    (click)="onSelect(item)">
+    <div class="row">
+      <div class="small-3 columns">
+        <img src="" alt="Pic"/>
+      </div>
+      <div class="small-9 columns">
+        <h3>
+          {{item.name}}
+          <span class="rating">
+            <label class="secondary label">{{item.rating || 3.5}}</label>
+          </span>
+        </h3>
+        <div class="telephone"><i class="fi-telephone"></i> {{item.phone}}</div>
+        <div class="timings">
+          <span><i class="fi-clock"></i> {{item.open_time}} AM to {{item.close_time}} PM</span>
+        </div>
+        <span class="cusines">{{item.cuisine}}</span>
+      </div>
+    </div>
+  </li>
+</ul>

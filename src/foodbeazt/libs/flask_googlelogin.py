@@ -219,3 +219,9 @@ class GoogleLogin(object):
         Shortcut for `login_manager`'s `flask_login.LoginManager.user_loader`
         """
         self.login_manager.user_loader(func)
+
+    def request_loader(self, func):
+        """
+        Shortcut for `login_manager`'s `flask_login.LoginManager.request_loader`
+        """
+        self.login_manager.request_loader(func)

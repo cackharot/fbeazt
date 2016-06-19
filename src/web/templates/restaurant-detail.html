@@ -1,0 +1,24 @@
+<div *ngIf="restaurant">
+  <div class="row">
+    <div class="medium-12 columns">
+      <img src="" alt="Pic"/>
+    </div>
+    <div class="medium-12 columns">
+      <h3>
+        <a (click)="goBack()">
+          <i class="fi-arrow-left"></i>
+        </a>
+        {{restaurant.name}}
+        <span class="rating">
+          <label class="secondary label">{{restaurant.rating || 3.5}}</label>
+        </span>
+      </h3>
+      <div class="address"><i class="fi-marker"></i> {{restaurant.address}}</div>
+      <div class="telephone"><i class="fi-telephone"></i> {{restaurant.phone}}</div>
+      <div class="timings">
+        <span><i class="fi-clock"></i> {{restaurant.open_time}} AM to {{restaurant.close_time}} PM</span>
+      </div>
+      <span class="cusines">{{restaurant.cuisine}}</span>
+    </div>
+  </div>
+</div >

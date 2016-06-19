@@ -1,0 +1,21 @@
+{
+  "name": "foodbeazt-webapp",
+  "description": "",
+  "main": "",
+  "authors": [
+    "cackharot <cackharot@gmail.com>"
+  ],
+  "license": "Apache License 2.0",
+  "homepage": "https://github.com/cackharot/fbeazt",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "foundation": "^5.5.3"
+  }
+}

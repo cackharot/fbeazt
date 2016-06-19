@@ -1,0 +1,36 @@
+.top-bar .menu-text {
+  font-size: 1.8em; }
+
+.top-bar .mobile-cart {
+  text-align: right;
+  width: 100%; }
+
+#main h2 {
+  margin: 6px 10px; }
+
+ul.restaurants {
+  list-style: none;
+  margin: 0; }
+  ul.restaurants li {
+    padding: 0.6em 0;
+    border-bottom: 1px solid #eee; }
+
+span.rating {
+  float: right; }
+
+.timings, .telephone {
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #222; }
+
+.cusines {
+  padding: 0.3em 0.5em;
+  border: 1px solid #eee;
+  text-align: center;
+  border-radius: 6px;
+  color: #666;
+  font-size: 12px; }
+
+@media screen and (max-width: 39.9375em) {
+  .menu li a {
+    padding: 0; } }

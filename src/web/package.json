@@ -2,7 +2,7 @@
   "name": "foodbeazt-webapp",
   "version": "1.0.0",
   "scripts": {
-    "start": "tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
+    "start": "tsc && gulp bower && concurrently \"npm run tsc:w\" \"npm run lite\" \"gulp sass:watch\" ",
     "lite": "lite-server",
     "postinstall": "typings install",
     "tsc": "tsc",
@@ -11,15 +11,15 @@
   },
   "license": "Apache License 2.0",
   "dependencies": {
-    "@angular/common":  "2.0.0-rc.2",
-    "@angular/compiler":  "2.0.0-rc.2",
-    "@angular/core":  "2.0.0-rc.2",
-    "@angular/http":  "2.0.0-rc.2",
-    "@angular/platform-browser":  "2.0.0-rc.2",
-    "@angular/platform-browser-dynamic":  "2.0.0-rc.2",
-    "@angular/router":  "2.0.0-rc.2",
-    "@angular/router-deprecated":  "2.0.0-rc.2",
-    "@angular/upgrade":  "2.0.0-rc.2",
+    "@angular/common": "2.0.0-rc.2",
+    "@angular/compiler": "2.0.0-rc.2",
+    "@angular/core": "2.0.0-rc.2",
+    "@angular/http": "2.0.0-rc.2",
+    "@angular/platform-browser": "2.0.0-rc.2",
+    "@angular/platform-browser-dynamic": "2.0.0-rc.2",
+    "@angular/router": "2.0.0-rc.2",
+    "@angular/router-deprecated": "2.0.0-rc.2",
+    "@angular/upgrade": "2.0.0-rc.2",
     "systemjs": "0.19.27",
     "core-js": "^2.4.0",
     "reflect-metadata": "^0.1.3",
@@ -30,8 +30,11 @@
   },
   "devDependencies": {
     "concurrently": "^2.0.0",
+    "gulp": "^3.9.1",
+    "gulp-bower": "0.0.13",
+    "gulp-sass": "^2.3.2",
     "lite-server": "^2.2.0",
     "typescript": "^1.8.10",
-    "typings":"^1.0.4"
+    "typings": "^1.0.4"
   }
 }

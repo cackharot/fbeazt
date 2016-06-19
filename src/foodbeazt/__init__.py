@@ -17,11 +17,14 @@ import json
 from foodbeazt.libs.flask_googlelogin import GoogleLogin
 from flask_principal import Principal, Permission, Identity, AnonymousIdentity
 from flask_principal import identity_loaded, identity_changed, RoleNeed, UserNeed
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__, instance_relative_config=False)
 app.config.from_pyfile('foodbeazt.cfg', silent=False)
 if os.environ.get('FOODBEAZT_CONFIG', None):
     app.config.from_envvar('FOODBEAZT_CONFIG')
+
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 mongo = PyMongo(app)
 
@@ -99,6 +102,14 @@ def get_user(userid):
     user = service.get_by_id(userid)
     return getUserMixin(user)
 
+@auth.request_loader
+def request_loader(request):
+  tenant_id = request.cookies.get('tenant_id', None)
+  if tenant_id:
+    return
+  tenant_id = TenantService(mongo.db).get_by_name("FoodBeazt")['_id']
+  return User(-1, tenant_id, 'Anonymous', 'anonymous@anonymous.com', [],
+              tenant_id, None)
 
 class User(UserMixin):
     def __init__(self, user_id=None, tenant_id=None, name=None, email=None, roles=[], user_tenant_id=None,

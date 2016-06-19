@@ -9,14 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var router_deprecated_1 = require('@angular/router-deprecated');
+var restaurant_component_1 = require('./restaurant.component');
+var restaurant_detail_component_1 = require('./restaurant-detail.component');
+var store_service_1 = require('./services/store.service');
 var AppComponent = (function () {
     function AppComponent() {
     }
     AppComponent = __decorate([
         core_1.Component({
             selector: 'fb-app',
-            template: '<h1>Foodbeazt</h1>'
-        }), 
+            templateUrl: 'templates/app.html',
+            directives: [router_deprecated_1.ROUTER_DIRECTIVES, restaurant_component_1.RestaurantComponent],
+            providers: [router_deprecated_1.ROUTER_PROVIDERS, store_service_1.StoreService]
+        }),
+        router_deprecated_1.RouteConfig([
+            { name: 'RestaurantList', path: '/restaurants', component: restaurant_component_1.RestaurantComponent, useAsDefault: true },
+            { name: 'RestaurantDetail', path: 'restaurants/:id', component: restaurant_detail_component_1.RestaurantDetailComponent }
+        ]), 
         __metadata('design:paramtypes', [])
     ], AppComponent);
     return AppComponent;

@@ -59,6 +59,7 @@ target/
 
 # mac
 .DS_Store/
+.DS_Store
 
 activate.bat
 .idea/workspace.xml
