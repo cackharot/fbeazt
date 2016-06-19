@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
+var tabs_1 = require('./components/tabs');
 var restaurant_component_1 = require('./restaurant.component');
 var restaurant_detail_component_1 = require('./restaurant-detail.component');
 var store_service_1 = require('./services/store.service');
@@ -21,7 +22,7 @@ var AppComponent = (function () {
         core_1.Component({
             selector: 'fb-app',
             templateUrl: 'templates/app.html',
-            directives: [router_deprecated_1.ROUTER_DIRECTIVES, restaurant_component_1.RestaurantComponent],
+            directives: [tabs_1.Tabs, tabs_1.Tab, router_deprecated_1.ROUTER_DIRECTIVES, restaurant_component_1.RestaurantComponent],
             providers: [router_deprecated_1.ROUTER_PROVIDERS, store_service_1.StoreService, product_service_1.ProductService]
         }),
         router_deprecated_1.RouteConfig([

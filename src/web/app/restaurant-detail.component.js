@@ -10,8 +10,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
+var tabs_1 = require('./components/tabs');
 var store_service_1 = require('./services/store.service');
 var product_service_1 = require('./services/product.service');
+var product_1 = require('./model/product');
 var RestaurantDetailComponent = (function () {
     function RestaurantDetailComponent(storeService, productService, routeParams) {
         this.storeService = storeService;
@@ -33,7 +35,19 @@ var RestaurantDetailComponent = (function () {
         var _this = this;
         this.productService.search(this.storeId).then(function (x) {
             _this.products = x;
-            _this.categories = ['indian'];
+            _this.categories = [];
+            for (var i = 0; i < _this.products.length; ++i) {
+                var item = _this.products[i];
+                var category = _this.categories.find(function (x) { return x.name == item.category; });
+                if (category == undefined) {
+                    var c = new product_1.Category(item.category);
+                    c.addProduct(item);
+                    _this.categories.push(c);
+                }
+                else {
+                    category.addProduct(item);
+                }
+            }
         }).catch(this.handleError);
     };
     RestaurantDetailComponent.prototype.goBack = function () {
@@ -52,6 +66,7 @@ var RestaurantDetailComponent = (function () {
         core_1.Component({
             selector: 'restaurant-detail',
             templateUrl: 'templates/restaurant-detail.html',
+            directives: [tabs_1.Tabs, tabs_1.Tab]
         }), 
         __metadata('design:paramtypes', [store_service_1.StoreService, product_service_1.ProductService, router_deprecated_1.RouteParams])
     ], RestaurantDetailComponent);

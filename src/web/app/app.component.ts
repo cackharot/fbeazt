@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router, RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
 
+import { Tabs, Tab } from './components/tabs';
+
 import { RestaurantComponent } from './restaurant.component';
 import { RestaurantDetailComponent } from './restaurant-detail.component';
 
@@ -10,7 +12,7 @@ import { ProductService } from './services/product.service';
 @Component({
   selector: 'fb-app',
   templateUrl: 'templates/app.html',
-  directives: [ROUTER_DIRECTIVES, RestaurantComponent],
+  directives: [Tabs, Tab, ROUTER_DIRECTIVES, RestaurantComponent],
   providers: [ROUTER_PROVIDERS, StoreService, ProductService]
 })
 @RouteConfig([

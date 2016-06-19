@@ -46,6 +46,8 @@ span.rating {
 .button.expand {
   width: 100%; }
 
-@media screen and (max-width: 39.9375em) {
-  .menu li a {
-    padding: 0; } }
+.tabs-title.active {
+  background: #fefefe; }
+
+.menu li a {
+  padding: 0; }

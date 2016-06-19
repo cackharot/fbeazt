@@ -68,7 +68,11 @@ span.rating{
   width: 100%;
 }
 
-@media screen and (max-width:39.9375em){
+.tabs-title.active{
+  background: #fefefe;
+}
+
+// @media screen and (max-width:39.9375em){
   .menu{
     li{
       a{
@@ -76,4 +80,4 @@ span.rating{
       }
     }
   }
-}
+// }

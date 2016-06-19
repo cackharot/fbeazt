@@ -1,18 +1,22 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { Router, RouteParams } from '@angular/router-deprecated';
+import { Tabs, Tab } from './components/tabs';
 
 import { StoreService } from './services/store.service';
 import { ProductService } from './services/product.service';
 import { Restaurant } from './model/restaurant';
 
+import { Product, Category } from './model/product';
+
 @Component({
   selector: 'restaurant-detail',
   templateUrl: 'templates/restaurant-detail.html',
+  directives: [Tabs, Tab]
 })
 export class RestaurantDetailComponent implements OnInit {
   storeId: string;
   restaurant: Restaurant;
-  categories: string[];
+  categories: Category[];
   products: any[];
   error: any;
   @Output() close = new EventEmitter();
@@ -35,7 +39,18 @@ export class RestaurantDetailComponent implements OnInit {
   getProducts(){
     this.productService.search(this.storeId).then(x=>{
       this.products = x;
-      this.categories = ['indian'];
+      this.categories = [];
+      for(var i=0; i < this.products.length; ++i){
+        var item = this.products[i];
+        var category = this.categories.find(x=>x.name == item.category);
+        if(category == undefined){
+          var c = new Category(item.category);
+          c.addProduct(item);
+          this.categories.push(c);
+        }else{
+          category.addProduct(item);
+        }
+      }
     }).catch(this.handleError);
   }
 
