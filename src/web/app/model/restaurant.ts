@@ -1,23 +1,13 @@
-export interface Id {
-  $oid: string;
-}
-
-export interface TenantId {
-  $oid: string;
-}
-
-export interface Date {
-  $date: number;
-}
+import { ObjectId, Date } from "./base";
 
 export class Restaurant {
-  _id: Id;
+  _id: ObjectId;
   cuisine: string;
   deliver_time: number;
   phone: string;
   open_time: number;
   close_time: number;
-  tenant_id: TenantId;
+  tenant_id: ObjectId;
   created_at: Date;
   food_type: string[];
   address: string;

@@ -47,6 +47,27 @@ span.rating{
   font-size: 12px;
 }
 
+.card{
+  margin-bottom: 1em;
+  border-bottom: 1px solid #eee;
+
+  .card-divider{
+    padding: 0.6em;
+  }
+  h4{
+    font-weight: bold;
+  }
+  .price_tag{
+    font-size: 16px;
+    font-weight: normal;
+    float: right;
+  }
+}
+
+.button.expand{
+  width: 100%;
+}
+
 @media screen and (max-width:39.9375em){
   .menu{
     li{

@@ -1,5 +1,5 @@
 <div *ngIf="restaurant">
-  <div class="row">
+  <section class="row">
     <div class="medium-12 columns">
       <img src="" alt="Pic"/>
     </div>
@@ -20,5 +20,37 @@
       </div>
       <span class="cusines">{{restaurant.cuisine}}</span>
     </div>
-  </div>
-</div >
+  </section>
+  <section class="row">
+    <div class="medium-12 columns">
+      <ul class="tabs" data-tab role="tablist">
+        <li class="tab-title" role="presentation" *ngFor="let category of categories">
+          <a href="#panel2-2" role="tab" tabindex="0" aria-selected="false">{{category}}</a>
+        </li>
+      </ul>
+      <div class="tabs-content">
+        <section role="tabpanel" aria-hidden="false" class="content active" id="panel2-2">
+          <div class="card" *ngFor="let product of products">
+            <img src="http://placekitten.com/g/400/200">
+            <div class="card-divider">
+              <h4>
+                {{product.name}}
+                <span class="price_tag">
+                  Rs. {{product.sell_price}}
+                </span>
+              </h4>
+            </div>
+            <div class="card-section">
+              <p>{{product.description}}</p>
+            </div>
+            <div class="card-action">
+              <a href="#" class="expand button add-to-cart">
+                <i class="fi-plus"></i> Add
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</div>

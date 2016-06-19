@@ -11,26 +11,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
 var store_service_1 = require('./services/store.service');
+var product_service_1 = require('./services/product.service');
 var RestaurantDetailComponent = (function () {
-    function RestaurantDetailComponent(storeService, routeParams) {
+    function RestaurantDetailComponent(storeService, productService, routeParams) {
         this.storeService = storeService;
+        this.productService = productService;
         this.routeParams = routeParams;
         this.close = new core_1.EventEmitter();
     }
     RestaurantDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
         var id = this.routeParams.get('id');
+        this.storeId = id;
         this.storeService.get(id).then(function (x) {
             _this.restaurant = x;
+            _this.getProducts();
         })
-            .catch(function (err) {
-            console.log(err);
-            _this.error = err;
-        });
+            .catch(this.handleError);
+    };
+    RestaurantDetailComponent.prototype.getProducts = function () {
+        var _this = this;
+        this.productService.search(this.storeId).then(function (x) {
+            _this.products = x;
+            _this.categories = ['indian'];
+        }).catch(this.handleError);
     };
     RestaurantDetailComponent.prototype.goBack = function () {
         this.close.emit(this.restaurant);
         window.history.back();
+    };
+    RestaurantDetailComponent.prototype.handleError = function (err) {
+        console.log(err);
+        this.error = err;
     };
     __decorate([
         core_1.Output(), 
@@ -41,7 +53,7 @@ var RestaurantDetailComponent = (function () {
             selector: 'restaurant-detail',
             templateUrl: 'templates/restaurant-detail.html',
         }), 
-        __metadata('design:paramtypes', [store_service_1.StoreService, router_deprecated_1.RouteParams])
+        __metadata('design:paramtypes', [store_service_1.StoreService, product_service_1.ProductService, router_deprecated_1.RouteParams])
     ], RestaurantDetailComponent);
     return RestaurantDetailComponent;
 }());
