@@ -24,7 +24,7 @@ export class RestaurantDetailComponent implements OnInit {
   error: any;
   @Output() close = new EventEmitter();
 
-  constructor(
+  constructor(private router: Router,
     private storeService: StoreService,
     private productService: ProductService,
     private orderService: OrderService,
@@ -65,9 +65,9 @@ export class RestaurantDetailComponent implements OnInit {
     this.orderService.addLineItem(lineItem);
   }
 
-  goBack() {
+  goBack(id: string) {
     this.close.emit(this.restaurant);
-    window.history.back();
+    this.router.navigate([id]);
   }
 
   private handleError(err: any){

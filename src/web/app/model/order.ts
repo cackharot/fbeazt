@@ -28,6 +28,18 @@ export class Order {
       cur_item.quantity++;
     }
   }
+
+  getTotalAmount(){
+    let price = 0;
+    this.items.forEach(x=> price = price + x.price);
+    return price;
+  }
+
+  getTotalQuantity(){
+    let quantity = 0;
+    this.items.forEach(x=> quantity = quantity + x.quantity);
+    return quantity;
+  }
 }
 
 export class LineItem {

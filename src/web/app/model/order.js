@@ -18,6 +18,16 @@ var Order = (function () {
             cur_item.quantity++;
         }
     };
+    Order.prototype.getTotalAmount = function () {
+        var price = 0;
+        this.items.forEach(function (x) { return price = price + x.price; });
+        return price;
+    };
+    Order.prototype.getTotalQuantity = function () {
+        var quantity = 0;
+        this.items.forEach(function (x) { return quantity = quantity + x.quantity; });
+        return quantity;
+    };
     return Order;
 }());
 exports.Order = Order;

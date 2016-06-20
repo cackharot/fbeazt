@@ -25,7 +25,7 @@ export class OrderService {
   addLineItem(item: LineItem) {
     this.currentOrder.addItem(item);
     this.itemAddedSource.next(item);
-    console.log(this.currentOrder);
+    // console.log(this.currentOrder);
   }
 
   updateDeliveryDetails(deliveryDetails: DeliveryDetails) {
@@ -35,6 +35,14 @@ export class OrderService {
 
   getOrder(){
     return this.currentOrder;
+  }
+
+  getTotalQuantity(){
+    return this.currentOrder.getTotalQuantity();
+  }
+
+  getTotalAmount(){
+    return this.currentOrder.getTotalAmount();
   }
 
   confirmOrder() {

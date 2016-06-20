@@ -3,6 +3,8 @@ import { Router, RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angul
 
 import { Tabs, Tab } from './components/tabs';
 
+import { CartSummaryComponent } from './components/cartsummary';
+import { CheckoutComponent } from './components/checkout';
 import { RestaurantComponent } from './restaurant.component';
 import { RestaurantDetailComponent } from './restaurant-detail.component';
 
@@ -13,11 +15,15 @@ import { OrderService } from './services/order.service';
 @Component({
   selector: 'fb-app',
   templateUrl: 'templates/app.html',
-  directives: [Tabs, Tab, ROUTER_DIRECTIVES, RestaurantComponent],
+  directives: [Tabs, Tab, ROUTER_DIRECTIVES, RestaurantComponent, CartSummaryComponent],
   providers: [ROUTER_PROVIDERS, StoreService, ProductService, OrderService]
 })
 @RouteConfig([
-  { name: 'RestaurantList', path: '/restaurants', component: RestaurantComponent, useAsDefault: true},
-  { name: 'RestaurantDetail', path: 'restaurants/:id', component: RestaurantDetailComponent }
+  { name: 'Home', path: '/', component: RestaurantComponent, useAsDefault: true},
+  { name: 'RestaurantList', path: '/restaurants', component: RestaurantComponent},
+  { name: 'RestaurantDetail', path: '/restaurants/:id', component: RestaurantDetailComponent },
+  { name: 'Checkout', path: '/checkout', component: CheckoutComponent },
 ])
-export class AppComponent { }
+export class AppComponent {
+  constructor(private router: Router){}
+}

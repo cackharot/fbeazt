@@ -1,8 +1,8 @@
 <div *ngIf="restaurant">
   <nav aria-label="You are here:" role="navigation">
     <ul class="breadcrumbs">
-      <li><a (click)="goBack()">Home</a></li>
-      <li><a (click)="goBack()">Restaurants</a></li>
+      <li><a (click)="goBack('Home')">Home</a></li>
+      <li><a (click)="goBack('RestaurantList')">Restaurants</a></li>
       <li>
         <span class="show-for-sr">Current:</span>{{restaurant.name}}
       </li>

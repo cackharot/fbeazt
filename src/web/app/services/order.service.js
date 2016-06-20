@@ -26,7 +26,7 @@ var OrderService = (function () {
     OrderService.prototype.addLineItem = function (item) {
         this.currentOrder.addItem(item);
         this.itemAddedSource.next(item);
-        console.log(this.currentOrder);
+        // console.log(this.currentOrder);
     };
     OrderService.prototype.updateDeliveryDetails = function (deliveryDetails) {
         this.currentOrder.delivery_details = deliveryDetails;
@@ -34,6 +34,12 @@ var OrderService = (function () {
     };
     OrderService.prototype.getOrder = function () {
         return this.currentOrder;
+    };
+    OrderService.prototype.getTotalQuantity = function () {
+        return this.currentOrder.getTotalQuantity();
+    };
+    OrderService.prototype.getTotalAmount = function () {
+        return this.currentOrder.getTotalAmount();
     };
     OrderService.prototype.confirmOrder = function () {
         this.currentOrder.confirm();
