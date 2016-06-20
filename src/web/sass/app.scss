@@ -1,9 +1,27 @@
 $primary_color: blue;
 $logo_font_size: 1.8em;
 
+$max_width: 960px;
+
+header, #main{
+  margin: 0 auto;
+  max-width: $max_width;
+}
+
+.breadcrumbs{
+  margin: 4px 6px;
+}
+
 .top-bar{
+  background: #008CBA;
+  ul{
+    background: #008CBA;
+  }
   .menu-text {
     font-size: $logo_font_size;
+    a{
+      color: white;
+    }
   }
 
   .mobile-cart{
@@ -28,23 +46,41 @@ ul.restaurants{
   }
 }
 
-span.rating{
-  float: right;
+.restaurants{
+  .title {
+    margin: 0;
+    margin-bottom: 10px;
+  }
 }
 
-.timings, .telephone {
-  margin-bottom: 6px;
+span.rating{
+  float: right;
+  // top: 10px;
+  // position: relative;
+}
+
+.timings, .telephone, .address {
+  margin-bottom: 10px;
   font-size: 13px;
   color: #222;
 }
 
 .cusines{
-  padding: 0.3em 0.5em;
+  display: inline-block;
+  padding: 6px 15px;
   border: 1px solid #eee;
   text-align: center;
   border-radius: 6px;
   color: #666;
   font-size: 12px;
+}
+
+img.header_img{
+  margin-bottom: 10px;
+}
+
+img.res_logo{
+  opacity: 0.35;
 }
 
 .card{
@@ -68,8 +104,23 @@ span.rating{
   width: 100%;
 }
 
-.tabs-title.active{
-  background: #fefefe;
+.tabs-title{
+  text-transform: uppercase;
+  border-bottom: 3px solid transparent;
+  a{
+    padding: 12px 18px;
+  }
+}
+
+.tabs-title.active {
+  background: none;
+  border-bottom: 3px solid #62bf02;
+  a{
+    background: none;
+    color: #62bf02;
+    padding: 12px 18px;
+    font-weight: bold;
+  }
 }
 
 // @media screen and (max-width:39.9375em){

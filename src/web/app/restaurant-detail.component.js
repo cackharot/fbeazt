@@ -13,11 +13,14 @@ var router_deprecated_1 = require('@angular/router-deprecated');
 var tabs_1 = require('./components/tabs');
 var store_service_1 = require('./services/store.service');
 var product_service_1 = require('./services/product.service');
+var order_service_1 = require('./services/order.service');
 var product_1 = require('./model/product');
+var order_1 = require('./model/order');
 var RestaurantDetailComponent = (function () {
-    function RestaurantDetailComponent(storeService, productService, routeParams) {
+    function RestaurantDetailComponent(storeService, productService, orderService, routeParams) {
         this.storeService = storeService;
         this.productService = productService;
+        this.orderService = orderService;
         this.routeParams = routeParams;
         this.close = new core_1.EventEmitter();
     }
@@ -50,6 +53,11 @@ var RestaurantDetailComponent = (function () {
             }
         }).catch(this.handleError);
     };
+    RestaurantDetailComponent.prototype.addToCart = function (item, event) {
+        event.preventDefault();
+        var lineItem = new order_1.LineItem(item._id, item.name, "", item.category, item.food_type[0], 1.0, item.sell_price);
+        this.orderService.addLineItem(lineItem);
+    };
     RestaurantDetailComponent.prototype.goBack = function () {
         this.close.emit(this.restaurant);
         window.history.back();
@@ -66,9 +74,10 @@ var RestaurantDetailComponent = (function () {
         core_1.Component({
             selector: 'restaurant-detail',
             templateUrl: 'templates/restaurant-detail.html',
-            directives: [tabs_1.Tabs, tabs_1.Tab]
+            directives: [tabs_1.Tabs, tabs_1.Tab, router_deprecated_1.ROUTER_DIRECTIVES],
+            providers: [router_deprecated_1.ROUTER_PROVIDERS]
         }), 
-        __metadata('design:paramtypes', [store_service_1.StoreService, product_service_1.ProductService, router_deprecated_1.RouteParams])
+        __metadata('design:paramtypes', [store_service_1.StoreService, product_service_1.ProductService, order_service_1.OrderService, router_deprecated_1.RouteParams])
     ], RestaurantDetailComponent);
     return RestaurantDetailComponent;
 }());

@@ -8,12 +8,13 @@ import { RestaurantDetailComponent } from './restaurant-detail.component';
 
 import { StoreService } from './services/store.service';
 import { ProductService } from './services/product.service';
+import { OrderService } from './services/order.service';
 
 @Component({
   selector: 'fb-app',
   templateUrl: 'templates/app.html',
   directives: [Tabs, Tab, ROUTER_DIRECTIVES, RestaurantComponent],
-  providers: [ROUTER_PROVIDERS, StoreService, ProductService]
+  providers: [ROUTER_PROVIDERS, StoreService, ProductService, OrderService]
 })
 @RouteConfig([
   { name: 'RestaurantList', path: '/restaurants', component: RestaurantComponent, useAsDefault: true},

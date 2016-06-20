@@ -1,3 +1,4 @@
+<img src="/images/header1.jpg" class="header_img"/>
 <h2>Restaurants</h2>
 <ul class="restaurants">
   <li *ngFor="let item of restaurants"
@@ -5,16 +6,16 @@
     (click)="onSelect(item)">
     <div class="row">
       <div class="small-3 columns">
-        <img src="" alt="Pic"/>
+        <img src="/images/placeholder.png" alt="Comming soon..." class="res_logo"/>
       </div>
       <div class="small-9 columns">
-        <h3>
+        <h3 class="title">
           {{item.name}}
           <span class="rating">
             <label class="secondary label">{{item.rating || 3.5}}</label>
           </span>
         </h3>
-        <div class="telephone"><i class="fi-telephone"></i> {{item.phone}}</div>
+        <!-- <div class="telephone"><i class="fi-telephone"></i> {{item.phone}}</div> -->
         <div class="timings">
           <span><i class="fi-clock"></i> {{item.open_time}} AM to {{item.close_time}} PM</span>
         </div>

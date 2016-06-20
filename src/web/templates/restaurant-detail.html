@@ -1,20 +1,25 @@
 <div *ngIf="restaurant">
+  <nav aria-label="You are here:" role="navigation">
+    <ul class="breadcrumbs">
+      <li><a (click)="goBack()">Home</a></li>
+      <li><a (click)="goBack()">Restaurants</a></li>
+      <li>
+        <span class="show-for-sr">Current:</span>{{restaurant.name}}
+      </li>
+    </ul>
+  </nav>
+  <img src="/images/header2.jpg" alt="Pic" class="header_img"/>
+  <br/>
   <section class="row">
     <div class="medium-12 columns">
-      <img src="" alt="Pic"/>
-    </div>
-    <div class="medium-12 columns">
-      <h3>
-        <a (click)="goBack()">
-          <i class="fi-arrow-left"></i>
-        </a>
+      <h3 class="title">
         {{restaurant.name}}
         <span class="rating">
           <label class="secondary label">{{restaurant.rating || 3.5}}</label>
         </span>
       </h3>
       <div class="address"><i class="fi-marker"></i> {{restaurant.address}}</div>
-      <div class="telephone"><i class="fi-telephone"></i> {{restaurant.phone}}</div>
+      <!-- <div class="telephone"><i class="fi-telephone"></i> {{restaurant.phone}}</div> -->
       <div class="timings">
         <span><i class="fi-clock"></i> {{restaurant.open_time}} AM to {{restaurant.close_time}} PM</span>
       </div>
@@ -22,13 +27,13 @@
     </div>
   </section>
   <br/>
-  <br/>
   <section class="row">
     <div class="medium-12 columns">
       <tabs>
         <tab tabTitle="{{category.name}}" *ngFor="let category of categories">
           <div class="card" *ngFor="let product of category.products">
-            <img src="http://placekitten.com/g/400/200">
+            <img src="/images/header4.jpg">
+            <!-- <img src="http://placekitten.com/g/400/200"> -->
             <div class="card-divider">
               <h4>
                 {{product.name}}
@@ -41,7 +46,7 @@
               <p>{{product.description}}</p>
             </div>
             <div class="card-action">
-              <a href="#" class="expand button add-to-cart">
+              <a (click)="addToCart(product,$event)" class="expand button add-to-cart">
                 <i class="fi-plus"></i> Add
               </a>
             </div>

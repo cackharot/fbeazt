@@ -1,9 +1,21 @@
-.top-bar .menu-text {
-  font-size: 1.8em; }
+header, #main {
+  margin: 0 auto;
+  max-width: 960px; }
 
-.top-bar .mobile-cart {
-  text-align: right;
-  width: 100%; }
+.breadcrumbs {
+  margin: 4px 6px; }
+
+.top-bar {
+  background: #008CBA; }
+  .top-bar ul {
+    background: #008CBA; }
+  .top-bar .menu-text {
+    font-size: 1.8em; }
+    .top-bar .menu-text a {
+      color: white; }
+  .top-bar .mobile-cart {
+    text-align: right;
+    width: 100%; }
 
 #main h2 {
   margin: 6px 10px; }
@@ -15,21 +27,32 @@ ul.restaurants {
     padding: 0.6em 0;
     border-bottom: 1px solid #eee; }
 
+.restaurants .title {
+  margin: 0;
+  margin-bottom: 10px; }
+
 span.rating {
   float: right; }
 
-.timings, .telephone {
-  margin-bottom: 6px;
+.timings, .telephone, .address {
+  margin-bottom: 10px;
   font-size: 13px;
   color: #222; }
 
 .cusines {
-  padding: 0.3em 0.5em;
+  display: inline-block;
+  padding: 6px 15px;
   border: 1px solid #eee;
   text-align: center;
   border-radius: 6px;
   color: #666;
   font-size: 12px; }
+
+img.header_img {
+  margin-bottom: 10px; }
+
+img.res_logo {
+  opacity: 0.35; }
 
 .card {
   margin-bottom: 1em;
@@ -46,8 +69,20 @@ span.rating {
 .button.expand {
   width: 100%; }
 
+.tabs-title {
+  text-transform: uppercase;
+  border-bottom: 3px solid transparent; }
+  .tabs-title a {
+    padding: 12px 18px; }
+
 .tabs-title.active {
-  background: #fefefe; }
+  background: none;
+  border-bottom: 3px solid #62bf02; }
+  .tabs-title.active a {
+    background: none;
+    color: #62bf02;
+    padding: 12px 18px;
+    font-weight: bold; }
 
 .menu li a {
   padding: 0; }
