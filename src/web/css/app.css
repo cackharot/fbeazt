@@ -2,6 +2,12 @@ header, #main {
   margin: 0 auto;
   max-width: 960px; }
 
+.float-right {
+  float: right; }
+
+.float-left {
+  float: left; }
+
 .breadcrumbs {
   margin: 4px 6px; }
 
@@ -16,6 +22,14 @@ header, #main {
   .top-bar .mobile-cart {
     text-align: right;
     width: 100%; }
+  .top-bar .fi-shopping-cart {
+    font-size: 2em;
+    bottom: -6px;
+    position: relative; }
+  .top-bar .badge {
+    position: relative;
+    top: -16px;
+    right: 10px; }
 
 #main h2 {
   margin: 6px 10px; }

@@ -4,11 +4,11 @@
       <ul class="menu">
         <li class="menu-text"><a [routerLink]="['RestaurantList']">Foodbeazt</a></li>
         <li class="show-for-small-only mobile-cart">
-          <i class="fi-shopping-cart"></i><label class="success badge">3</label>
+          <cart-summary></cart-summary>
         </li>
       </ul>
     </div>
-    <div class="top-bar-right">
+    <div class="top-bar-right show-for-medium">
       <cart-summary></cart-summary>
     </div>
   </nav>

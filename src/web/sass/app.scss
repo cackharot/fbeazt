@@ -8,6 +8,14 @@ header, #main{
   max-width: $max_width;
 }
 
+.float-right{
+  float: right;
+}
+
+.float-left{
+  float: left;
+}
+
 .breadcrumbs{
   margin: 4px 6px;
 }
@@ -27,6 +35,18 @@ header, #main{
   .mobile-cart{
     text-align: right;
     width: 100%;
+  }
+
+  .fi-shopping-cart{
+    font-size: 2em;
+    bottom: -6px;
+    position: relative;
+  }
+  
+  .badge{
+    position: relative;
+    top: -16px;
+    right: 10px;
   }
 }
 
@@ -133,12 +153,10 @@ img.res_logo{
   }
 }
 
-// @media screen and (max-width:39.9375em){
-  .menu{
-    li{
-      a{
-        padding: 0;
-      }
+.menu{
+  li{
+    a{
+      padding: 0;
     }
   }
-// }
+}
