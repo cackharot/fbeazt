@@ -15,10 +15,15 @@ export class CheckoutComponent implements OnInit {
   order: Order;
 
   constructor(private router: Router,
-    private orderService: OrderService) { }
+    private orderService: OrderService) { 
+    }
 
   ngOnInit() {
     this.order = this.orderService.getOrder();
+  }
+
+  isEmpty(){
+    return this.order && this.order.items.length == 0;
   }
 
   goBack(id: string) {

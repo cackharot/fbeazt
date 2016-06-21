@@ -19,6 +19,9 @@ var CheckoutComponent = (function () {
     CheckoutComponent.prototype.ngOnInit = function () {
         this.order = this.orderService.getOrder();
     };
+    CheckoutComponent.prototype.isEmpty = function () {
+        return this.order && this.order.items.length == 0;
+    };
     CheckoutComponent.prototype.goBack = function (id) {
         this.router.navigate([id]);
     };

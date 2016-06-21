@@ -6,14 +6,55 @@
     </li>
   </ul>
 </nav>
-<section class="row">
+<div class="warn info" *ngIf="isEmpty()">
+  <h3>Oops!</h3>
+  <p>Added items to the cart to checkout :)</p>
+</div>
+<section class="row" *ngIf="!isEmpty()">
   <div class="medium-12 columns">
     <h2>Delivery Details</h2>
+    <div class="callout secondary">
+      <p>
+        Kindly ensure you have given correct delivery address with postbox number, floor number,
+        mobile number and pincode.
+        Unless you receive an email or SMS or a call from us. <i>Your order will not be processed.</i>
+      </p> 
+    </div>
   </div>
   <div class="medium-12 columns">
     <h2>Payment Details</h2>
+    <div class="callout primary">
+      <p>Presently we accept only <b>Cash On Delivery</b>(CoD).</p>
+      <p>Online transactions through Credit/Debit card and NetBanking coming soon...</p> 
+    </div>
   </div>
   <div class="medium-12 columns">
     <h2>Review Order</h2>
+    <table class="table order_table">
+      <tbody>
+        <tr *ngFor="let item of order.items">
+          <td>
+            <p class="product_name">{{item.name}}</p>
+            <p class="product_desc">{{item.description}}</p>
+          </td>
+          <td class="quantity">
+            {{item.quantity}}
+          </td>
+          <td class="price">
+            {{item.price*item.quantity}}
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2">
+            Total:
+          </td>
+          <td class="total">
+            Rs. 000.00
+          </td>
+        </tr>
+      </tfoot>
+    </table>
   </div>
 </section>
