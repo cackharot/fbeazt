@@ -19,7 +19,11 @@
         <div class="timings">
           <span><i class="fi-clock"></i> {{item.open_time}} AM to {{item.close_time}} PM</span>
         </div>
-        <span class="cusines">{{item.cuisine}}</span>
+        <ul class="cuisines">
+          <li *ngFor="let cus of item.cuisines">
+            <span class="cusines">{{cus}}</span>
+          </li>
+        </ul>
       </div>
     </div>
   </li>

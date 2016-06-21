@@ -65,14 +65,20 @@ span.rating{
   color: #222;
 }
 
-.cusines{
-  display: inline-block;
-  padding: 6px 15px;
-  border: 1px solid #eee;
-  text-align: center;
-  border-radius: 6px;
-  color: #666;
-  font-size: 12px;
+.cuisines{
+  list-style: none;
+  margin: 0;
+
+  li{
+    display: inline-block;
+    padding: 6px 15px !important;
+    margin: 0 6px;
+    border: 1px solid #eee;
+    text-align: center;
+    border-radius: 6px;
+    color: #666;
+    font-size: 12px;
+  }
 }
 
 img.header_img{
@@ -97,6 +103,10 @@ img.res_logo{
     font-size: 16px;
     font-weight: normal;
     float: right;
+  }
+
+  .card-action{
+    margin: 10px 0;
   }
 }
 

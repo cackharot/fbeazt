@@ -22,7 +22,6 @@ export class RestaurantDetailComponent implements OnInit {
   categories: Category[];
   products: any[];
   error: any;
-  @Output() close = new EventEmitter();
 
   constructor(private router: Router,
     private storeService: StoreService,
@@ -66,7 +65,6 @@ export class RestaurantDetailComponent implements OnInit {
   }
 
   goBack(id: string) {
-    this.close.emit(this.restaurant);
     this.router.navigate([id]);
   }
 

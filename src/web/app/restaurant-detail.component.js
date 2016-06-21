@@ -23,7 +23,6 @@ var RestaurantDetailComponent = (function () {
         this.productService = productService;
         this.orderService = orderService;
         this.routeParams = routeParams;
-        this.close = new core_1.EventEmitter();
     }
     RestaurantDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -60,17 +59,12 @@ var RestaurantDetailComponent = (function () {
         this.orderService.addLineItem(lineItem);
     };
     RestaurantDetailComponent.prototype.goBack = function (id) {
-        this.close.emit(this.restaurant);
         this.router.navigate([id]);
     };
     RestaurantDetailComponent.prototype.handleError = function (err) {
         console.log(err);
         this.error = err;
     };
-    __decorate([
-        core_1.Output(), 
-        __metadata('design:type', Object)
-    ], RestaurantDetailComponent.prototype, "close", void 0);
     RestaurantDetailComponent = __decorate([
         core_1.Component({
             selector: 'restaurant-detail',

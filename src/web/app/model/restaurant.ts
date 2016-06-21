@@ -2,7 +2,7 @@ import { ObjectId, Date } from "./base";
 
 export class Restaurant {
   _id: ObjectId;
-  cuisine: string;
+  cuisines: string[];
   deliver_time: number;
   phone: string;
   open_time: number;

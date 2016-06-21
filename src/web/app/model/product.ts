@@ -3,7 +3,7 @@ import { ObjectId, Date } from "./base";
 export class Product {
   _id: ObjectId;
   deliver_time: number;
-  cuisine: string;
+  cuisines: string[];
   buy_price: number;
   open_time: number;
   store_id: ObjectId;

@@ -1,8 +1,8 @@
 <div *ngIf="restaurant">
   <nav aria-label="You are here:" role="navigation">
     <ul class="breadcrumbs">
-      <li><a (click)="goBack('Home')">Home</a></li>
-      <li><a (click)="goBack('RestaurantList')">Restaurants</a></li>
+      <li><a href="#" (click)="goBack('Home')">Home</a></li>
+      <li><a href="#" (click)="goBack('RestaurantList')">Restaurants</a></li>
       <li>
         <span class="show-for-sr">Current:</span>{{restaurant.name}}
       </li>
@@ -23,7 +23,11 @@
       <div class="timings">
         <span><i class="fi-clock"></i> {{restaurant.open_time}} AM to {{restaurant.close_time}} PM</span>
       </div>
-      <span class="cusines">{{restaurant.cuisine}}</span>
+      <ul class="cuisines">
+        <li *ngFor="let cus of restaurant.cuisines">
+          <span class="cusines">{{cus}}</span>
+        </li>
+      </ul>
     </div>
   </section>
   <br/>
@@ -45,6 +49,11 @@
             <div class="card-section">
               <p>{{product.description}}</p>
             </div>
+            <ul class="cuisines">
+              <li *ngFor="let cus of product.cuisines">
+                <span class="cusines">{{cus}}</span>
+              </li>
+            </ul>
             <div class="card-action">
               <a (click)="addToCart(product,$event)" class="expand button add-to-cart">
                 <i class="fi-plus"></i> Add
