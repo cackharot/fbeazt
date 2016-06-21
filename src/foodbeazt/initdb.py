@@ -13,47 +13,58 @@ from service.UserService import UserService
 from service.ProductService import ProductService
 from service.StoreService import StoreService
 
+cuisines = ['north indian','south indian','chineese','italian','english','american']
+category = ['starter', 'maincourse', 'deserts', 'specials']
+food_types = ['veg', 'non-veg']
 
 def create_sample_data(db, tenant_id):
-    store_service = StoreService(db)
-    product_service = ProductService(db)
+  store_service = StoreService(db)  
+  store = store_service.get_by_name('Test Store')
+  
+  if store is not None:
+    print("Sample seed data already created!!")
+    return
 
-    store = store_service.get_by_name('Test Store')
+  for i in range(0,50):
+    store_name = "My Store %d" % (i)
+    store = {'tenant_id': tenant_id, 
+            'name': store_name, 
+            'address': 'sample address',
+            'phone': random.randint(600000,6999999),
+            'food_type': food_types, 
+            'cuisines': [cuisines[i % len(cuisines)], cuisines[i % (len(cuisines)-1)]], 
+            'open_time': random.randint(7,11), 
+            'close_time': random.randint(9,12), 
+            'deliver_time': random.randint(20,60)}
+    store_service.save(store)
+    create_items(db, tenant_id, store['_id'])
 
-    if store is None:
-        store = {'tenant_id': tenant_id, 'name': 'Test Store', 'address': 'sample address', 'phone': '1234569870',
-                 'food_type': ['veg'], 'cuisine': 'indian', 'open_time': 8, 'close_time': 11, 'deliver_time': 45}
-        store_service.save(store)
+def create_items(db, tenant_id, store_id):
+  product_service = ProductService(db)
+  items = product_service.search(tenant_id, store_id)
+  if len(items) > 20:
+    print('Products already added!')
+    return
 
-    store_id = store['_id']
-    print('\nStore:')
-    print(json.dumps(store, default=json_util.default))
-
-    items = product_service.search(tenant_id, store_id)
-
-    if len(items) > 100:
-        print('100 products already added!')
-        return
-
-    category = ['starter', 'maincourse', 'deserts', 'specials']
-    food_types = ['veg', 'non-veg']
-
-    print('\nProducts:')
-    for i in range(0, 100):
-        no = str(random.randint(100, 12563))
-        price = random.randint(10, 500)
-        item = {'tenant_id': tenant_id, 'name': 'Item ' + no, 'barcode': '1256' + no,
-                'food_type': [food_types[i % len(food_types)]],
-                'cuisine': 'indian', 'store_id': store_id, 'category': category[i % len(category)],
-                'open_time': 8, 'close_time': 11, 'deliver_time': 45, 'buy_price': price - 10.0,
-                'sell_price': price,
-                'discount': 0.0}
-        product_service.create(item)
-
-    print('\nCreated 100 products!')
-
-    pass
-
+  item_count = random.randint(20,50)
+  for i in range(0, item_count):
+    no = str(random.randint(100, 12563))
+    price = random.randint(10, 500)
+    item = {'tenant_id': tenant_id, 
+            'store_id': store_id,
+            'name': 'Item ' + no, 
+            'barcode': '1256' + no,
+            'food_type': [food_types[i % len(food_types)]],
+            'cuisines': [cuisines[i %len(cuisines)]],
+            'category': category[i % len(category)],
+            'open_time': 8, 
+            'close_time': 11, 
+            'deliver_time': 45, 
+            'buy_price': price - 10.0,
+            'sell_price': price,
+            'discount': 0.0}
+    product_service.create(item)
+  print("Created %d products" % (item_count))
 
 def setup():
     client = MongoClient()
@@ -83,12 +94,20 @@ def setup():
     user = user_service.get_by_email("foodbeazt@gmail.com")
     print(json.dumps(user, default=json_util.default))
 
-    print('\nSample data:')
+    print('\nCreating sample product data:')
     create_sample_data(db, tenant_id)
 
     pass
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1:
+      if sys.argv[1] == "drop":
+        print('Dropping database...')
+        from pymongo import Connection
+        c = Connection()
+        c.drop_database('foodbeaztDb')
+        print('Drop successfull')
+
     print("Initializing database...")
     setup()
