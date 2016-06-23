@@ -31,13 +31,13 @@
     </div>
   </section>
   <br/>
-  <section class="row">
-    <div class="medium-12 columns">
-      <tabs>
-        <tab tabTitle="{{category.name}}" *ngFor="let category of categories">
-          <div class="card" *ngFor="let product of category.products">
-            <img src="/images/header4.jpg">
-            <!-- <img src="http://placekitten.com/g/400/200"> -->
+  <section class="products">
+    <tabs>
+      <tab tabTitle="{{category.name}}" *ngFor="let category of categories">
+        <div class="row" *ngFor="let chunkItems of category.products | chunk: 3">
+          <div class="card medium-4 columns" [class.end]="isLast" *ngFor="let product of chunkItems;let isLast=last;">
+            <img src="/images/header4.jpg" />
+            <!-- <img src="http://placekitten.com/g/400/200"/> -->
             <div class="card-divider">
               <h4>
                 {{product.name}}
@@ -60,8 +60,8 @@
               </a>
             </div>
           </div>
-        </tab>
-      </tabs>
-    </div>
+        </div>
+      </tab>
+    </tabs>
   </section>
 </div>

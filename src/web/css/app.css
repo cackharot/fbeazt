@@ -104,6 +104,9 @@ img.res_logo {
     padding: 12px 18px;
     font-weight: bold; }
 
+.tabs-content .content {
+  padding-top: 1em; }
+
 .menu li a {
   padding: 0; }
 

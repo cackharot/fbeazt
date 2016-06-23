@@ -16,6 +16,7 @@ var product_service_1 = require('./services/product.service');
 var order_service_1 = require('./services/order.service');
 var product_1 = require('./model/product');
 var order_1 = require('./model/order');
+var chunk_pipe_1 = require('./pipes/chunk.pipe');
 var RestaurantDetailComponent = (function () {
     function RestaurantDetailComponent(router, storeService, productService, orderService, routeParams) {
         this.router = router;
@@ -80,7 +81,8 @@ var RestaurantDetailComponent = (function () {
             selector: 'restaurant-detail',
             templateUrl: 'templates/restaurant-detail.html',
             directives: [tabs_1.Tabs, tabs_1.Tab, router_deprecated_1.ROUTER_DIRECTIVES],
-            providers: [router_deprecated_1.ROUTER_PROVIDERS]
+            providers: [router_deprecated_1.ROUTER_PROVIDERS],
+            pipes: [chunk_pipe_1.ChunkPipe],
         }), 
         __metadata('design:paramtypes', [router_deprecated_1.Router, store_service_1.StoreService, product_service_1.ProductService, order_service_1.OrderService, router_deprecated_1.RouteParams])
     ], RestaurantDetailComponent);

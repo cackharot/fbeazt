@@ -10,11 +10,14 @@ import { Restaurant } from './model/restaurant';
 import { Product, Category } from './model/product';
 import { LineItem } from './model/order';
 
+import { ChunkPipe } from './pipes/chunk.pipe';
+
 @Component({
   selector: 'restaurant-detail',
   templateUrl: 'templates/restaurant-detail.html',
   directives: [Tabs, Tab, ROUTER_DIRECTIVES],
-  providers: [ROUTER_PROVIDERS]
+  providers: [ROUTER_PROVIDERS],
+  pipes: [ChunkPipe],
 })
 export class RestaurantDetailComponent implements OnInit {
   storeId: string;
