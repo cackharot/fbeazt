@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject }    from 'rxjs/Subject';
+import { Headers, Http } from '@angular/http';
 import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
 
 import { Product } from '../model/product';
@@ -11,14 +12,17 @@ export class OrderService {
   @LocalStorage() private currentOrder: Order = new Order();
   private itemAddedSource = new Subject<LineItem>();
   private deliveryUpdatedSource = new Subject<DeliveryDetails>();
-  private orderConfirmedSource = new Subject<boolean>();
+  private orderConfirmedSource = new Subject<Order>();
+  private orderResetedSource = new Subject<Order>();
+  private orderUrl:string = 'http://localhost:4000/api/order';
 
   // Observable string streams
   itemAdded$ = this.itemAddedSource.asObservable();
   deliveryUpdated$ = this.deliveryUpdatedSource.asObservable();
   orderConfirmed$ = this.orderConfirmedSource.asObservable();
+  orderReseted$ = this.orderResetedSource.asObservable();
 
-  constructor(){
+  constructor(private http: Http){
     if(this.currentOrder.constructor.name != 'Order'){
       this.currentOrder = new Order(this.currentOrder);
     }
@@ -48,12 +52,24 @@ export class OrderService {
 
   confirmOrder() {
     this.currentOrder.confirm();
-    this.orderConfirmedSource.next(true);
-    this.currentOrder = new Order();
+    return this.http.post(`${this.orderUrl}/-1`, this.currentOrder)
+      .toPromise()
+      .then(response => {
+        let updatedOrder = new Order(response.json());
+        this.orderConfirmedSource.next(updatedOrder);
+        this.currentOrder = new Order();
+        return updatedOrder;
+      })
+      .catch(this.handleError);
   }
 
   resetOrder(){
     this.currentOrder = new Order();
-    this.orderConfirmedSource.next(false);
+    this.orderResetedSource.next(this.currentOrder);
+  }
+
+  private handleError(error: any) {
+    console.error('An error occurred', error);
+    return Promise.reject(error.message || error);
   }
 }

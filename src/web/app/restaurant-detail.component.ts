@@ -20,7 +20,7 @@ export class RestaurantDetailComponent implements OnInit {
   storeId: string;
   restaurant: Restaurant;
   categories: Category[];
-  products: any[];
+  products: Product[];
   error: any;
 
   constructor(private router: Router,
@@ -62,6 +62,8 @@ export class RestaurantDetailComponent implements OnInit {
     let lineItem = new LineItem({
       _id: item._id,
       name: item.name,
+      store_id: item.store_id,
+      store_name: this.restaurant.name,
       description: "",
       category: item.category,
       vegetarian: item.food_type[0] == 'veg',

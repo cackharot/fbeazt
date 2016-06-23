@@ -22,6 +22,9 @@ var CartSummaryComponent = (function () {
         this.orderService.itemAdded$.subscribe(function (x) {
             _this.update();
         });
+        this.orderService.orderReseted$.subscribe(function (x) {
+            _this.update();
+        });
     };
     CartSummaryComponent.prototype.update = function () {
         this.totalQuantity = this.orderService.getTotalQuantity();

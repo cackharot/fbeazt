@@ -10,19 +10,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var Subject_1 = require('rxjs/Subject');
+var http_1 = require('@angular/http');
 var WebStorage_1 = require("angular2-localstorage/WebStorage");
 var order_1 = require('../model/order');
 var OrderService = (function () {
-    function OrderService() {
+    function OrderService(http) {
+        this.http = http;
         // Observable string sources
         this.currentOrder = new order_1.Order();
         this.itemAddedSource = new Subject_1.Subject();
         this.deliveryUpdatedSource = new Subject_1.Subject();
         this.orderConfirmedSource = new Subject_1.Subject();
+        this.orderResetedSource = new Subject_1.Subject();
+        this.orderUrl = 'http://localhost:4000/api/order';
         // Observable string streams
         this.itemAdded$ = this.itemAddedSource.asObservable();
         this.deliveryUpdated$ = this.deliveryUpdatedSource.asObservable();
         this.orderConfirmed$ = this.orderConfirmedSource.asObservable();
+        this.orderReseted$ = this.orderResetedSource.asObservable();
         if (this.currentOrder.constructor.name != 'Order') {
             this.currentOrder = new order_1.Order(this.currentOrder);
         }
@@ -45,13 +50,25 @@ var OrderService = (function () {
         return this.currentOrder.getTotalAmount();
     };
     OrderService.prototype.confirmOrder = function () {
+        var _this = this;
         this.currentOrder.confirm();
-        this.orderConfirmedSource.next(true);
-        this.currentOrder = new order_1.Order();
+        return this.http.post(this.orderUrl + "/-1", this.currentOrder)
+            .toPromise()
+            .then(function (response) {
+            var updatedOrder = new order_1.Order(response.json());
+            _this.orderConfirmedSource.next(updatedOrder);
+            _this.currentOrder = new order_1.Order();
+            return updatedOrder;
+        })
+            .catch(this.handleError);
     };
     OrderService.prototype.resetOrder = function () {
         this.currentOrder = new order_1.Order();
-        this.orderConfirmedSource.next(false);
+        this.orderResetedSource.next(this.currentOrder);
+    };
+    OrderService.prototype.handleError = function (error) {
+        console.error('An error occurred', error);
+        return Promise.reject(error.message || error);
     };
     __decorate([
         WebStorage_1.LocalStorage(), 
@@ -59,7 +76,7 @@ var OrderService = (function () {
     ], OrderService.prototype, "currentOrder", void 0);
     OrderService = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [http_1.Http])
     ], OrderService);
     return OrderService;
 }());

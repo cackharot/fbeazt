@@ -1,18 +1,18 @@
 import { ObjectId, Date } from "./base";
 
 export class Product {
-  _id: ObjectId;
+  _id: ObjectId = new ObjectId();
   deliver_time: number;
   cuisines: string[];
   buy_price: number;
   open_time: number;
-  store_id: ObjectId;
+  store_id: ObjectId = new ObjectId();
   discount: number;
   close_time: number;
   category: string;
   created_at: Date;
   sell_price: number;
-  tenant_id: ObjectId;
+  tenant_id: ObjectId = new ObjectId();
   barcode: string;
   food_type: string[];
   updated_at: Date;
@@ -21,6 +21,8 @@ export class Product {
 
   constructor(data={}){
     Object.assign(this, data);
+    this._id = ObjectId.of(this._id);
+    this.store_id = ObjectId.of(this.store_id);
   }
 }
 

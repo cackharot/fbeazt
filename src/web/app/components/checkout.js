@@ -15,9 +15,26 @@ var CheckoutComponent = (function () {
     function CheckoutComponent(router, orderService) {
         this.router = router;
         this.orderService = orderService;
+        this.orderSuccess = false;
     }
     CheckoutComponent.prototype.ngOnInit = function () {
         this.order = this.orderService.getOrder();
+    };
+    CheckoutComponent.prototype.resetOrder = function () {
+        this.orderService.resetOrder();
+        this.router.navigate(['Home']);
+    };
+    CheckoutComponent.prototype.confirmOrder = function () {
+        var _this = this;
+        this.orderService.confirmOrder()
+            .then(function (updatedOrder) {
+            _this.order = updatedOrder;
+            _this.orderSuccess = true;
+        }).catch(this.handleError);
+    };
+    CheckoutComponent.prototype.handleError = function (error) {
+        console.log(error);
+        this.error = error;
     };
     CheckoutComponent.prototype.isEmpty = function () {
         return this.order && this.order.items.length == 0;

@@ -1,13 +1,13 @@
 import { ObjectId, Date } from "./base";
 
 export class Restaurant {
-  _id: ObjectId;
+  _id: ObjectId = new ObjectId();
   cuisines: string[];
   deliver_time: number;
   phone: string;
   open_time: number;
   close_time: number;
-  tenant_id: ObjectId;
+  tenant_id: ObjectId = new ObjectId();
   created_at: Date;
   food_type: string[];
   address: string;
@@ -16,6 +16,7 @@ export class Restaurant {
 
   constructor(data={}){
     Object.assign(this, data);
+    this._id = ObjectId.of(this._id);
   }
 
   getId(){

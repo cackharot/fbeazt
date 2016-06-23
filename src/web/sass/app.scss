@@ -160,3 +160,12 @@ img.res_logo{
     }
   }
 }
+
+.order_table{
+  .price, .quantity, .total {
+    text-align: right;
+  }
+  .total{
+    font-weight: bold;
+  }
+}

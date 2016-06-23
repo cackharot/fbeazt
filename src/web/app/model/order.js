@@ -1,9 +1,12 @@
 "use strict";
+var base_1 = require("./base");
 var Order = (function () {
     function Order(data) {
         if (data === void 0) { data = {}; }
+        this._id = new base_1.ObjectId();
         this.delivery_details = new DeliveryDetails();
         Object.assign(this, data);
+        this._id = base_1.ObjectId.of(this._id);
         if (this.items == undefined) {
             this.items = [];
             this.status = false;
@@ -29,9 +32,16 @@ var Order = (function () {
             cur_item.quantity++;
         }
     };
+    Order.prototype.getStores = function () {
+        var stores = this.items.map(function (x) { return ({ store_name: x.store_name, store_id: x.store_id }); });
+        return stores;
+    };
+    Order.prototype.getItems = function (store_id) {
+        return this.items.filter(function (x) { return x.store_id == store_id; });
+    };
     Order.prototype.getTotalAmount = function () {
         var price = 0;
-        this.items.forEach(function (x) { return price = price + x.price; });
+        this.items.forEach(function (x) { return price = price + x.getTotalPrice(); });
         return price;
     };
     Order.prototype.getTotalQuantity = function () {
@@ -45,15 +55,28 @@ exports.Order = Order;
 var LineItem = (function () {
     function LineItem(data) {
         if (data === void 0) { data = {}; }
+        this._id = new base_1.ObjectId();
+        this.product_id = new base_1.ObjectId();
+        this.store_id = new base_1.ObjectId();
         Object.assign(this, data);
+        this._id = base_1.ObjectId.of(this._id);
+        this.product_id = base_1.ObjectId.of(this.product_id);
+        this.store_id = base_1.ObjectId.of(this.store_id);
     }
+    LineItem.prototype.getTotalPrice = function () {
+        return this.price * this.quantity;
+    };
     return LineItem;
 }());
 exports.LineItem = LineItem;
 var DeliveryDetails = (function () {
     function DeliveryDetails(data) {
         if (data === void 0) { data = {}; }
+        this._id = new base_1.ObjectId();
+        this.customer_id = new base_1.ObjectId();
         Object.assign(this, data);
+        this._id = base_1.ObjectId.of(this._id);
+        this.customer_id = base_1.ObjectId.of(this.customer_id);
     }
     return DeliveryDetails;
 }());

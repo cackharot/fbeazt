@@ -15,9 +15,9 @@
     <h2>Delivery Details</h2>
     <div class="callout secondary">
       <p>
-        Kindly ensure you have given correct delivery address with postbox number, floor number,
+        Kindly ensure that you have given correct delivery address with postbox number, floor number,
         mobile number and pincode.
-        Unless you receive an email or SMS or a call from us. <i>Your order will not be processed.</i>
+        Unless you receive an email or SMS or a phone call from us, <i>Your order will not be processed.</i>
       </p> 
     </div>
   </div>
@@ -30,31 +30,42 @@
   </div>
   <div class="medium-12 columns">
     <h2>Review Order</h2>
-    <table class="table order_table">
-      <tbody>
-        <tr *ngFor="let item of order.items">
-          <td>
-            <p class="product_name">{{item.name}}</p>
-            <p class="product_desc">{{item.description}}</p>
-          </td>
-          <td class="quantity">
-            {{item.quantity}}
-          </td>
-          <td class="price">
-            {{item.price*item.quantity}}
-          </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="2">
-            Total:
-          </td>
-          <td class="total">
-            Rs. 000.00
-          </td>
-        </tr>
-      </tfoot>
-    </table>
+    <div class="review_restaurant" *ngFor="let store of order.getStores()">
+      <h4>{{store.store_name}}</h4>
+      <table class="table order_table">
+        <tbody>
+          <tr *ngFor="let item of order.getItems(store.store_id)">
+            <td>
+              <p class="product_name">{{item.name}}</p>
+              <p class="product_desc">{{item.description}}</p>
+            </td>
+            <td class="quantity">
+              x{{item.quantity}}
+            </td>
+            <td class="price">
+              {{item.price*item.quantity}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="order__total">
+      <table class="table order__total">
+        <tfoot>
+          <tr>
+            <td colspan="2">
+              Total:
+            </td>
+            <td class="total">
+              Rs. {{order.getTotalAmount()}}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="center">
+      <button (click)="resetOrder()" class="button secondary">Cancel</button>
+      <button (click)="confirmOrder()" class="button primary">Confirm</button>
+    </div>
   </div>
 </section>

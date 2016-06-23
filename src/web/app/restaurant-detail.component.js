@@ -58,6 +58,8 @@ var RestaurantDetailComponent = (function () {
         var lineItem = new order_1.LineItem({
             _id: item._id,
             name: item.name,
+            store_id: item.store_id,
+            store_name: this.restaurant.name,
             description: "",
             category: item.category,
             vegetarian: item.food_type[0] == 'veg',

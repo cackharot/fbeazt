@@ -106,3 +106,9 @@ img.res_logo {
 
 .menu li a {
   padding: 0; }
+
+.order_table .price, .order_table .quantity, .order_table .total {
+  text-align: right; }
+
+.order_table .total {
+  font-weight: bold; }

@@ -13,6 +13,8 @@ import { Order, DeliveryDetails, LineItem } from '../model/order';
 })
 export class CheckoutComponent implements OnInit {
   order: Order;
+  orderSuccess:boolean = false;
+  error:any;
 
   constructor(private router: Router,
     private orderService: OrderService) { 
@@ -20,6 +22,24 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit() {
     this.order = this.orderService.getOrder();
+  }
+
+  resetOrder(){
+    this.orderService.resetOrder();
+    this.router.navigate(['Home']);
+  }
+
+  confirmOrder(){
+    this.orderService.confirmOrder()
+    .then(updatedOrder => {
+      this.order = updatedOrder;
+      this.orderSuccess = true;
+    }).catch(this.handleError);
+  }
+
+  private handleError(error:any){
+    console.log(error);
+    this.error = error;
   }
 
   isEmpty(){

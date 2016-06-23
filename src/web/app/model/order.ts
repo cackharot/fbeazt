@@ -1,7 +1,7 @@
 import { ObjectId, Date } from "./base";
 
 export class Order {
-  _id: ObjectId;
+  _id: ObjectId = new ObjectId();
   delivery_details: DeliveryDetails = new DeliveryDetails();
   delivery_date: Date;
   created_date: Date;
@@ -11,6 +11,9 @@ export class Order {
 
   constructor(data={}){
     Object.assign(this, data);
+
+    this._id = ObjectId.of(this._id);
+
     if(this.items == undefined){
       this.items = [];
       this.status = false;
@@ -38,9 +41,18 @@ export class Order {
     }
   }
 
+  getStores(){
+    let stores = this.items.map(x=> ({store_name: x.store_name,store_id: x.store_id}));
+    return stores;
+  }
+
+  getItems(store_id){
+    return this.items.filter(x=>x.store_id == store_id);
+  }
+
   getTotalAmount(){
     let price = 0;
-    this.items.forEach(x=> price = price + x.price);
+    this.items.forEach(x=> price = price + x.getTotalPrice());
     return price;
   }
 
@@ -52,8 +64,10 @@ export class Order {
 }
 
 export class LineItem {
-  _id: ObjectId;
-  product_id: ObjectId;
+  _id: ObjectId = new ObjectId();
+  product_id: ObjectId = new ObjectId();
+  store_id: ObjectId = new ObjectId();
+  store_name: string;
   name: string;
   description: string;
   category: string;
@@ -63,11 +77,19 @@ export class LineItem {
 
   constructor(data={}){
     Object.assign(this, data);
+    this._id = ObjectId.of(this._id);
+    this.product_id = ObjectId.of(this.product_id);
+    this.store_id = ObjectId.of(this.store_id);
+  }
+
+  getTotalPrice(){
+    return this.price * this.quantity;
   }
 }
 
 export class DeliveryDetails {
-  customer_id: ObjectId;
+  _id: ObjectId = new ObjectId();
+  customer_id: ObjectId = new ObjectId();
   name: string;
   email: string;
   phone: string;
@@ -81,5 +103,7 @@ export class DeliveryDetails {
 
   constructor(data={}){
     Object.assign(this, data);
+    this._id = ObjectId.of(this._id);
+    this.customer_id = ObjectId.of(this.customer_id);
   }
 }
