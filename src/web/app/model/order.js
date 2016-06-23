@@ -1,9 +1,20 @@
 "use strict";
 var Order = (function () {
-    function Order() {
-        this.items = [];
-        this.status = false;
-        this.state = 'NEW';
+    function Order(data) {
+        if (data === void 0) { data = {}; }
+        this.delivery_details = new DeliveryDetails();
+        Object.assign(this, data);
+        if (this.items == undefined) {
+            this.items = [];
+            this.status = false;
+            this.state = 'NEW';
+        }
+        if (this.items.length > 0 && this.items[0].constructor.name != 'LineItem') {
+            this.items = this.items.map(function (x) { return new LineItem(x); });
+        }
+        if (this.delivery_details.constructor.name != 'DeliveryDetails') {
+            this.delivery_details = new DeliveryDetails(this.delivery_details);
+        }
     }
     Order.prototype.confirm = function () {
         this.status = true;
@@ -32,20 +43,17 @@ var Order = (function () {
 }());
 exports.Order = Order;
 var LineItem = (function () {
-    function LineItem(product_id, name, desc, category, food_type, quantity, price) {
-        this.product_id = product_id;
-        this.name = name;
-        this.description = desc;
-        this.category = category;
-        this.vegetarian = food_type === 'veg';
-        this.quantity = quantity;
-        this.price = price;
+    function LineItem(data) {
+        if (data === void 0) { data = {}; }
+        Object.assign(this, data);
     }
     return LineItem;
 }());
 exports.LineItem = LineItem;
 var DeliveryDetails = (function () {
-    function DeliveryDetails() {
+    function DeliveryDetails(data) {
+        if (data === void 0) { data = {}; }
+        Object.assign(this, data);
     }
     return DeliveryDetails;
 }());

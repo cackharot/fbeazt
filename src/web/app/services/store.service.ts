@@ -16,7 +16,7 @@ export class StoreService {
     return this.http.get(this.storesUrl)
                .toPromise()
                .then(response =>{
-                 return response.json() as Restaurant[];
+                 return response.json().map(x => new Restaurant(x));
                })
                .catch(this.handleError);
   }
@@ -24,7 +24,7 @@ export class StoreService {
   get(id): Promise<Restaurant> {
     return this.http.get(`${this.storeUrl}/${id}`)
                .toPromise()
-               .then(response => response.json())
+               .then(response => new Restaurant(response.json()))
                .catch(this.handleError);
   }
 

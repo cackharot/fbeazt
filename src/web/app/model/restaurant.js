@@ -1,6 +1,8 @@
 "use strict";
 var Restaurant = (function () {
-    function Restaurant() {
+    function Restaurant(data) {
+        if (data === void 0) { data = {}; }
+        Object.assign(this, data);
     }
     Restaurant.prototype.getId = function () {
         return this._id.$oid;

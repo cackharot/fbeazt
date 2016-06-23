@@ -14,6 +14,10 @@ export class Restaurant {
   name: string;
   status: boolean;
 
+  constructor(data={}){
+    Object.assign(this, data);
+  }
+
   getId(){
     return this._id.$oid;
   }

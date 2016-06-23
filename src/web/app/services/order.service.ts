@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject }    from 'rxjs/Subject';
+import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
 
 import { Product } from '../model/product';
 import { Order, LineItem, DeliveryDetails } from '../model/order';
@@ -7,7 +8,7 @@ import { Order, LineItem, DeliveryDetails } from '../model/order';
 @Injectable()
 export class OrderService {
   // Observable string sources
-  private currentOrder: Order;
+  @LocalStorage() private currentOrder: Order = new Order();
   private itemAddedSource = new Subject<LineItem>();
   private deliveryUpdatedSource = new Subject<DeliveryDetails>();
   private orderConfirmedSource = new Subject<boolean>();
@@ -18,14 +19,14 @@ export class OrderService {
   orderConfirmed$ = this.orderConfirmedSource.asObservable();
 
   constructor(){
-    this.currentOrder = new Order();
+    if(this.currentOrder.constructor.name != 'Order'){
+      this.currentOrder = new Order(this.currentOrder);
+    }
   }
 
-  // Service message commands
   addLineItem(item: LineItem) {
     this.currentOrder.addItem(item);
     this.itemAddedSource.next(item);
-    // console.log(this.currentOrder);
   }
 
   updateDeliveryDetails(deliveryDetails: DeliveryDetails) {
@@ -48,6 +49,7 @@ export class OrderService {
   confirmOrder() {
     this.currentOrder.confirm();
     this.orderConfirmedSource.next(true);
+    this.currentOrder = new Order();
   }
 
   resetOrder(){

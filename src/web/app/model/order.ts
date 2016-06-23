@@ -2,17 +2,26 @@ import { ObjectId, Date } from "./base";
 
 export class Order {
   _id: ObjectId;
-  delivery_details: DeliveryDetails;
+  delivery_details: DeliveryDetails = new DeliveryDetails();
   delivery_date: Date;
   created_date: Date;
   state: string;
   items: LineItem[];
   status: boolean;
 
-  constructor(){
-    this.items = [];
-    this.status = false;
-    this.state = 'NEW';
+  constructor(data={}){
+    Object.assign(this, data);
+    if(this.items == undefined){
+      this.items = [];
+      this.status = false;
+      this.state = 'NEW';
+    }
+    if(this.items.length > 0 && this.items[0].constructor.name != 'LineItem'){
+      this.items = this.items.map(x=>new LineItem(x));
+    }
+    if(this.delivery_details.constructor.name != 'DeliveryDetails'){
+      this.delivery_details = new DeliveryDetails(this.delivery_details);
+    }
   }
 
   confirm(){
@@ -52,17 +61,9 @@ export class LineItem {
   quantity: number;
   price: number;
 
-  constructor(product_id: ObjectId, name: string,
-    desc: string, category: string, food_type: string,
-    quantity: number, price: number){
-      this.product_id = product_id;
-      this.name = name;
-      this.description = desc;
-      this.category = category;
-      this.vegetarian = food_type === 'veg';
-      this.quantity = quantity;
-      this.price = price;
-    }
+  constructor(data={}){
+    Object.assign(this, data);
+  }
 }
 
 export class DeliveryDetails {
@@ -77,4 +78,8 @@ export class DeliveryDetails {
   city: string;
   country: string;
   notes: string;
+
+  constructor(data={}){
+    Object.assign(this, data);
+  }
 }

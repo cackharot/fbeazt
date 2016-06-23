@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
+var restaurant_1 = require('../model/restaurant');
 require('rxjs/add/operator/toPromise');
 var StoreService = (function () {
     function StoreService(http) {
@@ -21,14 +22,14 @@ var StoreService = (function () {
         return this.http.get(this.storesUrl)
             .toPromise()
             .then(function (response) {
-            return response.json();
+            return response.json().map(function (x) { return new restaurant_1.Restaurant(x); });
         })
             .catch(this.handleError);
     };
     StoreService.prototype.get = function (id) {
         return this.http.get(this.storeUrl + "/" + id)
             .toPromise()
-            .then(function (response) { return response.json(); })
+            .then(function (response) { return new restaurant_1.Restaurant(response.json()); })
             .catch(this.handleError);
     };
     StoreService.prototype.handleError = function (error) {

@@ -43,7 +43,7 @@ var RestaurantDetailComponent = (function () {
                 var item = _this.products[i];
                 var category = _this.categories.find(function (x) { return x.name == item.category; });
                 if (category == undefined) {
-                    var c = new product_1.Category(item.category);
+                    var c = new product_1.Category({ name: item.category });
                     c.addProduct(item);
                     _this.categories.push(c);
                 }
@@ -55,7 +55,15 @@ var RestaurantDetailComponent = (function () {
     };
     RestaurantDetailComponent.prototype.addToCart = function (item, event) {
         event.preventDefault();
-        var lineItem = new order_1.LineItem(item._id, item.name, "", item.category, item.food_type[0], 1.0, item.sell_price);
+        var lineItem = new order_1.LineItem({
+            _id: item._id,
+            name: item.name,
+            description: "",
+            category: item.category,
+            vegetarian: item.food_type[0] == 'veg',
+            quantity: 1.0,
+            price: item.sell_price
+        });
         this.orderService.addLineItem(lineItem);
     };
     RestaurantDetailComponent.prototype.goBack = function (id) {

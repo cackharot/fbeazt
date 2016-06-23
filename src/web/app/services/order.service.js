@@ -10,9 +10,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var Subject_1 = require('rxjs/Subject');
+var WebStorage_1 = require("angular2-localstorage/WebStorage");
 var order_1 = require('../model/order');
 var OrderService = (function () {
     function OrderService() {
+        // Observable string sources
+        this.currentOrder = new order_1.Order();
         this.itemAddedSource = new Subject_1.Subject();
         this.deliveryUpdatedSource = new Subject_1.Subject();
         this.orderConfirmedSource = new Subject_1.Subject();
@@ -20,13 +23,13 @@ var OrderService = (function () {
         this.itemAdded$ = this.itemAddedSource.asObservable();
         this.deliveryUpdated$ = this.deliveryUpdatedSource.asObservable();
         this.orderConfirmed$ = this.orderConfirmedSource.asObservable();
-        this.currentOrder = new order_1.Order();
+        if (this.currentOrder.constructor.name != 'Order') {
+            this.currentOrder = new order_1.Order(this.currentOrder);
+        }
     }
-    // Service message commands
     OrderService.prototype.addLineItem = function (item) {
         this.currentOrder.addItem(item);
         this.itemAddedSource.next(item);
-        // console.log(this.currentOrder);
     };
     OrderService.prototype.updateDeliveryDetails = function (deliveryDetails) {
         this.currentOrder.delivery_details = deliveryDetails;
@@ -44,11 +47,16 @@ var OrderService = (function () {
     OrderService.prototype.confirmOrder = function () {
         this.currentOrder.confirm();
         this.orderConfirmedSource.next(true);
+        this.currentOrder = new order_1.Order();
     };
     OrderService.prototype.resetOrder = function () {
         this.currentOrder = new order_1.Order();
         this.orderConfirmedSource.next(false);
     };
+    __decorate([
+        WebStorage_1.LocalStorage(), 
+        __metadata('design:type', order_1.Order)
+    ], OrderService.prototype, "currentOrder", void 0);
     OrderService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [])

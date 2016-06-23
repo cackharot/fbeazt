@@ -16,7 +16,9 @@ export class ProductService {
     return this.http.get(`${this.productsUrl}/${store_id}`)
                .toPromise()
                .then(response =>{
-                 return response.json().items;
+                 let items = response.json().items;
+                 let products = items.map(x=> new Product(x));
+                 return products;
                })
                .catch(this.handleError);
   }
@@ -24,7 +26,7 @@ export class ProductService {
   get(store_id, id): Promise<Product> {
     return this.http.get(`${this.productUrl}/${store_id}/${id}`)
                .toPromise()
-               .then(response => response.json())
+               .then(response => new Product(response.json()))
                .catch(this.handleError);
   }
 

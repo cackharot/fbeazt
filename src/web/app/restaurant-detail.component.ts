@@ -47,7 +47,7 @@ export class RestaurantDetailComponent implements OnInit {
         var item = this.products[i];
         var category = this.categories.find(x=>x.name == item.category);
         if(category == undefined){
-          var c = new Category(item.category);
+          var c = new Category({name: item.category});
           c.addProduct(item);
           this.categories.push(c);
         }else{
@@ -59,8 +59,15 @@ export class RestaurantDetailComponent implements OnInit {
 
   addToCart(item: Product, event: any){
     event.preventDefault();
-    let lineItem = new LineItem(item._id,item.name,"",
-      item.category,item.food_type[0],1.0,item.sell_price);
+    let lineItem = new LineItem({
+      _id: item._id,
+      name: item.name,
+      description: "",
+      category: item.category,
+      vegetarian: item.food_type[0] == 'veg',
+      quantity: 1.0,
+      price: item.sell_price
+    });
     this.orderService.addLineItem(lineItem);
   }
 

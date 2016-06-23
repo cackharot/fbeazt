@@ -29,6 +29,7 @@
     "bootstrap": "^3.3.6"
   },
   "devDependencies": {
+    "angular2-localstorage": "^0.4.0",
     "concurrently": "^2.0.0",
     "gulp": "^3.9.1",
     "gulp-bower": "0.0.13",

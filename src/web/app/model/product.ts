@@ -18,15 +18,21 @@ export class Product {
   updated_at: Date;
   name: string;
   status: boolean;
+
+  constructor(data={}){
+    Object.assign(this, data);
+  }
 }
 
 export class Category {
   name: string;
-  products: Product[];
+  products: Product[] = [];
 
-  constructor(name: string){
-    this.name = name;
-    this.products = [];
+  constructor(data={}){
+    Object.assign(this, data);
+    if(this.products.length > 0){
+      this.products = this.products.map(x=>new Product(x));
+    }
   }
 
   addProduct(item: Product){
