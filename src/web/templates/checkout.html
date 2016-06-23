@@ -6,10 +6,15 @@
     </li>
   </ul>
 </nav>
-<div class="warn info" *ngIf="isEmpty()">
+<div class="callout primary" *ngIf="isEmpty()">
   <h3>Oops!</h3>
   <p>Added items to the cart to checkout :)</p>
 </div>
+<div class="callout alert" *ngIf="error != null">
+  <h3>Oops!</h3>
+  <p>This was not supposed to happen. Kindly try again after sometime.</p>
+</div>
+
 <section class="row" *ngIf="!isEmpty()">
   <div class="medium-12 columns">
     <h2>Delivery Details</h2>

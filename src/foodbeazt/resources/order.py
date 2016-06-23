@@ -64,7 +64,7 @@ class OrderApi(Resource):
         except Exception as e:
             print(e)
             return dict(status="error",
-                        message="Oops! Error while trying to save order details! Please try again later")
+                        message="Oops! Error while trying to save order details! Please try again later"), 420
 
     def delete(self, _id):
         item = self.service.get_by_id(_id)

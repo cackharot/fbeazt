@@ -55,9 +55,10 @@ var OrderService = (function () {
         return this.http.post(this.orderUrl + "/-1", this.currentOrder)
             .toPromise()
             .then(function (response) {
-            var updatedOrder = new order_1.Order(response.json());
+            console.log(response);
+            var updatedOrder = new order_1.Order(response.json().data);
             _this.orderConfirmedSource.next(updatedOrder);
-            _this.currentOrder = new order_1.Order();
+            // this.currentOrder = new Order();
             return updatedOrder;
         })
             .catch(this.handleError);
@@ -68,7 +69,7 @@ var OrderService = (function () {
     };
     OrderService.prototype.handleError = function (error) {
         console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
+        return Promise.reject(error.json().message || error);
     };
     __decorate([
         WebStorage_1.LocalStorage(), 

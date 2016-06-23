@@ -16,6 +16,7 @@ var CheckoutComponent = (function () {
         this.router = router;
         this.orderService = orderService;
         this.orderSuccess = false;
+        this.error = null;
     }
     CheckoutComponent.prototype.ngOnInit = function () {
         this.order = this.orderService.getOrder();
@@ -30,11 +31,9 @@ var CheckoutComponent = (function () {
             .then(function (updatedOrder) {
             _this.order = updatedOrder;
             _this.orderSuccess = true;
-        }).catch(this.handleError);
-    };
-    CheckoutComponent.prototype.handleError = function (error) {
-        console.log(error);
-        this.error = error;
+        }, function (errorMsg) {
+            _this.error = errorMsg;
+        });
     };
     CheckoutComponent.prototype.isEmpty = function () {
         return this.order && this.order.items.length == 0;

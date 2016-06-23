@@ -55,9 +55,10 @@ export class OrderService {
     return this.http.post(`${this.orderUrl}/-1`, this.currentOrder)
       .toPromise()
       .then(response => {
-        let updatedOrder = new Order(response.json());
+        console.log(response);
+        let updatedOrder = new Order(response.json().data);
         this.orderConfirmedSource.next(updatedOrder);
-        this.currentOrder = new Order();
+        // this.currentOrder = new Order();
         return updatedOrder;
       })
       .catch(this.handleError);
@@ -70,6 +71,6 @@ export class OrderService {
 
   private handleError(error: any) {
     console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+    return Promise.reject(error.json().message || error);
   }
 }

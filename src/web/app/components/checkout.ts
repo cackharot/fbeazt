@@ -14,11 +14,11 @@ import { Order, DeliveryDetails, LineItem } from '../model/order';
 export class CheckoutComponent implements OnInit {
   order: Order;
   orderSuccess:boolean = false;
-  error:any;
+  error:any = null;
 
   constructor(private router: Router,
     private orderService: OrderService) { 
-    }
+  }
 
   ngOnInit() {
     this.order = this.orderService.getOrder();
@@ -31,15 +31,12 @@ export class CheckoutComponent implements OnInit {
 
   confirmOrder(){
     this.orderService.confirmOrder()
-    .then(updatedOrder => {
-      this.order = updatedOrder;
-      this.orderSuccess = true;
-    }).catch(this.handleError);
-  }
-
-  private handleError(error:any){
-    console.log(error);
-    this.error = error;
+      .then(updatedOrder => {
+        this.order = updatedOrder;
+        this.orderSuccess = true;
+      }, errorMsg => {
+        this.error = errorMsg
+      });
   }
 
   isEmpty(){
