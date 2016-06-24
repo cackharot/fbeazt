@@ -55,10 +55,10 @@ export class OrderService {
     return this.http.post(`${this.orderUrl}/-1`, this.currentOrder)
       .toPromise()
       .then(response => {
-        console.log(response);
+        console.log(response.json());
         let updatedOrder = new Order(response.json().data);
         this.orderConfirmedSource.next(updatedOrder);
-        // this.currentOrder = new Order();
+        this.currentOrder = updatedOrder;
         return updatedOrder;
       })
       .catch(this.handleError);

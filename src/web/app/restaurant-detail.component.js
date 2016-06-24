@@ -57,7 +57,7 @@ var RestaurantDetailComponent = (function () {
     RestaurantDetailComponent.prototype.addToCart = function (item, event) {
         event.preventDefault();
         var lineItem = new order_1.LineItem({
-            _id: item._id,
+            product_id: item._id,
             name: item.name,
             store_id: item.store_id,
             store_name: this.restaurant.name,
@@ -69,7 +69,8 @@ var RestaurantDetailComponent = (function () {
         });
         this.orderService.addLineItem(lineItem);
     };
-    RestaurantDetailComponent.prototype.goBack = function (id) {
+    RestaurantDetailComponent.prototype.goBack = function (id, event) {
+        // event.preventDefault();
         this.router.navigate([id]);
     };
     RestaurantDetailComponent.prototype.handleError = function (err) {

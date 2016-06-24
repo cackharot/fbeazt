@@ -13,7 +13,7 @@
     <h1>FoodBeazt - Order Confirmation</h1>
 </div>
 <p>
-   <b>Dear {{order['customer']['name']}}</b>
+   <b>Dear {{order['delivery_details']['name']}}</b>
 </p>
 <p>
     Thank you for Shopping at Foodbeazt.in<br/>
@@ -28,8 +28,8 @@
     {% for item in order['items'] %}
     <tr>
         <td class="cell">{{item['name']}}</td>
-        <td class="cell" style="text-align:right;">{{item['sell_price']}}</td>
-        <td class="cell" style="text-align:right;">{{item['quantity'] * item['sell_price']}}</td>
+        <td class="cell" style="text-align:right;">{{item['price']}}</td>
+        <td class="cell" style="text-align:right;">{{item['quantity'] * item['price']}}</td>
     </tr>
     {% endfor %}
     <tr>
@@ -47,12 +47,11 @@
 <div>
     <h3>Delivery Address:</h3>
     <p>
-        Name: {{order['customer']['name']}}<br/>
-        Address: {{order['customer']['street']}},<br/>
-        {{order['customer']['area']}},<br/>
-        {{order['customer']['landmark']}},<br/>
-        {{order['customer']['pincode']}}<br/>
-        Phone: {{order['customer']['phone']}}<br/>
+        Name: {{order['delivery_details']['name']}}<br/>
+        Address: {{order['delivery_details']['address']}},<br/>
+        {{order['delivery_details']['landmark']}},<br/>
+        {{order['delivery_details']['pincode']}}<br/>
+        Phone: {{order['delivery_details']['phone']}}<br/>
     </p>
 </div>
 

@@ -16,10 +16,12 @@ var CheckoutComponent = (function () {
         this.router = router;
         this.orderService = orderService;
         this.orderSuccess = false;
+        this.submitted = false;
         this.error = null;
     }
     CheckoutComponent.prototype.ngOnInit = function () {
         this.order = this.orderService.getOrder();
+        this.orderSuccess = this.order.order_no && this.order.order_no.length > 0;
     };
     CheckoutComponent.prototype.resetOrder = function () {
         this.orderService.resetOrder();
@@ -27,13 +29,21 @@ var CheckoutComponent = (function () {
     };
     CheckoutComponent.prototype.confirmOrder = function () {
         var _this = this;
-        this.orderService.confirmOrder()
-            .then(function (updatedOrder) {
-            _this.order = updatedOrder;
-            _this.orderSuccess = true;
-        }, function (errorMsg) {
-            _this.error = errorMsg;
-        });
+        this.submitted = true;
+        if (this.order.items.length > 0) {
+            this.orderService.confirmOrder()
+                .then(function (updatedOrder) {
+                _this.order = updatedOrder;
+                _this.orderSuccess = true;
+                _this.error = null;
+            }, function (errorMsg) {
+                _this.orderSuccess = false;
+                _this.error = errorMsg;
+            });
+        }
+        else {
+            this.error = "Invalid order";
+        }
     };
     CheckoutComponent.prototype.isEmpty = function () {
         return this.order && this.order.items.length == 0;

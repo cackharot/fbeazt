@@ -63,7 +63,7 @@ export class RestaurantDetailComponent implements OnInit {
   addToCart(item: Product, event: any){
     event.preventDefault();
     let lineItem = new LineItem({
-      _id: item._id,
+      product_id: item._id,
       name: item.name,
       store_id: item.store_id,
       store_name: this.restaurant.name,
@@ -76,7 +76,8 @@ export class RestaurantDetailComponent implements OnInit {
     this.orderService.addLineItem(lineItem);
   }
 
-  goBack(id: string) {
+  goBack(id: string, event: any) {
+    // event.preventDefault();
     this.router.navigate([id]);
   }
 

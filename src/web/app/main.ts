@@ -8,7 +8,8 @@ import { AppComponent } from './app.component';
 let appPromise = bootstrap(AppComponent,[
   HTTP_PROVIDERS,
   ROUTER_PROVIDERS,
-  LocalStorageService
-]);
+  LocalStorageService,
+])
+.catch((err: any) => console.error(err));
 
 LocalStorageSubscriber(appPromise);

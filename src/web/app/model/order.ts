@@ -2,12 +2,12 @@ import { ObjectId, Date } from "./base";
 
 export class Order {
   _id: ObjectId = new ObjectId();
+  order_no: string;
   delivery_details: DeliveryDetails = new DeliveryDetails();
-  delivery_date: Date;
-  created_date: Date;
-  state: string;
+  created_at: Date;
+  updated_at: Date;
   items: LineItem[];
-  status: boolean;
+  status: string;
 
   constructor(data={}){
     Object.assign(this, data);
@@ -16,8 +16,7 @@ export class Order {
 
     if(this.items == undefined){
       this.items = [];
-      this.status = false;
-      this.state = 'NEW';
+      this.status = 'NEW';
     }
     if(this.items.length > 0 && this.items[0].constructor.name != 'LineItem'){
       this.items = this.items.map(x=>new LineItem(x));
@@ -28,13 +27,13 @@ export class Order {
   }
 
   confirm(){
-    this.status=true;
-    this.state = 'CONFIRMED';
+    this.status = 'CONFIRMED';
   }
 
   addItem(item: LineItem){
     let cur_item = this.items.find(x=>x.product_id == item.product_id);
     if(cur_item == undefined){
+      item.no = this.items.length + 1;
       this.items.push(item);
     }else{
       cur_item.quantity++;
@@ -64,7 +63,7 @@ export class Order {
 }
 
 export class LineItem {
-  _id: ObjectId = new ObjectId();
+  no: number;
   product_id: ObjectId = new ObjectId();
   store_id: ObjectId = new ObjectId();
   store_name: string;
@@ -77,7 +76,6 @@ export class LineItem {
 
   constructor(data={}){
     Object.assign(this, data);
-    this._id = ObjectId.of(this._id);
     this.product_id = ObjectId.of(this.product_id);
     this.store_id = ObjectId.of(this.store_id);
   }
@@ -88,7 +86,6 @@ export class LineItem {
 }
 
 export class DeliveryDetails {
-  _id: ObjectId = new ObjectId();
   customer_id: ObjectId = new ObjectId();
   name: string;
   email: string;
@@ -103,7 +100,6 @@ export class DeliveryDetails {
 
   constructor(data={}){
     Object.assign(this, data);
-    this._id = ObjectId.of(this._id);
     this.customer_id = ObjectId.of(this.customer_id);
   }
 }

@@ -55,10 +55,10 @@ var OrderService = (function () {
         return this.http.post(this.orderUrl + "/-1", this.currentOrder)
             .toPromise()
             .then(function (response) {
-            console.log(response);
+            console.log(response.json());
             var updatedOrder = new order_1.Order(response.json().data);
             _this.orderConfirmedSource.next(updatedOrder);
-            // this.currentOrder = new Order();
+            _this.currentOrder = updatedOrder;
             return updatedOrder;
         })
             .catch(this.handleError);

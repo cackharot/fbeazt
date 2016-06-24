@@ -14,7 +14,17 @@
   <h3>Oops!</h3>
   <p>This was not supposed to happen. Kindly try again after sometime.</p>
 </div>
-
+<div class="callout success" *ngIf="orderSuccess">
+  <h3>Thanks {{order.delivery_details.name}}</h3>
+  <p>
+    Your order is successfull, kindly note the order number for further reference <b>{{order.order_no}}</b>.
+    An invoice email is on the way to your inbox.
+  </p>
+  <p>
+    Enjoy your gourment meal!
+  </p>
+</div>
+<form (ngSubmit)="confirmOrder()" #orderForm="ngForm" *ngIf="!orderSuccess">
 <section class="row" *ngIf="!isEmpty()">
   <div class="medium-12 columns">
     <h2>Delivery Details</h2>
@@ -25,6 +35,24 @@
         Unless you receive an email or SMS or a phone call from us, <i>Your order will not be processed.</i>
       </p> 
     </div>
+    <label for="name">Name:
+      <input type="text" maxlength="50" id="name" [(ngModel)]="order.delivery_details.name" required/>
+    </label>
+    <label for="phone">Phone:
+      <input type="text" maxlength="10" minlength="10" id="phone" [(ngModel)]="order.delivery_details.phone" required/>
+    </label>
+    <label for="email">Email:
+      <input type="email" maxlength="200" minlength="3" id="email" [(ngModel)]="order.delivery_details.email" required/>
+    </label>
+    <label for="pincode">Pincode:
+      <input type="text" maxlength="6" minlength="6" id="pincode" [(ngModel)]="order.delivery_details.pincode" required/>
+    </label>
+    <label for="address">Address:
+      <textarea maxlength="500" minlength="10" id="address" [(ngModel)]="order.delivery_details.address" required></textarea>
+    </label>
+    <label for="landmark">Nearby landmark:
+      <input type="text" maxlength="50" id="landmark" [(ngModel)]="order.delivery_details.landmark" />
+    </label>
   </div>
   <div class="medium-12 columns">
     <h2>Payment Details</h2>
@@ -70,7 +98,10 @@
     </div>
     <div class="center">
       <button (click)="resetOrder()" class="button secondary">Cancel</button>
-      <button (click)="confirmOrder()" class="button primary">Confirm</button>
+      <button type="submit" class="button primary" [disabled]="!orderForm.form.valid">
+        Confirm
+      </button>
     </div>
   </div>
 </section>
+</form>

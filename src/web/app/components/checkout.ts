@@ -14,6 +14,7 @@ import { Order, DeliveryDetails, LineItem } from '../model/order';
 export class CheckoutComponent implements OnInit {
   order: Order;
   orderSuccess:boolean = false;
+  submitted:boolean = false;
   error:any = null;
 
   constructor(private router: Router,
@@ -22,6 +23,7 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit() {
     this.order = this.orderService.getOrder();
+    this.orderSuccess = this.order.order_no && this.order.order_no.length > 0;
   }
 
   resetOrder(){
@@ -30,13 +32,20 @@ export class CheckoutComponent implements OnInit {
   }
 
   confirmOrder(){
-    this.orderService.confirmOrder()
-      .then(updatedOrder => {
-        this.order = updatedOrder;
-        this.orderSuccess = true;
-      }, errorMsg => {
-        this.error = errorMsg
-      });
+    this.submitted = true;
+    if(this.order.items.length > 0){
+      this.orderService.confirmOrder()
+        .then(updatedOrder => {
+          this.order = updatedOrder;
+          this.orderSuccess = true;
+          this.error = null;
+        }, errorMsg => {
+          this.orderSuccess = false;
+          this.error = errorMsg
+        });
+    }else{
+      this.error = "Invalid order";
+    }
   }
 
   isEmpty(){

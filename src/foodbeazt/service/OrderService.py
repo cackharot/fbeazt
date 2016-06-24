@@ -25,13 +25,16 @@ class OrderService(object):
         return [x for x in lst.sort("created_at", -1).skip(skip_records).limit(page_size)], lst.count()
 
     def generate_order_no(self):
-        digits = "".join([random.choice(string.digits) for i in range(3)])
+        digits_f = "".join([random.choice(string.digits) for i in range(3)])
         chars = "".join([random.choice(string.ascii_uppercase) for i in range(3)])
-        return chars + '' + digits
+        digits_l = "".join([random.choice(string.digits) for i in range(3)])
+        return digits_f + '' + chars + '' + digits_l
 
     def save(self, item):
         if '_id' not in item or item['_id'] is None or item['_id'] == "-1":
             item.pop('_id', None)
+            item['delivery_charges'] = self.get_delivery_charges(item)
+            item['total'] = self.get_order_total(item)
             item['created_at'] = datetime.now()
             item['status'] = 'PENDING'
             item['order_no'] = self.generate_order_no()
@@ -49,3 +52,10 @@ class OrderService(object):
 
     def get_by_id(self, _id):
         return self.orders.find_one({'_id': ObjectId(_id)})
+
+    def get_delivery_charges(self, order):
+        return 40.0
+    
+    def get_order_total(self, order):
+        item_total = sum([x['price']*x['quantity'] for x in order['items']])
+        return item_total + order['delivery_charges']
