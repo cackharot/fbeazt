@@ -12,7 +12,7 @@ export class StoreService {
 
   constructor(private http: Http) { }
 
-  search(): Promise<Restaurant[]> {
+  search(data:any={}): Promise<Restaurant[]> {
     return this.http.get(this.storesUrl)
                .toPromise()
                .then(response =>{

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 
 import { StoreService } from './services/store.service';
@@ -10,7 +10,7 @@ import { Restaurant } from './model/restaurant';
   directives: [ROUTER_DIRECTIVES],
 })
 export class RestaurantComponent implements OnInit {
-  restaurants: Restaurant[];
+  @Input() restaurants: Restaurant[];
   selectedRestaurant: Restaurant;
 
   constructor(
@@ -18,7 +18,9 @@ export class RestaurantComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-    this.getRestaurants();
+    // if(this.restaurants.length == 0){
+    //   this.getRestaurants();
+    // }
   }
 
   getRestaurants(){

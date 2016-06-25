@@ -18,7 +18,8 @@ var StoreService = (function () {
         this.storesUrl = 'http://localhost:4000/api/stores'; // URL to web api
         this.storeUrl = 'http://localhost:4000/api/store'; // URL to web api
     }
-    StoreService.prototype.search = function () {
+    StoreService.prototype.search = function (data) {
+        if (data === void 0) { data = {}; }
         return this.http.get(this.storesUrl)
             .toPromise()
             .then(function (response) {

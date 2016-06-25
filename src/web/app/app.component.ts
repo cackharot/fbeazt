@@ -3,6 +3,7 @@ import { Router, RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angul
 
 import { CartSummaryComponent } from './components/cartsummary';
 import { CheckoutComponent } from './components/checkout';
+import { HomeComponent } from './components/home';
 import { RestaurantComponent } from './restaurant.component';
 import { RestaurantDetailComponent } from './restaurant-detail.component';
 
@@ -17,7 +18,7 @@ import { OrderService } from './services/order.service';
   providers: [ROUTER_PROVIDERS, StoreService, ProductService, OrderService]
 })
 @RouteConfig([
-  { name: 'Home', path: '/', component: RestaurantComponent, useAsDefault: true},
+  { name: 'Home', path: '/', component: HomeComponent, useAsDefault: true},
   { name: 'RestaurantList', path: 'restaurants', component: RestaurantComponent},
   { name: 'RestaurantDetail', path: 'restaurant/:id', component: RestaurantDetailComponent },
   { name: 'Checkout', path: 'checkout', component: CheckoutComponent },

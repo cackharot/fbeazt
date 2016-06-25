@@ -1,0 +1,43 @@
+<section class="row user__location">
+  <div class="medium-12 columns">
+    <input type="text" placeholder="Enter your location..."/>
+  </div>
+</section>
+<img src="/images/header1.jpg" class="header_img"/>
+<section class="row search__container">
+  <div class="small-12 medium-12 columns grid-content">
+    <form (ngSubmit)="search()" #searchForm="ngForm">
+    <label>
+      <span class="inline-label">
+        <input type="search" [(ngModel)]="searchText" placeholder="Restaurant or food name...">
+        <button type="submit" class="button">Search</button>
+      </span>
+    </label>
+    </form>
+  </div>
+</section>
+<section class="row" *ngIf="activeTab == null">
+  <div class="medium-12 columns">
+    <h3>Popular items</h3>
+  </div>
+</section>
+<section class="row" *ngIf="activeTab != null">
+  <div class="medium-12 columns">
+    <ul class="tabs">
+      <li class="tabs-title" [class.active]="activeTab =='Restaurant'">
+        <a (click)="activateTab('Restaurant')">Restaurants</a>
+      </li>
+      <li class="tabs-title" [class.active]="activeTab =='Product'">
+        <a (click)="activateTab('Product')">Foods</a>
+      </li>
+    </ul>
+    <div class="tabs-content">
+      <div class="content" *ngIf="activeTab =='Restaurant'">
+        <restaurants [restaurants]="restaurants"></restaurants>
+      </div>
+      <div class="content" *ngIf="activeTab =='Product'">
+        menus
+      </div>
+    </div>
+  </div>
+</section>

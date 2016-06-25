@@ -77,3 +77,5 @@ bower_components/
 tmp/
 .tmp/
 *.js.map
+
+.vscode/

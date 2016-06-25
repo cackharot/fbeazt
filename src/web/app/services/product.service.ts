@@ -1,9 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, URLSearchParams, Http } from '@angular/http';
 
 import { Product } from '../model/product';
 
 import 'rxjs/add/operator/toPromise';
+
+export class ProductSearchModel{
+  searchText:string;
+  onlyVeg:boolean=false;
+  sortBy:string = 'Rating';
+  sortDirection:string = 'ASC';
+
+  constructor(searchText:string=null, onlyVeg:boolean = false){
+    this.searchText = searchText;
+    this.onlyVeg = onlyVeg;
+  }
+}
 
 @Injectable()
 export class ProductService {
@@ -11,6 +23,25 @@ export class ProductService {
   private productUrl = 'http://localhost:4000/api/product';
 
   constructor(private http: Http) { }
+
+  searchAll(data:ProductSearchModel): Promise<Product[]> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('searchText', data.searchText);
+    params.set('onlyVeg', data.onlyVeg.toString());
+    params.set('sortBy', data.sortBy);
+    params.set('sortDirection', data.sortDirection);
+
+    return this.http.get(`${this.productsUrl}/-1`, {
+                search: params
+              })
+               .toPromise()
+               .then(response =>{
+                 let items = response.json().items;
+                 let products = items.map(x=> new Product(x));
+                 return products;
+               })
+               .catch(this.handleError);
+  }
 
   search(store_id): Promise<Product[]> {
     return this.http.get(`${this.productsUrl}/${store_id}`)

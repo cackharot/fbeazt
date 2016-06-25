@@ -17,7 +17,9 @@ var RestaurantComponent = (function () {
         this.router = router;
     }
     RestaurantComponent.prototype.ngOnInit = function () {
-        this.getRestaurants();
+        // if(this.restaurants.length == 0){
+        //   this.getRestaurants();
+        // }
     };
     RestaurantComponent.prototype.getRestaurants = function () {
         var _this = this;
@@ -30,6 +32,10 @@ var RestaurantComponent = (function () {
         var link = ['/RestaurantDetail', { id: restaurant._id.$oid }];
         this.router.navigate(link);
     };
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Array)
+    ], RestaurantComponent.prototype, "restaurants", void 0);
     RestaurantComponent = __decorate([
         core_1.Component({
             selector: 'restaurants',

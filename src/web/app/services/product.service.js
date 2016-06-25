@@ -12,12 +12,42 @@ var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
 var product_1 = require('../model/product');
 require('rxjs/add/operator/toPromise');
+var ProductSearchModel = (function () {
+    function ProductSearchModel(searchText, onlyVeg) {
+        if (searchText === void 0) { searchText = null; }
+        if (onlyVeg === void 0) { onlyVeg = false; }
+        this.onlyVeg = false;
+        this.sortBy = 'Rating';
+        this.sortDirection = 'ASC';
+        this.searchText = searchText;
+        this.onlyVeg = onlyVeg;
+    }
+    return ProductSearchModel;
+}());
+exports.ProductSearchModel = ProductSearchModel;
 var ProductService = (function () {
     function ProductService(http) {
         this.http = http;
         this.productsUrl = 'http://localhost:4000/api/products';
         this.productUrl = 'http://localhost:4000/api/product';
     }
+    ProductService.prototype.searchAll = function (data) {
+        var params = new http_1.URLSearchParams();
+        params.set('searchText', data.searchText);
+        params.set('onlyVeg', data.onlyVeg.toString());
+        params.set('sortBy', data.sortBy);
+        params.set('sortDirection', data.sortDirection);
+        return this.http.get(this.productsUrl + "/-1", {
+            search: params
+        })
+            .toPromise()
+            .then(function (response) {
+            var items = response.json().items;
+            var products = items.map(function (x) { return new product_1.Product(x); });
+            return products;
+        })
+            .catch(this.handleError);
+    };
     ProductService.prototype.search = function (store_id) {
         return this.http.get(this.productsUrl + "/" + store_id)
             .toPromise()

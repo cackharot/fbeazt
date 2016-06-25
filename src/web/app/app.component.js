@@ -12,6 +12,7 @@ var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
 var cartsummary_1 = require('./components/cartsummary');
 var checkout_1 = require('./components/checkout');
+var home_1 = require('./components/home');
 var restaurant_component_1 = require('./restaurant.component');
 var restaurant_detail_component_1 = require('./restaurant-detail.component');
 var store_service_1 = require('./services/store.service');
@@ -29,7 +30,7 @@ var AppComponent = (function () {
             providers: [router_deprecated_1.ROUTER_PROVIDERS, store_service_1.StoreService, product_service_1.ProductService, order_service_1.OrderService]
         }),
         router_deprecated_1.RouteConfig([
-            { name: 'Home', path: '/', component: restaurant_component_1.RestaurantComponent, useAsDefault: true },
+            { name: 'Home', path: '/', component: home_1.HomeComponent, useAsDefault: true },
             { name: 'RestaurantList', path: 'restaurants', component: restaurant_component_1.RestaurantComponent },
             { name: 'RestaurantDetail', path: 'restaurant/:id', component: restaurant_detail_component_1.RestaurantDetailComponent },
             { name: 'Checkout', path: 'checkout', component: checkout_1.CheckoutComponent },

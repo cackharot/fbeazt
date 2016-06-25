@@ -42,7 +42,7 @@ header, #main{
     bottom: -6px;
     position: relative;
   }
-  
+
   .badge{
     position: relative;
     top: -16px;
@@ -174,4 +174,48 @@ img.res_logo{
   .total{
     font-weight: bold;
   }
+}
+
+.inline-label {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-align-items: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  margin-bottom: 1rem;
+}
+
+.inline-label > input,
+.inline-label > select {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  margin: 0;
+}
+
+label > .inline-label {
+  margin-top: 0.5rem;
+}
+
+.inline-label > a,
+.inline-label > button,
+.inline-label > input[type="button"],
+.inline-label > input[type="submit"] {
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin: 0;
+  border-radius: 0;
 }
