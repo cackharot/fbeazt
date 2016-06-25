@@ -31,9 +31,9 @@ var AppComponent = (function () {
         }),
         router_deprecated_1.RouteConfig([
             { name: 'Home', path: '/', component: restaurant_component_1.RestaurantComponent, useAsDefault: true },
-            { name: 'RestaurantList', path: '/restaurants', component: restaurant_component_1.RestaurantComponent },
-            { name: 'RestaurantDetail', path: '/restaurants/:id', component: restaurant_detail_component_1.RestaurantDetailComponent },
-            { name: 'Checkout', path: '/checkout', component: checkout_1.CheckoutComponent },
+            { name: 'RestaurantList', path: 'restaurants', component: restaurant_component_1.RestaurantComponent },
+            { name: 'RestaurantDetail', path: 'restaurant/:id', component: restaurant_detail_component_1.RestaurantDetailComponent },
+            { name: 'Checkout', path: 'checkout', component: checkout_1.CheckoutComponent },
         ]), 
         __metadata('design:paramtypes', [router_deprecated_1.Router])
     ], AppComponent);

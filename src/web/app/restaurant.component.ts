@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router-deprecated';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 
 import { StoreService } from './services/store.service';
 import { Restaurant } from './model/restaurant';
@@ -7,6 +7,7 @@ import { Restaurant } from './model/restaurant';
 @Component({
   selector: 'restaurants',
   templateUrl: 'templates/restaurants.html',
+  directives: [ROUTER_DIRECTIVES],
 })
 export class RestaurantComponent implements OnInit {
   restaurants: Restaurant[];
@@ -28,7 +29,7 @@ export class RestaurantComponent implements OnInit {
 
   onSelect(restaurant: Restaurant){
     this.selectedRestaurant = restaurant;
-    let link = ['RestaurantDetail', { id: restaurant._id.$oid }];
+    let link = ['/RestaurantDetail', { id: restaurant._id.$oid }];
     this.router.navigate(link);
   }
 }

@@ -82,7 +82,6 @@ var RestaurantDetailComponent = (function () {
             selector: 'restaurant-detail',
             templateUrl: 'templates/restaurant-detail.html',
             directives: [tabs_1.Tabs, tabs_1.Tab, router_deprecated_1.ROUTER_DIRECTIVES],
-            providers: [router_deprecated_1.ROUTER_PROVIDERS],
             pipes: [chunk_pipe_1.ChunkPipe],
         }), 
         __metadata('design:paramtypes', [router_deprecated_1.Router, store_service_1.StoreService, product_service_1.ProductService, order_service_1.OrderService, router_deprecated_1.RouteParams])

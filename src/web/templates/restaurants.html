@@ -2,15 +2,14 @@
 <h2>Restaurants</h2>
 <ul class="restaurants">
   <li *ngFor="let item of restaurants"
-    [class.selected]="item === selectedRestaurant"
-    (click)="onSelect(item)">
+    [class.selected]="item === selectedRestaurant">
     <div class="row">
       <div class="small-3 columns">
         <img src="/images/placeholder.png" alt="Comming soon..." class="res_logo"/>
       </div>
       <div class="small-9 columns">
         <h3 class="title">
-          {{item.name}}
+          <a (click)="onSelect(item)">{{item.name}}</a>
           <span class="rating">
             <label class="secondary label">{{item.rating || 3.5}}</label>
           </span>

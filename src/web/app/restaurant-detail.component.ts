@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+import { Router, RouteParams, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 import { Tabs, Tab } from './components/tabs';
 
 import { StoreService } from './services/store.service';
@@ -16,7 +16,6 @@ import { ChunkPipe } from './pipes/chunk.pipe';
   selector: 'restaurant-detail',
   templateUrl: 'templates/restaurant-detail.html',
   directives: [Tabs, Tab, ROUTER_DIRECTIVES],
-  providers: [ROUTER_PROVIDERS],
   pipes: [ChunkPipe],
 })
 export class RestaurantDetailComponent implements OnInit {

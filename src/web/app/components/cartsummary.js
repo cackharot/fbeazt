@@ -28,7 +28,8 @@ var CartSummaryComponent = (function () {
         });
     };
     CartSummaryComponent.prototype.canShow = function () {
-        return this.currentOrder.isConfirmed();
+        var isCheckoutPage = this.router.isRouteActive(this.router.generate(['/Checkout']));
+        return !isCheckoutPage && !this.currentOrder.isConfirmed();
     };
     CartSummaryComponent.prototype.update = function () {
         this.totalQuantity = this.currentOrder.getTotalQuantity();

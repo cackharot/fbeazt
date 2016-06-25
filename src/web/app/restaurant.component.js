@@ -27,13 +27,14 @@ var RestaurantComponent = (function () {
     };
     RestaurantComponent.prototype.onSelect = function (restaurant) {
         this.selectedRestaurant = restaurant;
-        var link = ['RestaurantDetail', { id: restaurant._id.$oid }];
+        var link = ['/RestaurantDetail', { id: restaurant._id.$oid }];
         this.router.navigate(link);
     };
     RestaurantComponent = __decorate([
         core_1.Component({
             selector: 'restaurants',
             templateUrl: 'templates/restaurants.html',
+            directives: [router_deprecated_1.ROUTER_DIRECTIVES],
         }), 
         __metadata('design:paramtypes', [store_service_1.StoreService, router_deprecated_1.Router])
     ], RestaurantComponent);

@@ -20,9 +20,9 @@ import { OrderService } from './services/order.service';
 })
 @RouteConfig([
   { name: 'Home', path: '/', component: RestaurantComponent, useAsDefault: true},
-  { name: 'RestaurantList', path: '/restaurants', component: RestaurantComponent},
-  { name: 'RestaurantDetail', path: '/restaurants/:id', component: RestaurantDetailComponent },
-  { name: 'Checkout', path: '/checkout', component: CheckoutComponent },
+  { name: 'RestaurantList', path: 'restaurants', component: RestaurantComponent},
+  { name: 'RestaurantDetail', path: 'restaurant/:id', component: RestaurantDetailComponent },
+  { name: 'Checkout', path: 'checkout', component: CheckoutComponent },
 ])
 export class AppComponent {
   constructor(private router: Router){}
