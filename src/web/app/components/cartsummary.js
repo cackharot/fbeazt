@@ -18,6 +18,7 @@ var CartSummaryComponent = (function () {
     }
     CartSummaryComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.currentOrder = this.orderService.getOrder();
         this.update();
         this.orderService.itemAdded$.subscribe(function (x) {
             _this.update();
@@ -26,9 +27,12 @@ var CartSummaryComponent = (function () {
             _this.update();
         });
     };
+    CartSummaryComponent.prototype.canShow = function () {
+        return this.currentOrder.isConfirmed();
+    };
     CartSummaryComponent.prototype.update = function () {
-        this.totalQuantity = this.orderService.getTotalQuantity();
-        this.totalAmount = this.orderService.getTotalAmount();
+        this.totalQuantity = this.currentOrder.getTotalQuantity();
+        this.totalAmount = this.currentOrder.getTotalAmount();
     };
     CartSummaryComponent.prototype.navigateToCheckout = function (event) {
         this.router.navigate(['Checkout']);

@@ -42,14 +42,6 @@ export class OrderService {
     return this.currentOrder;
   }
 
-  getTotalQuantity(){
-    return this.currentOrder.getTotalQuantity();
-  }
-
-  getTotalAmount(){
-    return this.currentOrder.getTotalAmount();
-  }
-
   confirmOrder() {
     this.currentOrder.confirm();
     return this.http.post(`${this.orderUrl}/-1`, this.currentOrder)

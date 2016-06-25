@@ -30,6 +30,10 @@ export class Order {
     this.status = 'CONFIRMED';
   }
 
+  isConfirmed(){
+    return this.status == 'CONFIRMED';
+  }
+
   addItem(item: LineItem){
     let cur_item = this.items.find(x=>x.product_id == item.product_id);
     if(cur_item == undefined){

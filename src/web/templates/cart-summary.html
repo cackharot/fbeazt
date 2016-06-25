@@ -1,4 +1,4 @@
-<ul class="menu float-right">
+<ul class="menu float-right" *ngIf="canShow()">
   <li (click)="navigateToCheckout($event)">
     <i class="fi-shopping-cart"></i>
     <label class="success badge">{{totalQuantity}}</label>

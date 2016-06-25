@@ -21,6 +21,9 @@ var Order = (function () {
     Order.prototype.confirm = function () {
         this.status = 'CONFIRMED';
     };
+    Order.prototype.isConfirmed = function () {
+        return this.status == 'CONFIRMED';
+    };
     Order.prototype.addItem = function (item) {
         var cur_item = this.items.find(function (x) { return x.product_id == item.product_id; });
         if (cur_item == undefined) {

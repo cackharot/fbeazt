@@ -12,6 +12,7 @@ import { Order, DeliveryDetails, LineItem } from '../model/order';
   directives: [ROUTER_DIRECTIVES],
 })
 export class CartSummaryComponent implements OnInit {
+  currentOrder:Order;
   totalQuantity: number;
   totalAmount: number;
 
@@ -19,6 +20,7 @@ export class CartSummaryComponent implements OnInit {
     private orderService: OrderService) { }
 
   ngOnInit() {
+    this.currentOrder = this.orderService.getOrder();
     this.update();
     this.orderService.itemAdded$.subscribe((x)=>{
       this.update();
@@ -28,9 +30,13 @@ export class CartSummaryComponent implements OnInit {
     });
   }
 
+  canShow(){
+    return this.currentOrder.isConfirmed();
+  }
+
   update(){
-    this.totalQuantity = this.orderService.getTotalQuantity();
-    this.totalAmount = this.orderService.getTotalAmount();
+    this.totalQuantity = this.currentOrder.getTotalQuantity();
+    this.totalAmount = this.currentOrder.getTotalAmount();
   }
 
   navigateToCheckout(event: any){

@@ -43,12 +43,6 @@ var OrderService = (function () {
     OrderService.prototype.getOrder = function () {
         return this.currentOrder;
     };
-    OrderService.prototype.getTotalQuantity = function () {
-        return this.currentOrder.getTotalQuantity();
-    };
-    OrderService.prototype.getTotalAmount = function () {
-        return this.currentOrder.getTotalAmount();
-    };
     OrderService.prototype.confirmOrder = function () {
         var _this = this;
         this.currentOrder.confirm();
