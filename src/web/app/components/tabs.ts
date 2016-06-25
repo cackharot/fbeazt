@@ -1,33 +1,15 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-import { ContentChildren, QueryList, AfterContentInit } from '@angular/core';
+import {Component, ViewChild, ContentChild, 
+  ContentChildren, QueryList, Query, Directive, forwardRef,
+  AfterViewInit, AfterContentInit} from '@angular/core';
 
-@Component({
-  selector: 'tab',
-  inputs: [
-  'title:tabTitle',
-  'active'
-  ],
-  template: `
-    <div class="content" [hidden]="!active">
-      <ng-content></ng-content>
-    </div>
-  `
-})
-export class Tab {
-  title: string;
-  active: boolean;
-
-  constructor(){
-    this.active = false;
-  }
-}
+import { Tab } from './tab';
 
 @Component({
   selector: 'tabs',
   template: `
     <ul class="tabs" role="tablist">
       <li class="tabs-title" *ngFor="let tab of tabs" [class.active]="tab.active">
-        <a href="#" (click)="selectTab(tab, $event)">{{tab.title}}</a>
+        <a (click)="selectTab(tab, $event)">{{tab.title}}</a>
       </li>
     </ul>
     <div class="tabs-content">
@@ -36,11 +18,16 @@ export class Tab {
   `,
 })
 export class Tabs implements AfterContentInit {
-  @ContentChildren(Tab) tabs: QueryList<Tab>;
+  @ContentChildren(forwardRef(() => Tab)) tabs: QueryList<Tab>;
 
   // contentChildren are set
   ngAfterContentInit() {
-    this.initTabs();
+    var that = this;
+    window.setTimeout(function(){
+      if(that.tabs.length>0){
+        that.initTabs();
+      }
+    }, 200);
   }
 
   initTabs(){
@@ -57,8 +44,7 @@ export class Tabs implements AfterContentInit {
     if(event){
       event.preventDefault();
     }
-    console.log(tab);
-    if(tab === undefined){
+    if(tab === undefined || tab.active === true){
       return;
     }
     this.tabs.toArray().forEach((x) => {

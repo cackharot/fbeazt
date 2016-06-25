@@ -24,6 +24,7 @@ var CartSummaryComponent = (function () {
             _this.update();
         });
         this.orderService.orderReseted$.subscribe(function (x) {
+            _this.currentOrder = x;
             _this.update();
         });
     };

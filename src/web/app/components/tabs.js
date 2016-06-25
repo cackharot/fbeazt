@@ -9,31 +9,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var core_2 = require('@angular/core');
-var Tab = (function () {
-    function Tab() {
-        this.active = false;
-    }
-    Tab = __decorate([
-        core_1.Component({
-            selector: 'tab',
-            inputs: [
-                'title:tabTitle',
-                'active'
-            ],
-            template: "\n    <div class=\"content\" [hidden]=\"!active\">\n      <ng-content></ng-content>\n    </div>\n  "
-        }), 
-        __metadata('design:paramtypes', [])
-    ], Tab);
-    return Tab;
-}());
-exports.Tab = Tab;
+var tab_1 = require('./tab');
 var Tabs = (function () {
     function Tabs() {
     }
     // contentChildren are set
     Tabs.prototype.ngAfterContentInit = function () {
-        this.initTabs();
+        var that = this;
+        window.setTimeout(function () {
+            if (that.tabs.length > 0) {
+                that.initTabs();
+            }
+        }, 200);
     };
     Tabs.prototype.initTabs = function () {
         // get all active tabs
@@ -47,8 +34,7 @@ var Tabs = (function () {
         if (event) {
             event.preventDefault();
         }
-        console.log(tab);
-        if (tab === undefined) {
+        if (tab === undefined || tab.active === true) {
             return;
         }
         this.tabs.toArray().forEach(function (x) {
@@ -57,13 +43,13 @@ var Tabs = (function () {
         tab.active = true;
     };
     __decorate([
-        core_2.ContentChildren(Tab), 
-        __metadata('design:type', core_2.QueryList)
+        core_1.ContentChildren(core_1.forwardRef(function () { return tab_1.Tab; })), 
+        __metadata('design:type', core_1.QueryList)
     ], Tabs.prototype, "tabs", void 0);
     Tabs = __decorate([
         core_1.Component({
             selector: 'tabs',
-            template: "\n    <ul class=\"tabs\" role=\"tablist\">\n      <li class=\"tabs-title\" *ngFor=\"let tab of tabs\" [class.active]=\"tab.active\">\n        <a href=\"#\" (click)=\"selectTab(tab, $event)\">{{tab.title}}</a>\n      </li>\n    </ul>\n    <div class=\"tabs-content\">\n      <ng-content></ng-content>\n    </div>\n  ",
+            template: "\n    <ul class=\"tabs\" role=\"tablist\">\n      <li class=\"tabs-title\" *ngFor=\"let tab of tabs\" [class.active]=\"tab.active\">\n        <a (click)=\"selectTab(tab, $event)\">{{tab.title}}</a>\n      </li>\n    </ul>\n    <div class=\"tabs-content\">\n      <ng-content></ng-content>\n    </div>\n  ",
         }), 
         __metadata('design:paramtypes', [])
     ], Tabs);

@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { Router, RouteParams, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
-import { Tabs, Tab } from './components/tabs';
+
+import { Tab } from './components/tab';
+import { Tabs } from './components/tabs';
 
 import { StoreService } from './services/store.service';
 import { ProductService } from './services/product.service';

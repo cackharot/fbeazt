@@ -26,6 +26,7 @@ export class CartSummaryComponent implements OnInit {
       this.update();
     });
     this.orderService.orderReseted$.subscribe((x)=>{
+      this.currentOrder = x;
       this.update();
     });
   }

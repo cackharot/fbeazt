@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
+var tab_1 = require('./components/tab');
 var tabs_1 = require('./components/tabs');
 var store_service_1 = require('./services/store.service');
 var product_service_1 = require('./services/product.service');
@@ -81,7 +82,7 @@ var RestaurantDetailComponent = (function () {
         core_1.Component({
             selector: 'restaurant-detail',
             templateUrl: 'templates/restaurant-detail.html',
-            directives: [tabs_1.Tabs, tabs_1.Tab, router_deprecated_1.ROUTER_DIRECTIVES],
+            directives: [tabs_1.Tabs, tab_1.Tab, router_deprecated_1.ROUTER_DIRECTIVES],
             pipes: [chunk_pipe_1.ChunkPipe],
         }), 
         __metadata('design:paramtypes', [router_deprecated_1.Router, store_service_1.StoreService, product_service_1.ProductService, order_service_1.OrderService, router_deprecated_1.RouteParams])
