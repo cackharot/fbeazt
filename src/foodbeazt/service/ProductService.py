@@ -33,11 +33,11 @@ class ProductService(object):
     if store_id and store_id != '-1':
       query['store_id'] = ObjectId(store_id)
 
-    if filter_text and len(filter_text) > 2:
-      query['name'] = re.compile(filter_text, re.IGNORECASE)
+    if filter_text is not None and len(filter_text) > 2:
+      query['name'] = {'$regex': r".*%s.*" % filter_text, '$options': 'i'}
 
-    if category and len(category) > 2:
-      query['category'] = re.compile(category, re.IGNORECASE)
+    if category is not None and len(category) > 2:
+      query['category'] = {'$regex': r".*%s.*" % category, '$options': 'i'}
 
     offset = (page_no - 1) * page_size
     if offset < 0: offset = 0

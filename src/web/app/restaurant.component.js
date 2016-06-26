@@ -17,9 +17,6 @@ var RestaurantComponent = (function () {
         this.router = router;
     }
     RestaurantComponent.prototype.ngOnInit = function () {
-        // if(this.restaurants.length == 0){
-        //   this.getRestaurants();
-        // }
     };
     RestaurantComponent.prototype.getRestaurants = function () {
         var _this = this;

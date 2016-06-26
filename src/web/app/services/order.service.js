@@ -36,6 +36,20 @@ var OrderService = (function () {
         this.currentOrder.addItem(item);
         this.itemAddedSource.next(item);
     };
+    OrderService.prototype.addItem = function (item) {
+        var lineItem = new order_1.LineItem({
+            product_id: item._id,
+            name: item.name,
+            store_id: item.store_id,
+            store_name: "",
+            description: "",
+            category: item.category,
+            vegetarian: item.food_type[0] == 'veg',
+            quantity: 1.0,
+            price: item.sell_price
+        });
+        this.addLineItem(lineItem);
+    };
     OrderService.prototype.updateDeliveryDetails = function (deliveryDetails) {
         this.currentOrder.delivery_details = deliveryDetails;
         this.deliveryUpdatedSource.next(deliveryDetails);

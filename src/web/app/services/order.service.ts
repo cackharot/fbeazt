@@ -33,6 +33,21 @@ export class OrderService {
     this.itemAddedSource.next(item);
   }
 
+  addItem(item: Product){
+    let lineItem = new LineItem({
+      product_id: item._id,
+      name: item.name,
+      store_id: item.store_id,
+      store_name: "", //TODO
+      description: "", //TODO
+      category: item.category,
+      vegetarian: item.food_type[0] == 'veg',
+      quantity: 1.0,
+      price: item.sell_price
+    });
+    this.addLineItem(lineItem);
+  }
+
   updateDeliveryDetails(deliveryDetails: DeliveryDetails) {
     this.currentOrder.delivery_details = deliveryDetails;
     this.deliveryUpdatedSource.next(deliveryDetails);

@@ -44,7 +44,7 @@
         <restaurants [restaurants]="restaurants"></restaurants>
       </div>
       <div class="content" *ngIf="activeTab =='Product'">
-        menus
+        <product-list [products]="products" (selectedProduct)="addToCart($event)"></product-list>
       </div>
     </div>
   </div>

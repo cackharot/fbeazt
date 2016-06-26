@@ -17,6 +17,7 @@ import { StoreSearchModel, StoreService } from '../services/store.service';
 import { ProductSearchModel, ProductService } from '../services/product.service';
 
 import { RestaurantComponent } from '../restaurant.component';
+import { ProductListComponent } from './productlist';
 
 import { Restaurant } from '../model/restaurant';
 import { Product, Category } from '../model/product';
@@ -25,7 +26,7 @@ import { Order, DeliveryDetails, LineItem } from '../model/order';
 @Component({
   selector: 'home-page',
   templateUrl: 'templates/home.html',
-  directives: [FORM_DIRECTIVES, ROUTER_DIRECTIVES, RestaurantComponent],
+  directives: [FORM_DIRECTIVES, ROUTER_DIRECTIVES, RestaurantComponent, ProductListComponent],
 })
 export class HomeComponent implements OnInit {
   @SessionStorage() searchText:string = '';
@@ -83,7 +84,7 @@ export class HomeComponent implements OnInit {
     this.productService.searchAll(new ProductSearchModel(this.searchText, this.onlyVeg))
     .then(x=>{
       this.products = x;
-      if(this.activeTab == null && x && x.length > 0){
+      if(x && x.length > 0){
         this.activeTab = 'Product';
       }
     })
@@ -92,6 +93,10 @@ export class HomeComponent implements OnInit {
 
   activateTab(id:string){
     this.activeTab = id;
+  }
+
+  addToCart(item: Product){
+    this.orderService.addItem(item);
   }
 
   handleError(errorMsg:any){

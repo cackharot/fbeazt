@@ -18,9 +18,6 @@ export class RestaurantComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-    // if(this.restaurants.length == 0){
-    //   this.getRestaurants();
-    // }
   }
 
   getRestaurants(){

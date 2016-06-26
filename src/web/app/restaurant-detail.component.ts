@@ -3,6 +3,7 @@ import { Router, RouteParams, ROUTER_DIRECTIVES } from '@angular/router-deprecat
 
 import { Tab } from './components/tab';
 import { Tabs } from './components/tabs';
+import { ProductListComponent } from './components/productlist';
 
 import { StoreService } from './services/store.service';
 import { ProductService } from './services/product.service';
@@ -17,7 +18,7 @@ import { ChunkPipe } from './pipes/chunk.pipe';
 @Component({
   selector: 'restaurant-detail',
   templateUrl: 'templates/restaurant-detail.html',
-  directives: [Tabs, Tab, ROUTER_DIRECTIVES],
+  directives: [Tabs, Tab, ROUTER_DIRECTIVES, ProductListComponent],
   pipes: [ChunkPipe],
 })
 export class RestaurantDetailComponent implements OnInit {
@@ -61,24 +62,11 @@ export class RestaurantDetailComponent implements OnInit {
     }).catch(this.handleError);
   }
 
-  addToCart(item: Product, event: any){
-    event.preventDefault();
-    let lineItem = new LineItem({
-      product_id: item._id,
-      name: item.name,
-      store_id: item.store_id,
-      store_name: this.restaurant.name,
-      description: "",
-      category: item.category,
-      vegetarian: item.food_type[0] == 'veg',
-      quantity: 1.0,
-      price: item.sell_price
-    });
-    this.orderService.addLineItem(lineItem);
+  addToCart(item: Product){
+    this.orderService.addItem(item);
   }
 
-  goBack(id: string, event: any) {
-    // event.preventDefault();
+  goBack(id: string) {
     this.router.navigate([id]);
   }
 

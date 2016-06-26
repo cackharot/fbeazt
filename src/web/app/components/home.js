@@ -20,6 +20,7 @@ var order_service_1 = require('../services/order.service');
 var store_service_1 = require('../services/store.service');
 var product_service_1 = require('../services/product.service');
 var restaurant_component_1 = require('../restaurant.component');
+var productlist_1 = require('./productlist');
 var HomeComponent = (function () {
     function HomeComponent(router, productService, orderService, storeService) {
         this.router = router;
@@ -69,7 +70,7 @@ var HomeComponent = (function () {
         this.productService.searchAll(new product_service_1.ProductSearchModel(this.searchText, this.onlyVeg))
             .then(function (x) {
             _this.products = x;
-            if (_this.activeTab == null && x && x.length > 0) {
+            if (x && x.length > 0) {
                 _this.activeTab = 'Product';
             }
         })
@@ -77,6 +78,9 @@ var HomeComponent = (function () {
     };
     HomeComponent.prototype.activateTab = function (id) {
         this.activeTab = id;
+    };
+    HomeComponent.prototype.addToCart = function (item) {
+        this.orderService.addItem(item);
     };
     HomeComponent.prototype.handleError = function (errorMsg) {
         this.errorMsg = errorMsg;
@@ -105,7 +109,7 @@ var HomeComponent = (function () {
         core_1.Component({
             selector: 'home-page',
             templateUrl: 'templates/home.html',
-            directives: [common_1.FORM_DIRECTIVES, router_deprecated_1.ROUTER_DIRECTIVES, restaurant_component_1.RestaurantComponent],
+            directives: [common_1.FORM_DIRECTIVES, router_deprecated_1.ROUTER_DIRECTIVES, restaurant_component_1.RestaurantComponent, productlist_1.ProductListComponent],
         }), 
         __metadata('design:paramtypes', [router_deprecated_1.Router, product_service_1.ProductService, order_service_1.OrderService, store_service_1.StoreService])
     ], HomeComponent);

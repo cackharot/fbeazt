@@ -12,11 +12,11 @@ var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
 var tab_1 = require('./components/tab');
 var tabs_1 = require('./components/tabs');
+var productlist_1 = require('./components/productlist');
 var store_service_1 = require('./services/store.service');
 var product_service_1 = require('./services/product.service');
 var order_service_1 = require('./services/order.service');
 var product_1 = require('./model/product');
-var order_1 = require('./model/order');
 var chunk_pipe_1 = require('./pipes/chunk.pipe');
 var RestaurantDetailComponent = (function () {
     function RestaurantDetailComponent(router, storeService, productService, orderService, routeParams) {
@@ -55,23 +55,10 @@ var RestaurantDetailComponent = (function () {
             }
         }).catch(this.handleError);
     };
-    RestaurantDetailComponent.prototype.addToCart = function (item, event) {
-        event.preventDefault();
-        var lineItem = new order_1.LineItem({
-            product_id: item._id,
-            name: item.name,
-            store_id: item.store_id,
-            store_name: this.restaurant.name,
-            description: "",
-            category: item.category,
-            vegetarian: item.food_type[0] == 'veg',
-            quantity: 1.0,
-            price: item.sell_price
-        });
-        this.orderService.addLineItem(lineItem);
+    RestaurantDetailComponent.prototype.addToCart = function (item) {
+        this.orderService.addItem(item);
     };
-    RestaurantDetailComponent.prototype.goBack = function (id, event) {
-        // event.preventDefault();
+    RestaurantDetailComponent.prototype.goBack = function (id) {
         this.router.navigate([id]);
     };
     RestaurantDetailComponent.prototype.handleError = function (err) {
@@ -82,7 +69,7 @@ var RestaurantDetailComponent = (function () {
         core_1.Component({
             selector: 'restaurant-detail',
             templateUrl: 'templates/restaurant-detail.html',
-            directives: [tabs_1.Tabs, tab_1.Tab, router_deprecated_1.ROUTER_DIRECTIVES],
+            directives: [tabs_1.Tabs, tab_1.Tab, router_deprecated_1.ROUTER_DIRECTIVES, productlist_1.ProductListComponent],
             pipes: [chunk_pipe_1.ChunkPipe],
         }), 
         __metadata('design:paramtypes', [router_deprecated_1.Router, store_service_1.StoreService, product_service_1.ProductService, order_service_1.OrderService, router_deprecated_1.RouteParams])
