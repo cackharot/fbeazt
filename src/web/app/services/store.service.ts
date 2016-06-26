@@ -14,6 +14,7 @@ export class StoreSearchModel{
   sortDirection:string = 'ASC';
   pageNo:number = 1;
   pageSize:number = 10;
+  store_ids:string[];
 
   constructor(searchText:string=null,
     onlyVeg:boolean = false,
@@ -27,6 +28,7 @@ export class StoreSearchModel{
     this.userPincode = +userPincode;
     this.pageNo = pageNo;
     this.pageSize = pageSize;
+    this.store_ids = [];
   }
 }
 
@@ -40,6 +42,7 @@ export class StoreService {
   search(data:StoreSearchModel): Promise<Restaurant[]> {
     let params: URLSearchParams = new URLSearchParams();
     params.set('filter_text', data.searchText);
+    params.set('store_ids', data.store_ids.join(','));
     params.set('only_veg', data.onlyVeg.toString());
     params.set('user_location', data.userLocation);
     params.set('user_pincode', data.userPincode.toString());

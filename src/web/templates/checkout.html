@@ -52,7 +52,7 @@
       <li class="question">Can I cancel the order?</li>
       <li class="answer">Yes you can cancel within 5 minutes of placing the order.</li>
       <li class="question">What is the delivery time?</li>
-      <li class="answer">We have a specialized delivery team who make sure to 
+      <li class="answer">We have a specialized delivery team who make sure to
         get your food as soon as possible. We also requested the restaurants to make this in priority.
         Also it depends on distance between you and the restaurants, weather, traffic conditions,
         restaurants peak time, food availablity, etc., We will make sure to contact you if your order
@@ -61,7 +61,7 @@
       <li class="question">What are the payment modes?</li>
       <li class="answer">At present we accept only Cash on Delivery.</li>
       <li class="question">What is your operation time?</li>
-      <li class="answer">We operate from 9AM to 11PM for 365 days (Unless we have a natural calamity). 
+      <li class="answer">We operate from 9AM to 11PM for 365 days (Unless we have a natural calamity).
         However food availablity is upto the individual restaurant's holiday schedule.
       </li>
       <li class="question">One or many of the food items delivered has gone bad. What should I do?</li>
@@ -81,7 +81,7 @@
         Kindly ensure that you have given correct delivery address with postbox number, floor number,
         mobile number and pincode.
         Unless you receive an email or SMS or a phone call from us, <i>Your order will not be processed.</i>
-      </p> 
+      </p>
     </div>
     <label for="name">Name:
       <input type="text" maxlength="50" id="name" [(ngModel)]="order.delivery_details.name" required/>
@@ -106,32 +106,32 @@
     <h2>Payment Details</h2>
     <div class="callout primary">
       <p>Presently we accept only <b>Cash On Delivery</b>(CoD).</p>
-      <p>Online transactions through Credit/Debit card and NetBanking coming soon...</p> 
+      <p>Online transactions through Credit/Debit card and NetBanking coming soon...</p>
     </div>
   </div>
   <div class="medium-12 columns">
     <h2>Review Order</h2>
     <div class="review_restaurant" *ngFor="let store of order.getStores()">
-      <h4>{{store.store_name}}</h4>
+      <h4>{{store.name}}</h4>
       <table class="table order_table">
         <tbody>
-          <tr *ngFor="let item of order.getItems(store.store_id)">
+          <tr *ngFor="let item of order.getItems(store._id)">
             <td>
               <p class="product_name">{{item.name}}</p>
               <p class="product_desc">{{item.description}}</p>
             </td>
             <td class="quantity">
-              x{{item.quantity}}
+              {{item.price}}x{{item.quantity}}
             </td>
             <td class="price">
-              {{item.price*item.quantity}}
+              {{item.getTotalPrice()}}
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div class="order__total">
-      <table class="table order__total">
+    <div class="order__total__container">
+      <table class="table order_table">
         <tfoot>
           <tr>
             <td colspan="2">

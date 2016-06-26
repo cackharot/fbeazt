@@ -2,12 +2,14 @@ from bson import ObjectId, json_util
 from flask import g, request
 from flask_restful import Resource
 from service.ProductService import ProductService
+from service.StoreService import StoreService, DuplicateStoreNameException
 from foodbeazt import mongo
 
 
 class ProductListApi(Resource):
   def __init__(self):
     self.service = ProductService(mongo.db)
+    self.storeService = StoreService(mongo.db)
 
   def get(self, store_id=None):
     tenant_id = g.user.tenant_id
@@ -27,6 +29,12 @@ class ProductListApi(Resource):
                                         page_size=page_size, category=category,
                                         only_veg=only_veg,
                                         filter_text=filter_text)
+    if items and len(items) > 0:
+      store_ids = [str(x['store_id']) for x in items]
+      stores = self.storeService.search_by_ids(store_ids=store_ids)
+      for item in items:
+        item['store'] = next((x for x in stores if x['_id'] == item['store_id']), None)
+
     return {'items': items, 'total': total}
 
 

@@ -17,6 +17,12 @@ var Restaurant = (function () {
     Restaurant.prototype.getCreatedAt = function () {
         return this.created_at.$date;
     };
+    Restaurant.of = function (data) {
+        if (data == null || data.constructor.name == 'Restaurant') {
+            return data;
+        }
+        return new Restaurant(data);
+    };
     return Restaurant;
 }());
 exports.Restaurant = Restaurant;

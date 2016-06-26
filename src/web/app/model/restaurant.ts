@@ -30,4 +30,11 @@ export class Restaurant {
   getCreatedAt(){
     return this.created_at.$date;
   }
+
+  static of(data){
+    if(data == null || data.constructor.name == 'Restaurant'){
+      return data;
+    }
+    return new Restaurant(data);
+  }
 }

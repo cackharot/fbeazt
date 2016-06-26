@@ -1,5 +1,7 @@
 import { ObjectId, Date } from "./base";
 
+import {Restaurant} from "./restaurant";
+
 export class Product {
   _id: ObjectId = new ObjectId();
   deliver_time: number;
@@ -7,6 +9,7 @@ export class Product {
   buy_price: number;
   open_time: number;
   store_id: ObjectId = new ObjectId();
+  store:Restaurant = new Restaurant();
   discount: number;
   close_time: number;
   category: string;
@@ -23,10 +26,22 @@ export class Product {
     Object.assign(this, data);
     this._id = ObjectId.of(this._id);
     this.store_id = ObjectId.of(this.store_id);
+    this.store = Restaurant.of(this.store);
   }
 
   isVeg(){
     return this.food_type.filter(x=>x=='veg').length == 1;
+  }
+
+  isNonVeg(){
+    return !this.isVeg();
+  }
+
+  static of(data){
+    if(data == null || data.constructor.name == 'Product'){
+      return data;
+    }
+    return new Product(data);
   }
 }
 

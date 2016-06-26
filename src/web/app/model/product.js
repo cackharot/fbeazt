@@ -1,17 +1,29 @@
 "use strict";
 var base_1 = require("./base");
+var restaurant_1 = require("./restaurant");
 var Product = (function () {
     function Product(data) {
         if (data === void 0) { data = {}; }
         this._id = new base_1.ObjectId();
         this.store_id = new base_1.ObjectId();
+        this.store = new restaurant_1.Restaurant();
         this.tenant_id = new base_1.ObjectId();
         Object.assign(this, data);
         this._id = base_1.ObjectId.of(this._id);
         this.store_id = base_1.ObjectId.of(this.store_id);
+        this.store = restaurant_1.Restaurant.of(this.store);
     }
     Product.prototype.isVeg = function () {
         return this.food_type.filter(function (x) { return x == 'veg'; }).length == 1;
+    };
+    Product.prototype.isNonVeg = function () {
+        return !this.isVeg();
+    };
+    Product.of = function (data) {
+        if (data == null || data.constructor.name == 'Product') {
+            return data;
+        }
+        return new Product(data);
     };
     return Product;
 }());

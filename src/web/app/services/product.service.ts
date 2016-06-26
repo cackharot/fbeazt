@@ -49,7 +49,7 @@ export class ProductService {
                .toPromise()
                .then(response =>{
                  let items = response.json().items;
-                 let products = items.map(x=> new Product(x));
+                 let products = items.map(x=> Product.of(x));
                  return products;
                })
                .catch(this.handleError);
@@ -60,7 +60,7 @@ export class ProductService {
                .toPromise()
                .then(response =>{
                  let items = response.json().items;
-                 let products = items.map(x=> new Product(x));
+                 let products = items.map(x=> Product.of(x));
                  return products;
                })
                .catch(this.handleError);
@@ -69,7 +69,7 @@ export class ProductService {
   get(store_id, id): Promise<Product> {
     return this.http.get(`${this.productUrl}/${store_id}/${id}`)
                .toPromise()
-               .then(response => new Product(response.json()))
+               .then(response => Product.of(response.json()))
                .catch(this.handleError);
   }
 

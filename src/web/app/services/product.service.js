@@ -53,7 +53,7 @@ var ProductService = (function () {
             .toPromise()
             .then(function (response) {
             var items = response.json().items;
-            var products = items.map(function (x) { return new product_1.Product(x); });
+            var products = items.map(function (x) { return product_1.Product.of(x); });
             return products;
         })
             .catch(this.handleError);
@@ -63,7 +63,7 @@ var ProductService = (function () {
             .toPromise()
             .then(function (response) {
             var items = response.json().items;
-            var products = items.map(function (x) { return new product_1.Product(x); });
+            var products = items.map(function (x) { return product_1.Product.of(x); });
             return products;
         })
             .catch(this.handleError);
@@ -71,7 +71,7 @@ var ProductService = (function () {
     ProductService.prototype.get = function (store_id, id) {
         return this.http.get(this.productUrl + "/" + store_id + "/" + id)
             .toPromise()
-            .then(function (response) { return new product_1.Product(response.json()); })
+            .then(function (response) { return product_1.Product.of(response.json()); })
             .catch(this.handleError);
     };
     ProductService.prototype.handleError = function (error) {

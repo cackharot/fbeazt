@@ -1,31 +1,37 @@
 "use strict";
 var base_1 = require("./base");
+var restaurant_1 = require("./restaurant");
+var _ = require("lodash");
+(function (OrderStatus) {
+    OrderStatus[OrderStatus["NEW"] = 0] = "NEW";
+    OrderStatus[OrderStatus["CONFIRMED"] = 1] = "CONFIRMED";
+    OrderStatus[OrderStatus["PROGRESS"] = 2] = "PROGRESS";
+    OrderStatus[OrderStatus["DELIVERED"] = 3] = "DELIVERED";
+    OrderStatus[OrderStatus["CANCELLED"] = 4] = "CANCELLED";
+    OrderStatus[OrderStatus["INVALID"] = 5] = "INVALID";
+    OrderStatus[OrderStatus["UNKNOWN"] = 6] = "UNKNOWN";
+})(exports.OrderStatus || (exports.OrderStatus = {}));
+var OrderStatus = exports.OrderStatus;
 var Order = (function () {
     function Order(data) {
         if (data === void 0) { data = {}; }
         this._id = new base_1.ObjectId();
         this.delivery_details = new DeliveryDetails();
+        this.items = [];
+        this.status = OrderStatus.NEW;
         Object.assign(this, data);
         this._id = base_1.ObjectId.of(this._id);
-        if (this.items == undefined) {
-            this.items = [];
-            this.status = 'NEW';
-        }
-        if (this.items.length > 0 && this.items[0].constructor.name != 'LineItem') {
-            this.items = this.items.map(function (x) { return new LineItem(x); });
-        }
-        if (this.delivery_details.constructor.name != 'DeliveryDetails') {
-            this.delivery_details = new DeliveryDetails(this.delivery_details);
-        }
+        this.items = this.items.map(function (x) { return LineItem.of(x); });
+        this.delivery_details = DeliveryDetails.of(this.delivery_details);
     }
     Order.prototype.confirm = function () {
-        this.status = 'CONFIRMED';
+        this.status = OrderStatus.CONFIRMED;
     };
     Order.prototype.isConfirmed = function () {
-        return this.status == 'CONFIRMED';
+        return this.status == OrderStatus.CONFIRMED;
     };
     Order.prototype.addItem = function (item) {
-        var cur_item = this.items.find(function (x) { return x.product_id == item.product_id; });
+        var cur_item = this.items.find(function (x) { return _.isEqual(x.product_id, item.product_id); });
         if (cur_item == undefined) {
             item.no = this.items.length + 1;
             this.items.push(item);
@@ -35,21 +41,28 @@ var Order = (function () {
         }
     };
     Order.prototype.getStores = function () {
-        var stores = this.items.map(function (x) { return ({ store_name: x.store_name, store_id: x.store_id }); });
+        var stores = this.getUnique(this.items.map(function (x) { return x.store; }));
         return stores;
     };
+    Order.prototype.getUnique = function (data) {
+        var unique = {};
+        var distinct = [];
+        data.forEach(function (x) {
+            if (!unique[x._id.$oid]) {
+                distinct.push(x);
+                unique[x._id.$oid] = true;
+            }
+        });
+        return distinct;
+    };
     Order.prototype.getItems = function (store_id) {
-        return this.items.filter(function (x) { return x.store_id == store_id; });
+        return this.items.filter(function (x) { return _.isEqual(x.store_id, store_id); });
     };
     Order.prototype.getTotalAmount = function () {
-        var price = 0;
-        this.items.forEach(function (x) { return price = price + x.getTotalPrice(); });
-        return price;
+        return this.items.reduce(function (n, x) { return n + x.getTotalPrice(); }, 0);
     };
     Order.prototype.getTotalQuantity = function () {
-        var quantity = 0;
-        this.items.forEach(function (x) { return quantity = quantity + x.quantity; });
-        return quantity;
+        return this.items.reduce(function (n, x) { return n + x.quantity; }, 0);
     };
     return Order;
 }());
@@ -62,9 +75,16 @@ var LineItem = (function () {
         Object.assign(this, data);
         this.product_id = base_1.ObjectId.of(this.product_id);
         this.store_id = base_1.ObjectId.of(this.store_id);
+        this.store = restaurant_1.Restaurant.of(this.store);
     }
     LineItem.prototype.getTotalPrice = function () {
         return this.price * this.quantity;
+    };
+    LineItem.of = function (data) {
+        if (data == null || data.constructor.name == 'LineItem') {
+            return data;
+        }
+        return new LineItem(data);
     };
     return LineItem;
 }());
@@ -76,6 +96,12 @@ var DeliveryDetails = (function () {
         Object.assign(this, data);
         this.customer_id = base_1.ObjectId.of(this.customer_id);
     }
+    DeliveryDetails.of = function (data) {
+        if (data == null || data.constructor.name == 'DeliveryDetails') {
+            return data;
+        }
+        return new DeliveryDetails(data);
+    };
     return DeliveryDetails;
 }());
 exports.DeliveryDetails = DeliveryDetails;

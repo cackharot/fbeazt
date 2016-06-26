@@ -1,4 +1,16 @@
 import { ObjectId, Date } from "./base";
+import {Restaurant} from "./restaurant";
+import * as _ from "lodash";
+
+export enum OrderStatus{
+  NEW,
+  CONFIRMED,
+  PROGRESS,
+  DELIVERED,
+  CANCELLED,
+  INVALID,
+  UNKNOWN
+}
 
 export class Order {
   _id: ObjectId = new ObjectId();
@@ -6,36 +18,27 @@ export class Order {
   delivery_details: DeliveryDetails = new DeliveryDetails();
   created_at: Date;
   updated_at: Date;
-  items: LineItem[];
-  status: string;
+  items: LineItem[] = [];
+  status: OrderStatus = OrderStatus.NEW;
 
   constructor(data={}){
     Object.assign(this, data);
 
     this._id = ObjectId.of(this._id);
-
-    if(this.items == undefined){
-      this.items = [];
-      this.status = 'NEW';
-    }
-    if(this.items.length > 0 && this.items[0].constructor.name != 'LineItem'){
-      this.items = this.items.map(x=>new LineItem(x));
-    }
-    if(this.delivery_details.constructor.name != 'DeliveryDetails'){
-      this.delivery_details = new DeliveryDetails(this.delivery_details);
-    }
+    this.items = this.items.map(x=> LineItem.of(x));
+    this.delivery_details = DeliveryDetails.of(this.delivery_details);
   }
 
   confirm(){
-    this.status = 'CONFIRMED';
+    this.status = OrderStatus.CONFIRMED;
   }
 
   isConfirmed(){
-    return this.status == 'CONFIRMED';
+    return this.status == OrderStatus.CONFIRMED;
   }
 
   addItem(item: LineItem){
-    let cur_item = this.items.find(x=>x.product_id == item.product_id);
+    let cur_item = this.items.find(x=> _.isEqual(x.product_id,item.product_id));
     if(cur_item == undefined){
       item.no = this.items.length + 1;
       this.items.push(item);
@@ -45,24 +48,32 @@ export class Order {
   }
 
   getStores(){
-    let stores = this.items.map(x=> ({store_name: x.store_name,store_id: x.store_id}));
+    let stores = this.getUnique(this.items.map(x=> x.store));
     return stores;
   }
 
+  getUnique(data:any[]){
+    var unique = {};
+    var distinct = [];
+    data.forEach(function (x) {
+      if (!unique[x._id.$oid]) {
+        distinct.push(x);
+        unique[x._id.$oid] = true;
+      }
+    });
+    return distinct;
+  }
+
   getItems(store_id){
-    return this.items.filter(x=>x.store_id == store_id);
+    return this.items.filter(x=> _.isEqual(x.store_id,store_id));
   }
 
   getTotalAmount(){
-    let price = 0;
-    this.items.forEach(x=> price = price + x.getTotalPrice());
-    return price;
+    return this.items.reduce((n, x) => n + x.getTotalPrice(), 0);
   }
 
   getTotalQuantity(){
-    let quantity = 0;
-    this.items.forEach(x=> quantity = quantity + x.quantity);
-    return quantity;
+    return this.items.reduce((n, x) => n + x.quantity, 0);
   }
 }
 
@@ -70,7 +81,7 @@ export class LineItem {
   no: number;
   product_id: ObjectId = new ObjectId();
   store_id: ObjectId = new ObjectId();
-  store_name: string;
+  store: Restaurant;
   name: string;
   description: string;
   category: string;
@@ -82,10 +93,18 @@ export class LineItem {
     Object.assign(this, data);
     this.product_id = ObjectId.of(this.product_id);
     this.store_id = ObjectId.of(this.store_id);
+    this.store = Restaurant.of(this.store);
   }
 
   getTotalPrice(){
     return this.price * this.quantity;
+  }
+
+  static of(data){
+    if(data == null || data.constructor.name == 'LineItem'){
+      return data;
+    }
+    return new LineItem(data);
   }
 }
 
@@ -105,5 +124,12 @@ export class DeliveryDetails {
   constructor(data={}){
     Object.assign(this, data);
     this.customer_id = ObjectId.of(this.customer_id);
+  }
+
+  static of(data){
+    if(data == null || data.constructor.name == 'DeliveryDetails'){
+      return data;
+    }
+    return new DeliveryDetails(data);
   }
 }

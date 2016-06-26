@@ -31,6 +31,7 @@ var StoreSearchModel = (function () {
         this.userPincode = +userPincode;
         this.pageNo = pageNo;
         this.pageSize = pageSize;
+        this.store_ids = [];
     }
     return StoreSearchModel;
 }());
@@ -44,6 +45,7 @@ var StoreService = (function () {
     StoreService.prototype.search = function (data) {
         var params = new http_1.URLSearchParams();
         params.set('filter_text', data.searchText);
+        params.set('store_ids', data.store_ids.join(','));
         params.set('only_veg', data.onlyVeg.toString());
         params.set('user_location', data.userLocation);
         params.set('user_pincode', data.userPincode.toString());

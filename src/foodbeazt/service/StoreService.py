@@ -56,3 +56,6 @@ class StoreService(object):
 
   def get_by_id(self, _id):
     return self.stores.find_one({'_id': ObjectId(_id)})
+
+  def search_by_ids(self, store_ids):
+    return [x for x in self.stores.find({ '_id': { '$in': [ObjectId(x) for x in store_ids] }})]

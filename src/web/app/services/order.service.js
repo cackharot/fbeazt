@@ -41,7 +41,7 @@ var OrderService = (function () {
             product_id: item._id,
             name: item.name,
             store_id: item.store_id,
-            store_name: "",
+            store: item.store,
             description: "",
             category: item.category,
             vegetarian: item.food_type[0] == 'veg',
