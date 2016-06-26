@@ -26,7 +26,8 @@ export class RestaurantDetailComponent implements OnInit {
   restaurant: Restaurant;
   categories: Category[];
   products: Product[];
-  error: any;
+  onlyVeg:boolean = false;
+  errorMsg: any;
 
   constructor(private router: Router,
     private storeService: StoreService,
@@ -40,14 +41,16 @@ export class RestaurantDetailComponent implements OnInit {
     this.storeService.get(id).then(x=>{
       this.restaurant = x;
       this.getProducts();
-    })
-    .catch(this.handleError);
+    }).catch(errorMsg=> this.errorMsg = errorMsg);
   }
 
   getProducts(){
     this.productService.search(this.storeId).then(x=>{
       this.products = x;
       this.categories = [];
+      if(this.onlyVeg){
+        this.products = this.products.filter(x=>x.isVeg());
+      }
       for(var i=0; i < this.products.length; ++i){
         var item = this.products[i];
         var category = this.categories.find(x=>x.name == item.category);
@@ -59,7 +62,7 @@ export class RestaurantDetailComponent implements OnInit {
           category.addProduct(item);
         }
       }
-    }).catch(this.handleError);
+    }).catch(errorMsg=> this.errorMsg = errorMsg);
   }
 
   addToCart(item: Product){
@@ -70,8 +73,7 @@ export class RestaurantDetailComponent implements OnInit {
     this.router.navigate([id]);
   }
 
-  private handleError(err: any){
-    console.log(err);
-    this.error = err;
+  filter(){
+    this.getProducts();
   }
 }

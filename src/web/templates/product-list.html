@@ -3,7 +3,8 @@
   <p>You might have misspelled or try again!</p>
 </div>
 <div class="row" *ngFor="let chunkItems of products | chunk: 3">
-  <div class="card medium-4 columns" [class.end]="isLast" *ngFor="let product of chunkItems;let isLast=last;">
+  <div class="card medium-4 columns" [class.end]="isLast"
+    *ngFor="let product of chunkItems;let isLast=last;">
     <img src="/images/header4.jpg" />
     <div class="card-divider">
       <h4>

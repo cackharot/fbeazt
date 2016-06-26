@@ -25,6 +25,7 @@ var RestaurantDetailComponent = (function () {
         this.productService = productService;
         this.orderService = orderService;
         this.routeParams = routeParams;
+        this.onlyVeg = false;
     }
     RestaurantDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -33,14 +34,16 @@ var RestaurantDetailComponent = (function () {
         this.storeService.get(id).then(function (x) {
             _this.restaurant = x;
             _this.getProducts();
-        })
-            .catch(this.handleError);
+        }).catch(function (errorMsg) { return _this.errorMsg = errorMsg; });
     };
     RestaurantDetailComponent.prototype.getProducts = function () {
         var _this = this;
         this.productService.search(this.storeId).then(function (x) {
             _this.products = x;
             _this.categories = [];
+            if (_this.onlyVeg) {
+                _this.products = _this.products.filter(function (x) { return x.isVeg(); });
+            }
             for (var i = 0; i < _this.products.length; ++i) {
                 var item = _this.products[i];
                 var category = _this.categories.find(function (x) { return x.name == item.category; });
@@ -53,7 +56,7 @@ var RestaurantDetailComponent = (function () {
                     category.addProduct(item);
                 }
             }
-        }).catch(this.handleError);
+        }).catch(function (errorMsg) { return _this.errorMsg = errorMsg; });
     };
     RestaurantDetailComponent.prototype.addToCart = function (item) {
         this.orderService.addItem(item);
@@ -61,9 +64,8 @@ var RestaurantDetailComponent = (function () {
     RestaurantDetailComponent.prototype.goBack = function (id) {
         this.router.navigate([id]);
     };
-    RestaurantDetailComponent.prototype.handleError = function (err) {
-        console.log(err);
-        this.error = err;
+    RestaurantDetailComponent.prototype.filter = function () {
+        this.getProducts();
     };
     RestaurantDetailComponent = __decorate([
         core_1.Component({

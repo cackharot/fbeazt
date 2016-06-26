@@ -23,7 +23,6 @@ export class ProductListComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
-
   }
 
   select(item: Product, event: any=null){

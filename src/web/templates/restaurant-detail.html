@@ -1,3 +1,7 @@
+<div class="callout alert" *ngIf="errorMsg != null">
+  <h4>Oops! Something went wrong.</h4>
+  {{errorMsg}}
+</div>
 <div *ngIf="restaurant">
   <nav aria-label="You are here:" role="navigation">
     <ul class="breadcrumbs">
@@ -32,9 +36,24 @@
   </section>
   <br/>
   <section class="products">
+    <div class="row filter__container">
+      <div class="small-3 medium-2 columns">
+        Only Veg:
+      </div>
+      <div class="small-9 medium-10 columns">
+        <div class="switch tiny">
+          <input class="switch-input" id="onlyVeg" type="checkbox"
+          (change)="filter()" [(ngModel)]="onlyVeg" name="onlyVeg">
+          <label class="switch-paddle" for="onlyVeg">
+            <span class="show-for-sr">Only Veg:</span>
+          </label>
+        </div>
+      </div>
+    </div>
     <tabs>
       <tab tabTitle="{{category.name}}" *ngFor="let category of categories">
-        <product-list [products]="category.products" (selectedProduct)="addToCart($event)"></product-list>
+        <product-list [products]="category.products"
+          (selectedProduct)="addToCart($event)"></product-list>
       </tab>
     </tabs>
   </section>

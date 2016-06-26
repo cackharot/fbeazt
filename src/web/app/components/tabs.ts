@@ -1,4 +1,4 @@
-import {Component, ViewChild, ContentChild, 
+import {Component, ViewChild, ContentChild,
   ContentChildren, QueryList, Query, Directive, forwardRef,
   AfterViewInit, AfterContentInit} from '@angular/core';
 
@@ -23,11 +23,13 @@ export class Tabs implements AfterContentInit {
   // contentChildren are set
   ngAfterContentInit() {
     var that = this;
-    window.setTimeout(function(){
-      if(that.tabs.length>0){
-        that.initTabs();
-      }
-    }, 200);
+    this.tabs.changes.subscribe(x=>{
+      window.setTimeout(function(){
+        if(that.tabs.length>0){
+          that.initTabs();
+        }
+      }, 200);
+    });
   }
 
   initTabs(){
