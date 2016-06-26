@@ -12,6 +12,29 @@ var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
 var restaurant_1 = require('../model/restaurant');
 require('rxjs/add/operator/toPromise');
+var StoreSearchModel = (function () {
+    function StoreSearchModel(searchText, onlyVeg, userLocation, userPincode, pageNo, pageSize) {
+        if (searchText === void 0) { searchText = null; }
+        if (onlyVeg === void 0) { onlyVeg = false; }
+        if (userLocation === void 0) { userLocation = ''; }
+        if (userPincode === void 0) { userPincode = ''; }
+        if (pageNo === void 0) { pageNo = 1; }
+        if (pageSize === void 0) { pageSize = 10; }
+        this.onlyVeg = false;
+        this.sortBy = 'Rating';
+        this.sortDirection = 'ASC';
+        this.pageNo = 1;
+        this.pageSize = 10;
+        this.searchText = searchText;
+        this.onlyVeg = onlyVeg;
+        this.userLocation = userLocation;
+        this.userPincode = +userPincode;
+        this.pageNo = pageNo;
+        this.pageSize = pageSize;
+    }
+    return StoreSearchModel;
+}());
+exports.StoreSearchModel = StoreSearchModel;
 var StoreService = (function () {
     function StoreService(http) {
         this.http = http;
@@ -19,8 +42,16 @@ var StoreService = (function () {
         this.storeUrl = 'http://localhost:4000/api/store'; // URL to web api
     }
     StoreService.prototype.search = function (data) {
-        if (data === void 0) { data = {}; }
-        return this.http.get(this.storesUrl)
+        var params = new http_1.URLSearchParams();
+        params.set('filter_text', data.searchText);
+        params.set('only_veg', data.onlyVeg.toString());
+        params.set('user_location', data.userLocation);
+        params.set('user_pincode', data.userPincode.toString());
+        params.set('sort_by', data.sortBy);
+        params.set('sort_direction', data.sortDirection);
+        params.set('page_no', data.pageNo.toString());
+        params.set('page_size', data.pageSize.toString());
+        return this.http.get(this.storesUrl, { search: params })
             .toPromise()
             .then(function (response) {
             return response.json().map(function (x) { return new restaurant_1.Restaurant(x); });

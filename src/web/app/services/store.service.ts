@@ -1,9 +1,34 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { URLSearchParams, Headers, Http } from '@angular/http';
 
 import { Restaurant } from '../model/restaurant';
 
 import 'rxjs/add/operator/toPromise';
+
+export class StoreSearchModel{
+  searchText:string;
+  onlyVeg:boolean=false;
+  userPincode:number;
+  userLocation:string;
+  sortBy:string = 'Rating';
+  sortDirection:string = 'ASC';
+  pageNo:number = 1;
+  pageSize:number = 10;
+
+  constructor(searchText:string=null,
+    onlyVeg:boolean = false,
+    userLocation:string = '',
+    userPincode:string = '',
+    pageNo:number = 1,
+    pageSize:number = 10){
+    this.searchText = searchText;
+    this.onlyVeg = onlyVeg;
+    this.userLocation = userLocation;
+    this.userPincode = +userPincode;
+    this.pageNo = pageNo;
+    this.pageSize = pageSize;
+  }
+}
 
 @Injectable()
 export class StoreService {
@@ -12,8 +37,18 @@ export class StoreService {
 
   constructor(private http: Http) { }
 
-  search(data:any={}): Promise<Restaurant[]> {
-    return this.http.get(this.storesUrl)
+  search(data:StoreSearchModel): Promise<Restaurant[]> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('filter_text', data.searchText);
+    params.set('only_veg', data.onlyVeg.toString());
+    params.set('user_location', data.userLocation);
+    params.set('user_pincode', data.userPincode.toString());
+    params.set('sort_by', data.sortBy);
+    params.set('sort_direction', data.sortDirection);
+    params.set('page_no', data.pageNo.toString());
+    params.set('page_size', data.pageSize.toString());
+
+    return this.http.get(this.storesUrl,{search: params})
                .toPromise()
                .then(response =>{
                  return response.json().map(x => new Restaurant(x));

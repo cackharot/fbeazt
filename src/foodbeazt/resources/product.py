@@ -20,6 +20,7 @@ class ProductListApi(Resource):
         page_size = int(request.args.get('page_size', 24))
         filter_text = request.args.get('filter_text', None)
         category = request.args.get('category', None)
+        only_veg = request.args.get('only_veg', False)
 
         items, total = self.service.search(tenant_id=tenant_id, store_id=store_id, page_no=page_no,
                                            page_size=page_size, category=category,

@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
 
 import { Tab } from './tab';
 import { Tabs } from './tabs';
 
 import { OrderService } from '../services/order.service';
-import { StoreService } from '../services/store.service';
+import { StoreSearchModel, StoreService } from '../services/store.service';
 import { ProductSearchModel, ProductService } from '../services/product.service';
 
 import { RestaurantComponent } from '../restaurant.component';
@@ -20,13 +21,13 @@ import { Order, DeliveryDetails, LineItem } from '../model/order';
   directives: [ROUTER_DIRECTIVES, RestaurantComponent],
 })
 export class HomeComponent implements OnInit {
-  searchText:string;
-  userLocation:string;
-  userPincode:string;
-  activeTab:string;
-  onlyVeg:boolean = false;
+  @SessionStorage() searchText:string = '';
+  @SessionStorage() userLocation:string = '';
+  @SessionStorage() userPincode:string = '';
+  @SessionStorage() onlyVeg:boolean = false;
   restaurants:Restaurant[];
   products:Product[];
+  activeTab:string;
   errorMsg:string;
 
   constructor(private router: Router,
@@ -35,7 +36,9 @@ export class HomeComponent implements OnInit {
     private storeService: StoreService) { }
 
   ngOnInit() {
-
+    if(this.searchText && this.searchText.length > 3){
+      this.search();
+    }
   }
 
   search(){
@@ -44,14 +47,11 @@ export class HomeComponent implements OnInit {
   }
 
   searchRestaurants(){
-    this.storeService.search({
-      'searchText': this.searchText,
-      'userPincdoe': this.userPincode,
-      'userLocation': this.userLocation,
-      'onlyVeg': this.onlyVeg,
-      'sort_by': 'Rating',
-      'sort_direction': 'ASC'
-    }).then(x=>{
+    let searchData = new StoreSearchModel(this.searchText,
+      this.onlyVeg,
+      this.userLocation,
+      this.userPincode);
+    this.storeService.search(searchData).then(x=>{
       this.restaurants = x;
       if(x && x.length > 0){
         this.activeTab = 'Restaurant';

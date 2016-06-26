@@ -13,14 +13,22 @@ var http_1 = require('@angular/http');
 var product_1 = require('../model/product');
 require('rxjs/add/operator/toPromise');
 var ProductSearchModel = (function () {
-    function ProductSearchModel(searchText, onlyVeg) {
+    function ProductSearchModel(searchText, onlyVeg, category, pageNo, pageSize) {
         if (searchText === void 0) { searchText = null; }
         if (onlyVeg === void 0) { onlyVeg = false; }
+        if (category === void 0) { category = ''; }
+        if (pageNo === void 0) { pageNo = 1; }
+        if (pageSize === void 0) { pageSize = 50; }
         this.onlyVeg = false;
         this.sortBy = 'Rating';
         this.sortDirection = 'ASC';
+        this.pageNo = 1;
+        this.pageSize = 50;
         this.searchText = searchText;
+        this.category = category;
         this.onlyVeg = onlyVeg;
+        this.pageNo = pageNo;
+        this.pageSize = pageSize;
     }
     return ProductSearchModel;
 }());
@@ -33,10 +41,12 @@ var ProductService = (function () {
     }
     ProductService.prototype.searchAll = function (data) {
         var params = new http_1.URLSearchParams();
-        params.set('searchText', data.searchText);
-        params.set('onlyVeg', data.onlyVeg.toString());
-        params.set('sortBy', data.sortBy);
-        params.set('sortDirection', data.sortDirection);
+        params.set('filter_text', data.searchText);
+        params.set('only_veg', data.onlyVeg.toString());
+        params.set('sort_by', data.sortBy);
+        params.set('sort_direction', data.sortDirection);
+        params.set('page_no', data.pageNo.toString());
+        params.set('page_size', data.pageSize.toString());
         return this.http.get(this.productsUrl + "/-1", {
             search: params
         })

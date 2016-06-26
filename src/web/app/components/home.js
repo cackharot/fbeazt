@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
+var WebStorage_1 = require("angular2-localstorage/WebStorage");
 var order_service_1 = require('../services/order.service');
 var store_service_1 = require('../services/store.service');
 var product_service_1 = require('../services/product.service');
@@ -20,9 +21,15 @@ var HomeComponent = (function () {
         this.productService = productService;
         this.orderService = orderService;
         this.storeService = storeService;
+        this.searchText = '';
+        this.userLocation = '';
+        this.userPincode = '';
         this.onlyVeg = false;
     }
     HomeComponent.prototype.ngOnInit = function () {
+        if (this.searchText && this.searchText.length > 3) {
+            this.search();
+        }
     };
     HomeComponent.prototype.search = function () {
         this.searchRestaurants();
@@ -30,14 +37,8 @@ var HomeComponent = (function () {
     };
     HomeComponent.prototype.searchRestaurants = function () {
         var _this = this;
-        this.storeService.search({
-            'searchText': this.searchText,
-            'userPincdoe': this.userPincode,
-            'userLocation': this.userLocation,
-            'onlyVeg': this.onlyVeg,
-            'sort_by': 'Rating',
-            'sort_direction': 'ASC'
-        }).then(function (x) {
+        var searchData = new store_service_1.StoreSearchModel(this.searchText, this.onlyVeg, this.userLocation, this.userPincode);
+        this.storeService.search(searchData).then(function (x) {
             _this.restaurants = x;
             if (x && x.length > 0) {
                 _this.activeTab = 'Restaurant';
@@ -62,6 +63,22 @@ var HomeComponent = (function () {
     HomeComponent.prototype.handleError = function (errorMsg) {
         this.errorMsg = errorMsg;
     };
+    __decorate([
+        WebStorage_1.SessionStorage(), 
+        __metadata('design:type', String)
+    ], HomeComponent.prototype, "searchText", void 0);
+    __decorate([
+        WebStorage_1.SessionStorage(), 
+        __metadata('design:type', String)
+    ], HomeComponent.prototype, "userLocation", void 0);
+    __decorate([
+        WebStorage_1.SessionStorage(), 
+        __metadata('design:type', String)
+    ], HomeComponent.prototype, "userPincode", void 0);
+    __decorate([
+        WebStorage_1.SessionStorage(), 
+        __metadata('design:type', Boolean)
+    ], HomeComponent.prototype, "onlyVeg", void 0);
     HomeComponent = __decorate([
         core_1.Component({
             selector: 'home-page',

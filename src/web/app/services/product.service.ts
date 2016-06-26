@@ -8,12 +8,22 @@ import 'rxjs/add/operator/toPromise';
 export class ProductSearchModel{
   searchText:string;
   onlyVeg:boolean=false;
+  category:string;
   sortBy:string = 'Rating';
   sortDirection:string = 'ASC';
+  pageNo:number = 1;
+  pageSize:number = 50;
 
-  constructor(searchText:string=null, onlyVeg:boolean = false){
+  constructor(searchText:string=null,
+    onlyVeg:boolean = false,
+    category:string = '',
+    pageNo:number = 1,
+    pageSize:number = 50){
     this.searchText = searchText;
+    this.category = category;
     this.onlyVeg = onlyVeg;
+    this.pageNo = pageNo;
+    this.pageSize = pageSize;
   }
 }
 
@@ -26,10 +36,12 @@ export class ProductService {
 
   searchAll(data:ProductSearchModel): Promise<Product[]> {
     let params: URLSearchParams = new URLSearchParams();
-    params.set('searchText', data.searchText);
-    params.set('onlyVeg', data.onlyVeg.toString());
-    params.set('sortBy', data.sortBy);
-    params.set('sortDirection', data.sortDirection);
+    params.set('filter_text', data.searchText);
+    params.set('only_veg', data.onlyVeg.toString());
+    params.set('sort_by', data.sortBy);
+    params.set('sort_direction', data.sortDirection);
+    params.set('page_no', data.pageNo.toString());
+    params.set('page_size', data.pageSize.toString());
 
     return this.http.get(`${this.productsUrl}/-1`, {
                 search: params
