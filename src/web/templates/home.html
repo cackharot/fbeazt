@@ -15,10 +15,17 @@
     </label>
     </form>
   </div>
-  <div class="medium-12 columns filter__container">
-    <label class="">
-      Only Veg: <input type="checkbox" class="switch" (change)="search()" [(ngModel)]="onlyVeg" />
-    </label>
+  <div class="small-3 medium-2 columns filter__container">
+    Only Veg:
+  </div>
+  <div class="small-9 medium-10 columns filter__container">
+    <div class="switch tiny">
+      <input class="switch-input" id="onlyVeg" type="checkbox"
+       (change)="search()" [(ngModel)]="onlyVeg" name="onlyVeg">
+      <label class="switch-paddle" for="onlyVeg">
+        <span class="show-for-sr">Only Veg:</span>
+      </label>
+    </div>
   </div>
 </section>
 <section class="row" *ngIf="searchText == null || searchText.length == 0">
