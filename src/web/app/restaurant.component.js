@@ -23,9 +23,12 @@ var RestaurantComponent = (function () {
     };
     RestaurantComponent.prototype.getRestaurants = function () {
         var _this = this;
-        this.storeService.search().then(function (x) {
+        this.storeService.search(new store_service_1.StoreSearchModel()).then(function (x) {
             _this.restaurants = x;
         });
+    };
+    RestaurantComponent.prototype.isEmpty = function () {
+        return this.restaurants == null || this.restaurants.length == 0;
     };
     RestaurantComponent.prototype.onSelect = function (restaurant) {
         this.selectedRestaurant = restaurant;

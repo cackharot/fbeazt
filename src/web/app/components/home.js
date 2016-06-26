@@ -9,8 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var common_1 = require('@angular/common');
 var router_deprecated_1 = require('@angular/router-deprecated');
 var WebStorage_1 = require("angular2-localstorage/WebStorage");
+require('rxjs/add/operator/map');
+require('rxjs/add/operator/debounceTime');
+require('rxjs/add/operator/distinctUntilChanged');
+require('rxjs/add/operator/switchMap');
 var order_service_1 = require('../services/order.service');
 var store_service_1 = require('../services/store.service');
 var product_service_1 = require('../services/product.service');
@@ -25,13 +30,26 @@ var HomeComponent = (function () {
         this.userLocation = '';
         this.userPincode = '';
         this.onlyVeg = false;
+        this.activeTab = 'Restaurant';
+        this.searchCtrl = new common_1.Control('');
+        this.submitted = false;
     }
     HomeComponent.prototype.ngOnInit = function () {
-        if (this.searchText && this.searchText.length > 3) {
-            this.search();
-        }
+        var _this = this;
+        this.searchCtrl.valueChanges
+            .debounceTime(400)
+            .distinctUntilChanged()
+            .subscribe(function (term) {
+            _this.searchText = term;
+            _this.search();
+        });
     };
     HomeComponent.prototype.search = function () {
+        if (this.searchText == null
+            || this.searchText.length < 3) {
+            return;
+        }
+        this.submitted = true;
         this.searchRestaurants();
         this.searchProducts();
     };
@@ -79,11 +97,15 @@ var HomeComponent = (function () {
         WebStorage_1.SessionStorage(), 
         __metadata('design:type', Boolean)
     ], HomeComponent.prototype, "onlyVeg", void 0);
+    __decorate([
+        WebStorage_1.SessionStorage(), 
+        __metadata('design:type', String)
+    ], HomeComponent.prototype, "activeTab", void 0);
     HomeComponent = __decorate([
         core_1.Component({
             selector: 'home-page',
             templateUrl: 'templates/home.html',
-            directives: [router_deprecated_1.ROUTER_DIRECTIVES, restaurant_component_1.RestaurantComponent],
+            directives: [common_1.FORM_DIRECTIVES, router_deprecated_1.ROUTER_DIRECTIVES, restaurant_component_1.RestaurantComponent],
         }), 
         __metadata('design:paramtypes', [router_deprecated_1.Router, product_service_1.ProductService, order_service_1.OrderService, store_service_1.StoreService])
     ], HomeComponent);

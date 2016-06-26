@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 
-import { StoreService } from './services/store.service';
+import { StoreSearchModel, StoreService } from './services/store.service';
 import { Restaurant } from './model/restaurant';
 
 @Component({
@@ -24,9 +24,13 @@ export class RestaurantComponent implements OnInit {
   }
 
   getRestaurants(){
-    this.storeService.search().then(x=>{
+    this.storeService.search(new StoreSearchModel()).then(x=>{
       this.restaurants = x;
     });
+  }
+
+  isEmpty(){
+    return this.restaurants == null || this.restaurants.length == 0;
   }
 
   onSelect(restaurant: Restaurant){

@@ -1,6 +1,13 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { FORM_DIRECTIVES, Control } from '@angular/common';
 import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
-import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
+import { LocalStorage, SessionStorage } from "angular2-localstorage/WebStorage";
+
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/switchMap';
 
 import { Tab } from './tab';
 import { Tabs } from './tabs';
@@ -18,30 +25,42 @@ import { Order, DeliveryDetails, LineItem } from '../model/order';
 @Component({
   selector: 'home-page',
   templateUrl: 'templates/home.html',
-  directives: [ROUTER_DIRECTIVES, RestaurantComponent],
+  directives: [FORM_DIRECTIVES, ROUTER_DIRECTIVES, RestaurantComponent],
 })
 export class HomeComponent implements OnInit {
   @SessionStorage() searchText:string = '';
   @SessionStorage() userLocation:string = '';
   @SessionStorage() userPincode:string = '';
   @SessionStorage() onlyVeg:boolean = false;
+  @SessionStorage() activeTab:string = 'Restaurant';
+  searchCtrl:Control = new Control('');
+  submitted:boolean = false;
   restaurants:Restaurant[];
   products:Product[];
-  activeTab:string;
   errorMsg:string;
 
   constructor(private router: Router,
     private productService: ProductService,
     private orderService: OrderService,
-    private storeService: StoreService) { }
+    private storeService: StoreService) {
+  }
 
   ngOnInit() {
-    if(this.searchText && this.searchText.length > 3){
-      this.search();
-    }
+    this.searchCtrl.valueChanges
+                 .debounceTime(400)
+                 .distinctUntilChanged()
+                 .subscribe(term => {
+                   this.searchText = term;
+                   this.search();
+                 });
   }
 
   search(){
+    if(this.searchText == null
+      || this.searchText.length < 3){
+      return;
+    }
+    this.submitted = true;
     this.searchRestaurants();
     this.searchProducts();
   }

@@ -1,5 +1,8 @@
-<h2>Restaurants</h2>
-<ul class="restaurants">
+<div class="callout warning" *ngIf="isEmpty()">
+  <h3>Oops! No restaurants found</h3>
+  <p>You might have misspelled or try again!</p>
+</div>
+<ul class="restaurants" *ngIf="!isEmpty()">
   <li *ngFor="let item of restaurants"
     [class.selected]="item === selectedRestaurant">
     <div class="row">
