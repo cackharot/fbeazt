@@ -25,8 +25,9 @@ class ProductService(object):
   def get_by_name(self, name):
     return [x for x in self.products.find({'name': name})]
 
-  def search(self, tenant_id, store_id, page_no=1, page_size=16,
-    category=None, filter_text=None):
+  def search(self, tenant_id, store_id,
+    page_no=1, page_size=16,
+    category=None, filter_text=None, only_veg=False):
     query = {}
     if tenant_id and tenant_id != '-1':
       query['tenant_id'] = ObjectId(tenant_id)
@@ -38,6 +39,9 @@ class ProductService(object):
 
     if category is not None and len(category) > 2:
       query['category'] = {'$regex': r".*%s.*" % category, '$options': 'i'}
+
+    if only_veg:
+      query['food_type'] = {'$elemMatch': {'$eq': 'veg'}}
 
     offset = (page_no - 1) * page_size
     if offset < 0: offset = 0

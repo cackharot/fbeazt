@@ -63,7 +63,7 @@ var HomeComponent = (function () {
                 _this.activeTab = 'Restaurant';
             }
         })
-            .catch(this.handleError);
+            .catch(function (errMsg) { return _this.errorMsg = errMsg; });
     };
     HomeComponent.prototype.searchProducts = function () {
         var _this = this;
@@ -74,16 +74,13 @@ var HomeComponent = (function () {
                 _this.activeTab = 'Product';
             }
         })
-            .catch(this.handleError);
+            .catch(function (errMsg) { return _this.errorMsg = errMsg; });
     };
     HomeComponent.prototype.activateTab = function (id) {
         this.activeTab = id;
     };
     HomeComponent.prototype.addToCart = function (item) {
         this.orderService.addItem(item);
-    };
-    HomeComponent.prototype.handleError = function (errorMsg) {
-        this.errorMsg = errorMsg;
     };
     __decorate([
         WebStorage_1.SessionStorage(), 

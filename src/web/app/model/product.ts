@@ -24,6 +24,10 @@ export class Product {
     this._id = ObjectId.of(this._id);
     this.store_id = ObjectId.of(this.store_id);
   }
+
+  isVeg(){
+    return this.food_type.filter(x=>x=='veg').length == 1;
+  }
 }
 
 export class Category {

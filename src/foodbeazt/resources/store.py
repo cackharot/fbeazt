@@ -14,6 +14,7 @@ class StoreListApi(Resource):
 
     page_no = int(request.args.get('page_no', 1))
     page_size = int(request.args.get('page_size', 10))
+    only_veg = bool(request.args.get('only_veg', False))
     filter_text = request.args.get('filter_text', None)
     user_pincode = request.args.get('user_pincode', None)
     user_location = request.args.get('user_location', None)
@@ -21,6 +22,7 @@ class StoreListApi(Resource):
     lst, count = self.service.search(
         tenant_id=tenant_id,
         filter_text=filter_text,
+        only_veg=only_veg,
         page_no=page_no,
         page_size=page_size)
     return lst

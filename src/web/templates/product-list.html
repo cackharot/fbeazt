@@ -7,7 +7,7 @@
     <img src="/images/header4.jpg" />
     <div class="card-divider">
       <h4>
-        {{product.name}}
+        {{product.name}} <i class="veg__icon" *ngIf="product.isVeg()"></i>
         <span class="price_tag">
           Rs. {{product.sell_price}}
         </span>

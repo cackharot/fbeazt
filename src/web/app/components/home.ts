@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit {
         this.activeTab = 'Restaurant';
       }
     })
-    .catch(this.handleError);
+    .catch(errMsg => this.errorMsg = errMsg);
   }
 
   searchProducts(){
@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit {
         this.activeTab = 'Product';
       }
     })
-    .catch(this.handleError);
+    .catch(errMsg => this.errorMsg = errMsg);
   }
 
   activateTab(id:string){
@@ -97,9 +97,5 @@ export class HomeComponent implements OnInit {
 
   addToCart(item: Product){
     this.orderService.addItem(item);
-  }
-
-  handleError(errorMsg:any){
-    this.errorMsg = errorMsg;
   }
 }

@@ -11,13 +11,15 @@ class StoreService(object):
     self.db = db
     self.stores = self.db.store_collection
 
-  def search(self, tenant_id, filter_text=None, page_no=1,page_size=10):
+  def search(self, tenant_id, filter_text=None, only_veg=False, page_no=1,page_size=10):
     query = {"tenant_id": ObjectId(tenant_id)}
 
     if filter_text is not None and len(filter_text) > 2:
       query['name'] = {'$regex': r".*%s.*" % filter_text, '$options': 'i'}
 
-    print(query)
+    if only_veg:
+      query['food_type'] = {'$elemMatch': {'$eq': 'veg'}}
+
     offset = (page_no - 1) * page_size
     if offset < 0: offset = 0
     lst = self.stores.find(query)

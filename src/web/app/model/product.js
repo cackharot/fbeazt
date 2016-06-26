@@ -10,6 +10,9 @@ var Product = (function () {
         this._id = base_1.ObjectId.of(this._id);
         this.store_id = base_1.ObjectId.of(this.store_id);
     }
+    Product.prototype.isVeg = function () {
+        return this.food_type.filter(function (x) { return x == 'veg'; }).length == 1;
+    };
     return Product;
 }());
 exports.Product = Product;

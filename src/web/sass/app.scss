@@ -219,3 +219,12 @@ label > .inline-label {
   margin: 0;
   border-radius: 0;
 }
+
+.veg__icon{
+  color: green;
+  font-style: normal;
+}
+
+.veg__icon:after{
+  content: "⊡";
+}
