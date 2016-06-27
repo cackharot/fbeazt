@@ -22,7 +22,7 @@ from flask_cors import CORS, cross_origin
 app = Flask(__name__, instance_relative_config=False)
 app.config.from_pyfile('foodbeazt.cfg', silent=False)
 if os.environ.get('FOODBEAZT_CONFIG', None):
-    app.config.from_envvar('FOODBEAZT_CONFIG')
+  app.config.from_envvar('FOODBEAZT_CONFIG')
 
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
@@ -47,142 +47,161 @@ babel = Babel(app)
 
 @babel.localeselector
 def get_locale():
-    return g.get('current_lang', 'en')
+  return g.get('current_lang', 'en')
 
 @app.route('/oauth2callback')
 @auth.oauth2callback
 def outhCallback(token, userinfo, **params):
-    return create_or_update_user(userinfo)
+  create_or_update_user(userinfo)
+  return redirect('/admin')
 
 
 @identity_loaded.connect_via(app)
 def on_identity_loaded(sender, identity):
-    # Set the identity user object
-    identity.user = current_user
+  # Set the identity user object
+  identity.user = current_user
 
-    # Add the UserNeed to the identity
-    if hasattr(current_user, 'id'):
-        identity.provides.add(UserNeed(current_user.id))
+  # Add the UserNeed to the identity
+  if hasattr(current_user, 'id'):
+    identity.provides.add(UserNeed(current_user.id))
 
-    # Assuming the User model has a list of roles, update the
-    # identity with the roles that the user provides
-    if hasattr(current_user, 'roles'):
-        for role in current_user.roles:
-            identity.provides.add(RoleNeed(role))
-
+  # Assuming the User model has a list of roles, update the
+  # identity with the roles that the user provides
+  if hasattr(current_user, 'roles'):
+    for role in current_user.roles:
+      identity.provides.add(RoleNeed(role))
 
 def create_or_update_user(user_info):
-    user = get_or_create_user(user_info)
-    user_mixin = getUserMixin(user)
-    login_user(user_mixin)
-    # Tell Flask-Principal the identity changed
-    identity_changed.send(current_app._get_current_object(), identity=Identity(str(user_mixin.id)))
-    session['user_id'] = str(user['_id'])
-    session['tenant_id'] = str(user['tenant_id'])
-    session['name'] = user['name']
-    session['email'] = user['email']
-    session['roles'] = user.get('roles', ['member'])
-    return redirect('/admin')
+  user = get_or_create_user(user_info)
+  user_mixin = getUserMixin(user)
+  login_user(user_mixin)
+  # Tell Flask-Principal the identity changed
+  identity_changed.send(current_app._get_current_object(), identity=Identity(str(user_mixin.id)))
+  # session['user_id'] = str(user['_id'])
+  # session['tenant_id'] = str(user['tenant_id'])
+  # session['name'] = user['name']
+  # session['email'] = user['email']
+  # session['roles'] = user.get('roles', None)
+  return user_mixin
 
+def login_anonymous():
+  return create_or_update_user({
+            'id': 'guest@foodbeazt.in',
+            'name': 'Guest',
+            'email': 'guest@foodbeazt.in',
+            'roles': ['member']
+          })
 
 def getUserMixin(user):
-    tenant_id = request.cookies.get('tenant_id', None)
-    if not tenant_id:
-        tenant_id = user.get('tenant_id', None)
-    else:
-        tenant_id = unquote(tenant_id).replace('"', '')
+  if user is None: return None
+  tenant_id = request.cookies.get('tenant_id', None)
+  if not tenant_id:
+    tenant_id = user.get('tenant_id', None)
+  else:
+    tenant_id = unquote(tenant_id).replace('"', '')
 
-    return User(user['_id'], tenant_id, user['name'], user['email'], user['roles'],
-                user.get('tenant_id', None), user.get('identity', None))
+  return User(user['_id'], tenant_id, user['name'], user['email'], user['roles'],
+              user.get('tenant_id', None), user.get('identity', None))
 
+def default_tenantId():
+  return TenantService(mongo.db).get_by_name("FoodBeazt")['_id']
+
+def get_or_create_user(item):
+  service = UserService(mongo.db)
+  email = item['email']
+  prev = service.get_by_email(email)
+  if prev:
+    return prev
+  print('Creating new user...')
+
+  tenant_id = default_tenantId()
+
+  if email == "cackharot@gmail.com":
+    roles = ["tenant_admin", 'member']
+  else:
+    roles = ["member"]
+
+  user = {'username': email, 'email': email, 'name': item['name'], 'auth_type': 'google',
+          'tenant_id': tenant_id, 'roles': roles, 'identity': item['id']}
+  service.create(user)
+  return user
 
 @auth.user_loader
 def get_user(userid):
-    service = UserService(mongo.db)
-    user = service.get_by_id(userid)
-    return getUserMixin(user)
+  if request and request.path.startswith('/static/'):
+    return None
+  user = UserService(mongo.db).get_by_id(userid)
+  return getUserMixin(user)
 
 @auth.request_loader
 def request_loader(request):
-  tenant_id = request.cookies.get('tenant_id', None)
-  if tenant_id:
-    return
-  tenant_id = TenantService(mongo.db).get_by_name("FoodBeazt")['_id']
-  return User(-1, tenant_id, 'Anonymous', 'anonymous@anonymous.com', [],
-              tenant_id, None)
+  if request and request.path.startswith('/static/'):
+    return None
+  if session and session.get('identity.id',None) is not None:
+    userid= str(session['identity.id'])
+    # print("Session user_id %s" % (userid))
+    user_mixin = getUserMixin(UserService(mongo.db).get_by_id(userid))
+    if user_mixin:
+      login_user(user_mixin)
+      identity_changed.send(current_app._get_current_object(), identity=Identity(str(user_mixin.id)))
+      return user_mixin
+  # print("Anonymous login initiated############### %s" % (request.path))
+  return login_anonymous()
 
 class User(UserMixin):
-    def __init__(self, user_id=None, tenant_id=None, name=None, email=None, roles=[], user_tenant_id=None,
-                 identity=None):
-        self.id = user_id
-        self.user_id = user_id
-        self.tenant_id = tenant_id
-        self.name = name
-        self.email = email
-        self.roles = roles
-        self.user_tenant_id = user_tenant_id
-        self.identity = identity
+  def __init__(self, user_id=None, tenant_id=None, name=None, email=None,
+                roles=[], user_tenant_id=None,
+                identity=None):
+    self.id = user_id
+    self.user_id = user_id
+    self.tenant_id = tenant_id
+    self.name = name
+    self.email = email
+    self.roles = roles
+    self.user_tenant_id = user_tenant_id
+    self.identity = identity
 
-    def is_authenticated(self):
-        return self.id is not None
+  def is_authenticated(self):
+    return not self.is_anonymous()
 
-    def is_anonymous(self):
-        return self.email == 'guest@foodbeazt.in' or self.email is None
-
-
-def get_or_create_user(item):
-    service = UserService(mongo.db)
-    prev = service.get_by_email(item['email'])
-    if prev:
-        return prev
-    print('Creating new user...')
-    tenant_id = TenantService(mongo.db).get_by_name("FoodBeazt")['_id']
-    email = item['email']
-    if email == "cackharot@gmail.com":
-        roles = ["tenant_admin", 'member']
-    else:
-        roles = ["member"]
-    user = {'username': item['email'], 'email': email, 'name': item['name'], 'auth_type': 'google',
-            'tenant_id': tenant_id, 'roles': roles, 'identity': item['id']}
-    service.create(user)
-    return user
-
+  def is_anonymous(self):
+    return self.email in [None, "-1", "", 'guest@foodbeazt.in']
 
 @app.before_request
 def set_user_on_request_g():
-    setattr(g, 'user', current_user)
+  setattr(g, 'user', current_user)
 
 
 @api.representation('application/json')
 def mjson(data, code, headers=None):
-    d = json.dumps(data, default=json_util.default)
-    resp = make_response(d, code)
-    resp.headers.extend(headers or {})
-    return resp
+  d = json.dumps(data, default=json_util.default)
+  resp = make_response(d, code)
+  resp.headers.extend(headers or {})
+  return resp
 
 
 @app.route("/")
 def home():
-    return redirect('/beta')
-    #name = session.get('name', None)
-    #return render_template('launch_home.jinja2', name=name)
+  return redirect('/beta')
+  #name = session.get('name', None)
+  #return render_template('launch_home.jinja2', name=name)
 
 
 @app.route("/beta")
 def beta_home():
-    if not current_user.is_authenticated():
-        create_or_update_user({'email': 'guest@foodbeazt.in', 'name': 'Guest', 'id': 'guest@foodbeazt.in'})
-        return redirect('/beta')
-    return render_template('home.jinja2')
+  if not current_user.is_authenticated():
+    login_anonymous()
+    return redirect('/beta')
+  return render_template('home.jinja2')
 
 
 @app.route("/admin")
 @login_required
 def admin_home():
-    if not admin_permission.can():
-        doLogout()
-        return redirect('/admin')
-    return render_template('admin/index.jinja2')
+  if not admin_permission.can():
+    doLogout()
+    return "You are unauthorized to access this page! Sorry :(", 403
+  return render_template('admin/index.jinja2')
 
 
 @app.route('/logout')
@@ -192,10 +211,10 @@ def app_logout():
     return redirect('/')
 
 def doLogout():
-    logout_user()
-    # Tell Flask-Principal the user is anonymous
-    identity_changed.send(current_app._get_current_object(), identity=AnonymousIdentity())
-    session.clear()
+  logout_user()
+  # Tell Flask-Principal the user is anonymous
+  identity_changed.send(current_app._get_current_object(), identity=AnonymousIdentity())
+  session.clear()
 
 # @app.route("/recreatedb")
 # def recreate_db():
@@ -212,27 +231,27 @@ upload_folder = os.path.join(APP_ROOT, 'static/images/products/')
 
 
 def allowed_files(filename):
-    return '.' in filename and filename.split('.')[1] in ['jpg', 'png', 'gif', 'jpeg', 'bmp']
+  return '.' in filename and filename.split('.')[1] in ['jpg', 'png', 'gif', 'jpeg', 'bmp']
 
 
 @app.route("/api/upload_product_image/<string:_id>", methods=['GET', 'POST'])
 def upload_product_image(_id):
-    service = ProductService(mongo.db)
-    item = service.get_by_id(_id)
-    if item and request.files and len(request.files) > 0 and request.files['file']:
-        if 'image_url' in item and item['image_url']:
-            fname = os.path.join(upload_folder, item['image_url'])
-            if os.path.isfile(fname):
-                os.remove(fname)
+  service = ProductService(mongo.db)
+  item = service.get_by_id(_id)
+  if item and request.files and len(request.files) > 0 and request.files['file']:
+    if 'image_url' in item and item['image_url']:
+      fname = os.path.join(upload_folder, item['image_url'])
+      if os.path.isfile(fname):
+        os.remove(fname)
 
-        file_body = request.files['file']
-        if allowed_files(secure_filename(file_body.filename)):
-            filename = secure_filename(str(uuid4()) + "." + file_body.filename.split('.')[1])
-            item['image_url'] = filename
-            file_body.save(os.path.join(upload_folder, filename))
-            service.update(item)
-            return json.dumps({"status": "success", "id": _id, "filename": filename})
-    return '', 404
+    file_body = request.files['file']
+    if allowed_files(secure_filename(file_body.filename)):
+      filename = secure_filename(str(uuid4()) + "." + file_body.filename.split('.')[1])
+      item['image_url'] = filename
+      file_body.save(os.path.join(upload_folder, filename))
+      service.update(item)
+      return json.dumps({"status": "success", "id": _id, "filename": filename})
+  return '', 404
 
 
 from foodbeazt.resources.subscription import SubscriptionApi, SubscriptionListApi
