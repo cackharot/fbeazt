@@ -3,20 +3,24 @@
   {{errorMsg}}
 </div>
 <div *ngIf="restaurant">
-  <nav aria-label="You are here:" role="navigation">
-    <ul class="breadcrumbs">
-      <li><a (click)="goBack('Home', $event)">Home</a></li>
-      <!--<li><a (click)="goBack('RestaurantList', $event)">Restaurants</a></li>-->
-      <li>
-        <span class="show-for-sr">Current:</span>{{restaurant.name}}
-      </li>
-    </ul>
-  </nav>
-  <img src="/images/header2.jpg" alt="Pic" class="header_img"/>
+  <section class="row">
+    <div class="medium-12 small-11 columns end">
+      <nav aria-label="You are here:" role="navigation">
+        <ul class="breadcrumbs">
+          <li><a (click)="goBack('Home', $event)">Home</a></li>
+          <!--<li><a (click)="goBack('RestaurantList', $event)">Restaurants</a></li>-->
+          <li>
+            <span class="show-for-sr">Current:</span>{{restaurant.name}}
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+  <!--<img src="/images/header2.jpg" alt="Pic" class="header_img"/>-->
   <br/>
   <section class="row">
-    <div class="medium-12 columns">
-      <h3 class="title">
+    <div class="medium-12 small-11 columns end">
+      <h3 class="title dark">
         {{restaurant.name}}
         <span class="rating">
           <label class="secondary label">{{restaurant.rating || 3.5}}</label>
@@ -50,11 +54,15 @@
         </div>
       </div>
     </div>
-    <tabs>
-      <tab tabTitle="{{category.name}}" *ngFor="let category of categories">
-        <product-list [products]="category.products"
-          (selectedProduct)="addToCart($event)"></product-list>
-      </tab>
-    </tabs>
+    <div class="row">
+      <div class="medium-12 small-11 columns end">
+        <tabs>
+          <tab tabTitle="{{category.name}}" *ngFor="let category of categories">
+            <product-list [products]="category.products"
+              (selectedProduct)="addToCart($event)"></product-list>
+          </tab>
+        </tabs>
+      </div>
+    </div>
   </section>
 </div>

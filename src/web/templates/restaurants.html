@@ -2,30 +2,28 @@
   <h3>Oops! No restaurants found</h3>
   <p>You might have misspelled or try again!</p>
 </div>
-<ul class="restaurants" *ngIf="!isEmpty()">
-  <li *ngFor="let item of restaurants"
-    [class.selected]="item === selectedRestaurant">
-    <div class="row">
-      <div class="small-3 columns">
-        <img src="/images/placeholder.png" alt="Comming soon..." class="res_logo"/>
-      </div>
-      <div class="small-9 columns">
-        <h3 class="title">
-          <a (click)="onSelect(item)">{{item.name}}</a>
-          <span class="rating">
-            <label class="secondary label">{{item.rating || 3.5}}</label>
-          </span>
-        </h3>
-        <!-- <div class="telephone"><i class="fi-telephone"></i> {{item.phone}}</div> -->
-        <div class="timings">
-          <span><i class="fi-clock"></i> {{item.open_time}} AM to {{item.close_time}} PM</span>
-        </div>
-        <ul class="cuisines">
-          <li *ngFor="let cus of item.cuisines">
-            <span class="cusines">{{cus}}</span>
-          </li>
-        </ul>
-      </div>
+<div class="restaurants" *ngIf="!isEmpty()">
+  <div class="row" *ngFor="let item of restaurants"
+  [class.selected]="item === selectedRestaurant">
+    <div class="small-3 medium-3 columns">
+      <img src="/images/placeholder.png" alt="Comming soon..." class="res_logo"/>
     </div>
-  </li>
-</ul>
+    <div class="small-9 medium-9 columns light end">
+      <h3 class="title">
+        <a class="dark" (click)="onSelect(item)">{{item.name}}</a>
+        <span class="rating">
+          <label class="secondary label">{{item.rating || 3.5}}</label>
+        </span>
+      </h3>
+      <!-- <div class="telephone"><i class="fi-telephone"></i> {{item.phone}}</div> -->
+      <div class="timings">
+        <span><i class="fi-clock"></i> {{item.open_time}} AM to {{item.close_time}} PM</span>
+      </div>
+      <ul class="cuisines">
+        <li *ngFor="let cus of item.cuisines">
+          <span class="cusines">{{cus}}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
