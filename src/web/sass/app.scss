@@ -416,3 +416,9 @@ label > .inline-label {
     }
   }
 }
+@media screen and (max-width: 40em) {
+  .card{
+    width: auto;
+    margin: 10px 0 7px 0px;
+  }
+}

@@ -299,3 +299,8 @@ label > .inline-label {
     font-size: 26px; }
   .checkout__page h4 {
     font-size: 22px; } }
+
+@media screen and (max-width: 40em) {
+  .card {
+    width: auto;
+    margin: 10px 0 7px 0px; } }
