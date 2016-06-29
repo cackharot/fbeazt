@@ -8,7 +8,7 @@ from flask_pymongo import PyMongo
 from flask_restful import Api
 from flask_babel import Babel
 from pymongo import Connection
-from bson import json_util
+from bson import ObjectId, json_util
 from werkzeug.utils import secure_filename
 from service.ProductService import ProductService
 from service.TenantService import TenantService
@@ -186,6 +186,12 @@ def home():
   #name = session.get('name', None)
   #return render_template('launch_home.jinja2', name=name)
 
+@app.route("/test_order_email")
+def test_order_email():
+  tenant_id = g.user.tenant_id
+  query = {'tenant_id': ObjectId(tenant_id)}
+  order = [x for x in mongo.db.order_collection.find(query).sort("created_at", -1)][0]
+  return render_template("order_created.html", order=order)
 
 @app.route("/beta")
 def beta_home():
