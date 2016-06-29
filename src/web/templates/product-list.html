@@ -4,21 +4,22 @@
 </div>
 <div class="card" *ngFor="let product of products;">
   <img src="/images/food-turkey.jpg" />
-  <div class="card-divider">
-    <h4 class="dark">
-      {{product.name}} <i class="veg__icon" *ngIf="product.isVeg()"></i>
-      <span class="price_tag">
-        Rs. {{product.sell_price}}
-      </span>
-    </h4>
-  </div>
-  <div class="card-section">
-    <p>{{product.description}}</p>
-    <ul class="cuisines">
+  <div class="card-section align-center">
+    <div class="center__container">
+      <i class="veg__icon" [class.green]="product.isVeg()" [class.brown]="!product.isVeg()"></i>
+    </div>
+    <ul class="cuisines light">
       <li *ngFor="let cus of product.cuisines">
         <span class="cusines">{{cus}}</span>
       </li>
     </ul>
+    <h4 class="dark">
+      {{product.name}}
+    </h4>
+    <p class="show-for-medium">{{product.description}}</p>
+    <span class="price_tag light">
+      Rs. {{product.sell_price}}
+    </span>
   </div>
   <div class="card-action align-center">
     <a (click)="select(product,$event)" class="button add-to-cart">

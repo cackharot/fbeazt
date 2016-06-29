@@ -215,11 +215,22 @@ img.res_logo{
     border-radius: 3px 3px 0 0;
   }
 
-  .card-divider{
-    padding: 0.6em;
-  }
   .card-section{
+    padding: 0.6em;
     min-height: 50px;
+    position: relative;
+    .center__container{
+      position: absolute;
+      top: -13px;
+      text-align: center;
+      left: 45%;
+      background: white;
+      height: 30px;
+      line-height: 18px;
+      width: 30px;
+      display: inline-block;
+      border-radius: 45%;
+    }
   }
 
   h4{
@@ -228,16 +239,18 @@ img.res_logo{
 
   .cuisines{
     margin: 0 10px;
+    text-transform: capitalize;
+    li{
+      border: 0;
+    }
   }
 
   .price_tag{
     font-size: 16px;
     font-weight: normal;
-    float: right;
   }
 
   .card-action{
-    margin: 10px 0;
     .button{
       width: 75%;
       border: 1px solid #4c9cdf;
@@ -392,12 +405,16 @@ label > .inline-label {
 }
 
 .veg__icon{
-  color: green;
   font-style: normal;
-}
-
-.veg__icon:after{
-  content: "⊡";
+  &:after{
+    content: "⊡";
+  }
+  &.green{
+    color: green;
+  }
+  &.brown{
+    color: brown;
+  }
 }
 
 .checkout__page{
@@ -418,7 +435,7 @@ label > .inline-label {
 }
 @media screen and (max-width: 40em) {
   .card{
-    width: auto;
-    margin: 10px 0 7px 0px;
+    width: 47%;
+    margin: 7px 5px;
   }
 }

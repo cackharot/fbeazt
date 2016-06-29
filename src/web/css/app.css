@@ -151,28 +151,39 @@ img.res_logo {
     -webkit-border-radius: 3px 3px 0 0;
     -moz-border-radius: 3px 3px 0 0;
     border-radius: 3px 3px 0 0; }
-  .card .card-divider {
-    padding: 0.6em; }
   .card .card-section {
-    min-height: 50px; }
+    padding: 0.6em;
+    min-height: 50px;
+    position: relative; }
+    .card .card-section .center__container {
+      position: absolute;
+      top: -13px;
+      text-align: center;
+      left: 45%;
+      background: white;
+      height: 30px;
+      line-height: 18px;
+      width: 30px;
+      display: inline-block;
+      border-radius: 45%; }
   .card h4 {
     font-weight: 600; }
   .card .cuisines {
-    margin: 0 10px; }
+    margin: 0 10px;
+    text-transform: capitalize; }
+    .card .cuisines li {
+      border: 0; }
   .card .price_tag {
     font-size: 16px;
-    font-weight: normal;
-    float: right; }
-  .card .card-action {
-    margin: 10px 0; }
-    .card .card-action .button {
-      width: 75%;
-      border: 1px solid #4c9cdf;
-      color: #4c9cdf;
-      background: 0; }
-      .card .card-action .button:hover {
-        color: #fff;
-        background: #4c9cdf; }
+    font-weight: normal; }
+  .card .card-action .button {
+    width: 75%;
+    border: 1px solid #4c9cdf;
+    color: #4c9cdf;
+    background: 0; }
+    .card .card-action .button:hover {
+      color: #fff;
+      background: #4c9cdf; }
 
 .button {
   -webkit-border-radius: 3px;
@@ -285,11 +296,13 @@ label > .inline-label {
   border-radius: 0; }
 
 .veg__icon {
-  color: green;
   font-style: normal; }
-
-.veg__icon:after {
-  content: "⊡"; }
+  .veg__icon:after {
+    content: "⊡"; }
+  .veg__icon.green {
+    color: green; }
+  .veg__icon.brown {
+    color: brown; }
 
 .checkout__page h2 {
   color: #46535e; }
@@ -302,5 +315,5 @@ label > .inline-label {
 
 @media screen and (max-width: 40em) {
   .card {
-    width: auto;
-    margin: 10px 0 7px 0px; } }
+    width: 47%;
+    margin: 7px 5px; } }
