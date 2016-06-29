@@ -2,7 +2,7 @@
   "name": "foodbeazt-webapp",
   "version": "1.0.0",
   "scripts": {
-    "start": "tsc && gulp bower && concurrently \"npm run tsc:w\" \"npm run lite\" ",
+    "start": "tsc && gulp bower && concurrently \"npm run tsc:w\" \"npm run lite\" \"gulp sass:watch\" ",
     "lite": "lite-server",
     "postinstall": "typings install",
     "tsc": "tsc",

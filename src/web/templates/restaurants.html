@@ -15,6 +15,7 @@
           <label class="secondary label">{{item.rating || 3.5}}</label>
         </span>
       </h3>
+      <div class="address"><i class="fi-marker"></i> {{item.address}}</div>
       <!-- <div class="telephone"><i class="fi-telephone"></i> {{item.phone}}</div> -->
       <div class="timings">
         <span><i class="fi-clock"></i> {{item.open_time}} AM to {{item.close_time}} PM</span>
@@ -24,6 +25,9 @@
           <span class="cusines">{{cus}}</span>
         </li>
       </ul>
+      <div class="show-for-medium">
+        <button type="button" class="button green" (click)="onSelect(item)">View Menu</button>
+      </div>
     </div>
   </div>
 </div>

@@ -4,7 +4,7 @@
 </div>
 <div *ngIf="restaurant">
   <section class="row">
-    <div class="medium-12 small-11 columns end">
+    <div class="medium-12 small-12 columns end">
       <nav aria-label="You are here:" role="navigation">
         <ul class="breadcrumbs">
           <li><a (click)="goBack('Home', $event)">Home</a></li>
@@ -17,9 +17,8 @@
     </div>
   </section>
   <!--<img src="/images/header2.jpg" alt="Pic" class="header_img"/>-->
-  <br/>
   <section class="row">
-    <div class="medium-12 small-11 columns end">
+    <div class="medium-12 small-12 columns end">
       <h3 class="title dark">
         {{restaurant.name}}
         <span class="rating">
@@ -55,7 +54,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="medium-12 small-11 columns end">
+      <div class="medium-12 small-12 columns end">
         <tabs>
           <tab tabTitle="{{category.name}}" *ngFor="let category of categories">
             <product-list [products]="category.products"

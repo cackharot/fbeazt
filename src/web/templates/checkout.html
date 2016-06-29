@@ -1,21 +1,30 @@
-<nav aria-label="You are here:" role="navigation">
-  <ul class="breadcrumbs">
-    <li><a (click)="goBack('Home')">Home</a></li>
-    <li>
-      <span class="show-for-sr">Current:</span>Checkout
-    </li>
-  </ul>
-</nav>
-<div class="callout primary" *ngIf="isEmpty()">
-  <h3>Oops!</h3>
-  <p>Added items to the cart to checkout :)</p>
-</div>
-<div class="callout alert" *ngIf="error != null">
-  <h3>Oops!</h3>
-  <p>This was not supposed to happen. Kindly try again after sometime.</p>
-</div>
+<section class="checkout__page">
+<section class="row">
+    <div class="medium-12 small-12 columns end">
+      <nav aria-label="You are here:" role="navigation">
+        <ul class="breadcrumbs">
+          <li><a (click)="goBack('Home')">Home</a></li>
+          <li>
+            <span class="show-for-sr">Current:</span>Checkout
+          </li>
+        </ul>
+      </nav>
+    </div>
+</section>
+<section class="row">
+    <div class="medium-12 small-12 columns end">
+      <div class="callout primary" *ngIf="isEmpty()">
+        <h3>Oops!</h3>
+        <p>Added items to the cart to checkout :)</p>
+      </div>
+      <div class="callout alert" *ngIf="error != null">
+        <h3>Oops!</h3>
+        <p>This was not supposed to happen. Kindly try again after sometime.</p>
+      </div>
+    </div>
+</section>
 <section class="row" *ngIf="orderSuccess">
-  <div class="medium-12 columns">
+  <div class="medium-12 small-12 columns">
     <div class="callout success">
       <h3>Thanks {{order.delivery_details.name}},</h3>
       <p>
@@ -74,8 +83,8 @@
 </section>
 <form (ngSubmit)="confirmOrder()" #orderForm="ngForm" *ngIf="!orderSuccess">
 <section class="row" *ngIf="!isEmpty()">
-  <div class="medium-12 columns">
-    <h2>Delivery Details</h2>
+  <div class="medium-6 columns">
+    <h2><i class="fi-home"></i> Delivery Details</h2>
     <div class="callout secondary">
       <p>
         Kindly ensure that you have given correct delivery address with postbox number, floor number,
@@ -102,49 +111,57 @@
       <input type="text" maxlength="50" id="landmark" [(ngModel)]="order.delivery_details.landmark" />
     </label>
   </div>
-  <div class="medium-12 columns">
-    <h2>Payment Details</h2>
-    <div class="callout primary">
-      <p>Presently we accept only <b>Cash On Delivery</b>(CoD).</p>
-      <p>Online transactions through Credit/Debit card and NetBanking coming soon...</p>
+  <div class="medium-6 columns">
+    <div class="row">
+      <div class="medium-12 columns">
+        <h2><i class="fi-shopping-cart"></i> Order details</h2>
+        <div class="review_restaurant" *ngFor="let store of order.getStores()">
+          <h4>{{store.name}}</h4>
+          <table class="table order_table">
+            <tbody>
+              <tr *ngFor="let item of order.getItems(store._id)">
+                <td>
+                  <p class="product_name">{{item.name}}</p>
+                  <p class="product_desc">{{item.description}}</p>
+                </td>
+                <td class="quantity">
+                  {{item.price}}x{{item.quantity}}
+                </td>
+                <td class="price">
+                  {{item.getTotalPrice()}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="order__total__container">
+          <table class="table order_table">
+            <tfoot>
+              <tr>
+                <td colspan="2">
+                  Total:
+                </td>
+                <td class="total">
+                  Rs. {{order.getTotalAmount()}}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+        <div class="medium-12 columns">
+          <h2><i class="fi-dollar-bill"></i> Payment Details</h2>
+          <div class="callout primary">
+            <p>Presently we accept only <b>Cash On Delivery</b>(CoD).</p>
+            <p>Online transactions through Credit/Debit card and NetBanking coming soon...</p>
+          </div>
+        </div>
     </div>
   </div>
   <div class="medium-12 columns">
-    <h2>Review Order</h2>
-    <div class="review_restaurant" *ngFor="let store of order.getStores()">
-      <h4>{{store.name}}</h4>
-      <table class="table order_table">
-        <tbody>
-          <tr *ngFor="let item of order.getItems(store._id)">
-            <td>
-              <p class="product_name">{{item.name}}</p>
-              <p class="product_desc">{{item.description}}</p>
-            </td>
-            <td class="quantity">
-              {{item.price}}x{{item.quantity}}
-            </td>
-            <td class="price">
-              {{item.getTotalPrice()}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="order__total__container">
-      <table class="table order_table">
-        <tfoot>
-          <tr>
-            <td colspan="2">
-              Total:
-            </td>
-            <td class="total">
-              Rs. {{order.getTotalAmount()}}
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-    <div class="center">
+    <div class="align-center">
       <button (click)="resetOrder()" class="button secondary">Cancel</button>
       <button type="submit" class="button primary" [disabled]="!orderForm.form.valid">
         Confirm
@@ -153,3 +170,4 @@
   </div>
 </section>
 </form>
+</section>

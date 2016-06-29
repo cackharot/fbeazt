@@ -1,12 +1,14 @@
-<ul class="menu float-left" *ngIf="canShow()">
-  <li (click)="navigateToCheckout($event)">
-    <i class="fi-shopping-cart"></i>
-    <label class="success badge">{{totalQuantity}}</label>
+<ul class="menu float-left">
+  <li *ngIf="canShow()">
+    <a (click)="navigateToCheckout($event)" class="cart">
+      <i class="fi-shopping-cart"></i>
+      {{totalQuantity}} Items - <b>{{totalAmount}}</b>
+    </a>
   </li>
-  <li class="show-for-medium">
+  <!--<li class="show-for-medium">
     <button (click)="navigateToCheckout($event)" class="primary button">
+      <i class="fi-shopping-cart"></i>
       <span class="chk">Checkout</span>
-      <i class="fi-arrow-right"></i>
     </button>
-  </li>
+  </li>-->
 </ul>

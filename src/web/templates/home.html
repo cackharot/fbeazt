@@ -5,7 +5,7 @@
 </section>-->
 <!--<img src="/images/header1.jpg" class="header_img"/>-->
 <section class="row search__container">
-  <div class="medium-12 small-11 columns end">
+  <div class="medium-12 small-12 columns end">
     <form #searchForm="ngForm">
     <label>
       <span class="inline-label">
@@ -29,19 +29,19 @@
   </div>
 </section>
 <section class="row" *ngIf="searchText == null || searchText.length == 0">
-  <div class="medium-12 small-11 columns end">
+  <div class="medium-12 small-12 columns end">
     <h3>Popular items</h3>
   </div>
 </section>
 <section class="row" *ngIf="searchText && searchText.length < 3">
-  <div class="medium-12 small-11 columns end">
+  <div class="medium-12 small-12 columns end">
     <div class="callout primary">
       <p>Atleast enter 3 letters to begin the search!</p>
     </div>
   </div>
 </section>
 <section class="row" *ngIf="searchText && searchText.length > 2 && submitted">
-  <div class="medium-12 small-11 columns end">
+  <div class="medium-12 small-12 columns end">
     <ul class="tabs">
       <li class="tabs-title" [class.active]="activeTab =='Restaurant'">
         <a (click)="activateTab('Restaurant')">Restaurants</a>

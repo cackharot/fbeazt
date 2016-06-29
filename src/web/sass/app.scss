@@ -1,6 +1,7 @@
 $primary_color: blue;
-$logo_font_size: 36px;
-
+$logo_font_size: 28px;
+$dark_color: #46535e;
+$light_color: #9ca3a8;
 $max_width: 960px;
 
 body{
@@ -17,15 +18,31 @@ header, #main{
   // background-color: #574e21;
   background-color: #f3f3f3;
   min-height: 100%;
-  // background-image: url("/images/arabesque.png");
+  position: relative;
+  opacity: 0.99;
+  &:after {
+    content: "";
+    background-image: url("/images/food.png");
+    opacity: 0.45;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+  }
+}
+
+.row{
+  max-width: 85em;
 }
 
 .light{
-  color: #9ca3a8;
+  color: $light_color;
 }
 
 .dark{
-  color: #46535e;
+  color: $dark_color;
 }
 
 .float-right{
@@ -52,6 +69,7 @@ header, #main{
     background: #162c3f;
     display: table;
     height: 100%;
+    // width: 100%;
   }
   a{
     color: white;
@@ -65,19 +83,27 @@ header, #main{
 
   .mobile-cart{
     text-align: right;
-    width: 100%;
+    // width: 100%;
+  }
+
+  .button{
+    position: relative;
   }
 
   .fi-shopping-cart{
-    font-size: 2em;
-    bottom: -6px;
-    position: relative;
+    font-size: 1.3333em;
+    vertical-align: -15%;
   }
 
-  .badge{
-    position: relative;
-    top: -16px;
-    right: 10px;
+  .cart{
+    text-transform: uppercase;
+    letter-spacing: -1px;
+  }
+
+  .top-bar-left{
+    ul{
+      width:100%;
+    }
   }
 
   .top-bar-right{
@@ -90,12 +116,6 @@ header, #main{
   }
 }
 
-#main{
-  h2{
-    margin: 6px 10px;
-  }
-}
-
 .restaurants{
   .row{
     background-color: #fff;
@@ -105,7 +125,7 @@ header, #main{
     padding: 5px;
     position: relative;
     min-height: 80px;
-    margin: 20px 0;
+    margin: 10px 0;
     -webkit-box-shadow: 0 1px 1px 0 rgba(159,167,194,0.6);
     -moz-box-shadow: 0 1px 1px 0 rgba(159,167,194,0.6);
     box-shadow: 0 1px 1px 0 rgba(159,167,194,0.6);
@@ -116,6 +136,9 @@ header, #main{
         padding-right: 0.9375rem;
       }
     }
+  }
+  .button{
+    margin-top: 1em;
   }
 }
 
@@ -168,7 +191,7 @@ img.res_logo{
 .card{
   display: inline-block;
   vertical-align: top;
-  width: 226px;
+  width: 250px;
   background-color: #fff;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -216,14 +239,10 @@ img.res_logo{
   .card-action{
     margin: 10px 0;
     .button{
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      border-radius: 3px;
       width: 75%;
       border: 1px solid #4c9cdf;
       color: #4c9cdf;
       background: 0;
-      margin: 0;
 
       &:hover{
         color:#fff;
@@ -233,30 +252,79 @@ img.res_logo{
   }
 }
 
+.button{
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  margin: 0;
+}
+
 .button.expand{
   width: 100%;
 }
 
-.tabs-title{
-  text-transform: uppercase;
-  border-bottom: 3px solid transparent;
-  a{
-    padding: 12px 18px;
+.button.green {
+  background: #9c0;
+  border: 1px solid #9c0;
+  color: #fff;
+  &:hover{
+    background: #9b0;
+    border: 1px solid #9b0;
   }
 }
 
-.tabs-title.active {
+.tabs{
+  -webkit-box-shadow: 0 1px 0 0 rgba(255,255,255,0.5);
+  -moz-box-shadow: 0 1px 0 0 rgba(255,255,255,0.5);
+  box-shadow: 0 1px 0 0 rgba(255,255,255,0.5);
+  border: 0;
+  border-top: 1px solid #e5e7e8;
+  border-bottom: 1px solid #e5e7e8;
   background: none;
-  border-bottom: 3px solid #62bf02;
+}
+
+.tabs-title{
+  text-transform: uppercase;
   a{
-    background: none;
-    color: #62bf02;
-    padding: 12px 18px;
-    font-weight: bold;
+    color: $dark_color;
+    padding: 13px 10px;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &:hover{
+    background: 0;
+    a{
+      background: 0;
+    }
+  }
+
+  &.active {
+    background: #4c9cdf;
+    border-bottom: 0;
+    position: relative;
+    a{
+      background: none;
+      color: #fff;
+    }
+
+    &:after{
+      content: "";
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid #4c9cdf;
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      margin-left: -12px;
+    }
   }
 }
 
 .tabs-content{
+  background: 0;
+  border: 0;
   .content{
     padding-top: 1em;
   }
@@ -330,4 +398,21 @@ label > .inline-label {
 
 .veg__icon:after{
   content: "⊡";
+}
+
+.checkout__page{
+  h2{
+    color: $dark_color;
+  }
+}
+
+@media screen and (min-width: 40em){
+  .checkout__page{
+    h2{
+      font-size: 26px;
+    }
+    h4{
+      font-size: 22px;
+    }
+  }
 }

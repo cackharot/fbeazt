@@ -7,7 +7,22 @@ header, #main {
 
 #main {
   background-color: #f3f3f3;
-  min-height: 100%; }
+  min-height: 100%;
+  position: relative;
+  opacity: 0.99; }
+  #main:after {
+    content: "";
+    background-image: url("/images/food.png");
+    opacity: 0.45;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1; }
+
+.row {
+  max-width: 85em; }
 
 .light {
   color: #9ca3a8; }
@@ -38,27 +53,25 @@ header, #main {
   .top-bar a {
     color: white; }
   .top-bar .menu-text {
-    font-size: 36px; }
+    font-size: 28px; }
   .top-bar .fi-marker {
     font-size: 32px; }
   .top-bar .mobile-cart {
-    text-align: right;
-    width: 100%; }
-  .top-bar .fi-shopping-cart {
-    font-size: 2em;
-    bottom: -6px;
+    text-align: right; }
+  .top-bar .button {
     position: relative; }
-  .top-bar .badge {
-    position: relative;
-    top: -16px;
-    right: 10px; }
+  .top-bar .fi-shopping-cart {
+    font-size: 1.3333em;
+    vertical-align: -15%; }
+  .top-bar .cart {
+    text-transform: uppercase;
+    letter-spacing: -1px; }
+  .top-bar .top-bar-left ul {
+    width: 100%; }
   .top-bar .top-bar-right ul {
     margin-right: 1em; }
     .top-bar .top-bar-right ul li {
       padding-right: 1em; }
-
-#main h2 {
-  margin: 6px 10px; }
 
 .restaurants .row {
   background-color: #fff;
@@ -68,7 +81,7 @@ header, #main {
   padding: 5px;
   position: relative;
   min-height: 80px;
-  margin: 20px 0;
+  margin: 10px 0;
   -webkit-box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
   -moz-box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
   box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6); }
@@ -76,6 +89,9 @@ header, #main {
     padding: 0; }
     .restaurants .row .columns:first-child {
       padding-right: 0.9375rem; }
+
+.restaurants .button {
+  margin-top: 1em; }
 
 .title {
   margin: 0;
@@ -114,7 +130,7 @@ img.res_logo {
 .card {
   display: inline-block;
   vertical-align: top;
-  width: 226px;
+  width: 250px;
   background-color: #fff;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -150,38 +166,74 @@ img.res_logo {
   .card .card-action {
     margin: 10px 0; }
     .card .card-action .button {
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      border-radius: 3px;
       width: 75%;
       border: 1px solid #4c9cdf;
       color: #4c9cdf;
-      background: 0;
-      margin: 0; }
+      background: 0; }
       .card .card-action .button:hover {
         color: #fff;
         background: #4c9cdf; }
 
+.button {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  margin: 0; }
+
 .button.expand {
   width: 100%; }
 
+.button.green {
+  background: #9c0;
+  border: 1px solid #9c0;
+  color: #fff; }
+  .button.green:hover {
+    background: #9b0;
+    border: 1px solid #9b0; }
+
+.tabs {
+  -webkit-box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5);
+  -moz-box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5);
+  border: 0;
+  border-top: 1px solid #e5e7e8;
+  border-bottom: 1px solid #e5e7e8;
+  background: none; }
+
 .tabs-title {
-  text-transform: uppercase;
-  border-bottom: 3px solid transparent; }
+  text-transform: uppercase; }
   .tabs-title a {
-    padding: 12px 18px; }
+    color: #46535e;
+    padding: 13px 10px;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600; }
+  .tabs-title:hover {
+    background: 0; }
+    .tabs-title:hover a {
+      background: 0; }
+  .tabs-title.active {
+    background: #4c9cdf;
+    border-bottom: 0;
+    position: relative; }
+    .tabs-title.active a {
+      background: none;
+      color: #fff; }
+    .tabs-title.active:after {
+      content: "";
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid #4c9cdf;
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      margin-left: -12px; }
 
-.tabs-title.active {
-  background: none;
-  border-bottom: 3px solid #62bf02; }
-  .tabs-title.active a {
-    background: none;
-    color: #62bf02;
-    padding: 12px 18px;
-    font-weight: bold; }
-
-.tabs-content .content {
-  padding-top: 1em; }
+.tabs-content {
+  background: 0;
+  border: 0; }
+  .tabs-content .content {
+    padding-top: 1em; }
 
 .menu li a {
   padding: 0; }
@@ -238,3 +290,12 @@ label > .inline-label {
 
 .veg__icon:after {
   content: "⊡"; }
+
+.checkout__page h2 {
+  color: #46535e; }
+
+@media screen and (min-width: 40em) {
+  .checkout__page h2 {
+    font-size: 26px; }
+  .checkout__page h4 {
+    font-size: 22px; } }
