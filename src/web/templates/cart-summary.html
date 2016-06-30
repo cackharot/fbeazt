@@ -2,7 +2,12 @@
   <li *ngIf="canShow()">
     <a (click)="navigateToCheckout($event)" class="cart">
       <i class="fi-shopping-cart"></i>
-      {{totalQuantity}} Items - <b>{{totalAmount}}</b>
+      <span *ngIf="totalQuantity>0">
+        {{totalQuantity}} Items - <b>{{totalAmount}}</b>
+      </span>
+      <span *ngIf="totalQuantity==0">
+        Empty
+      </span>
     </a>
   </li>
   <!--<li class="show-for-medium">

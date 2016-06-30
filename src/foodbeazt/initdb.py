@@ -18,23 +18,26 @@ category = ['starter', 'maincourse', 'deserts', 'specials']
 food_types = ['veg', 'non-veg']
 
 def create_sample_data(db, tenant_id):
-  store_service = StoreService(db)  
+  store_service = StoreService(db)
   store = store_service.get_by_name('Test Store')
-  
+
   if store is not None:
     print("Sample seed data already created!!")
     return
 
   for i in range(0,50):
     store_name = "My Store %d" % (i)
-    store = {'tenant_id': tenant_id, 
-            'name': store_name, 
+    store = {'tenant_id': tenant_id,
+            'name': store_name,
             'address': 'sample address',
             'phone': random.randint(600000,6999999),
-            'food_type': food_types, 
-            'cuisines': [cuisines[i % len(cuisines)], cuisines[i % (len(cuisines)-1)]], 
-            'open_time': random.randint(7,11), 
-            'close_time': random.randint(9,12), 
+            'food_type': food_types,
+            'holidays': ['Sunday'],
+            'is_closed': False,
+            'rating': 0,
+            'cuisines': [cuisines[i % len(cuisines)], cuisines[i % (len(cuisines)-1)]],
+            'open_time': random.randint(7,11),
+            'close_time': random.randint(9,12),
             'deliver_time': random.randint(20,60)}
     store_service.save(store)
     create_items(db, tenant_id, store['_id'])
@@ -50,16 +53,16 @@ def create_items(db, tenant_id, store_id):
   for i in range(0, item_count):
     no = str(random.randint(100, 12563))
     price = random.randint(10, 500)
-    item = {'tenant_id': tenant_id, 
+    item = {'tenant_id': tenant_id,
             'store_id': store_id,
-            'name': 'Item ' + no, 
+            'name': 'Item ' + no,
             'barcode': '1256' + no,
             'food_type': [food_types[i % len(food_types)]],
             'cuisines': [cuisines[i %len(cuisines)]],
             'category': category[i % len(category)],
-            'open_time': 8, 
-            'close_time': 11, 
-            'deliver_time': 45, 
+            'open_time': 8,
+            'close_time': 11,
+            'deliver_time': 45,
             'buy_price': price - 10.0,
             'sell_price': price,
             'discount': 0.0}

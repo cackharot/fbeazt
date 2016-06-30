@@ -43,6 +43,30 @@ header, #main {
 .breadcrumbs {
   margin: 4px 6px; }
 
+.search__container {
+  margin-bottom: 10px;
+  background-color: #fff;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  padding: 10px 5px;
+  position: relative;
+  min-height: 80px;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
+  -moz-box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
+  box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6); }
+  .search__container .switch {
+    display: inline-block;
+    margin-bottom: 0;
+    bottom: -8px; }
+
+.filter__container {
+  margin-bottom: 10px; }
+  .filter__container .switch {
+    display: inline-block;
+    margin-bottom: 0;
+    bottom: -8px; }
+
 .top-bar {
   background: #162c3f;
   height: 70px; }
@@ -55,7 +79,8 @@ header, #main {
   .top-bar .menu-text {
     font-size: 28px; }
   .top-bar .fi-marker {
-    font-size: 32px; }
+    margin: 0;
+    vertical-align: baseline; }
   .top-bar .mobile-cart {
     text-align: right; }
   .top-bar .button {
@@ -101,7 +126,7 @@ header, #main {
 span.rating {
   float: right; }
 
-.timings, .telephone, .address {
+.timings, .telephone, .address, .holidays {
   margin-bottom: 10px;
   font-size: 13px; }
 

@@ -30,6 +30,9 @@
       <div class="timings">
         <span><i class="fi-clock"></i> {{restaurant.open_time}} AM to {{restaurant.close_time}} PM</span>
       </div>
+      <div class="holidays" *ngIf="restaurant.holidays.length>0">
+         Holidays: {{restaurant.holidays.join(', ')}}
+      </div>
       <ul class="cuisines">
         <li *ngFor="let cus of restaurant.cuisines">
           <span class="cusines">{{cus}}</span>
@@ -40,10 +43,8 @@
   <br/>
   <section class="products">
     <div class="row filter__container">
-      <div class="small-3 medium-2 columns">
+      <div class="medium-3 columns">
         Only Veg:
-      </div>
-      <div class="small-9 medium-10 columns">
         <div class="switch tiny">
           <input class="switch-input" id="onlyVeg" type="checkbox"
           (change)="filter()" [(ngModel)]="onlyVeg" name="onlyVeg">

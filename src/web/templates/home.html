@@ -7,18 +7,21 @@
 <section class="row search__container">
   <div class="medium-12 small-12 columns end">
     <form #searchForm="ngForm">
-    <label>
-      <span class="inline-label">
-        <input type="search" [ngModel]="searchText" [ngFormControl]="searchCtrl" placeholder="Restaurant or food name...">
-        <button type="submit" class="button">Search</button>
+    <div class="input-group">
+      <span class="input-group-label">
+        <i class="fi-home"></i> Puducherry
       </span>
-    </label>
+      <input class="input-group-field" type="search"
+          placeholder="Restaurant or dish or cuisine..."
+          [ngModel]="searchText" [ngFormControl]="searchCtrl">
+      <div class="input-group-button">
+        <button type="submit" class="button">Search</button>
+      </div>
+    </div>
     </form>
   </div>
-  <div class="small-3 medium-2 columns">
-    Only Veg:
-  </div>
-  <div class="small-9 medium-10 columns">
+  <div class="medium-3 columns end">
+    <i class="fi-filter"></i> Only Veg:
     <div class="switch tiny">
       <input class="switch-input" id="onlyVeg" type="checkbox"
        (change)="search()" [(ngModel)]="onlyVeg" name="onlyVeg">

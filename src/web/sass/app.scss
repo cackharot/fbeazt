@@ -62,6 +62,36 @@ header, #main{
   margin: 4px 6px;
 }
 
+.search__container{
+  margin-bottom: 10px;
+  background-color: #fff;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  padding: 10px 5px;
+  position: relative;
+  min-height: 80px;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(159,167,194,0.6);
+  -moz-box-shadow: 0 1px 1px 0 rgba(159,167,194,0.6);
+  box-shadow: 0 1px 1px 0 rgba(159,167,194,0.6);
+
+  .switch{
+    display: inline-block;
+    margin-bottom: 0;
+    bottom: -8px;
+  }
+}
+
+.filter__container{
+  margin-bottom: 10px;
+
+   .switch{
+    display: inline-block;
+    margin-bottom: 0;
+    bottom: -8px;
+  }
+}
+
 .top-bar{
   background: #162c3f;
   height: 70px;
@@ -77,8 +107,10 @@ header, #main{
   .menu-text {
     font-size: $logo_font_size;
   }
+
   .fi-marker{
-    font-size: 32px;
+    margin: 0;
+    vertical-align: baseline;
   }
 
   .mobile-cart{
@@ -155,7 +187,7 @@ span.rating{
   // position: relative;
 }
 
-.timings, .telephone, .address {
+.timings, .telephone, .address, .holidays {
   margin-bottom: 10px;
   font-size: 13px;
 }

@@ -7,6 +7,7 @@ export class Restaurant {
   phone: string;
   open_time: number;
   close_time: number;
+  holidays:string[] = [];
   tenant_id: ObjectId = new ObjectId();
   created_at: Date;
   food_type: string[];
