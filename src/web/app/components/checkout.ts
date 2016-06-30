@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
 
 import { OrderService } from '../services/order.service';
 
@@ -15,15 +16,17 @@ export class CheckoutComponent implements OnInit {
   order: Order;
   orderSuccess:boolean = false;
   submitted:boolean = false;
+  @LocalStorage() canSaveDeliveryDetails:boolean = false;
   error:any = null;
 
   constructor(private router: Router,
-    private orderService: OrderService) { 
+    private orderService: OrderService) {
   }
 
   ngOnInit() {
     this.order = this.orderService.getOrder();
     this.orderSuccess = this.order.order_no && this.order.order_no.length > 0;
+    this.restoreDeliveryDetails();
   }
 
   resetOrder(){
@@ -32,6 +35,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   confirmOrder(){
+    this.saveDeliveryDetails();
     this.submitted = true;
     if(this.order.items.length > 0){
       this.orderService.confirmOrder()
@@ -45,6 +49,33 @@ export class CheckoutComponent implements OnInit {
         });
     }else{
       this.error = "Invalid order";
+    }
+  }
+
+  private saveDeliveryDetails(){
+    if(this.canSaveDeliveryDetails == false){
+      localStorage.setItem("delivery_details", null);
+      return;
+    }
+    try{
+      let value = JSON.stringify(this.order.delivery_details);
+      localStorage.setItem("delivery_details", value);
+    }catch(e){
+      console.log(e);
+    }
+  }
+
+  private restoreDeliveryDetails(){
+    if(this.canSaveDeliveryDetails == false){
+      return;
+    }
+    try{
+      let value = JSON.parse(localStorage.getItem("delivery_details"));
+      if(value && value.name){
+        this.order.delivery_details = DeliveryDetails.of(value);
+      }
+    }catch(e){
+      console.log(e);
     }
   }
 

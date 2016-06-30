@@ -43,12 +43,12 @@
     <h4>Feedback</h4>
     <p>
       Your feedback is valuable to us. We always like to serve you better. If you have any suggestions
-      or compliants kindly write to us on <a href="mailto:foodbeazt@gmail.com">foodbeazt@gmail.com</a> or call us at 737300000.
+      or compliants kindly write to us on <a href="mailto:foodbeazt@gmail.com">foodbeazt@gmail.com</a> or call us at +91 7373730484.
     </p>
   </div>
   <div class="medium-12 columns">
     <h4>Frequently Asked Questions</h4>
-    <ul>
+    <ul class="faq">
       <li class="question">Do you operate outside Puducherry?</li>
       <li class="answer">NO. But we like to expand our services beyond Puducherry.
         Kindly contact us for more information.
@@ -56,7 +56,7 @@
       <li class="question">Is Foodbeazt a restaurant which makes food and does online delivery?</li>
       <li class="answer">NO, Foodbeazt is a delivery service. We have tie up's with various
         restaurants in Puducherry. You can view menus of individual restaurants and order
-        multiple food items from multiple restaurants.
+        multiple dishes from multiple restaurants.
       </li>
       <li class="question">Can I cancel the order?</li>
       <li class="answer">Yes you can cancel within 5 minutes of placing the order.</li>
@@ -73,10 +73,10 @@
       <li class="answer">We operate from 9AM to 11PM for 365 days (Unless we have a natural calamity).
         However food availablity is upto the individual restaurant's holiday schedule.
       </li>
-      <li class="question">One or many of the food items delivered has gone bad. What should I do?</li>
+      <li class="question">One or many of the dishes delivered has gone bad. What should I do?</li>
       <li class="answer">
-        We are committed to deliver your items from restaurants without any delay and ensure that they
-        are hot and fresh, so this does not happen. But in exceptional cases we will refund cash.
+        We are committed to deliver the dishes from restaurants without any delay and ensure that they
+        are hot and fresh, so this does not happen. But in exceptional cases we will refund your money.
       </li>
     </ul>
   </div>
@@ -109,6 +109,10 @@
     </label>
     <label for="landmark">Nearby landmark:
       <input type="text" maxlength="50" id="landmark" [(ngModel)]="order.delivery_details.landmark" />
+    </label>
+    <label for="speed_checkout">
+      <input type="checkbox" id="speed_checkout" [(ngModel)]="canSaveDeliveryDetails" />
+      Speed checkout next time.
     </label>
   </div>
   <div class="medium-6 columns">

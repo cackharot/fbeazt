@@ -16,55 +16,67 @@
       </nav>
     </div>
   </section>
-  <img src="/images/header2.jpg" alt="Pic" class="header_img show-for-small-only"/>
-  <section class="restaurants details">
-    <div class="row">
-      <div class="medium-12 small-12 columns end">
-        <h3 class="title dark">
-          {{restaurant.name}}
-          <span class="rating">
-            <label class="secondary label">{{restaurant.rating || 3.5}}</label>
-          </span>
-        </h3>
-        <div class="address"><i class="fi-marker"></i> {{restaurant.address}}</div>
-        <!-- <div class="telephone"><i class="fi-telephone"></i> {{restaurant.phone}}</div> -->
-        <div class="timings">
-          <span><i class="fi-clock"></i> {{restaurant.open_time}} AM to {{restaurant.close_time}} PM</span>
+  <div class="row">
+    <div class="medium-12 columns">
+      <section class="restaurants details">
+        <div class="row">
+          <div class="medium-6 small-12 columns end">
+            <img src="/images/header2.jpg" alt="Pic" class="header_img show-for-small-only"/>
+            <div class="content">
+              <h3 class="title dark">
+                {{restaurant.name}}
+                <span class="rating">
+                  <label class="secondary label">{{restaurant.rating || 3.5}}</label>
+                </span>
+              </h3>
+              <div class="address"><i class="fi-marker"></i> {{restaurant.address}}</div>
+              <!-- <div class="telephone"><i class="fi-telephone"></i> {{restaurant.phone}}</div> -->
+              <div class="timings">
+                <span><i class="fi-clock"></i> {{restaurant.open_time}} AM to {{restaurant.close_time}} PM</span>
+              </div>
+              <div class="holidays" *ngIf="restaurant.holidays.length>0">
+                Holidays: {{restaurant.holidays.join(', ')}}
+              </div>
+              <ul class="cuisines">
+                <li *ngFor="let cus of restaurant.cuisines">
+                  <span class="cusines">{{cus}}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="medium-6 columns show-for-medium">
+            <img src="/images/header2.jpg" alt="Pic" class="header_img"/>
+          </div>
         </div>
-        <div class="holidays" *ngIf="restaurant.holidays.length>0">
-          Holidays: {{restaurant.holidays.join(', ')}}
+      </section>
+      <br/>
+      <section class="products">
+        <div class="row filter__container">
+          <div class="medium-3 columns">
+            Only Veg:
+            <div class="switch tiny">
+              <input class="switch-input" id="onlyVeg" type="checkbox"
+              (change)="filter()" [(ngModel)]="onlyVeg" name="onlyVeg">
+              <label class="switch-paddle" for="onlyVeg">
+                <span class="show-for-sr">Only Veg:</span>
+              </label>
+            </div>
+          </div>
         </div>
-        <ul class="cuisines">
-          <li *ngFor="let cus of restaurant.cuisines">
-            <span class="cusines">{{cus}}</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-  <br/>
-  <section class="products">
-    <div class="row filter__container">
-      <div class="medium-3 columns">
-        Only Veg:
-        <div class="switch tiny">
-          <input class="switch-input" id="onlyVeg" type="checkbox"
-          (change)="filter()" [(ngModel)]="onlyVeg" name="onlyVeg">
-          <label class="switch-paddle" for="onlyVeg">
-            <span class="show-for-sr">Only Veg:</span>
-          </label>
+        <div class="row">
+          <div class="medium-12 small-12 columns end">
+            <tabs>
+              <tab tabTitle="{{category.name}}" *ngFor="let category of categories">
+                <product-list [products]="category.products"
+                  (selectedProduct)="addToCart($event)"></product-list>
+              </tab>
+            </tabs>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
-    <div class="row">
-      <div class="medium-12 small-12 columns end">
-        <tabs>
-          <tab tabTitle="{{category.name}}" *ngFor="let category of categories">
-            <product-list [products]="category.products"
-              (selectedProduct)="addToCart($event)"></product-list>
-          </tab>
-        </tabs>
-      </div>
-    </div>
-  </section>
+    <!--<div class="medium-4 columns end">
+      <h3>Popular Restaurants</h3>
+    </div>-->
+  </div>
 </div>
