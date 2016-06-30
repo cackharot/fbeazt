@@ -289,6 +289,9 @@ img.res_logo {
 .menu li a {
   padding: 0; }
 
+.order_table td {
+  background: #fff; }
+
 .order_table .price, .order_table .quantity, .order_table .total {
   text-align: right; }
 
@@ -354,8 +357,9 @@ label > .inline-label {
   position: relative;
   -webkit-box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
   -moz-box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
-  box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
-  border-color: #62b580; }
+  box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6); }
+  .checkout__page .callout.success {
+    border-color: #62b580; }
 
 .checkout__page h2, .checkout__page h4 {
   font-weight: 600; }

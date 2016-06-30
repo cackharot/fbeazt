@@ -19,6 +19,7 @@ var Order = (function () {
         this.delivery_details = new DeliveryDetails();
         this.items = [];
         this.status = OrderStatus.NEW;
+        this.delivery_charges = 40;
         Object.assign(this, data);
         this._id = base_1.ObjectId.of(this._id);
         this.items = this.items.map(function (x) { return LineItem.of(x); });
@@ -58,7 +59,13 @@ var Order = (function () {
     Order.prototype.getItems = function (store_id) {
         return this.items.filter(function (x) { return _.isEqual(x.store_id, store_id); });
     };
+    Order.prototype.getDeliveryCharges = function () {
+        return this.delivery_charges;
+    };
     Order.prototype.getTotalAmount = function () {
+        return this.getDeliveryCharges() + this.getSubTotal();
+    };
+    Order.prototype.getSubTotal = function () {
         return this.items.reduce(function (n, x) { return n + x.getTotalPrice(); }, 0);
     };
     Order.prototype.getTotalQuantity = function () {

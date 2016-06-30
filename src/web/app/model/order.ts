@@ -20,6 +20,7 @@ export class Order {
   updated_at: Date;
   items: LineItem[] = [];
   status: OrderStatus = OrderStatus.NEW;
+  delivery_charges:number = 40;
 
   constructor(data={}){
     Object.assign(this, data);
@@ -68,7 +69,15 @@ export class Order {
     return this.items.filter(x=> _.isEqual(x.store_id,store_id));
   }
 
+  getDeliveryCharges(){
+    return this.delivery_charges;
+  }
+
   getTotalAmount(){
+    return this.getDeliveryCharges() + this.getSubTotal();
+  }
+
+  getSubTotal(){
     return this.items.reduce((n, x) => n + x.getTotalPrice(), 0);
   }
 
