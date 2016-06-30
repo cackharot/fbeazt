@@ -98,6 +98,12 @@ header, #main {
     .top-bar .top-bar-right ul li {
       padding-right: 1em; }
 
+.restaurants.details .row {
+  margin: 0 auto;
+  padding: 1em; }
+  .restaurants.details .row .columns:first-child {
+    padding-right: 0rem; }
+
 .restaurants .row {
   background-color: #fff;
   -webkit-border-radius: 3px;
@@ -146,7 +152,6 @@ span.rating {
       margin: 0; }
 
 img.header_img {
-  margin-bottom: 10px;
   width: 100%; }
 
 img.res_logo {

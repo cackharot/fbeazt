@@ -16,28 +16,30 @@
       </nav>
     </div>
   </section>
-  <!--<img src="/images/header2.jpg" alt="Pic" class="header_img"/>-->
-  <section class="row">
-    <div class="medium-12 small-12 columns end">
-      <h3 class="title dark">
-        {{restaurant.name}}
-        <span class="rating">
-          <label class="secondary label">{{restaurant.rating || 3.5}}</label>
-        </span>
-      </h3>
-      <div class="address"><i class="fi-marker"></i> {{restaurant.address}}</div>
-      <!-- <div class="telephone"><i class="fi-telephone"></i> {{restaurant.phone}}</div> -->
-      <div class="timings">
-        <span><i class="fi-clock"></i> {{restaurant.open_time}} AM to {{restaurant.close_time}} PM</span>
+  <img src="/images/header2.jpg" alt="Pic" class="header_img show-for-small-only"/>
+  <section class="restaurants details">
+    <div class="row">
+      <div class="medium-12 small-12 columns end">
+        <h3 class="title dark">
+          {{restaurant.name}}
+          <span class="rating">
+            <label class="secondary label">{{restaurant.rating || 3.5}}</label>
+          </span>
+        </h3>
+        <div class="address"><i class="fi-marker"></i> {{restaurant.address}}</div>
+        <!-- <div class="telephone"><i class="fi-telephone"></i> {{restaurant.phone}}</div> -->
+        <div class="timings">
+          <span><i class="fi-clock"></i> {{restaurant.open_time}} AM to {{restaurant.close_time}} PM</span>
+        </div>
+        <div class="holidays" *ngIf="restaurant.holidays.length>0">
+          Holidays: {{restaurant.holidays.join(', ')}}
+        </div>
+        <ul class="cuisines">
+          <li *ngFor="let cus of restaurant.cuisines">
+            <span class="cusines">{{cus}}</span>
+          </li>
+        </ul>
       </div>
-      <div class="holidays" *ngIf="restaurant.holidays.length>0">
-         Holidays: {{restaurant.holidays.join(', ')}}
-      </div>
-      <ul class="cuisines">
-        <li *ngFor="let cus of restaurant.cuisines">
-          <span class="cusines">{{cus}}</span>
-        </li>
-      </ul>
     </div>
   </section>
   <br/>
