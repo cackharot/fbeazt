@@ -29,7 +29,7 @@ header, #main {
   .light.green {
     color: #9c0; }
   .light.red {
-    color: darkred; }
+    color: #963f3f; }
 
 .dark {
   color: #46535e; }
@@ -234,17 +234,22 @@ img.res_logo {
   -moz-border-radius: 3px;
   border-radius: 3px;
   margin: 0; }
-
-.button.expand {
-  width: 100%; }
-
-.button.green {
-  background: #9c0;
-  border: 1px solid #9c0;
-  color: #fff; }
-  .button.green:hover {
-    background: #9b0;
-    border: 1px solid #9b0; }
+  .button.expand {
+    width: 100%; }
+  .button.green {
+    background: #9c0;
+    border: 1px solid #9c0;
+    color: #fff; }
+    .button.green:hover {
+      background: #9b0;
+      border: 1px solid #9b0; }
+  .button.red {
+    background: #963f3f;
+    border: 1px solid #963f3f;
+    color: #fff; }
+    .button.red:hover {
+      background: #7b3434;
+      border: 1px solid #7b3434; }
 
 .tabs {
   -webkit-box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5);

@@ -43,7 +43,7 @@ header, #main{
     color: #9c0;
   }
   &.red{
-    color: darkred;
+    color: #963f3f;
   }
 }
 
@@ -330,19 +330,27 @@ img.res_logo{
   -moz-border-radius: 3px;
   border-radius: 3px;
   margin: 0;
-}
+  &.expand{
+    width: 100%;
+  }
 
-.button.expand{
-  width: 100%;
-}
-
-.button.green {
-  background: #9c0;
-  border: 1px solid #9c0;
-  color: #fff;
-  &:hover{
-    background: #9b0;
-    border: 1px solid #9b0;
+  &.green {
+    background: #9c0;
+    border: 1px solid #9c0;
+    color: #fff;
+    &:hover{
+      background: #9b0;
+      border: 1px solid #9b0;
+    }
+  }
+  &.red {
+    background: #963f3f;
+    border: 1px solid #963f3f;
+    color: #fff;
+    &:hover{
+      background: #7b3434;
+      border: 1px solid #7b3434;
+    }
   }
 }
 

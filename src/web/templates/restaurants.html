@@ -3,30 +3,42 @@
   <p>You might have misspelled or try again!</p>
 </div>
 <div class="restaurants" *ngIf="!isEmpty()">
-  <div class="row" *ngFor="let item of restaurants"
-  [class.selected]="item === selectedRestaurant">
+  <div class="row" *ngFor="let restaurant of restaurants"
+  [class.selected]="restaurant === selectedRestaurant">
     <div class="small-3 medium-3 columns">
       <img src="/images/placeholder.png" alt="Comming soon..." class="res_logo"/>
     </div>
     <div class="small-9 medium-9 columns light content end">
       <h3 class="title">
-        <a class="dark" (click)="onSelect(item)">{{item.name}}</a>
+        <a class="dark" (click)="onSelect(restaurant)">{{restaurant.name}}</a>
         <span class="rating">
-          <label class="secondary label">{{item.rating || 3.5}}</label>
+          <label class="secondary label">{{restaurant.rating || 3.5}}</label>
         </span>
       </h3>
-      <div class="address"><i class="fi-marker"></i> {{item.address}}</div>
-      <!-- <div class="telephone"><i class="fi-telephone"></i> {{item.phone}}</div> -->
+      <div class="address"><i class="fi-marker"></i> {{restaurant.address}}</div>
+      <!-- <div class="telephone"><i class="fi-telephone"></i> {{restaurant.phone}}</div> -->
       <div class="timings">
-        <span><i class="fi-clock"></i> {{item.open_time}} AM to {{item.close_time}} PM</span>
+        <span><i class="fi-clock"></i>
+          {{restaurant.open_time}} AM to {{restaurant.close_time}} PM
+          <span class="light green" *ngIf="!restaurant.isHoliday() && restaurant.isOpen()">(Open)</span>
+          <span class="light red" *ngIf="!restaurant.isHoliday() && restaurant.isClosed()">
+            (Closed?)
+          </span>
+          <span class="light red" *ngIf="restaurant.isHoliday()">(Holiday)</span>
+        </span>
       </div>
       <ul class="cuisines">
-        <li *ngFor="let cus of item.cuisines">
+        <li *ngFor="let cus of restaurant.cuisines">
           <span class="cusines">{{cus}}</span>
         </li>
       </ul>
       <div class="show-for-medium">
-        <button type="button" class="button green" (click)="onSelect(item)">View Menu</button>
+        <button type="button" class="button"
+          (click)="onSelect(restaurant)"
+          [class.green]="!restaurant.isHoliday() && restaurant.isOpen()"
+          [class.red]="restaurant.isClosed() || restaurant.isHoliday()">
+          View Menu
+        </button>
       </div>
     </div>
   </div>

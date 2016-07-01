@@ -33,6 +33,9 @@ var Restaurant = (function () {
         var weekday = hs[moment().weekday() - 1];
         return this.holidays.some(function (x) { return x.toLocaleLowerCase().localeCompare(weekday) == 0; });
     };
+    Restaurant.prototype.isAvailable = function () {
+        return !this.isHoliday() && this.isOpen();
+    };
     Restaurant.of = function (data) {
         if (data == null || data.constructor.name == Restaurant.name) {
             return data;

@@ -50,6 +50,10 @@ export class Restaurant {
     return this.holidays.some(x=> x.toLocaleLowerCase().localeCompare(weekday) == 0);
   }
 
+  isAvailable(){
+    return !this.isHoliday() && this.isOpen();
+  }
+
   static of(data){
     if(data == null || data.constructor.name == Restaurant.name){
       return data;
