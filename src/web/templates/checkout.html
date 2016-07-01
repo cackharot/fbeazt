@@ -119,50 +119,50 @@
     <div class="row">
       <div class="medium-12 columns">
         <h2><i class="fi-shopping-cart"></i> Order details</h2>
-        <div class="review_restaurant" *ngFor="let store of order.getStores()">
-          <h4>{{store.name}}</h4>
-          <table class="table order_table">
-            <tbody>
-              <tr *ngFor="let item of order.getItems(store._id)">
-                <td>
-                  <span class="product_name">{{item.name}}</span>
-                </td>
-                <td class="quantity">
-                  {{item.price}}x{{item.quantity}}
-                </td>
-                <td class="price">
-                  {{item.getTotalPrice()}}
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="2">
-                  Subtotal:
-                </td>
-                <td class="total">
-                  {{order.getSubTotal()}}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  Delivery Charges:
-                </td>
-                <td class="total">
-                  {{order.getDeliveryCharges()}}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  Total:
-                </td>
-                <td class="total">
-                  Rs. {{order.getTotalAmount()}}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+        <table class="table order_table">
+          <tbody>
+            <tr *ngFor="let item of order.getItems()">
+              <td>
+                <div class="product_name">
+                  {{item.name}} <br/>
+                  <span class="store_name light"><i>from</i> {{item.store.name}}</span>
+                </div>
+              </td>
+              <td class="quantity">
+                <span class="price light">{{item.price}}x</span>{{item.quantity}}
+              </td>
+              <td class="price">
+                {{item.getTotalPrice()}}
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2">
+                Subtotal:
+              </td>
+              <td class="total">
+                {{order.getSubTotal()}}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                Delivery Charges:
+              </td>
+              <td class="total">
+                {{order.getDeliveryCharges()}}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                Total:
+              </td>
+              <td class="total">
+                Rs. {{order.getTotalAmount()}}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
     </div>
     <div class="row">

@@ -57,6 +57,10 @@ var Order = (function () {
         return distinct;
     };
     Order.prototype.getItems = function (store_id) {
+        if (store_id === void 0) { store_id = null; }
+        if (store_id == null) {
+            return this.items;
+        }
         return this.items.filter(function (x) { return _.isEqual(x.store_id, store_id); });
     };
     Order.prototype.getDeliveryCharges = function () {

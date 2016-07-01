@@ -304,8 +304,14 @@ img.res_logo {
 .order_table .price, .order_table .quantity, .order_table .total {
   text-align: right; }
 
+.order_table .quantity .price {
+  font-size: 12px; }
+
 .order_table .total {
   font-weight: bold; }
+
+.order_table .store_name {
+  font-size: 12px; }
 
 .inline-label {
   display: -webkit-flex;

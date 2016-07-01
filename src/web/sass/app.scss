@@ -426,8 +426,16 @@ img.res_logo{
   .price, .quantity, .total {
     text-align: right;
   }
+  .quantity{
+    .price{
+      font-size: 12px;
+    }
+  }
   .total{
     font-weight: bold;
+  }
+  .store_name{
+    font-size: 12px;
   }
 }
 

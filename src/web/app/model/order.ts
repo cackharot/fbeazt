@@ -65,7 +65,10 @@ export class Order {
     return distinct;
   }
 
-  getItems(store_id){
+  getItems(store_id=null){
+    if(store_id==null){
+      return this.items;
+    }
     return this.items.filter(x=> _.isEqual(x.store_id,store_id));
   }
 
