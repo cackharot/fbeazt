@@ -32,7 +32,14 @@
               <div class="address"><i class="fi-marker"></i> {{restaurant.address}}</div>
               <!-- <div class="telephone"><i class="fi-telephone"></i> {{restaurant.phone}}</div> -->
               <div class="timings">
-                <span><i class="fi-clock"></i> {{restaurant.open_time}} AM to {{restaurant.close_time}} PM</span>
+                <span><i class="fi-clock"></i>
+                  {{restaurant.open_time}} AM to {{restaurant.close_time}} PM
+                  <span class="light green" *ngIf="!restaurant.isHoliday() && restaurant.isOpen()">(Open)</span>
+                  <span class="light red" *ngIf="!restaurant.isHoliday() && restaurant.isClosed()">
+                    (Closed?)
+                  </span>
+                  <span class="light red" *ngIf="restaurant.isHoliday()">(Holiday)</span>
+                </span>
               </div>
               <div class="holidays" *ngIf="restaurant.holidays.length>0">
                 Holidays: {{restaurant.holidays.join(', ')}}

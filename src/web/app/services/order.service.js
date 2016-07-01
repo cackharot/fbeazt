@@ -37,6 +37,10 @@ var OrderService = (function () {
         this.itemAddedSource.next(item);
     };
     OrderService.prototype.addItem = function (item) {
+        if (!item.isAvailable()) {
+            console.log("Attempt to add not available item" + item);
+            return;
+        }
         var lineItem = new order_1.LineItem({
             product_id: item._id,
             name: item.name,

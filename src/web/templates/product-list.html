@@ -22,8 +22,9 @@
     </span>
   </div>
   <div class="card-action align-center">
-    <a (click)="select(product,$event)" class="button add-to-cart">
+    <button type="button" (click)="select(product,$event)"
+     [disabled]="!product.isAvailable()" class="button add-to-cart">
       <i class="fi-plus"></i> Add
-    </a>
+    </button>
   </div>
 </div>

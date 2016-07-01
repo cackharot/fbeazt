@@ -28,12 +28,16 @@ export class OrderService {
     }
   }
 
-  addLineItem(item: LineItem) {
+  private addLineItem(item: LineItem) {
     this.currentOrder.addItem(item);
     this.itemAddedSource.next(item);
   }
 
   addItem(item: Product){
+    if(!item.isAvailable()){
+      console.log("Attempt to add not available item" + item);
+      return;
+    }
     let lineItem = new LineItem({
       product_id: item._id,
       name: item.name,

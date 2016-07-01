@@ -37,6 +37,14 @@ export class Product {
     return !this.isVeg();
   }
 
+  isAvailable(){
+    if(this.status == false) return false;
+    if(this.store.isHoliday() || this.store.isClosed()){
+      return false;
+    }
+    return true;
+  }
+
   static of(data){
     if(data == null || data.constructor.name == 'Product'){
       return data;

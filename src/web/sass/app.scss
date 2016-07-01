@@ -39,6 +39,12 @@ header, #main{
 
 .light{
   color: $light_color;
+  &.green{
+    color: #9c0;
+  }
+  &.red{
+    color: darkred;
+  }
 }
 
 .dark{

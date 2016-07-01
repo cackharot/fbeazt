@@ -26,6 +26,10 @@ header, #main {
 
 .light {
   color: #9ca3a8; }
+  .light.green {
+    color: #9c0; }
+  .light.red {
+    color: darkred; }
 
 .dark {
   color: #46535e; }

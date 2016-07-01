@@ -19,6 +19,14 @@ var Product = (function () {
     Product.prototype.isNonVeg = function () {
         return !this.isVeg();
     };
+    Product.prototype.isAvailable = function () {
+        if (this.status == false)
+            return false;
+        if (this.store.isHoliday() || this.store.isClosed()) {
+            return false;
+        }
+        return true;
+    };
     Product.of = function (data) {
         if (data == null || data.constructor.name == 'Product') {
             return data;

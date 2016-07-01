@@ -1,4 +1,5 @@
 import { ObjectId, Date } from "./base";
+import * as moment from "moment";
 
 export class Restaurant {
   _id: ObjectId = new ObjectId();
@@ -7,7 +8,8 @@ export class Restaurant {
   phone: string;
   open_time: number;
   close_time: number;
-  holidays:string[] = [];
+  holidays:string[] = ['Friday'];
+  is_closed:boolean = false;
   tenant_id: ObjectId = new ObjectId();
   created_at: Date;
   food_type: string[];
@@ -30,6 +32,22 @@ export class Restaurant {
 
   getCreatedAt(){
     return this.created_at.$date;
+  }
+
+  isOpen(){
+    let hr = moment().hour();
+    let min = moment().minute();
+    return !this.is_closed && (hr >= this.open_time && hr <= (this.close_time+12));
+  }
+
+  isClosed(){
+    return !this.isOpen();
+  }
+
+  isHoliday(){
+    let hs = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+    let weekday = hs[moment().weekday()-1];
+    return this.holidays.some(x=> x.toLocaleLowerCase().localeCompare(weekday) == 0);
   }
 
   static of(data){

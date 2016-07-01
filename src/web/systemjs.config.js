@@ -7,6 +7,7 @@
     'angular2-localstorage':      'node_modules/angular2-localstorage',
     'rxjs':                       'node_modules/rxjs',
     'lodash':                     'node_modules/lodash/lodash.js',
+    'moment':                     'node_modules/moment/moment.js',
   };
   // packages tells the System loader how to load when no filename and/or no extension
   var packages = {

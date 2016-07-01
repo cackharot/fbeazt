@@ -16,6 +16,7 @@ from service.StoreService import StoreService
 cuisines = ['north indian','south indian','chineese','italian','english','american']
 category = ['starter', 'maincourse', 'deserts', 'specials']
 food_types = ['veg', 'non-veg']
+weekdays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 
 def create_sample_data(db, tenant_id):
   store_service = StoreService(db)
@@ -25,22 +26,23 @@ def create_sample_data(db, tenant_id):
     print("Sample seed data already created!!")
     return
 
-  for i in range(0,50):
+  for i in range(1,50):
     store_name = "My Store %d" % (i)
     store = {'tenant_id': tenant_id,
             'name': store_name,
             'address': 'sample address',
             'phone': random.randint(600000,6999999),
             'food_type': food_types,
-            'holidays': ['Sunday'],
+            'holidays': [weekdays[i%len(weekdays)]],
             'is_closed': False,
             'rating': 0,
             'cuisines': [cuisines[i % len(cuisines)], cuisines[i % (len(cuisines)-1)]],
             'open_time': random.randint(7,11),
-            'close_time': random.randint(9,12),
+            'close_time': random.randint(8,12),
             'deliver_time': random.randint(20,60)}
     store_service.save(store)
-    create_items(db, tenant_id, store['_id'])
+    item_count = create_items(db, tenant_id, store['_id'])
+    print("Created %s with %d items" %(store_name, item_count))
 
 def create_items(db, tenant_id, store_id):
   product_service = ProductService(db)
@@ -62,12 +64,14 @@ def create_items(db, tenant_id, store_id):
             'category': category[i % len(category)],
             'open_time': 8,
             'close_time': 11,
+            'status': False,
             'deliver_time': 45,
             'buy_price': price - 10.0,
             'sell_price': price,
             'discount': 0.0}
     product_service.create(item)
-  print("Created %d products" % (item_count))
+  # print("Created %d products" % (item_count))
+  return item_count
 
 def setup():
     client = MongoClient()
