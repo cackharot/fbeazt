@@ -5,7 +5,7 @@ var ObjectId = (function () {
         Object.assign(this, data);
     }
     ObjectId.of = function (data) {
-        if (data && data.constructor.name != 'ObjectId') {
+        if (data && data.constructor.name != ObjectId.name) {
             if (data.$oid == undefined) {
                 return new ObjectId();
             }

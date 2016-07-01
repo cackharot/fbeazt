@@ -28,7 +28,7 @@ var Product = (function () {
         return true;
     };
     Product.of = function (data) {
-        if (data == null || data.constructor.name == 'Product') {
+        if (data == null || data.constructor.name == Product.name) {
             return data;
         }
         return new Product(data);

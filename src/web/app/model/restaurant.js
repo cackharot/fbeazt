@@ -5,7 +5,7 @@ var Restaurant = (function () {
     function Restaurant(data) {
         if (data === void 0) { data = {}; }
         this._id = new base_1.ObjectId();
-        this.holidays = ['Friday'];
+        this.holidays = [];
         this.is_closed = false;
         this.tenant_id = new base_1.ObjectId();
         Object.assign(this, data);
@@ -34,7 +34,7 @@ var Restaurant = (function () {
         return this.holidays.some(function (x) { return x.toLocaleLowerCase().localeCompare(weekday) == 0; });
     };
     Restaurant.of = function (data) {
-        if (data == null || data.constructor.name == 'Restaurant') {
+        if (data == null || data.constructor.name == Restaurant.name) {
             return data;
         }
         return new Restaurant(data);

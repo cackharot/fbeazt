@@ -88,7 +88,7 @@ var LineItem = (function () {
         return this.price * this.quantity;
     };
     LineItem.of = function (data) {
-        if (data == null || data.constructor.name == 'LineItem') {
+        if (data == null || data.constructor.name == LineItem.name) {
             return data;
         }
         return new LineItem(data);
@@ -104,7 +104,7 @@ var DeliveryDetails = (function () {
         this.customer_id = base_1.ObjectId.of(this.customer_id);
     }
     DeliveryDetails.of = function (data) {
-        if (data == null || data.constructor.name == 'DeliveryDetails') {
+        if (data == null || data.constructor.name == DeliveryDetails.name) {
             return data;
         }
         return new DeliveryDetails(data);

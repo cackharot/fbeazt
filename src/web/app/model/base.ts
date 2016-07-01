@@ -6,7 +6,7 @@ export class ObjectId {
   }
 
   static of(data){
-    if(data && data.constructor.name != 'ObjectId'){
+    if(data && data.constructor.name != ObjectId.name){
       if(data.$oid == undefined){
         return new ObjectId();
       }

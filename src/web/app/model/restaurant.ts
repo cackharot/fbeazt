@@ -8,7 +8,7 @@ export class Restaurant {
   phone: string;
   open_time: number;
   close_time: number;
-  holidays:string[] = ['Friday'];
+  holidays:string[] = [];
   is_closed:boolean = false;
   tenant_id: ObjectId = new ObjectId();
   created_at: Date;
@@ -51,7 +51,7 @@ export class Restaurant {
   }
 
   static of(data){
-    if(data == null || data.constructor.name == 'Restaurant'){
+    if(data == null || data.constructor.name == Restaurant.name){
       return data;
     }
     return new Restaurant(data);

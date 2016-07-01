@@ -46,7 +46,7 @@ export class Product {
   }
 
   static of(data){
-    if(data == null || data.constructor.name == 'Product'){
+    if(data == null || data.constructor.name == Product.name){
       return data;
     }
     return new Product(data);

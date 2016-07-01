@@ -110,7 +110,7 @@ export class LineItem {
   }
 
   static of(data){
-    if(data == null || data.constructor.name == 'LineItem'){
+    if(data == null || data.constructor.name == LineItem.name){
       return data;
     }
     return new LineItem(data);
@@ -136,7 +136,7 @@ export class DeliveryDetails {
   }
 
   static of(data){
-    if(data == null || data.constructor.name == 'DeliveryDetails'){
+    if(data == null || data.constructor.name == DeliveryDetails.name){
       return data;
     }
     return new DeliveryDetails(data);
