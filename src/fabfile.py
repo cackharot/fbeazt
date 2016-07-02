@@ -5,7 +5,8 @@ env.user = 'ubuntu'
 env.key_filename = 'C:\\Users\\cackharot\\foodbeast_kp.pem'
 
 # the servers where the commands are executed
-env.hosts = ['foodbeazt.in']
+# env.hosts = ['foodbeazt.in']
+env.hosts = ['192.168.33.10']
 
 def pack():
     # create a new source distribution as tarball

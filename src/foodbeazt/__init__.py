@@ -1,4 +1,5 @@
-import os
+import os, sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__))))
 from urllib.parse import unquote
 from uuid import uuid4
 from flask import Flask, session, render_template, make_response, request, redirect, g, current_app, flash
@@ -7,17 +8,17 @@ from flask_mail import Mail
 from flask_pymongo import PyMongo
 from flask_restful import Api
 from flask_babel import Babel
-from pymongo import Connection
-from bson import ObjectId, json_util
+from flask_pymongo import MongoClient
 from werkzeug.utils import secure_filename
 from service.ProductService import ProductService
 from service.TenantService import TenantService
 from service.UserService import UserService
-import json
-from foodbeazt.libs.flask_googlelogin import GoogleLogin
+from libs.flask_googlelogin import GoogleLogin
 from flask_principal import Principal, Permission, Identity, AnonymousIdentity
 from flask_principal import identity_loaded, identity_changed, RoleNeed, UserNeed
 from flask_cors import CORS, cross_origin
+from bson import ObjectId, json_util
+import json
 
 app = Flask(__name__, instance_relative_config=False)
 app.config.from_pyfile('foodbeazt.cfg', silent=False)
