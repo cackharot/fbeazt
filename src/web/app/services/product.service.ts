@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Headers, URLSearchParams, Http } from '@angular/http';
 
 import { Product } from '../model/product';
+import { AppConfig } from '../AppConfig';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -29,8 +30,8 @@ export class ProductSearchModel{
 
 @Injectable()
 export class ProductService {
-  private productsUrl = 'http://localhost:4000/api/products';
-  private productUrl = 'http://localhost:4000/api/product';
+  private productsUrl = AppConfig.PRODUCTS_URL;
+  private productUrl = AppConfig.PRODUCT_URL;
 
   constructor(private http: Http) { }
 

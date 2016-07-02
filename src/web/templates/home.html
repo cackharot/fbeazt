@@ -1,9 +1,7 @@
-<!--<section class="row user__location">
-  <div class="medium-12 columns">
-    <input type="text" placeholder="Enter your location..."/>
-  </div>
-</section>-->
-<!--<img src="/images/header1.jpg" class="header_img"/>-->
+<div class="callout alert" *ngIf="errorMsg != null">
+  <h4>Oops! Something went wrong.</h4>
+  {{errorMsg}}
+</div>
 <section class="row search__container">
   <div class="medium-12 small-12 columns end">
     <form #searchForm="ngForm">

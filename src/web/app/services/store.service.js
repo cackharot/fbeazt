@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
 var restaurant_1 = require('../model/restaurant');
+var AppConfig_1 = require('../AppConfig');
 require('rxjs/add/operator/toPromise');
 var StoreSearchModel = (function () {
     function StoreSearchModel(searchText, onlyVeg, userLocation, userPincode, pageNo, pageSize) {
@@ -39,8 +40,8 @@ exports.StoreSearchModel = StoreSearchModel;
 var StoreService = (function () {
     function StoreService(http) {
         this.http = http;
-        this.storesUrl = 'http://localhost:4000/api/stores'; // URL to web api
-        this.storeUrl = 'http://localhost:4000/api/store'; // URL to web api
+        this.storesUrl = AppConfig_1.AppConfig.STORES_URL; // URL to web api
+        this.storeUrl = AppConfig_1.AppConfig.STORE_URL; // URL to web api
     }
     StoreService.prototype.search = function (data) {
         var params = new http_1.URLSearchParams();

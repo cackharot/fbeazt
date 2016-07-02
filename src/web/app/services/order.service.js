@@ -13,6 +13,7 @@ var Subject_1 = require('rxjs/Subject');
 var http_1 = require('@angular/http');
 var WebStorage_1 = require("angular2-localstorage/WebStorage");
 var order_1 = require('../model/order');
+var AppConfig_1 = require('../AppConfig');
 var OrderService = (function () {
     function OrderService(http) {
         this.http = http;
@@ -22,7 +23,7 @@ var OrderService = (function () {
         this.deliveryUpdatedSource = new Subject_1.Subject();
         this.orderConfirmedSource = new Subject_1.Subject();
         this.orderResetedSource = new Subject_1.Subject();
-        this.orderUrl = 'http://localhost:4000/api/order';
+        this.orderUrl = AppConfig_1.AppConfig.ORDER_URL;
         // Observable string streams
         this.itemAdded$ = this.itemAddedSource.asObservable();
         this.deliveryUpdated$ = this.deliveryUpdatedSource.asObservable();

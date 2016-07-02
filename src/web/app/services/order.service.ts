@@ -5,6 +5,7 @@ import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
 
 import { Product } from '../model/product';
 import { Order, LineItem, DeliveryDetails } from '../model/order';
+import { AppConfig } from '../AppConfig';
 
 @Injectable()
 export class OrderService {
@@ -14,7 +15,7 @@ export class OrderService {
   private deliveryUpdatedSource = new Subject<DeliveryDetails>();
   private orderConfirmedSource = new Subject<Order>();
   private orderResetedSource = new Subject<Order>();
-  private orderUrl:string = 'http://localhost:4000/api/order';
+  private orderUrl:string = AppConfig.ORDER_URL;
 
   // Observable string streams
   itemAdded$ = this.itemAddedSource.asObservable();

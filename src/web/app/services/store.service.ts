@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { URLSearchParams, Headers, Http } from '@angular/http';
 
 import { Restaurant } from '../model/restaurant';
+import { AppConfig } from '../AppConfig';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -34,8 +35,8 @@ export class StoreSearchModel{
 
 @Injectable()
 export class StoreService {
-  private storesUrl = 'http://localhost:4000/api/stores';  // URL to web api
-  private storeUrl = 'http://localhost:4000/api/store';  // URL to web api
+  private storesUrl = AppConfig.STORES_URL;  // URL to web api
+  private storeUrl = AppConfig.STORE_URL;  // URL to web api
 
   constructor(private http: Http) { }
 

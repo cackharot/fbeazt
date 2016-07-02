@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
 var product_1 = require('../model/product');
+var AppConfig_1 = require('../AppConfig');
 require('rxjs/add/operator/toPromise');
 var ProductSearchModel = (function () {
     function ProductSearchModel(searchText, onlyVeg, category, pageNo, pageSize) {
@@ -36,8 +37,8 @@ exports.ProductSearchModel = ProductSearchModel;
 var ProductService = (function () {
     function ProductService(http) {
         this.http = http;
-        this.productsUrl = 'http://localhost:4000/api/products';
-        this.productUrl = 'http://localhost:4000/api/product';
+        this.productsUrl = AppConfig_1.AppConfig.PRODUCTS_URL;
+        this.productUrl = AppConfig_1.AppConfig.PRODUCT_URL;
     }
     ProductService.prototype.searchAll = function (data) {
         var params = new http_1.URLSearchParams();
