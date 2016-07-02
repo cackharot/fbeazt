@@ -9,7 +9,6 @@ import { AppConfig } from '../AppConfig';
 
 @Injectable()
 export class OrderService {
-  // Observable string sources
   @LocalStorage() private currentOrder: Order = new Order();
   private itemAddedSource = new Subject<LineItem>();
   private deliveryUpdatedSource = new Subject<DeliveryDetails>();
@@ -17,14 +16,13 @@ export class OrderService {
   private orderResetedSource = new Subject<Order>();
   private orderUrl:string = AppConfig.ORDER_URL;
 
-  // Observable string streams
   itemAdded$ = this.itemAddedSource.asObservable();
   deliveryUpdated$ = this.deliveryUpdatedSource.asObservable();
   orderConfirmed$ = this.orderConfirmedSource.asObservable();
   orderReseted$ = this.orderResetedSource.asObservable();
 
   constructor(private http: Http){
-    if(this.currentOrder.constructor.name != 'Order'){
+    if(this.currentOrder.constructor.name != Order.name){
       this.currentOrder = new Order(this.currentOrder);
     }
   }
@@ -62,15 +60,16 @@ export class OrderService {
     return this.currentOrder;
   }
 
+
   confirmOrder() {
-    this.currentOrder.confirm();
+    // console.log(this.currentOrder);
     return this.http.post(`${this.orderUrl}/-1`, this.currentOrder)
       .toPromise()
       .then(response => {
-        console.log(response.json());
+        // console.log(response.json());
         let updatedOrder = new Order(response.json().data);
         this.orderConfirmedSource.next(updatedOrder);
-        this.currentOrder = updatedOrder;
+        this.resetOrder();
         return updatedOrder;
       })
       .catch(this.handleError);

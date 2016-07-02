@@ -33,7 +33,7 @@ export class CartSummaryComponent implements OnInit {
 
   canShow(){
     let isCheckoutPage = this.router.isRouteActive(this.router.generate(['/Checkout']));
-    return !isCheckoutPage && !this.currentOrder.isConfirmed();
+    return !isCheckoutPage;
   }
 
   update(){

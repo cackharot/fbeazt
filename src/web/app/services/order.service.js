@@ -17,19 +17,17 @@ var AppConfig_1 = require('../AppConfig');
 var OrderService = (function () {
     function OrderService(http) {
         this.http = http;
-        // Observable string sources
         this.currentOrder = new order_1.Order();
         this.itemAddedSource = new Subject_1.Subject();
         this.deliveryUpdatedSource = new Subject_1.Subject();
         this.orderConfirmedSource = new Subject_1.Subject();
         this.orderResetedSource = new Subject_1.Subject();
         this.orderUrl = AppConfig_1.AppConfig.ORDER_URL;
-        // Observable string streams
         this.itemAdded$ = this.itemAddedSource.asObservable();
         this.deliveryUpdated$ = this.deliveryUpdatedSource.asObservable();
         this.orderConfirmed$ = this.orderConfirmedSource.asObservable();
         this.orderReseted$ = this.orderResetedSource.asObservable();
-        if (this.currentOrder.constructor.name != 'Order') {
+        if (this.currentOrder.constructor.name != order_1.Order.name) {
             this.currentOrder = new order_1.Order(this.currentOrder);
         }
     }
@@ -64,14 +62,14 @@ var OrderService = (function () {
     };
     OrderService.prototype.confirmOrder = function () {
         var _this = this;
-        this.currentOrder.confirm();
+        // console.log(this.currentOrder);
         return this.http.post(this.orderUrl + "/-1", this.currentOrder)
             .toPromise()
             .then(function (response) {
-            console.log(response.json());
+            // console.log(response.json());
             var updatedOrder = new order_1.Order(response.json().data);
             _this.orderConfirmedSource.next(updatedOrder);
-            _this.currentOrder = updatedOrder;
+            _this.resetOrder();
             return updatedOrder;
         })
             .catch(this.handleError);

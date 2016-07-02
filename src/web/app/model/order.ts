@@ -30,14 +30,6 @@ export class Order {
     this.delivery_details = DeliveryDetails.of(this.delivery_details);
   }
 
-  confirm(){
-    this.status = OrderStatus.CONFIRMED;
-  }
-
-  isConfirmed(){
-    return this.status == OrderStatus.CONFIRMED;
-  }
-
   addItem(item: LineItem){
     let cur_item = this.items.find(x=> _.isEqual(x.product_id,item.product_id));
     if(cur_item == undefined){

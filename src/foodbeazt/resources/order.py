@@ -43,6 +43,7 @@ class OrderApi(Resource):
 
   def post(self, _id):
     order = json_util.loads(request.data.decode('utf-8'))
+    # print("RECEIVED ORDER", order)
     tenant_id = g.user.tenant_id
     valid_order = {
       'tenant_id': ObjectId(tenant_id)
@@ -58,9 +59,8 @@ class OrderApi(Resource):
       return dict(status='error', type='validation', message=delivery_validation), 422
 
     valid_order['delivery_details'] = delivery_details
-        
+
     try:
-      _id = "134"
       _id = self.service.save(valid_order)
       # self.send_email(valid_order)
       return {"status": "success", "location": "/api/order/" + str(_id), "data": valid_order}
@@ -93,14 +93,14 @@ class OrderApi(Resource):
 
   def validate_line_items(self, order):
     validation_error = None
-    sanitized_items = [] 
+    sanitized_items = []
     if not 'items' in order or len(order['items']) == 0:
         validation_error="Atleast one item is required to process the order"
     else:
       count = 1
       for item in order['items']:
         if item['product_id'] is None:
-          validation_error = "Invalid order item"
+          validation_error = "Invalid product id"
           break
         else:
           if item['quantity'] is None or float(item['quantity']) <= 0.0:
@@ -109,8 +109,11 @@ class OrderApi(Resource):
           else:
             product = self.productService.get_by_id(item['product_id'])
             if product is None:
-              validation_error = "Invalid order item"
+              validation_error = "Product not found with id %s" % (item['product_id'])
               break
+            elif product.get('status', True) == False:
+                validation_error = "%s is currently unavailable" % (product['name'])
+                break
             else:
               sanitized_items.append({
                 'no': count,
@@ -125,7 +128,7 @@ class OrderApi(Resource):
               })
               count =  count + 1
       return validation_error, sanitized_items
-    
+
   def validate_delivery_details(self, order):
     delivery_details = order.get('delivery_details',None)
     if delivery_details is None:
@@ -138,7 +141,7 @@ class OrderApi(Resource):
       return "Invalid phone number", None
     if delivery_details.get('pincode',None) is None or len(delivery_details['pincode']) != 6:
       return "Invalid pincode", None
-    if delivery_details.get('address',None) is None or len(delivery_details['address']) < 6or len(delivery_details['address']) > 500:
+    if delivery_details.get('address',None) is None or len(delivery_details['address']) < 6 or len(delivery_details['address']) > 500:
       return "Invalid address", None
     return None, {
       'name': delivery_details['name'],

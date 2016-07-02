@@ -25,12 +25,6 @@ var Order = (function () {
         this.items = this.items.map(function (x) { return LineItem.of(x); });
         this.delivery_details = DeliveryDetails.of(this.delivery_details);
     }
-    Order.prototype.confirm = function () {
-        this.status = OrderStatus.CONFIRMED;
-    };
-    Order.prototype.isConfirmed = function () {
-        return this.status == OrderStatus.CONFIRMED;
-    };
     Order.prototype.addItem = function (item) {
         var cur_item = this.items.find(function (x) { return _.isEqual(x.product_id, item.product_id); });
         if (cur_item == undefined) {
