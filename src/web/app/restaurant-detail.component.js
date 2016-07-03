@@ -13,6 +13,7 @@ var router_deprecated_1 = require('@angular/router-deprecated');
 var tab_1 = require('./components/tab');
 var tabs_1 = require('./components/tabs');
 var productlist_1 = require('./components/productlist');
+var spinner_1 = require('./components/spinner');
 var store_service_1 = require('./services/store.service');
 var product_service_1 = require('./services/product.service');
 var order_service_1 = require('./services/order.service');
@@ -26,13 +27,16 @@ var RestaurantDetailComponent = (function () {
         this.orderService = orderService;
         this.routeParams = routeParams;
         this.onlyVeg = false;
+        this.isRequesting = false;
     }
     RestaurantDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
         var id = this.routeParams.get('id');
         this.storeId = id;
+        this.isRequesting = true;
         this.storeService.get(id).then(function (x) {
             _this.restaurant = x;
+            _this.isRequesting = false;
             _this.getProducts();
         }).catch(function (errorMsg) { return _this.errorMsg = errorMsg; });
     };
@@ -55,8 +59,12 @@ var RestaurantDetailComponent = (function () {
                 else {
                     category.addProduct(item);
                 }
+                _this.isRequesting = false;
             }
-        }).catch(function (errorMsg) { return _this.errorMsg = errorMsg; });
+        }).catch(function (errorMsg) {
+            _this.errorMsg = errorMsg;
+            _this.isRequesting = false;
+        });
     };
     RestaurantDetailComponent.prototype.addToCart = function (item) {
         this.orderService.addItem(item);
@@ -71,7 +79,7 @@ var RestaurantDetailComponent = (function () {
         core_1.Component({
             selector: 'restaurant-detail',
             templateUrl: 'templates/restaurant-detail.html',
-            directives: [tabs_1.Tabs, tab_1.Tab, router_deprecated_1.ROUTER_DIRECTIVES, productlist_1.ProductListComponent],
+            directives: [tabs_1.Tabs, tab_1.Tab, router_deprecated_1.ROUTER_DIRECTIVES, spinner_1.SpinnerComponent, productlist_1.ProductListComponent],
             pipes: [chunk_pipe_1.ChunkPipe],
         }), 
         __metadata('design:paramtypes', [router_deprecated_1.Router, store_service_1.StoreService, product_service_1.ProductService, order_service_1.OrderService, router_deprecated_1.RouteParams])

@@ -13,6 +13,8 @@ var tab_1 = require('./tab');
 var Tabs = (function () {
     function Tabs() {
     }
+    Tabs.prototype.ngOnInit = function () {
+    };
     // contentChildren are set
     Tabs.prototype.ngAfterContentInit = function () {
         var that = this;

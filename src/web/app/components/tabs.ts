@@ -1,4 +1,4 @@
-import {Component, ViewChild, ContentChild,
+import {Component, ViewChild, ContentChild, OnInit,
   ContentChildren, QueryList, Query, Directive, forwardRef,
   AfterViewInit, AfterContentInit} from '@angular/core';
 
@@ -17,8 +17,11 @@ import { Tab } from './tab';
     </div>
   `,
 })
-export class Tabs implements AfterContentInit {
+export class Tabs implements AfterContentInit, OnInit {
   @ContentChildren(forwardRef(() => Tab)) tabs: QueryList<Tab>;
+
+  ngOnInit(){
+  }
 
   // contentChildren are set
   ngAfterContentInit() {

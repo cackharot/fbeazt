@@ -4,6 +4,7 @@ import { Router, RouteParams, ROUTER_DIRECTIVES } from '@angular/router-deprecat
 import { Tab } from './components/tab';
 import { Tabs } from './components/tabs';
 import { ProductListComponent } from './components/productlist';
+import { SpinnerComponent } from './components/spinner';
 
 import { StoreService } from './services/store.service';
 import { ProductService } from './services/product.service';
@@ -18,7 +19,7 @@ import { ChunkPipe } from './pipes/chunk.pipe';
 @Component({
   selector: 'restaurant-detail',
   templateUrl: 'templates/restaurant-detail.html',
-  directives: [Tabs, Tab, ROUTER_DIRECTIVES, ProductListComponent],
+  directives: [Tabs, Tab, ROUTER_DIRECTIVES, SpinnerComponent, ProductListComponent],
   pipes: [ChunkPipe],
 })
 export class RestaurantDetailComponent implements OnInit {
@@ -27,6 +28,7 @@ export class RestaurantDetailComponent implements OnInit {
   categories: Category[];
   products: Product[];
   onlyVeg:boolean = false;
+  isRequesting:boolean = false;
   errorMsg: any;
 
   constructor(private router: Router,
@@ -38,8 +40,10 @@ export class RestaurantDetailComponent implements OnInit {
   ngOnInit() {
     let id = this.routeParams.get('id');
     this.storeId = id;
+    this.isRequesting = true;
     this.storeService.get(id).then(x=>{
       this.restaurant = x;
+      this.isRequesting = false;
       this.getProducts();
     }).catch(errorMsg=> this.errorMsg = errorMsg);
   }
@@ -61,8 +65,12 @@ export class RestaurantDetailComponent implements OnInit {
         }else{
           category.addProduct(item);
         }
+        this.isRequesting = false;
       }
-    }).catch(errorMsg=> this.errorMsg = errorMsg);
+    }).catch(errorMsg=> {
+      this.errorMsg = errorMsg;
+      this.isRequesting = false;
+    });
   }
 
   addToCart(item: Product){

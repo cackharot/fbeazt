@@ -11,6 +11,7 @@ import 'rxjs/add/operator/switchMap';
 
 import { Tab } from './tab';
 import { Tabs } from './tabs';
+import { SpinnerComponent } from './spinner';
 
 import { OrderService } from '../services/order.service';
 import { StoreSearchModel, StoreService } from '../services/store.service';
@@ -26,7 +27,8 @@ import { Order, DeliveryDetails, LineItem } from '../model/order';
 @Component({
   selector: 'home-page',
   templateUrl: 'templates/home.html',
-  directives: [FORM_DIRECTIVES, ROUTER_DIRECTIVES, RestaurantComponent, ProductListComponent],
+  directives: [FORM_DIRECTIVES, ROUTER_DIRECTIVES,
+    SpinnerComponent, RestaurantComponent, ProductListComponent],
 })
 export class HomeComponent implements OnInit {
   @SessionStorage() searchText:string = '';
@@ -35,7 +37,7 @@ export class HomeComponent implements OnInit {
   @SessionStorage() onlyVeg:boolean = false;
   @SessionStorage() activeTab:string = 'Restaurant';
   searchCtrl:Control = new Control('');
-  submitted:boolean = false;
+  isRequesting:boolean = false;
   restaurants:Restaurant[];
   products:Product[];
   errorMsg:string;
@@ -61,7 +63,7 @@ export class HomeComponent implements OnInit {
       || this.searchText.length < 3){
       return;
     }
-    this.submitted = true;
+    this.isRequesting = true;
     this.searchRestaurants();
     this.searchProducts();
   }
@@ -77,8 +79,12 @@ export class HomeComponent implements OnInit {
       if(x && x.length > 0){
         this.activeTab = 'Restaurant';
       }
+      this.isRequesting = false;
     })
-    .catch(errMsg => this.errorMsg = errMsg);
+    .catch(errMsg => {
+      this.errorMsg = errMsg;
+      this.isRequesting = false;
+    });
   }
 
   searchProducts(){
@@ -89,8 +95,12 @@ export class HomeComponent implements OnInit {
       if(x && x.length > 0){
         this.activeTab = 'Product';
       }
+      this.isRequesting = false;
     })
-    .catch(errMsg => this.errorMsg = errMsg);
+    .catch(errMsg => {
+      this.errorMsg = errMsg;
+      this.isRequesting = false;
+    });
   }
 
   activateTab(id:string){

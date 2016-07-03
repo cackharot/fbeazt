@@ -16,6 +16,7 @@ require('rxjs/add/operator/map');
 require('rxjs/add/operator/debounceTime');
 require('rxjs/add/operator/distinctUntilChanged');
 require('rxjs/add/operator/switchMap');
+var spinner_1 = require('./spinner');
 var order_service_1 = require('../services/order.service');
 var store_service_1 = require('../services/store.service');
 var product_service_1 = require('../services/product.service');
@@ -33,7 +34,7 @@ var HomeComponent = (function () {
         this.onlyVeg = false;
         this.activeTab = 'Restaurant';
         this.searchCtrl = new common_1.Control('');
-        this.submitted = false;
+        this.isRequesting = false;
     }
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -50,7 +51,7 @@ var HomeComponent = (function () {
             || this.searchText.length < 3) {
             return;
         }
-        this.submitted = true;
+        this.isRequesting = true;
         this.searchRestaurants();
         this.searchProducts();
     };
@@ -63,8 +64,12 @@ var HomeComponent = (function () {
             if (x && x.length > 0) {
                 _this.activeTab = 'Restaurant';
             }
+            _this.isRequesting = false;
         })
-            .catch(function (errMsg) { return _this.errorMsg = errMsg; });
+            .catch(function (errMsg) {
+            _this.errorMsg = errMsg;
+            _this.isRequesting = false;
+        });
     };
     HomeComponent.prototype.searchProducts = function () {
         var _this = this;
@@ -75,8 +80,12 @@ var HomeComponent = (function () {
             if (x && x.length > 0) {
                 _this.activeTab = 'Product';
             }
+            _this.isRequesting = false;
         })
-            .catch(function (errMsg) { return _this.errorMsg = errMsg; });
+            .catch(function (errMsg) {
+            _this.errorMsg = errMsg;
+            _this.isRequesting = false;
+        });
     };
     HomeComponent.prototype.activateTab = function (id) {
         this.activeTab = id;
@@ -108,7 +117,8 @@ var HomeComponent = (function () {
         core_1.Component({
             selector: 'home-page',
             templateUrl: 'templates/home.html',
-            directives: [common_1.FORM_DIRECTIVES, router_deprecated_1.ROUTER_DIRECTIVES, restaurant_component_1.RestaurantComponent, productlist_1.ProductListComponent],
+            directives: [common_1.FORM_DIRECTIVES, router_deprecated_1.ROUTER_DIRECTIVES,
+                spinner_1.SpinnerComponent, restaurant_component_1.RestaurantComponent, productlist_1.ProductListComponent],
         }), 
         __metadata('design:paramtypes', [router_deprecated_1.Router, product_service_1.ProductService, order_service_1.OrderService, store_service_1.StoreService])
     ], HomeComponent);
