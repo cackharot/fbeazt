@@ -1,0 +1,17 @@
+[Unit]
+Description=Starts the foodbeazt api service
+After=syslog.target
+
+[Service]
+Type=notify
+NotifyAccess=all
+WorkingDirectory=/opt/fbeazt/bin
+ExecStart=/opt/fbeazt/fb/bin/uwsgi --ini /opt/fbeazt/bin/app_uwsgi.ini
+Restart=always
+User=nginx
+Group=nginx
+LimitNOFILE=10240
+LimitFSIZE=infinity
+
+[Install]
+WantedBy=multi-user.target

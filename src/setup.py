@@ -24,6 +24,6 @@ setup(
     package_data={'foodbeazt': extra_files},
     install_requires=['Flask','flask-login','flask-mail',
         'flask-pymongo','flask-restful','flask-babel', 'flask-principal',
-        'flask-cors',
-        'requests','bson']
+        'flask-cors', 'uwsgi',
+        'requests', 'pymongo']
 )

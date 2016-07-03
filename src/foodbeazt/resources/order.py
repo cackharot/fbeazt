@@ -62,7 +62,7 @@ class OrderApi(Resource):
 
     try:
       _id = self.service.save(valid_order)
-      # self.send_email(valid_order)
+      self.send_email(valid_order)
       return {"status": "success", "location": "/api/order/" + str(_id), "data": valid_order}
     except Exception as e:
       print("OrderService: ERROR ->")
@@ -82,6 +82,10 @@ class OrderApi(Resource):
     email = order['delivery_details'].get('email', None)
     if email is None or len(email) <= 3:
       return
+    if app.config.get('MAIL_SENDER',None) is None:
+      print("Invalid MAIL_SENDER configured. Not sending emails!!")
+      return
+
     msg = Message("Order confirmation <%s>" % (order.get('order_no', '000')),
                   sender=(app.config['MAIL_SENDER_NAME'], app.config['MAIL_SENDER']),
                   recipients=[email])

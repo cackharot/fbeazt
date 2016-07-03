@@ -19,16 +19,16 @@ def deploy():
     put('dist/%s.tar.gz' % dist, '/tmp/foodbeazt.tar.gz')
     # create a place where we can unzip the tarball, then enter
     # that directory and unzip it
-    run('mkdir -p /tmp/foodbeazt')
+    run('mkdir -p /opt/fbeazt')
     with cd('/tmp/foodbeazt'):
         run('tar xzf /tmp/foodbeazt.tar.gz')
         with cd(dist):
             # now setup the package with our virtual environment's
             # python interpreter
-            run('/home/ubuntu/fbeazt/venv/bin/python setup.py install')
-            run('/home/ubuntu/fbeazt/venv/bin/pip install -r /home/ubuntu/fbeazt/src/foodbeazt/requirements.txt')
+            # run('/opt/fbeazt/fb/bin/python setup.py install')
+            run('/opt/fbeazt/fb/bin/pip install foodbeazt.tar.gz')
     # now that all is set up, delete the folder again
     run('rm -rf /tmp/foodbeazt /tmp/foodbeazt.tar.gz')
     # and finally touch the .wsgi file so that mod_wsgi triggers
     # a reload of the application
-    run('touch /home/ubuntu/fbeazt/foodbeazt_wsgi.py')
+    run('touch /opt/fbeazt/foodbeazt_wsgi.py')
