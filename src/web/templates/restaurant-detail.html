@@ -44,11 +44,14 @@
               <div class="holidays" *ngIf="restaurant.holidays.length>0">
                 Holidays: {{restaurant.holidays.join(', ')}}
               </div>
-              <ul class="cuisines">
-                <li *ngFor="let cus of restaurant.cuisines">
-                  <span class="cusines">{{cus}}</span>
-                </li>
-              </ul>
+              <div class="">
+                <small>Cuisines:</small>
+                <ul class="cuisines">
+                  <li *ngFor="let cus of restaurant.cuisines">
+                    <span class="cusines">{{cus}}</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
           <div class="medium-6 columns show-for-medium">

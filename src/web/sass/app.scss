@@ -311,6 +311,7 @@ img.res_logo{
   }
 
   .card-action{
+    margin-bottom: 10px;
     .button{
       width: 75%;
       border: 1px solid #4c9cdf;
@@ -550,7 +551,10 @@ label > .inline-label {
 }
 @media screen and (max-width: 40em) {
   .card{
-    width: 47%;
+    width: 97%;
     margin: 7px 5px;
+    img{
+      height: 180px;
+    }
   }
 }

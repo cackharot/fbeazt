@@ -220,14 +220,16 @@ img.res_logo {
   .card .price_tag {
     font-size: 16px;
     font-weight: normal; }
-  .card .card-action .button {
-    width: 75%;
-    border: 1px solid #4c9cdf;
-    color: #4c9cdf;
-    background: 0; }
-    .card .card-action .button:hover {
-      color: #fff;
-      background: #4c9cdf; }
+  .card .card-action {
+    margin-bottom: 10px; }
+    .card .card-action .button {
+      width: 75%;
+      border: 1px solid #4c9cdf;
+      color: #4c9cdf;
+      background: 0; }
+      .card .card-action .button:hover {
+        color: #fff;
+        background: #4c9cdf; }
 
 .button {
   -webkit-border-radius: 3px;
@@ -402,5 +404,7 @@ label > .inline-label {
 
 @media screen and (max-width: 40em) {
   .card {
-    width: 47%;
-    margin: 7px 5px; } }
+    width: 97%;
+    margin: 7px 5px; }
+    .card img {
+      height: 180px; } }

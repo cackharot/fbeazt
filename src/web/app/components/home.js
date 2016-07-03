@@ -58,6 +58,7 @@ var HomeComponent = (function () {
         var _this = this;
         var searchData = new store_service_1.StoreSearchModel(this.searchText, this.onlyVeg, this.userLocation, this.userPincode);
         this.storeService.search(searchData).then(function (x) {
+            _this.errorMsg = null;
             _this.restaurants = x;
             if (x && x.length > 0) {
                 _this.activeTab = 'Restaurant';
@@ -69,6 +70,7 @@ var HomeComponent = (function () {
         var _this = this;
         this.productService.searchAll(new product_service_1.ProductSearchModel(this.searchText, this.onlyVeg))
             .then(function (x) {
+            _this.errorMsg = null;
             _this.products = x;
             if (x && x.length > 0) {
                 _this.activeTab = 'Product';

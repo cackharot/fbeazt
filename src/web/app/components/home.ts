@@ -72,6 +72,7 @@ export class HomeComponent implements OnInit {
       this.userLocation,
       this.userPincode);
     this.storeService.search(searchData).then(x=>{
+      this.errorMsg=null;
       this.restaurants = x;
       if(x && x.length > 0){
         this.activeTab = 'Restaurant';
@@ -83,6 +84,7 @@ export class HomeComponent implements OnInit {
   searchProducts(){
     this.productService.searchAll(new ProductSearchModel(this.searchText, this.onlyVeg))
     .then(x=>{
+      this.errorMsg=null;
       this.products = x;
       if(x && x.length > 0){
         this.activeTab = 'Product';

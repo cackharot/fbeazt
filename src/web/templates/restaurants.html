@@ -5,10 +5,10 @@
 <div class="restaurants" *ngIf="!isEmpty()">
   <div class="row" *ngFor="let restaurant of restaurants"
   [class.selected]="restaurant === selectedRestaurant">
-    <div class="small-3 medium-3 columns">
+    <div class="medium-3 columns show-for-medium">
       <img src="/images/placeholder.png" alt="Comming soon..." class="res_logo"/>
     </div>
-    <div class="small-9 medium-9 columns light content end">
+    <div class="medium-9 columns light content end">
       <h3 class="title">
         <a class="dark" (click)="onSelect(restaurant)">{{restaurant.name}}</a>
         <span class="rating">
@@ -27,12 +27,19 @@
           <span class="light red" *ngIf="restaurant.isHoliday()">(Holiday)</span>
         </span>
       </div>
-      <ul class="cuisines">
-        <li *ngFor="let cus of restaurant.cuisines">
-          <span class="cusines">{{cus}}</span>
-        </li>
-      </ul>
       <div class="show-for-medium">
+        <ul class="cuisines">
+          <li *ngFor="let cus of restaurant.cuisines">
+            <span class="cusines">{{cus}}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="light show-for-small-only">
+        <small>
+          Cuisines: {{restaurant.cuisines.join(', ')}}
+        </small>
+      </div>
+      <div class="">
         <button type="button" class="button"
           (click)="onSelect(restaurant)"
           [class.green]="!restaurant.isHoliday() && restaurant.isOpen()"
