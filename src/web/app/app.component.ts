@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+import { POPOVER_DIRECTIVES } from "ng2-popover";
 
 import { CartSummaryComponent } from './components/cartsummary';
 import { CheckoutComponent } from './components/checkout';
@@ -14,7 +15,7 @@ import { OrderService } from './services/order.service';
 @Component({
   selector: 'fb-app',
   templateUrl: 'templates/app.html',
-  directives: [ROUTER_DIRECTIVES, RestaurantComponent, CartSummaryComponent],
+  directives: [ROUTER_DIRECTIVES, POPOVER_DIRECTIVES, RestaurantComponent, CartSummaryComponent],
   providers: [ROUTER_PROVIDERS, StoreService, ProductService, OrderService]
 })
 @RouteConfig([

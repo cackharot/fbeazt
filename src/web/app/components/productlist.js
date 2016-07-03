@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_deprecated_1 = require('@angular/router-deprecated');
+var ng2_popover_1 = require("ng2-popover");
 var chunk_pipe_1 = require('../pipes/chunk.pipe');
 var ProductListComponent = (function () {
     function ProductListComponent(router) {
@@ -37,7 +38,7 @@ var ProductListComponent = (function () {
         core_1.Component({
             selector: 'product-list',
             templateUrl: 'templates/product-list.html',
-            directives: [router_deprecated_1.ROUTER_DIRECTIVES],
+            directives: [router_deprecated_1.ROUTER_DIRECTIVES, ng2_popover_1.POPOVER_DIRECTIVES],
             pipes: [chunk_pipe_1.ChunkPipe],
         }), 
         __metadata('design:paramtypes', [router_deprecated_1.Router])

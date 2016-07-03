@@ -8,6 +8,7 @@
     'rxjs':                       'node_modules/rxjs',
     'lodash':                     'node_modules/lodash/lodash.js',
     'moment':                     'node_modules/moment/moment.js',
+    'ng2-popover':                'node_modules/ng2-popover',
   };
   // packages tells the System loader how to load when no filename and/or no extension
   var packages = {
@@ -15,6 +16,7 @@
     'rxjs':                       { defaultExtension: 'js' },
     'angular2-in-memory-web-api': { main: 'index.js', defaultExtension: 'js' },
     'angular2-localstorage':      { defaultExtension: "js" },
+    'ng2-popover':                { main: 'index.js', defaultExtension: 'js' },
   };
   var ngPackageNames = [
     'common',

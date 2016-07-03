@@ -23,6 +23,14 @@
   </div>
   <div class="card-action align-center">
     <button type="button" (click)="select(product,$event)"
+     popover="Added to cart!"
+     popoverTitle=""
+     popoverPlacement="top"
+     [popoverOnHover]="false"
+     [popoverCloseOnClickOutside]="true"
+     [popoverCloseOnMouseOutside]="false"
+     [popoverDisabled]="false"
+     [popoverAnimation]="true"
      [disabled]="!product.isAvailable()" class="button add-to-cart">
       <i class="fi-plus"></i> Add
     </button>

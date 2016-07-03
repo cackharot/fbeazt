@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+import { POPOVER_DIRECTIVES } from "ng2-popover";
 
 import { OrderService } from '../services/order.service';
 import { ProductSearchModel, ProductService } from '../services/product.service';
@@ -12,7 +13,7 @@ import { ChunkPipe } from '../pipes/chunk.pipe';
 @Component({
   selector: 'product-list',
   templateUrl: 'templates/product-list.html',
-  directives: [ROUTER_DIRECTIVES],
+  directives: [ROUTER_DIRECTIVES, POPOVER_DIRECTIVES],
   pipes: [ChunkPipe],
 })
 export class ProductListComponent implements OnInit {
