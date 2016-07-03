@@ -196,9 +196,9 @@ def test_order_email():
 
 @app.route("/beta")
 def beta_home():
-  if not current_user.is_authenticated():
-    login_anonymous()
-    return redirect('/beta')
+  # if not current_user.is_authenticated():
+    # login_anonymous()
+    # return redirect('/beta')
   return render_template('home.jinja2')
 
 
