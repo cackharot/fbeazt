@@ -79,7 +79,6 @@ export class HomeComponent implements OnInit {
       if(x && x.length > 0){
         this.activeTab = 'Restaurant';
       }
-      this.isRequesting = false;
     })
     .catch(errMsg => {
       this.errorMsg = errMsg;

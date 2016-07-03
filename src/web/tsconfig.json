@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "dist/app",
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
@@ -8,5 +9,17 @@
     "experimentalDecorators": true,
     "removeComments": false,
     "noImplicitAny": false
-  }
+  },
+  "filesGlob": [
+    "app/**/*.ts",
+    "typings/**/*.d.ts",
+    "node_modules/immutable/dist/immutable.d.ts"
+  ],
+  "atom": {
+    "rewriteTsconfig": true
+  },
+  "files":[
+    "app/**/*.ts",
+    "typings/**/*.ts"
+  ]
 }
