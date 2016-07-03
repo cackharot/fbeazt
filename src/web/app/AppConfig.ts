@@ -1,5 +1,6 @@
 export class AppConfig {
   static BASE_URL:string = "http://localhost:4000/api";
+  // static BASE_URL:string = "http://185.73.37.215:8080/api";
   static STORES_URL:string = AppConfig.BASE_URL+"/stores";
   static STORE_URL:string = AppConfig.BASE_URL+"/store";
   static PRODUCTS_URL:string = AppConfig.BASE_URL+"/products";
