@@ -1,19 +1,11 @@
-<ul class="menu float-left">
-  <li *ngIf="canShow()">
-    <a (click)="navigateToCheckout($event)" class="cart">
-      <i class="fi-shopping-cart"></i>
-      <span *ngIf="totalQuantity>0">
-        {{totalQuantity}} Items - <b>{{totalAmount}}</b>
-      </span>
-      <span *ngIf="totalQuantity==0">
-        Empty
-      </span>
-    </a>
-  </li>
-  <!--<li class="show-for-medium">
-    <button (click)="navigateToCheckout($event)" class="primary button">
-      <i class="fi-shopping-cart"></i>
-      <span class="chk">Checkout</span>
-    </button>
-  </li>-->
-</ul>
+<div *ngIf="canShow()" class="menu checkout__menu float-left">
+  <a (click)="navigateToCheckout($event)" class="cart">
+    <i class="fi-shopping-cart"></i>
+    <span *ngIf="totalQuantity>0">
+      {{totalQuantity}} Items - <b class="rupee">{{totalAmount}}</b>
+    </span>
+    <span *ngIf="totalQuantity==0">
+      Empty
+    </span>
+  </a>
+</div>

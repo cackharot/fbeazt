@@ -131,9 +131,7 @@
               <td class="quantity">
                 <span class="price light">{{item.price}}x</span>{{item.quantity}}
               </td>
-              <td class="price">
-                {{item.getTotalPrice()}}
-              </td>
+              <td class="price">{{item.getTotalPrice()}}</td>
             </tr>
           </tbody>
           <tfoot>
@@ -141,25 +139,19 @@
               <td colspan="2">
                 Subtotal:
               </td>
-              <td class="total">
-                {{order.getSubTotal()}}
-              </td>
+              <td class="total">{{order.getSubTotal()}}</td>
             </tr>
             <tr>
               <td colspan="2">
                 Delivery Charges:
               </td>
-              <td class="total">
-                {{order.getDeliveryCharges()}}
-              </td>
+              <td class="total">{{order.getDeliveryCharges()}}</td>
             </tr>
             <tr>
               <td colspan="2">
                 Total:
               </td>
-              <td class="total">
-                Rs. {{order.getTotalAmount()}}
-              </td>
+              <td class="total rupee">{{order.getTotalAmount()}}</td>
             </tr>
           </tfoot>
         </table>

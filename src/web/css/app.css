@@ -85,8 +85,6 @@ header, #main {
   .top-bar .fi-marker {
     margin: 0;
     vertical-align: baseline; }
-  .top-bar .mobile-cart {
-    text-align: right; }
   .top-bar .button {
     position: relative; }
   .top-bar .fi-shopping-cart {
@@ -407,7 +405,9 @@ label > .inline-label {
     width: 97%;
     margin: 7px 5px; }
     .card img {
-      height: 180px; } }
+      height: 180px; }
+  .checkout__menu {
+    width: 100%; } }
 
 .popover {
   background: #333333;
@@ -431,3 +431,23 @@ label > .inline-label {
     bottom: -10px;
     width: 0;
     left: 40%; }
+
+.checkout__menu {
+  border: 1px solid #e6e6e6;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  padding: 5px;
+  text-align: center;
+  background: #162c3f;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
+  -moz-box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
+  box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
+  display: table;
+  height: 100%; }
+  .checkout__menu a {
+    vertical-align: middle;
+    display: table-cell; }
+
+.rupee:before {
+  content: '\20B9'; }

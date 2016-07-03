@@ -17,9 +17,7 @@
       {{product.name}}
     </h4>
     <p class="show-for-medium">{{product.description}}</p>
-    <span class="price_tag light">
-      Rs. {{product.sell_price}}
-    </span>
+    <span class="price_tag rupee light">{{product.sell_price}}</span>
   </div>
   <div class="card-action align-center">
     <button type="button" (click)="select(product,$event)"
