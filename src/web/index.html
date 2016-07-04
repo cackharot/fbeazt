@@ -7,17 +7,16 @@
     <link rel="stylesheet" href="css/foundation.css">
     <link rel="stylesheet" href="css/foundation-icons.css">
     <link rel="stylesheet" href="css/app.css">
-    <!-- 1. Load libraries -->
      <!-- Polyfill(s) for older browsers -->
+     <!-- build:vendor -->
     <script src="lib/shim.min.js"></script>
     <script src="lib/zone.js"></script>
     <script src="lib/Reflect.js"></script>
     <script src="lib/system.src.js"></script>
-    <!-- 2. Configure SystemJS -->
-    <script src="lib/systemjs.config.js"></script>
-    <script>
-      System.import('app').catch(function(err){ console.error(err); });
-    </script>
+    <!-- endbuild -->
+
+    <!-- build:app -->
+    <!-- endbuild -->
   </head>
   <!-- 3. Display the application -->
   <body>
@@ -28,12 +27,11 @@
       </div>
     </fb-app>
 
-    <!-- <script src="lib/jquery/dist/jquery.js"></script> -->
-    <script src="js/vendor/jquery.js"></script>
-    <script src="js/vendor/foundation.js"></script>
-    <script src="js/vendor/what-input.js"></script>
     <script>
-      $(document).foundation();
+      document.addEventListener('DOMContentLoaded', function () {
+        $(document).foundation();
+        System.import('app').catch(function(err){ console.error(err); });
+      });
     </script>
   </body>
 </html>
