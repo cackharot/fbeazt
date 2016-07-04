@@ -86,12 +86,19 @@ class OrderApi(Resource):
       print("Invalid MAIL_SENDER configured. Not sending emails!!")
       return
 
-    msg = Message("Order confirmation <%s>" % (order.get('order_no', '000')),
+    subject = "Order confirmation <%s>" % (order.get('order_no', '000'))
+    msg = Message(subject,
                   sender=(app.config['MAIL_SENDER_NAME'], app.config['MAIL_SENDER']),
                   recipients=[email])
     msg.html = order_created_template.render(order=order)
     try:
-      mail.send(msg)
+      if app.config['SEND_MAIL'] == False:
+        print("DEV ** Sending email [%s] to %s" % (subject, email))
+        import time
+        time.sleep(10)
+      else:
+        print("Sending email [%s] to %s" % (subject, email))
+        mail.send(msg)
     except Exception as e:
       print(e)
 
