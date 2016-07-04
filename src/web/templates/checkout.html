@@ -1,5 +1,10 @@
-<section class="checkout__page">
-<section class="row">
+<section class="row" *ngIf="isRequesting">
+  <div class="medium-12 columns">
+    <my-spinner [isRunning]="isRequesting"></my-spinner>
+  </div>
+</section>
+<section class="checkout__page" *ngIf="!isRequesting">
+  <section class="row">
     <div class="medium-12 small-12 columns end">
       <nav aria-label="You are here:" role="navigation">
         <ul class="breadcrumbs">
@@ -10,171 +15,171 @@
         </ul>
       </nav>
     </div>
-</section>
-<section class="row">
-    <div class="medium-12 small-12 columns end">
-      <div class="callout primary" *ngIf="isEmpty()">
-        <h3>Oops!</h3>
-        <p>Added items to the cart to checkout :)</p>
-      </div>
-      <div class="callout alert" *ngIf="error != null">
-        <h3>Oops!</h3>
-        <p>This was not supposed to happen. Kindly try again after sometime.</p>
-      </div>
-    </div>
-</section>
-<section class="row" *ngIf="orderSuccess">
-  <div class="medium-12 small-12 columns">
-    <div class="callout success">
-      <h3>Thanks {{order.delivery_details.name}},</h3>
-      <p>
-        Your order is successfull, kindly note the order number for further reference <b>{{order.order_no}}</b>.
-        An invoice email is on the way to your inbox.
-      </p>
-      <p>
-        Enjoy your gourment meal!
-      </p>
-      <p>
-        <a (click)="trackOrder()">Click here</a> to track this order status.
-      </p>
-    </div>
-  </div>
-  <div class="medium12 columns">
-    <h4>Feedback</h4>
-    <p>
-      Your feedback is valuable to us. We always like to serve you better. If you have any suggestions
-      or compliants kindly write to us on <a href="mailto:foodbeazt@gmail.com">foodbeazt@gmail.com</a> or call us at +91 7373730484.
-    </p>
-  </div>
-  <div class="medium-12 columns">
-    <h4>Frequently Asked Questions</h4>
-    <ul class="faq">
-      <li class="question">Do you operate outside Puducherry?</li>
-      <li class="answer">NO. But we like to expand our services beyond Puducherry.
-        Kindly contact us for more information.
-      </li>
-      <li class="question">Is Foodbeazt a restaurant which makes food and does online delivery?</li>
-      <li class="answer">NO, Foodbeazt is a delivery service. We have tie up's with various
-        restaurants in Puducherry. You can view menus of individual restaurants and order
-        multiple dishes from multiple restaurants.
-      </li>
-      <li class="question">Can I cancel the order?</li>
-      <li class="answer">Yes you can cancel within 5 minutes of placing the order.</li>
-      <li class="question">What is the delivery time?</li>
-      <li class="answer">We have a specialized delivery team who make sure to
-        get your food as soon as possible. We also requested the restaurants to make this in priority.
-        Also it depends on distance between you and the restaurants, weather, traffic conditions,
-        restaurants peak time, food availablity, etc., We will make sure to contact you if your order
-        is getting delayed. So for now considering these factors the average delivery time would be 45 minutes.
-      </li>
-      <li class="question">What are the payment modes?</li>
-      <li class="answer">At present we accept only Cash on Delivery.</li>
-      <li class="question">What is your operation time?</li>
-      <li class="answer">We operate from 9AM to 11PM for 365 days (Unless we have a natural calamity).
-        However food availablity is upto the individual restaurant's holiday schedule.
-      </li>
-      <li class="question">One or many of the dishes delivered has gone bad. What should I do?</li>
-      <li class="answer">
-        We are committed to deliver the dishes from restaurants without any delay and ensure that they
-        are hot and fresh, so this does not happen. But in exceptional cases we will refund your money.
-      </li>
-    </ul>
-  </div>
-</section>
-<form (ngSubmit)="confirmOrder()" #orderForm="ngForm" *ngIf="!orderSuccess">
-<section class="row" *ngIf="!isEmpty()">
-  <div class="medium-6 columns">
-    <h2><i class="fi-home"></i> Delivery Details</h2>
-    <div class="callout secondary">
-      <p>
-        Kindly ensure that you have given correct delivery address with postbox number, floor number,
-        mobile number and pincode.
-        Unless you receive an email or SMS or a phone call from us, <i>Your order will not be processed.</i>
-      </p>
-    </div>
-    <label for="name">Name:
-      <input type="text" maxlength="50" id="name" [(ngModel)]="order.delivery_details.name" required/>
-    </label>
-    <label for="phone">Phone:
-      <input type="text" maxlength="10" minlength="10" id="phone" [(ngModel)]="order.delivery_details.phone" required/>
-    </label>
-    <label for="email">Email:
-      <input type="email" maxlength="200" minlength="3" id="email" [(ngModel)]="order.delivery_details.email" required/>
-    </label>
-    <label for="pincode">Pincode:
-      <input type="text" maxlength="6" minlength="6" id="pincode" [(ngModel)]="order.delivery_details.pincode" required/>
-    </label>
-    <label for="address">Address:
-      <textarea maxlength="500" minlength="10" id="address" [(ngModel)]="order.delivery_details.address" required></textarea>
-    </label>
-    <label for="landmark">Nearby landmark:
-      <input type="text" maxlength="50" id="landmark" [(ngModel)]="order.delivery_details.landmark" />
-    </label>
-    <label for="speed_checkout">
-      <input type="checkbox" id="speed_checkout" [(ngModel)]="canSaveDeliveryDetails" />
-      Speed checkout next time.
-    </label>
-  </div>
-  <div class="medium-6 columns">
-    <div class="row">
-      <div class="medium-12 columns">
-        <h2><i class="fi-shopping-cart"></i> Order details</h2>
-        <table class="table order_table">
-          <tbody>
-            <tr *ngFor="let item of order.getItems()">
-              <td>
-                <div class="product_name">
-                  {{item.name}} <br/>
-                  <span class="store_name light"><i>from</i> {{item.store.name}}</span>
-                </div>
-              </td>
-              <td class="quantity">
-                <span class="price light">{{item.price}}x</span>{{item.quantity}}
-              </td>
-              <td class="price">{{item.getTotalPrice()}}</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="2">
-                Subtotal:
-              </td>
-              <td class="total">{{order.getSubTotal()}}</td>
-            </tr>
-            <tr>
-              <td colspan="2">
-                Delivery Charges:
-              </td>
-              <td class="total">{{order.getDeliveryCharges()}}</td>
-            </tr>
-            <tr>
-              <td colspan="2">
-                Total:
-              </td>
-              <td class="total rupee">{{order.getTotalAmount()}}</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-    </div>
-    <div class="row">
-        <div class="medium-12 columns">
-          <h2><i class="fi-credit-card"></i> Payment Details</h2>
-          <div class="callout primary">
-            <p>Presently we accept only <b>Cash On Delivery</b>(CoD).</p>
-            <p>Online transactions through Credit/Debit card and NetBanking coming soon...</p>
-          </div>
+  </section>
+  <section class="row">
+      <div class="medium-12 small-12 columns end">
+        <div class="callout primary" *ngIf="isEmpty()">
+          <h3>Oops!</h3>
+          <p>Added items to the cart to checkout :)</p>
         </div>
+        <div class="callout alert" *ngIf="error != null">
+          <h3>Oops!</h3>
+          <p>This was not supposed to happen. Kindly try again after sometime.</p>
+        </div>
+      </div>
+  </section>
+  <section class="row" *ngIf="orderSuccess">
+    <div class="medium-12 small-12 columns">
+      <div class="callout success">
+        <h3>Thanks {{order.delivery_details.name}},</h3>
+        <p>
+          Your order is successfull, kindly note the order number for further reference <b>{{order.order_no}}</b>.
+          An invoice email is on the way to your inbox.
+        </p>
+        <p>
+          Enjoy your gourment meal!
+        </p>
+        <p>
+          <a (click)="trackOrder()">Click here</a> to track this order status.
+        </p>
+      </div>
     </div>
-  </div>
-  <div class="medium-12 columns">
-    <div class="align-center">
-      <button (click)="resetOrder()" class="button secondary">Cancel</button>
-      <button type="submit" class="button primary" [disabled]="!orderForm.form.valid">
-        Confirm
-      </button>
+    <div class="medium12 columns">
+      <h4>Feedback</h4>
+      <p>
+        Your feedback is valuable to us. We always like to serve you better. If you have any suggestions
+        or compliants kindly write to us on <a href="mailto:foodbeazt@gmail.com">foodbeazt@gmail.com</a> or call us at +91 7373730484.
+      </p>
     </div>
-  </div>
-</section>
-</form>
+    <div class="medium-12 columns">
+      <h4>Frequently Asked Questions</h4>
+      <ul class="faq">
+        <li class="question">Do you operate outside Puducherry?</li>
+        <li class="answer">NO. But we like to expand our services beyond Puducherry.
+          Kindly contact us for more information.
+        </li>
+        <li class="question">Is Foodbeazt a restaurant which makes food and does online delivery?</li>
+        <li class="answer">NO, Foodbeazt is a delivery service. We have tie up's with various
+          restaurants in Puducherry. You can view menus of individual restaurants and order
+          multiple dishes from multiple restaurants.
+        </li>
+        <li class="question">Can I cancel the order?</li>
+        <li class="answer">Yes you can cancel within 5 minutes of placing the order.</li>
+        <li class="question">What is the delivery time?</li>
+        <li class="answer">We have a specialized delivery team who make sure to
+          get your food as soon as possible. We also requested the restaurants to make this in priority.
+          Also it depends on distance between you and the restaurants, weather, traffic conditions,
+          restaurants peak time, food availablity, etc., We will make sure to contact you if your order
+          is getting delayed. So for now considering these factors the average delivery time would be 45 minutes.
+        </li>
+        <li class="question">What are the payment modes?</li>
+        <li class="answer">At present we accept only Cash on Delivery.</li>
+        <li class="question">What is your operation time?</li>
+        <li class="answer">We operate from 9AM to 11PM for 365 days (Unless we have a natural calamity).
+          However food availablity is upto the individual restaurant's holiday schedule.
+        </li>
+        <li class="question">One or many of the dishes delivered has gone bad. What should I do?</li>
+        <li class="answer">
+          We are committed to deliver the dishes from restaurants without any delay and ensure that they
+          are hot and fresh, so this does not happen. But in exceptional cases we will refund your money.
+        </li>
+      </ul>
+    </div>
+  </section>
+  <form (ngSubmit)="confirmOrder()" #orderForm="ngForm" *ngIf="!orderSuccess">
+  <section class="row" *ngIf="!isEmpty()">
+    <div class="medium-6 columns">
+      <h2><i class="fi-home"></i> Delivery Details</h2>
+      <div class="callout secondary">
+        <p>
+          Kindly ensure that you have given correct delivery address with postbox number, floor number,
+          mobile number and pincode.
+          Unless you receive an email or SMS or a phone call from us, <i>Your order will not be processed.</i>
+        </p>
+      </div>
+      <label for="name">Name:
+        <input type="text" maxlength="50" id="name" [(ngModel)]="order.delivery_details.name" required/>
+      </label>
+      <label for="phone">Phone:
+        <input type="text" maxlength="10" minlength="10" id="phone" [(ngModel)]="order.delivery_details.phone" required/>
+      </label>
+      <label for="email">Email:
+        <input type="email" maxlength="200" minlength="3" id="email" [(ngModel)]="order.delivery_details.email" required/>
+      </label>
+      <label for="pincode">Pincode:
+        <input type="text" maxlength="6" minlength="6" id="pincode" [(ngModel)]="order.delivery_details.pincode" required/>
+      </label>
+      <label for="address">Address:
+        <textarea maxlength="500" minlength="10" id="address" [(ngModel)]="order.delivery_details.address" required></textarea>
+      </label>
+      <label for="landmark">Nearby landmark:
+        <input type="text" maxlength="50" id="landmark" [(ngModel)]="order.delivery_details.landmark" />
+      </label>
+      <label for="speed_checkout">
+        <input type="checkbox" id="speed_checkout" [(ngModel)]="canSaveDeliveryDetails" />
+        Speed checkout next time.
+      </label>
+    </div>
+    <div class="medium-6 columns">
+      <div class="row">
+        <div class="medium-12 columns">
+          <h2><i class="fi-shopping-cart"></i> Order details</h2>
+          <table class="table order_table">
+            <tbody>
+              <tr *ngFor="let item of order.getItems()">
+                <td>
+                  <div class="product_name">
+                    {{item.name}} <br/>
+                    <span class="store_name light"><i>from</i> {{item.store.name}}</span>
+                  </div>
+                </td>
+                <td class="quantity">
+                  <span class="price light">{{item.price}}x</span>{{item.quantity}}
+                </td>
+                <td class="price">{{item.getTotalPrice()}}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2">
+                  Subtotal:
+                </td>
+                <td class="total">{{order.getSubTotal()}}</td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  Delivery Charges:
+                </td>
+                <td class="total">{{order.getDeliveryCharges()}}</td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  Total:
+                </td>
+                <td class="total rupee">{{order.getTotalAmount()}}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+          <div class="medium-12 columns">
+            <h2><i class="fi-credit-card"></i> Payment Details</h2>
+            <div class="callout primary">
+              <p>Presently we accept only <b>Cash On Delivery</b>(CoD).</p>
+              <p>Online transactions through Credit/Debit card and NetBanking coming soon...</p>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="medium-12 columns">
+      <div class="align-center">
+        <button (click)="resetOrder()" class="button secondary">Cancel</button>
+        <button type="submit" class="button primary" [disabled]="!orderForm.form.valid">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </section>
+  </form>
 </section>

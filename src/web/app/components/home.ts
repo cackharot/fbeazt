@@ -88,18 +88,18 @@ export class HomeComponent implements OnInit {
 
   searchProducts(){
     this.productService.searchAll(new ProductSearchModel(this.searchText, this.onlyVeg))
-    .then(x=>{
-      this.errorMsg=null;
-      this.products = x;
-      if(x && x.length > 0){
-        this.activeTab = 'Product';
-      }
-      this.isRequesting = false;
-    })
-    .catch(errMsg => {
-      this.errorMsg = errMsg;
-      this.isRequesting = false;
-    });
+      .then(x=>{
+        this.errorMsg=null;
+        this.products = x;
+        if(x && x.length > 0 && this.restaurants.length == 0){
+          this.activeTab = 'Product';
+        }
+        this.isRequesting = false;
+      })
+      .catch(errMsg => {
+        this.errorMsg = errMsg;
+        this.isRequesting = false;
+      });
   }
 
   activateTab(id:string){

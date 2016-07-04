@@ -3,6 +3,7 @@ import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angul
 import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
 
 import { OrderService } from '../services/order.service';
+import { SpinnerComponent } from './spinner';
 
 import { Product, Category } from '../model/product';
 import { Order, DeliveryDetails, LineItem } from '../model/order';
@@ -10,12 +11,12 @@ import { Order, DeliveryDetails, LineItem } from '../model/order';
 @Component({
   selector: 'checkout',
   templateUrl: 'templates/checkout.html',
-  directives: [ROUTER_DIRECTIVES],
+  directives: [ROUTER_DIRECTIVES, SpinnerComponent],
 })
 export class CheckoutComponent implements OnInit {
   order: Order;
   orderSuccess:boolean = false;
-  submitted:boolean = false;
+  isRequesting:boolean = false;
   @LocalStorage() canSaveDeliveryDetails:boolean = false;
   error:any = null;
 
@@ -36,16 +37,18 @@ export class CheckoutComponent implements OnInit {
 
   confirmOrder(){
     this.saveDeliveryDetails();
-    this.submitted = true;
     if(this.order.items.length > 0){
+      this.isRequesting = true;
       this.orderService.confirmOrder()
         .then(updatedOrder => {
           this.order = updatedOrder;
           this.orderSuccess = true;
           this.error = null;
+          this.isRequesting = false;
         }, errorMsg => {
           this.orderSuccess = false;
           this.error = errorMsg
+          this.isRequesting = false;
         });
     }else{
       this.error = "Invalid order";

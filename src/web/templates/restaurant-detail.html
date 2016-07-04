@@ -1,13 +1,13 @@
-<div class="callout alert" *ngIf="errorMsg != null">
-  <h4>Oops! Something went wrong.</h4>
-  {{errorMsg}}
-</div>
 <section class="row" *ngIf="isRequesting">
   <div class="medium-12 columns">
     <my-spinner [isRunning]="isRequesting"></my-spinner>
   </div>
 </section>
 <div *ngIf="!isRequesting && restaurant">
+  <div class="callout alert" *ngIf="errorMsg != null">
+    <h4>Oops! Something went wrong.</h4>
+    {{errorMsg}}
+  </div>
   <section class="row">
     <div class="medium-12 small-12 columns end">
       <nav aria-label="You are here:" role="navigation">
