@@ -85,11 +85,13 @@ gulp.task('html', ['bundle:app', 'bundle:vendor'], function() {
 
 // TypeScript compile
 gulp.task('compile', ['clean'], function () {
+  var options = tscConfig.compilerOptions;
+  options.outDir = "dist/app";
   return gulp
-    .src(tscConfig.files)
-    .pipe(addsrc.append('config.prod.js'))
+    .src(tscConfig.files||["app/**/*.ts","typings/**/*"])
+    // .pipe(addsrc.append('config.prod.js'))
     .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(typescript(tscConfig.compilerOptions))
+    .pipe(typescript(options))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('dist'));
 });
