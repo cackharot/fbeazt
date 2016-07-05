@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "dist/app",
+    "outDir": "dist",
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
@@ -17,9 +17,5 @@
   ],
   "atom": {
     "rewriteTsconfig": true
-  },
-  "files":[
-    "app/**/*.ts",
-    "typings/**/*.ts"
-  ]
+  }
 }

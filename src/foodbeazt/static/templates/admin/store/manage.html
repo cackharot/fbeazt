@@ -67,13 +67,20 @@
                         </label>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="cuisine">Cuisines</label>
-                        <textarea class="form-control" id="cuisine" name="cuisine"
-                                  ng-class="{ 'parsley-error' : frmStore.cuisine.$invalid && !frmStore.cuisine.$pristine }"
-                                  ng-model="model.cuisine" required></textarea>
+                        <label class="control-label">Holidays</label><br/>
+                        <label ng-repeat="type in ['Sunday','Saturday','Monday','Tuesday','Wednesday','Thursday','Friday']">
+                            <input type="checkbox" checklist-model="model.holidays" checklist-value="type"> {{type}}
+                            <span style="margin-left:15px;"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="cuisines">Cuisines</label>
+                        <textarea class="form-control" id="cuisines" name="cuisines"
+                                  ng-class="{ 'parsley-error' : frmStore.cuisines.$invalid && !frmStore.cuisines.$pristine }"
+                                  ng-model="model.cuisines" required></textarea>
                         <ul class="parsley-errors-list filled"
-                            ng-show="frmStore.cuisine.$dirty && frmStore.cuisine.$invalid">
-                            <li class="parsley-required">Cuisine is required</li>
+                            ng-show="frmStore.cuisines.$dirty && frmStore.cuisines.$invalid">
+                            <li class="parsley-required">Cuisines is required</li>
                         </ul>
                     </div>
                     <div class="form-group">
@@ -104,13 +111,17 @@
                         <label class="control-label" for="deliver_time">Expected Delivery Time</label>
                         <input class="form-control" type="number" id="deliver_time" name="deliver_time"
                                ng-class="{ 'parsley-error' : frmStore.deliver_time.$invalid && !frmStore.deliver_time.$pristine }"
-                               ng-model="model.expected_delivery_time" required/>
+                               ng-model="model.deliver_time" required/>
                         <ul class="parsley-errors-list filled"
                             ng-show="frmStore.deliver_time.$dirty && frmStore.deliver_time.$invalid">
                             <li class="parsley-required" ng-show="frmStore.deliver_time.$error.required">
                                 Enter expected delivery time in minutes
                             </li>
                         </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Closed now</label><br/>
+                        <input type="checkbox" ng-model="model.is_closed" />
                     </div>
                 </div>
                 <div class="panel-footer">

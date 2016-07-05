@@ -53,6 +53,11 @@
                         </ul>
                     </div>
                     <div class="form-group">
+                        <label class="control-label" for="description">Description</label>
+                        <textarea class="form-control" name="description" id="description"
+                               ng-model="model.description"></textarea>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label" for="category">Category</label>
                         <select class="form-control" id="category" name="category" ng-model="model.category">
                             <option value="starter">Starter</option>
@@ -73,10 +78,10 @@
                         <label class="control-label" for="cuisine">Cuisine</label>
                         <input type="text" class="form-control" id="cuisine" name="cuisine"
                                ng-class="{ 'parsley-error' : frmProduct.cuisine.$invalid && !frmProduct.cuisine.$pristine }"
-                               ng-model="model.cuisine" required/>
+                               ng-model="model.cuisines" required/>
                         <ul class="parsley-errors-list filled"
                             ng-show="frmProduct.cuisine.$dirty && frmProduct.cuisine.$invalid">
-                            <li class="parsley-required">Cuisine is required</li>
+                            <li class="parsley-required">Cuisines is required</li>
                         </ul>
                     </div>
                     <div class="form-group">
@@ -103,18 +108,18 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label class="control-label" for="buy_price">Cost of ingredients</label>
                         <input class="form-control" type="text" id="buy_price" name="buy_price"
                                ng-model="model.buy_price"/>
-                    </div>
+                    </div>-->
                     <div class="form-group">
                         <label class="control-label" for="discount">Discount</label>
                         <input class="form-control" type="text" id="discount" name="discount"
                                ng-model="model.discount"/>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="sell_price">Sell Price</label>
+                        <label class="control-label" for="sell_price">Price</label>
                         <input class="form-control" type="text" id="sell_price" name="sell_price"
                                ng-class="{ 'parsley-error' : frmProduct.sell_price.$invalid && !frmProduct.sell_price.$pristine }"
                                ng-model="model.sell_price" required/>

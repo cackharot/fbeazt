@@ -26,6 +26,9 @@ class StoreService(object):
     return [x for x in lst.sort("created_at", -1).skip(offset).limit(page_size)], lst.count()
 
   def save(self, store_item):
+    if store_item.get('cuisines', None) is not None and isinstance(store_item['cuisines'], str):
+        store_item['cuisines'] = store_item['cuisines'].split(',')
+
     if '_id' not in store_item or store_item['_id'] is None or store_item['_id'] == "-1":
       store_item.pop('_id', None)
       store_item['created_at'] = datetime.now()

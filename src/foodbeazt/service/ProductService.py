@@ -8,12 +8,16 @@ class ProductService(object):
     self.products = db.product_collection
 
   def create(self, item):
+    if item.get('cuisines', None) is not None and isinstance(item['cuisines'], str):
+      item['cuisines'] = item['cuisines'].split(',')
     item.pop('_id', None)
     item['created_at'] = datetime.now()
     item['status'] = True
     return self.products.insert(item)
 
   def update(self, item):
+    if item.get('cuisines', None) is not None and isinstance(item['cuisines'], str):
+      item['cuisines'] = item['cuisines'].split(',')
     if item['_id'] is None:
         return
     item['updated_at'] = datetime.now()

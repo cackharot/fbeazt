@@ -42,7 +42,7 @@ export class OrderService {
       name: item.name,
       store_id: item.store_id,
       store: item.store,
-      description: "", //TODO
+      description: item.description,
       category: item.category,
       vegetarian: item.food_type[0] == 'veg',
       quantity: 1.0,

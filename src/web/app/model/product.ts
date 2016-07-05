@@ -1,4 +1,5 @@
 import { ObjectId, Date } from "./base";
+import * as moment from "moment";
 
 import {Restaurant} from "./restaurant";
 
@@ -20,6 +21,7 @@ export class Product {
   food_type: string[];
   updated_at: Date;
   name: string;
+  description: string='';
   status: boolean;
 
   constructor(data={}){
@@ -42,7 +44,14 @@ export class Product {
     if(this.store.isHoliday() || this.store.isClosed()){
       return false;
     }
+    // return this.isOpen();
     return true;
+  }
+
+  isOpen(){
+    let hr = moment().hour();
+    let min = moment().minute();
+    return (hr >= this.open_time && hr <= (this.close_time+12));
   }
 
   static of(data){

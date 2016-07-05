@@ -9,13 +9,15 @@
     <link rel="stylesheet" href="css/app.css">
      <!-- Polyfill(s) for older browsers -->
      <!-- build:vendor -->
-    <script src="lib/shim.min.js"></script>
-    <script src="lib/zone.js"></script>
-    <script src="lib/Reflect.js"></script>
-    <script src="lib/system.src.js"></script>
+    <script src="node_modules/core-js/client/shim.min.js"></script>
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
     <!-- endbuild -->
 
     <!-- build:app -->
+    <script src="systemjs.config.js"></script>
+    <script src="node_modules/rxjs/bundles/Rx.js"></script>
     <!-- endbuild -->
   </head>
   <!-- 3. Display the application -->
@@ -27,6 +29,11 @@
       </div>
     </fb-app>
 
+    <!-- build:jf -->
+    <script src="js/jquery.js"></script>
+    <script src="js/foundation.js"></script>
+    <script src="js/what-input.js"></script>
+    <!-- endbuild -->
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         $(document).foundation();

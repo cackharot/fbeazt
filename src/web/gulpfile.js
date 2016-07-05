@@ -26,10 +26,10 @@ gulp.task('clean', function () {
   return del('dist/**/*');
 });
 
-gulp.task('sass', ['clean'], function () {
+gulp.task('sass', function () {
   gulp.src('./sass/**/*.scss')
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('dist/css'));
+    .pipe(gulp.dest('css'));
 });
 
 gulp.task('sass:watch', function () {
@@ -42,7 +42,7 @@ gulp.task('bower', function() {
 });
 
 // copy static assets - i.e. non TypeScript compiled source
-gulp.task('copy:assets', ['clean'], function() {
+gulp.task('copy:assets', ['clean', 'sass'], function() {
   return gulp.src(['templates/**/*', 'images/**/*',
         'css/**/*'], { base : './' })
     .pipe(gulp.dest('dist'))
@@ -105,8 +105,7 @@ gulp.task('bundle:app', ['compile'], function() {
 });
 
 gulp.task('build:watch', ['sass', 'build'], function () {
-  gulp.watch(['app/**/*', 'index.html', 'templates/**/*'], ['build']);
-  gulp.watch(['sass/**/*.scss'], ['sass']);
+  gulp.watch(['app/**/*', 'sass/**/*.scss', 'index.html', 'templates/**/*'], ['build']);
 });
 
 // update the tsconfig files based on the glob pattern
@@ -131,8 +130,7 @@ gulp.task('serve', ['build'], function() {
     // browser: ["google chrome", "firefox"]
   });
 
-  gulp.watch(['app/**/*', 'index.html', 'templates/**/*'], ['buildAndReload']);
-  gulp.watch(['sass/**/*.scss'], ['sass']);
+  gulp.watch(['app/**/*','sass/**/*.scss', 'index.html', 'templates/**/*'], ['buildAndReload']);
 });
 
 gulp.task('build', ['compile', 'copy:assets', 'bundle:vendor','bundle:app', 'html']);
