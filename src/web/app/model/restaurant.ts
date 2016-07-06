@@ -8,6 +8,7 @@ export class Restaurant {
   phone: string;
   open_time: number;
   close_time: number;
+  rating: number = 0.0;
   holidays:string[] = [];
   is_closed:boolean = false;
   tenant_id: ObjectId = new ObjectId();
@@ -48,6 +49,10 @@ export class Restaurant {
     let hs = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
     let weekday = hs[moment().weekday()-1];
     return this.holidays.some(x=> x.toLocaleLowerCase().localeCompare(weekday) == 0);
+  }
+
+  getRating(){
+    return this.rating == 0 ? "--" : this.rating.toFixed(1);
   }
 
   static of(data){

@@ -30,14 +30,15 @@
             <div class="content">
               <h3 class="title dark">
                 {{restaurant.name}}
-                <span class="rating">
-                  <label class="secondary label">{{restaurant.rating || 3.5}}</label>
+                <span class="rating" title="Rating not available!">
+                  <!--<label class="secondary label">{{restaurant.getRating()}}</label>-->
+                  <i class="fa fa-star-o"></i>
                 </span>
               </h3>
-              <div class="address"><i class="fi-marker"></i> {{restaurant.address}}</div>
-              <!-- <div class="telephone"><i class="fi-telephone"></i> {{restaurant.phone}}</div> -->
+              <div class="address"><i class="fa fa-map-marker"></i> {{restaurant.address}}</div>
+              <!-- <div class="telephone"><i class="fa fa-telephone"></i> {{restaurant.phone}}</div> -->
               <div class="timings">
-                <span><i class="fi-clock"></i>
+                <span><i class="fa fa-hourglass-o"></i>
                   {{restaurant.open_time}} AM to {{restaurant.close_time}} PM
                   <span class="light green" *ngIf="!restaurant.isHoliday() && restaurant.isOpen()">(Open)</span>
                   <span class="light red" *ngIf="!restaurant.isHoliday() && restaurant.isClosed()">

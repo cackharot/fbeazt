@@ -97,7 +97,7 @@ body{
   }
 
   input[type=search]{
-    border: none;
+    border: 1px solid #a5ccf3;
     font-size: 10pt;
     float: left;
     color: #63717f;
@@ -519,7 +519,7 @@ label > .inline-label {
 .veg__icon{
   font-style: normal;
   &:after{
-    content: "\8865"; /*U+22a1*/
+    content: "\22A1";
   }
   &.green{
     color: green;

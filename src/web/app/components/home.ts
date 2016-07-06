@@ -76,7 +76,6 @@ export class HomeComponent implements OnInit {
       this.onlyOpen,
       this.userLocation,
       this.userPincode);
-    console.log(searchData);
     this.storeService.search(searchData).then(x=>{
       this.errorMsg=null;
       this.restaurants = x;
