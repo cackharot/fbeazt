@@ -72,17 +72,15 @@ export class OrderService {
     return this.currentOrder;
   }
 
-
   confirmOrder() {
     // console.log(this.currentOrder);
     return this.http.post(`${this.orderUrl}/-1`, this.currentOrder)
       .toPromise()
       .then(response => {
-        console.log(response.json());
+        // console.log(response.json());
         let updatedOrder = new Order(response.json().data);
         this.orderConfirmedSource.next(updatedOrder);
         this.currentOrder = updatedOrder;
-        // this.resetOrder();
         return updatedOrder;
       })
       .catch(this.handleError);
@@ -103,7 +101,7 @@ export class OrderService {
               .toPromise()
               .then(response=>{
                 let res = response.json();
-                console.log(res);
+                // console.log(res);
                 return res;
               })
               .catch(this.handleError);

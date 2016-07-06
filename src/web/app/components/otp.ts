@@ -25,7 +25,7 @@ export class OtpComponent implements OnInit {
   ngOnInit() {
     this.order = this.orderService.getOrder();
     console.log(this.order);
-    if(this.order.otp_status == 'VERIFIED'){
+    if(this.order.isConfirmed()){
       this.router.navigate(['OrderConfirmed']);
     }
   }

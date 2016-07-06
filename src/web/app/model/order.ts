@@ -93,6 +93,10 @@ export class Order {
   isConfirmed(){
     return this.order_no && this.order_no.length > 0 && this.otp_status == 'VERIFIED';
   }
+
+  isOtpSent(){
+    return this.otp_status == 'SENT';
+  }
 }
 
 export class LineItem {
