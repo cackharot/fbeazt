@@ -79,3 +79,5 @@ tmp/
 *.js.map
 
 .vscode/
+
+.sass-cache/

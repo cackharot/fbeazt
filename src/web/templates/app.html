@@ -1,26 +1,11 @@
 <header>
-  <nav class="top-bar">
-    <div class="top-bar-left">
-      <ul class="menu">
-        <li class="menu-text">
-          <a [routerLink]="['Home']">Foodbeazt</a>
-        </li>
-        <li class="show-for-small-only mobile-cart">
-          <cart-summary></cart-summary>
-        </li>
-      </ul>
-    </div>
-    <div class="top-bar-right show-for-medium">
-      <ul class="menu float-left">
-        <li>
-          <a href="#" title="Click to track your order">
-            <i class="fi-marker"></i> Track
-          </a>
-        </li>
-      </ul>
-      <cart-summary></cart-summary>
-    </div>
-  </nav>
+  <cart-summary></cart-summary>
+  <label for="track" class="show-for-medium">
+    <i class="fa fa-motorcycle"></i> Track
+  </label>
+  <div class="logo">
+    <a [routerLink]="['Home']">Foodbeazt</a>
+  </div>
 </header>
 <section id="main">
   <router-outlet></router-outlet>

@@ -1,11 +1,12 @@
-<div *ngIf="canShow()" class="menu checkout__menu float-left">
-  <a (click)="navigateToCheckout($event)" class="cart">
-    <i class="fi-shopping-cart"></i>
+<label for="cart-summary">
+  <a (click)="navigateToCheckout($event)">
+    <i class="fa fa-shopping-cart"></i>
     <span *ngIf="totalQuantity>0">
-      {{totalQuantity}} Items - <b class="rupee">{{totalAmount}}</b>
+      <i class="badge tiny success">{{totalQuantity}}</i>
+      <b class="rupee">{{totalAmount}}</b>
     </span>
     <span *ngIf="totalQuantity==0">
-      Empty
+      Empty!
     </span>
   </a>
-</div>
+</label>

@@ -1,0 +1,103 @@
+@import "compass/css3";
+@import "variables";
+
+header,nav{
+  margin: 0 auto;
+  user-select:none;
+  @include transition(all .2s ease);
+  @include transform(translate3d(0,0,0));
+}
+
+header{
+  // height: $baseline*2;
+  @include box-shadow(
+    0 .25em  rgba(0,0,0,0.2),
+    inset 0 -1px rgba(0,0,0,0.6),
+    inset 0 -2px rgba(255,255,255,0.15));
+  @include background(
+    linear-gradient(top ,
+    lighten(rgba(0,0,0,0.0), 0%) 0%,
+    darken(rgba(0,0,0,0.4), 10%) 99%));
+  background-color: #0c4d78;
+  z-index:99;
+  width: 100%;
+
+  a{
+    line-height:$baseline;
+    text-decoration: none;
+    color :white;
+    &:hover{
+      color: white;
+    }
+  }
+
+  .logo {
+    a {
+      z-index:9;
+      position:relative;
+      &:hover{
+        color:white;
+      }
+      @include box-shadow(
+        inset -1px 0 rgba(255,255,255,0.2),
+        inset  -2px 0 rgba(0,0,0,0.24));
+      text-align:center;
+      background-color:rgba(0,0,0,0.13);
+      display:block;
+      width: 6em;
+      font-weight: 600;
+      font-size: 28px;
+    }
+    @media screen and (max-width: 40em){
+      a{
+        @include box-shadow(none);
+        background-color: transparent;
+      }
+    }
+  }
+
+  label{
+    display: inline-block;
+    position: absolute;
+    transition:all .2s ease;
+    background-color: rgba(255,255,255,0.05);
+    position: absolute;
+    top:0; right:0%;
+    text-align:center;
+    padding:0 2em;
+    z-index:100; color:#aaa;
+    height: $baseline*2;
+    cursor:pointer;
+    width: 10em;
+    line-height: $baseline*2;
+    user-select:none;
+    @include box-shadow(
+      inset 1px 0 rgba(255,255,255,0.2),
+      inset 2px 0 rgba(0,0,0,0.2));
+    &:hover{
+     background-color: rgba(255,255,255,0.1); color: white;
+    }
+    &[for="cart-summary"]{
+      right:0em;
+      a{
+        line-height: $baseline*2;
+      }
+      .rupee{
+        position: relative;
+        right: 5px;
+      }
+      .badge{
+        line-height: 1.2em;
+        font-style: normal;
+        top: -10px;
+        position: relative;
+        min-width: 1.6em;
+        left: -6px;
+      }
+    }
+    &[for="track"]{
+      right:10em;
+      width: 9em;
+    }
+  }
+}

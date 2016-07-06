@@ -35,6 +35,7 @@ export class HomeComponent implements OnInit {
   @SessionStorage() userLocation:string = '';
   @SessionStorage() userPincode:string = '';
   @SessionStorage() onlyVeg:boolean = false;
+  @SessionStorage() onlyOpen:boolean = false;
   @SessionStorage() activeTab:string = 'Restaurant';
   searchCtrl:Control = new Control('');
   isRequesting:boolean = false;
@@ -69,10 +70,13 @@ export class HomeComponent implements OnInit {
   }
 
   searchRestaurants(){
-    let searchData = new StoreSearchModel(this.searchText,
+    let searchData = new StoreSearchModel(
+      this.searchText,
       this.onlyVeg,
+      this.onlyOpen,
       this.userLocation,
       this.userPincode);
+    console.log(searchData);
     this.storeService.search(searchData).then(x=>{
       this.errorMsg=null;
       this.restaurants = x;

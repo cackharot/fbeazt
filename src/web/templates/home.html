@@ -7,8 +7,9 @@
     <form #searchForm="ngForm">
     <div class="input-group">
       <span class="input-group-label show-for-medium">
-        <i class="fi-home"></i> Puducherry
+        <i class="fa fa-home"></i> Puducherry
       </span>
+      <i class="fa fa-search icon"></i>
       <input class="input-group-field" type="search"
           placeholder="Restaurant or dish or cuisine..."
           [ngModel]="searchText" [ngFormControl]="searchCtrl">
@@ -18,15 +19,18 @@
     </div>
     </form>
   </div>
-  <div class="medium-3 columns end">
-    <i class="fi-filter"></i> Only Veg:
-    <div class="switch tiny">
-      <input class="switch-input" id="onlyVeg" type="checkbox"
-       (change)="search()" [(ngModel)]="onlyVeg" name="onlyVeg">
-      <label class="switch-paddle" for="onlyVeg">
-        <span class="show-for-sr">Only Veg:</span>
-      </label>
-    </div>
+  <div class="medium-6 columns end">
+    <i class="fa fa-filter"></i> Filter:
+    <label class="lblOV">
+      Veg:
+      <input #lblOV type="checkbox" [checked]="onlyVeg"
+       (change)="onlyVeg=lblOV.checked;search()">
+    </label>
+    <label class="lblOO">
+      Open:
+      <input #lblOO type="checkbox" [checked]="onlyOpen"
+       (change)="onlyOpen=lblOO.checked;search()">
+    </label>
   </div>
 </section>
 <section class="row" *ngIf="searchText == null || searchText.length == 0">

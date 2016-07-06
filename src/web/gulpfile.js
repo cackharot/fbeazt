@@ -15,6 +15,9 @@ const reload = browserSync.reload;
 const tsconfig = require('tsconfig-glob');
 const addsrc = require('gulp-add-src');
 const Builder = require('systemjs-builder');
+const compass = require('gulp-compass');
+const minifyCSS = require('gulp-minify-css');
+const path = require('path');
 
 var tsProject = typescript.createProject('tsconfig.json', {
   typescript: require('typescript'),
@@ -27,13 +30,18 @@ gulp.task('clean', function () {
 });
 
 gulp.task('sass', function () {
-  gulp.src('./sass/**/*.scss')
-    .pipe(sass().on('error', sass.logError))
+  gulp.src('sass/**/*.scss')
+    // .pipe(sass().on('error', sass.logError))
+    .pipe(compass({
+      // project: path.join(__dirname, 'saas'),
+      css: 'css',
+      sass: 'sass'
+    }))
     .pipe(gulp.dest('css'));
 });
 
 gulp.task('sass:watch', function () {
-  gulp.watch('./sass/**/*.scss', ['sass']);
+  gulp.watch('sass/**/*.scss', ['sass']);
 });
 
 gulp.task('bower', function() {

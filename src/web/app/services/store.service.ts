@@ -9,6 +9,7 @@ import 'rxjs/add/operator/toPromise';
 export class StoreSearchModel{
   searchText:string;
   onlyVeg:boolean=false;
+  onlyOpen:boolean=false;
   userPincode:number;
   userLocation:string;
   sortBy:string = 'Rating';
@@ -18,13 +19,15 @@ export class StoreSearchModel{
   store_ids:string[];
 
   constructor(searchText:string=null,
-    onlyVeg:boolean = false,
-    userLocation:string = '',
-    userPincode:string = '',
-    pageNo:number = 1,
-    pageSize:number = 10){
+        onlyVeg:boolean = false,
+        onlyOpen:boolean = false,
+        userLocation:string = '',
+        userPincode:string = '',
+        pageNo:number = 1,
+        pageSize:number = 10){
     this.searchText = searchText;
     this.onlyVeg = onlyVeg;
+    this.onlyOpen = onlyOpen;
     this.userLocation = userLocation;
     this.userPincode = +userPincode;
     this.pageNo = pageNo;
@@ -45,6 +48,7 @@ export class StoreService {
     params.set('filter_text', data.searchText);
     params.set('store_ids', data.store_ids.join(','));
     params.set('only_veg', data.onlyVeg.toString());
+    params.set('only_open', data.onlyOpen.toString());
     params.set('user_location', data.userLocation);
     params.set('user_pincode', data.userPincode.toString());
     params.set('sort_by', data.sortBy);

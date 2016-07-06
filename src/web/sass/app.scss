@@ -1,17 +1,17 @@
-$primary_color: blue;
-$logo_font_size: 28px;
-$dark_color: #46535e;
-$light_color: #9ca3a8;
-$max_width: 960px;
+@import "compass/css3";
+@import "variables";
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600);
 
 body{
   font-family: "Open Sans",sans-serif;
-  // font-size: 10px;
+  font-weight: 400;
+  font-size: 15px;
+  line-height:$baseline;
 }
 
-header, #main{
+#main{
   margin: 0 auto;
-  // max-width: $max_width;
 }
 
 #main{
@@ -85,6 +85,43 @@ header, #main{
     display: inline-block;
     margin-bottom: 0;
     bottom: -8px;
+  }
+  label{
+    display: inline-block;
+  }
+
+  .input-group-label{
+    background: #2b303b;
+    color: #ccc;
+    border: none;
+  }
+
+  input[type=search]{
+    border: none;
+    font-size: 10pt;
+    float: left;
+    color: #63717f;
+    padding-left: 45px;
+    // @include border-radius(5px);
+    @include transition(background .55s ease);
+    &:-webkit-input-placeholder,
+    &:-ms-input-placeholder,
+    &:-moz-placeholder,
+    &::-moz-placeholder {
+      color: #65737e;
+    }
+    &:hover,&:active,&:focus{
+      outline:none;
+      background: #ffffff;
+    }
+  }
+  .icon{
+    @include transition(all .55s ease);
+    position: absolute;
+    margin-left: 17px;
+    margin-top: 13px;
+    z-index: 1;
+    color: #4f5b66;
   }
 }
 
@@ -482,7 +519,7 @@ label > .inline-label {
 .veg__icon{
   font-style: normal;
   &:after{
-    content: "⊡";
+    content: "\8865"; /*U+22a1*/
   }
   &.green{
     color: green;
