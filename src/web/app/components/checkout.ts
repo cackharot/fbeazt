@@ -55,6 +55,14 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
+  removeItem(item: LineItem) {
+    this.orderService.removeItem(item);
+  }
+
+  changeQuantity(item: LineItem, value: number){
+    this.orderService.updateQuantity(item, value);
+  }
+
   private saveDeliveryDetails(){
     if(this.canSaveDeliveryDetails == false){
       localStorage.setItem("delivery_details", null);

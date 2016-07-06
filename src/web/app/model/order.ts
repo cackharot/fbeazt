@@ -40,6 +40,15 @@ export class Order {
     }
   }
 
+  remove(item: LineItem){
+    let idx = this.items.findIndex(x=>x==item);
+    if(idx != -1){
+      this.items.splice(idx, 1);
+    }else{
+      console.log("Invalid item given to remove!");
+    }
+  }
+
   getStores(){
     let stores = this.getUnique(this.items.map(x=> x.store));
     return stores;

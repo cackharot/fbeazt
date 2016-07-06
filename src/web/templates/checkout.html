@@ -89,7 +89,7 @@
   <form (ngSubmit)="confirmOrder()" #orderForm="ngForm" *ngIf="!orderSuccess">
   <section class="row" *ngIf="!isEmpty()">
     <div class="medium-6 columns">
-      <h2><i class="fi-home"></i> Delivery Details</h2>
+      <h2><i class="fa fa-truck"></i> Delivery Details</h2>
       <div class="callout secondary">
         <p>
           Kindly ensure that you have given correct delivery address with postbox number, floor number,
@@ -123,18 +123,24 @@
     <div class="medium-6 columns">
       <div class="row">
         <div class="medium-12 columns">
-          <h2><i class="fi-shopping-cart"></i> Order details</h2>
+          <h2><i class="fa fa-shopping-cart"></i> Order details</h2>
           <table class="table order_table">
             <tbody>
               <tr *ngFor="let item of order.getItems()">
                 <td>
                   <div class="product_name">
+                    <a (click)="removeItem(item)" title="Remove item from cart!">
+                      <i class="fa fa-times-circle"></i>
+                    </a>
                     {{item.name}} <br/>
                     <span class="store_name light"><i>from</i> {{item.store.name}}</span>
                   </div>
                 </td>
                 <td class="quantity">
-                  <span class="price light">{{item.price}}x</span>{{item.quantity}}
+                  <!--<span class="price light">{{item.price}}x</span>-->
+                  <a (click)="changeQuantity(item,-1)"><i class="fa fa-minus-square"></i></a>
+                  {{item.quantity}}
+                  <a (click)="changeQuantity(item,1)"><i class="fa fa-plus-square"></i></a>
                 </td>
                 <td class="price">{{item.getTotalPrice()}}</td>
               </tr>
@@ -164,7 +170,7 @@
       </div>
       <div class="row">
           <div class="medium-12 columns">
-            <h2><i class="fi-credit-card"></i> Payment Details</h2>
+            <h2><i class="fa fa-credit-card"></i> Payment Details</h2>
             <div class="callout primary">
               <p>Presently we accept only <b>Cash On Delivery</b>(CoD).</p>
               <p>Online transactions through Credit/Debit card and NetBanking coming soon...</p>

@@ -14,9 +14,11 @@ export class OrderService {
   private deliveryUpdatedSource = new Subject<DeliveryDetails>();
   private orderConfirmedSource = new Subject<Order>();
   private orderResetedSource = new Subject<Order>();
+  private orderUpdatedSource = new Subject<Order>();
   private orderUrl:string = AppConfig.ORDER_URL;
 
   itemAdded$ = this.itemAddedSource.asObservable();
+  orderUpdated$ = this.orderUpdatedSource.asObservable();
   deliveryUpdated$ = this.deliveryUpdatedSource.asObservable();
   orderConfirmed$ = this.orderConfirmedSource.asObservable();
   orderReseted$ = this.orderResetedSource.asObservable();
@@ -49,6 +51,16 @@ export class OrderService {
       price: item.sell_price
     });
     this.addLineItem(lineItem);
+  }
+
+  removeItem(item:LineItem){
+    this.currentOrder.remove(item);
+    this.orderUpdatedSource.next(this.currentOrder);
+  }
+
+  updateQuantity(item:LineItem, value:number){
+    item.quantity = item.quantity + value;
+    this.orderUpdatedSource.next(this.currentOrder);
   }
 
   updateDeliveryDetails(deliveryDetails: DeliveryDetails) {
