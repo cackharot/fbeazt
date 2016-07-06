@@ -1,0 +1,32 @@
+<section class="row" *ngIf="isRequesting">
+  <div class="medium-12 columns">
+    <my-spinner [isRunning]="isRequesting"></my-spinner>
+  </div>
+</section>
+<section class="row">
+  <div class="medium-12 columns">
+    <div class="callout alert" *ngIf="error != null">
+      <h3>Oops!</h3>
+      <p>{{error}}</p>
+    </div>
+  </div>
+</section>
+<section class="row">
+  <div class="medium-12 columns">
+    <h3>OTP Verfication</h3>
+    <p>
+      A One Time Passcode (OTP) has been sent to your mobile <b>{{order.delivery_details.phone}}</b>,
+      Enter the 6 digit value in the below textbox to verify.
+    </p>
+    <form #otpform (submit)="verifyOtp()">
+    <label for="otptxt">
+      OTP: <input type="text" id="otptxt" [(ngModel)]="otp" maxlength="6" required>
+    </label>
+    <button type="submit" class="button">Verify</button>
+    </form>
+    <small class="light">
+      OTP verification allows us to manage automated systems placing spam orders.
+      This is done only once to ensure that a valid customer is placing the order.
+    </small>
+  </div>
+</section>

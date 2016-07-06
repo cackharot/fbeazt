@@ -78,10 +78,11 @@ export class OrderService {
     return this.http.post(`${this.orderUrl}/-1`, this.currentOrder)
       .toPromise()
       .then(response => {
-        // console.log(response.json());
+        console.log(response.json());
         let updatedOrder = new Order(response.json().data);
         this.orderConfirmedSource.next(updatedOrder);
-        this.resetOrder();
+        this.currentOrder = updatedOrder;
+        // this.resetOrder();
         return updatedOrder;
       })
       .catch(this.handleError);
@@ -90,6 +91,22 @@ export class OrderService {
   resetOrder(){
     this.currentOrder = new Order();
     this.orderResetedSource.next(this.currentOrder);
+  }
+
+  cancelOrder(){
+    this.resetOrder();
+  }
+
+  verifyOtp(otp:string,new_number:string){
+    let data = {'cmd':'VERIFY_OTP','otp':otp,'order_id':this.currentOrder._id,'number':new_number}
+    return this.http.put(`${this.orderUrl}/-1`,data)
+              .toPromise()
+              .then(response=>{
+                let res = response.json();
+                console.log(res);
+                return res;
+              })
+              .catch(this.handleError);
   }
 
   private handleError(error: any) {

@@ -15,6 +15,7 @@ export enum OrderStatus{
 export class Order {
   _id: ObjectId = new ObjectId();
   order_no: string;
+  otp_status:string = '';
   delivery_details: DeliveryDetails = new DeliveryDetails();
   created_at: Date;
   updated_at: Date;
@@ -87,6 +88,10 @@ export class Order {
 
   getTotalQuantity(){
     return this.items.reduce((n, x) => n + x.quantity, 0);
+  }
+
+  isConfirmed(){
+    return this.order_no && this.order_no.length > 0 && this.otp_status == 'VERIFIED';
   }
 }
 

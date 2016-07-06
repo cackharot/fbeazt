@@ -35,8 +35,10 @@ export class CartSummaryComponent implements OnInit {
   }
 
   canShow(){
-    let isCheckoutPage = this.router.isRouteActive(this.router.generate(['/Checkout']));
-    return !isCheckoutPage;
+    let valid = this.router.isRouteActive(this.router.generate(['/Checkout']));
+    valid = valid || this.router.isRouteActive(this.router.generate(['/Otp']));
+    valid = valid || this.router.isRouteActive(this.router.generate(['/OrderConfirmed']));
+    return !valid;
   }
 
   update(){

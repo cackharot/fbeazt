@@ -57,6 +57,10 @@ export class HomeComponent implements OnInit {
                    this.searchText = term;
                    this.search();
                  });
+    let order = this.orderService.getOrder();
+    if(order.isConfirmed()){
+      this.orderService.resetOrder();
+    }
   }
 
   search(){

@@ -1,13 +1,16 @@
+import time
 from bson import ObjectId, json_util
 from flask import g, request
 from flask_mail import Message
 from flask_restful import Resource
 from service.OrderService import OrderService
 from service.ProductService import ProductService
+from service.SmsService import SmsService
 from foodbeazt import mongo, app, mail
 
-order_created_template = app.jinja_env.get_template('order_created.html')
-
+order_created_template = app.jinja_env.get_template('email/order_created.html')
+order_created_sms_template = app.jinja_env.get_template('sms/order_created.html')
+order_otp_sms_template = app.jinja_env.get_template('sms/otp.html')
 
 class OrderListApi(Resource):
   def __init__(self):
@@ -34,12 +37,49 @@ class OrderApi(Resource):
   def __init__(self):
     self.service = OrderService(mongo.db)
     self.productService = ProductService(mongo.db)
+    self.smsService = SmsService(mongo.db, app.config['SMS_USER'], app.config['SMS_API_KEY'])
 
   def get(self, _id):
     if _id == "-1":
         return {}
     item = self.service.get_by_id(_id)
     return item
+
+  def put(self, _id):
+    data = json_util.loads(request.data.decode('utf-8'))
+    cmd = data.get('cmd', None)
+    if cmd is None:
+      return dict(status='error', message="Invalid command"), 423
+    if cmd == "VERIFY_OTP":
+      return self.verify_otp(data)
+    else:
+      return dict(status='error', message="Invalid command"), 423
+
+  def verify_otp(self, data):
+    order_id = data.get("order_id", None)
+    otp = data.get("otp", None)
+    new_number = data.get("number", None)
+    if otp is None or len(otp) < 3 or len(otp) > 10:
+      return dict(status='error', message="Invalid OTP given"), 424
+    order = self.service.get_by_id(order_id)
+    if order is None or order['status'] == 'DELIVERED':
+      return dict(status='error', message="Invalid Order id given. Order not found/delivered"), 425
+    if new_number is not None and len(new_number) != 0:
+      if len(new_number) != 10:
+        return dict(status='error', message="Invalid phone number!"), 426
+      else:
+        order['delivery_details']['phone'] = new_number
+        self.service.save(order)
+
+    number = order['delivery_details'].get('phone')
+    if self.smsService.update_otp(number, otp):
+      order['otp_status'] = 'VERIFIED'
+      self.service.save(order)
+      self.send_email(order)
+      self.send_sms(order)
+      return dict(status='success'), 200
+    else:
+      return dict(status='error',message="Invalid OTP given"), 424
 
   def post(self, _id):
     order = json_util.loads(request.data.decode('utf-8'))
@@ -61,8 +101,11 @@ class OrderApi(Resource):
     valid_order['delivery_details'] = delivery_details
 
     try:
+      valid_order['otp_status'] = self.send_otp(valid_order)
       _id = self.service.save(valid_order)
-      self.send_email(valid_order)
+      if valid_order['otp_status'] == 'VERIFIED':
+        self.send_email(valid_order)
+        self.send_sms(valid_order)
       return {"status": "success", "location": "/api/order/" + str(_id), "data": valid_order}
     except Exception as e:
       print("OrderService: ERROR ->")
@@ -77,6 +120,26 @@ class OrderApi(Resource):
     item['status'] = False
     self.service.delete(item)
     return None, 204
+
+  def send_otp(self, order):
+    if app.config['SEND_OTP'] == False:
+      return 'VERIFIED'
+    number = order['delivery_details'].get('phone')
+    if not self.smsService.verified_number(number):
+      otp = self.smsService.generate_otp()
+      message = order_otp_sms_template.render(order=order, otp=otp)
+      return self.smsService.send_otp(number, otp, message)
+    else:
+      return 'VERIFIED'
+
+  def send_sms(self, order):
+    number = order['delivery_details'].get('phone')
+    track_link = "http://foodbeazt.in/track/%s" % (order['order_no'])
+    message = order_created_sms_template.render(order=order,track_link=track_link)
+    if app.config['SEND_SMS'] == False:
+      print("DEV ** Sending SMS [%s] -> [%s]" % (number, message))
+    else:
+      self.smsService.send(number, message)
 
   def send_email(self, order):
     email = order['delivery_details'].get('email', None)
@@ -94,7 +157,6 @@ class OrderApi(Resource):
     try:
       if app.config['SEND_MAIL'] == False:
         print("DEV ** Sending email [%s] to %s" % (subject, email))
-        import time
         time.sleep(10)
       else:
         print("Sending email [%s] to %s" % (subject, email))

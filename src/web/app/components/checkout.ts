@@ -28,11 +28,22 @@ export class CheckoutComponent implements OnInit {
     this.order = this.orderService.getOrder();
     this.orderSuccess = this.order.order_no && this.order.order_no.length > 0;
     this.restoreDeliveryDetails();
+    if(this.order.order_no && this.order.order_no.length != 0){
+      this.navOrder();
+    }
   }
 
   resetOrder(){
     this.orderService.resetOrder();
     this.router.navigate(['Home']);
+  }
+
+  navOrder(){
+    if(this.order.otp_status == 'SENT'){
+      this.router.navigate(['Otp']);
+    }else if(this.order.otp_status == 'VERIFIED'){
+      this.router.navigate(['OrderConfirmed']);
+    }
   }
 
   confirmOrder(){
@@ -45,6 +56,7 @@ export class CheckoutComponent implements OnInit {
           this.orderSuccess = true;
           this.error = null;
           this.isRequesting = false;
+          this.navOrder();
         }, errorMsg => {
           this.orderSuccess = false;
           this.error = errorMsg

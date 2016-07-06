@@ -5,6 +5,8 @@ import { POPOVER_DIRECTIVES } from "ng2-popover";
 import { CartSummaryComponent } from './components/cartsummary';
 import { CheckoutComponent } from './components/checkout';
 import { HomeComponent } from './components/home';
+import { OrderSuccessComponent } from './components/order_success';
+import { OtpComponent } from './components/otp';
 import { RestaurantComponent } from './restaurant.component';
 import { RestaurantDetailComponent } from './restaurant-detail.component';
 
@@ -23,6 +25,8 @@ import { OrderService } from './services/order.service';
   { name: 'RestaurantList', path: 'restaurants', component: RestaurantComponent},
   { name: 'RestaurantDetail', path: 'restaurant/:id', component: RestaurantDetailComponent },
   { name: 'Checkout', path: 'checkout', component: CheckoutComponent },
+  { name: 'Otp', path: 'verify_otp', component: OtpComponent },
+  { name: 'OrderConfirmed', path: 'order_success', component: OrderSuccessComponent },
 ])
 export class AppComponent {
   constructor(private router: Router){}
