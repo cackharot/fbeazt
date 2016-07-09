@@ -248,8 +248,7 @@ body{
 
 span.rating{
   float: right;
-  // top: 10px;
-  // position: relative;
+  font-size: 16px;
 }
 
 .timings, .telephone, .address, .holidays {
@@ -547,26 +546,27 @@ label > .inline-label {
   }
 }
 
-.checkout__page{
+.checkout__page, .otp__page, .order__success{
   h2, h4{
     font-weight: 600;
   }
-  ul.faq{
-    list-style: none;
-    margin: 0 auto;
-    li{
-      padding: 0.5em 0.6em;
-      &.question{
-        font-weight: 600;
-        color: #fff;
-        background: #162c3f;
-      }
-      &.answer{
-        font-size: 14px;
-        background: #fff;
-        color: $dark_color;
-        padding-bottom: 1.24em;
-      }
+}
+
+ul.faq{
+  list-style: none;
+  margin: 0 auto;
+  li{
+    padding: 0.5em 0.6em;
+    &.question{
+      font-weight: 600;
+      color: #fff;
+      background: #162c3f;
+    }
+    &.answer{
+      font-size: 14px;
+      background: #fff;
+      color: $dark_color;
+      padding-bottom: 1.24em;
     }
   }
 }

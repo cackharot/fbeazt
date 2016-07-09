@@ -107,6 +107,18 @@ export class OrderService {
               .catch(this.handleError);
   }
 
+  resendOtp(new_number:string){
+    let data = {'cmd':'RESEND_OTP','order_id':this.currentOrder._id,'number':new_number}
+    return this.http.put(`${this.orderUrl}/-1`,data)
+              .toPromise()
+              .then(response=>{
+                let res = response.json();
+                // console.log(res);
+                return res;
+              })
+              .catch(this.handleError);
+  }
+
   private handleError(error: any) {
     console.error('An error occurred', error);
     return Promise.reject(error.json().message || error);

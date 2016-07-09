@@ -40,9 +40,11 @@ class SmsService(object):
     return otp
 
   def update_otp(self, number, otp):
-    query = self.otp_store.find({'number':number,'otp':otp})
+    n = datetime.now() - timedelta(minutes=4)
+    query = self.otp_store.find({'number':number,'created_at': {"$gt":n}}).sort('created_at', -1)
     if query.count() == 0: return False
     item = query[0]
+    if item['otp'] != otp: return False
     item['status'] = 'VERIFIED'
     item['verified_at'] = datetime.now()
     self.otp_store.save(item)
@@ -53,7 +55,11 @@ class SmsService(object):
 
   def check_otp(self, number, otp):
     query = self.otp_store.find({'number': number, 'otp': otp})
-    return query.count() == 1
+    if query.count() == 1:
+      return False
+    n = datetime.now() - timedelta(minutes=2)
+    query = self.otp_store.find({'number': number, 'created_at': {"$gt":n}})
+    return query.count() != 0
 
   def send(self, number, message):
     self.log.info("Sending SMS [%s] -> [%s](Count:%d)" % (number, message, len(message)))

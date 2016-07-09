@@ -497,22 +497,23 @@ label > .inline-label {
   border-color: #62b580;
 }
 
-.checkout__page h2, .checkout__page h4 {
+.checkout__page h2, .checkout__page h4, .otp__page h2, .otp__page h4, .order__success h2, .order__success h4 {
   font-weight: 600;
 }
-.checkout__page ul.faq {
+
+ul.faq {
   list-style: none;
   margin: 0 auto;
 }
-.checkout__page ul.faq li {
+ul.faq li {
   padding: 0.5em 0.6em;
 }
-.checkout__page ul.faq li.question {
+ul.faq li.question {
   font-weight: 600;
   color: #fff;
   background: #162c3f;
 }
-.checkout__page ul.faq li.answer {
+ul.faq li.answer {
   font-size: 14px;
   background: #fff;
   color: #46535e;

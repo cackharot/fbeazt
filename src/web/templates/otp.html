@@ -1,9 +1,9 @@
 <section class="row" *ngIf="isRequesting">
   <div class="medium-12 columns">
-    <my-spinner [isRunning]="isRequesting"></my-spinner>
+    <my-spinner [isRunning]="isRequesting" [message]="'Please wait while we verify the OTP...'"></my-spinner>
   </div>
 </section>
-<section class="row">
+<section class="row" *ngIf="!isRequesting">
   <div class="medium-12 columns">
     <div class="callout alert" *ngIf="error != null">
       <h3>Oops!</h3>
@@ -11,7 +11,7 @@
     </div>
   </div>
 </section>
-<section class="row">
+<section class="row otp__page" *ngIf="!isRequesting">
   <div class="medium-12 columns">
     <h3>OTP Verfication</h3>
     <p>
@@ -24,9 +24,19 @@
     </label>
     <button type="submit" class="button">Verify</button>
     </form>
-    <small class="light">
+    <br/>
+    <p>
+    <small>
       OTP verification allows us to manage automated systems placing spam orders.
-      This is done only once to ensure that a valid customer is placing the order.
+      This is done once to ensure that a valid customer is placing the order.
     </small>
+    </p>
+    <p>
+    <small>
+      Not received the OTP yet?
+      <span *ngIf="!canResendOTP()">You can resend OTP in {{seconds}} seconds.</span>
+      <button class="button" (click)="resendOtp()" [disabled]="!canResendOTP()">Resend</button>
+    </small>
+    </p>
   </div>
 </section>

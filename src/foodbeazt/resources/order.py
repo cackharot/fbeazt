@@ -62,8 +62,30 @@ class OrderApi(Resource):
       return dict(status='error', message="Invalid command"), 423
     if cmd == "VERIFY_OTP":
       return self.verify_otp(data)
+    elif cmd == "RESEND_OTP":
+      return self.resend_otp(data)
     else:
       return dict(status='error', message="Invalid command"), 423
+
+  def resend_otp(self, data):
+    order_id = data.get("order_id", None)
+    new_number = data.get("number", None)
+    try:
+      order = self.service.get_by_id(order_id)
+      if order is None or order['status'] == 'DELIVERED':
+        return dict(status='error', message="Invalid Order id given. Order not found/delivered"), 425
+      if new_number is not None and len(new_number) != 0:
+        if len(new_number) != 10:
+          return dict(status='error', message="Invalid phone number!"), 426
+        else:
+          order['delivery_details']['phone'] = new_number
+          self.service.save(order)
+      order['otp_status'] = self.send_otp(order)
+      self.service.save(order)
+      return dict(status='success'), 200
+    except Exception as e:
+      self.log.exception(e)
+      return dict(status="error",message="Error while sending OTP. Try again later!"), 400
 
   def verify_otp(self, data):
     order_id = data.get("order_id", None)
@@ -112,6 +134,8 @@ class OrderApi(Resource):
 
     _id = None
     try:
+      valid_order['delivery_charges'] = self.service.get_delivery_charges(valid_order)
+      valid_order['total'] = self.service.get_order_total(valid_order)
       self.check_duplicate_order(valid_order)
       valid_order['otp_status'] = self.send_otp(valid_order)
       _id = self.service.save(valid_order)
