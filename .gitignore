@@ -81,3 +81,5 @@ tmp/
 .vscode/
 
 .sass-cache/
+*.cfg
+**/*.cfg
