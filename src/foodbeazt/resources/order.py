@@ -7,6 +7,7 @@ from service.OrderService import OrderService
 from service.ProductService import ProductService
 from service.SmsService import SmsService
 from foodbeazt.fapp import mongo, app, mail
+import logging
 
 order_created_template = app.jinja_env.get_template('email/order_created.html')
 order_created_sms_template = app.jinja_env.get_template('sms/order_created.html')
@@ -14,36 +15,44 @@ order_otp_sms_template = app.jinja_env.get_template('sms/otp.html')
 
 class OrderListApi(Resource):
   def __init__(self):
+    self.log = logging.getLogger(__name__)
     self.service = OrderService(mongo.db)
 
   def get(self):
     tenant_id = g.user.tenant_id
     store_id = None
     if store_id == '-1' or store_id == -1:
-        store_id = None
-        tenant_id = None
+      store_id = None
+      tenant_id = None
 
     page_no = int(request.args.get('page_no', 1))
     page_size = int(request.args.get('page_size', 24))
     filter_text = request.args.get('filter_text', None)
 
-    items, total = self.service.search(tenant_id=tenant_id, store_id=store_id, page_no=page_no,
-                                        page_size=page_size,
-                                        filter_text=filter_text)
-    return {'items': items, 'total': total}
+    try:
+      items, total = self.service.search(tenant_id=tenant_id, store_id=store_id, page_no=page_no,
+                                          page_size=page_size,
+                                          filter_text=filter_text)
+      return {'items': items, 'total': total}
+    except Exception as e:
+      self.log.exception(e)
+      return {"status": "error", "message": "Error on searching retaurants"}, 420
 
 
 class OrderApi(Resource):
   def __init__(self):
+    self.log = logging.getLogger(__name__)
     self.service = OrderService(mongo.db)
     self.productService = ProductService(mongo.db)
     self.smsService = SmsService(mongo.db, app.config['SMS_USER'], app.config['SMS_API_KEY'])
 
   def get(self, _id):
-    if _id == "-1":
-        return {}
-    item = self.service.get_by_id(_id)
-    return item
+    if _id == "-1": return {}
+    try:
+      return self.service.get_by_id(_id)
+    except Exception as e:
+      self.log.exception(e)
+      return {"status": "error", "message": "Error on get retaurant with id %s" % _id}, 421
 
   def put(self, _id):
     data = json_util.loads(request.data.decode('utf-8'))
@@ -83,7 +92,7 @@ class OrderApi(Resource):
 
   def post(self, _id):
     order = json_util.loads(request.data.decode('utf-8'))
-    # print("RECEIVED ORDER", order)
+    self.log.debug("RECEIVED ORDER", order)
     tenant_id = g.user.tenant_id
     valid_order = {
       'tenant_id': ObjectId(tenant_id)
@@ -108,8 +117,7 @@ class OrderApi(Resource):
         self.send_sms(valid_order)
       return {"status": "success", "location": "/api/order/" + str(_id), "data": valid_order}
     except Exception as e:
-      print("OrderService: ERROR ->")
-      print(e)
+      self.log.exception(e)
       return dict(status="error",
                   message="Oops! Error while trying to save order details! Please try again later"), 420
 
@@ -137,7 +145,7 @@ class OrderApi(Resource):
     track_link = "http://foodbeazt.in/track/%s" % (order['order_no'])
     message = order_created_sms_template.render(order=order,track_link=track_link)
     if app.config['SEND_SMS'] == False:
-      print("DEV ** Sending SMS [%s] -> [%s]" % (number, message))
+      self.log.info("DEV ** Sending SMS [%s] -> [%s]" % (number, message))
     else:
       self.smsService.send(number, message)
 
@@ -146,7 +154,7 @@ class OrderApi(Resource):
     if email is None or len(email) <= 3:
       return
     if app.config.get('MAIL_SENDER',None) is None:
-      print("Invalid MAIL_SENDER configured. Not sending emails!!")
+      self.log.info("Invalid MAIL_SENDER configured. Not sending emails!!")
       return
 
     subject = "Order confirmation <%s>" % (order.get('order_no', '000'))
@@ -156,13 +164,13 @@ class OrderApi(Resource):
     msg.html = order_created_template.render(order=order)
     try:
       if app.config['SEND_MAIL'] == False:
-        print("DEV ** Sending email [%s] to %s" % (subject, email))
+        self.log.info("DEV ** Sending email [%s] to %s" % (subject, email))
         time.sleep(10)
       else:
-        print("Sending email [%s] to %s" % (subject, email))
+        self.log.info("Sending email [%s] to %s" % (subject, email))
         mail.send(msg)
     except Exception as e:
-      print(e)
+      self.log.exception(e)
 
   def validate_line_items(self, order):
     validation_error = None
