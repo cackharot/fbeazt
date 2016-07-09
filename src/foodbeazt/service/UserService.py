@@ -1,6 +1,6 @@
 from datetime import datetime
 from bson import ObjectId
-
+import logging
 
 class DuplicateUserException(Exception):
     def __init__(self, message='User name/email already exits'):
@@ -19,6 +19,7 @@ class UserServiceException(Exception):
 
 class UserService(object):
     def __init__(self, db):
+        self.log = logging.getLogger(__name__)
         self.db = db
         self.users = self.db.user_collection
 

@@ -20,9 +20,9 @@ from flask_cors import CORS, cross_origin
 from bson import ObjectId, json_util
 import json
 
-from flogging import logging, config_logging
+from flogging import logging, setup_logging
 
-config_logging()
+setup_logging()
 
 logger = logging.getLogger(__name__)
 
