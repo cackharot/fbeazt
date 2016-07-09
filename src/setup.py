@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 import os
+from foodbeazt.version import __VERSION__
 
 def package_files(ds):
   paths = []
@@ -13,7 +14,7 @@ extra_files = package_files(['foodbeazt/templates', 'foodbeazt/static'])
 
 setup(
     name='foodbeazt',
-    version='0.1',
+    version=__VERSION__,
     packages=find_packages(),
     url='www.foodbeazt.in',
     license='Apache License 2.0',

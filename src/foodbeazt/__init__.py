@@ -21,8 +21,9 @@ from bson import ObjectId, json_util
 import json
 
 app = Flask(__name__, instance_relative_config=False)
-app.config.from_pyfile('foodbeazt.cfg', silent=False)
-if os.environ.get('FOODBEAZT_CONFIG', None):
+app.config.from_pyfile('foodbeazt.cfg', silent=True)
+
+if os.environ.get('FOODBEAZT_CONFIG', None) is not None:
   app.config.from_envvar('FOODBEAZT_CONFIG')
 
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
