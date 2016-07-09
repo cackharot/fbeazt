@@ -19,6 +19,7 @@ def deploy():
 
 def deploy_web():
   with lcd('web'), hide('stdout'):
+    local("npm install")
     local("gulp build")
     run("rm -rf /opt/fbeazt/app/*")
     run("mkdir -p /opt/fbeazt/app")
