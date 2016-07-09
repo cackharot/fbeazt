@@ -20,6 +20,9 @@
     <span class="price_tag rupee light">{{product.sell_price}}</span>
   </div>
   <div class="card-action align-center">
+    <small class="light" *ngIf="!product.isAvailable()">
+      Currently unavailable. Try again later!
+    </small>
     <button type="button" (click)="select(product,$event)"
      popover="Added to cart!"
      popoverTitle=""

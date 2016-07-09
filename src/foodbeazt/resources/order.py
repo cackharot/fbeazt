@@ -3,7 +3,7 @@ from bson import ObjectId, json_util
 from flask import g, request
 from flask_mail import Message
 from flask_restful import Resource
-from service.OrderService import OrderService
+from service.OrderService import OrderService, DuplicateOrderException
 from service.ProductService import ProductService
 from service.SmsService import SmsService
 from foodbeazt.fapp import mongo, app, mail
@@ -41,6 +41,7 @@ class OrderListApi(Resource):
 
 class OrderApi(Resource):
   def __init__(self):
+    self.MAX_ORDER_PER_PHONE = 3
     self.log = logging.getLogger(__name__)
     self.service = OrderService(mongo.db)
     self.productService = ProductService(mongo.db)
@@ -109,17 +110,24 @@ class OrderApi(Resource):
 
     valid_order['delivery_details'] = delivery_details
 
+    _id = None
     try:
+      self.check_duplicate_order(valid_order)
       valid_order['otp_status'] = self.send_otp(valid_order)
       _id = self.service.save(valid_order)
-      if valid_order['otp_status'] == 'VERIFIED':
-        self.send_email(valid_order)
-        self.send_sms(valid_order)
-      return {"status": "success", "location": "/api/order/" + str(_id), "data": valid_order}
+    except DuplicateOrderException as e:
+      self.log.exception(e)
+      return dict(status="error",message="We identified frequent placement of order. \
+              Please wait 15 minutes before placing any other order."), 429
     except Exception as e:
       self.log.exception(e)
       return dict(status="error",
                   message="Oops! Error while trying to save order details! Please try again later"), 420
+
+    if valid_order['otp_status'] == 'VERIFIED':
+      self.send_email(valid_order)
+      self.send_sms(valid_order)
+    return {"status": "success", "location": "/api/order/" + str(_id), "data": valid_order}
 
   def delete(self, _id):
     item = self.service.get_by_id(_id)
@@ -147,7 +155,10 @@ class OrderApi(Resource):
     if app.config['SEND_SMS'] == False:
       self.log.info("DEV ** Sending SMS [%s] -> [%s]" % (number, message))
     else:
-      self.smsService.send(number, message)
+      try:
+        self.smsService.send(number, message)
+      except Exception as e:
+        self.log.exception(e)
 
   def send_email(self, order):
     email = order['delivery_details'].get('email', None)
@@ -236,3 +247,9 @@ class OrderApi(Resource):
       'country': 'India',
       'notes': delivery_details.get('notes', None)
     }
+
+  def check_duplicate_order(self, order):
+    phone = order['delivery_details']['phone']
+    order_count = self.smsService.get_order_count(phone=phone,minutes=15)
+    if order_count > self.MAX_ORDER_PER_PHONE:
+      raise DuplicateOrderException()

@@ -1,11 +1,13 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from bson import ObjectId
 import re
 import random
 import string
+import logging
 
 class SmsService(object):
   def __init__(self, db, user, api_key):
+    self.log = logging.getLogger(__name__)
     self.db = db
     self.user = user
     self.api_key = api_key
@@ -13,7 +15,10 @@ class SmsService(object):
     self.otp_store = db.sms_otp_collection
 
   def send_otp(self, number, otp, message):
-    print("Sending OTP SMS [%s] -> [%s](Count:%d)" % (number, message, len(message)))
+    self.log.info("Sending OTP SMS [%s] -> [%s](Count:%d)" % (number, message, len(message)))
+    if self.check_otp(number, otp):
+      self.log.warn("Trying to send duplicate OTP message %s" % (number))
+      return 'SENT'
     item = dict(number=number, message=message, char_count=len(message), created_at=datetime.now(),
                 status='SENT', otp=otp, details="")
     _id = self.otp_store.save(item)
@@ -31,7 +36,7 @@ class SmsService(object):
       count =  count + 1
     if count > 10:
       raise Exception("Unable to generate OTP after 10 iteration!!")
-    print("GENERATED OTP %s" % (otp))
+    self.log.info("GENERATED OTP %s" % (otp))
     return otp
 
   def update_otp(self, number, otp):
@@ -51,8 +56,19 @@ class SmsService(object):
     return query.count() == 1
 
   def send(self, number, message):
-    print("Sending SMS [%s] -> [%s](Count:%d)" % (number, message, len(message)))
+    self.log.info("Sending SMS [%s] -> [%s](Count:%d)" % (number, message, len(message)))
+    if self.has_duplicate_message(number, message):
+      self.log.warn("Trying to send duplicate message %s" % (number))
+      return 'SENT'
     item = dict(number=number, message=message, char_count=len(message), created_at=datetime.now(), status='I', details="")
     _id = self.sms_store.save(item)
-    print(item)
     return 'SENT'
+
+  def has_duplicate_message(self,number, message):
+    query = self.sms_store.find({'number':number,'message':message})
+    return query.count() > 1
+
+  def get_order_count(self, phone, minutes=15):
+    n = datetime.now() - timedelta(minutes=minutes)
+    query = self.sms_store.find({'number':phone,'created_at': { '$gt': n}})
+    return query.count()

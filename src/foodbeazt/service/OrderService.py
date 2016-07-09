@@ -4,6 +4,8 @@ from bson import ObjectId
 import random
 import string
 
+class DuplicateOrderException(Exception):
+    pass
 
 class OrderService(object):
     def __init__(self, db):
@@ -55,7 +57,7 @@ class OrderService(object):
 
     def get_delivery_charges(self, order):
         return 40.0
-    
+
     def get_order_total(self, order):
         item_total = sum([x['price']*x['quantity'] for x in order['items']])
         return item_total + order['delivery_charges']
