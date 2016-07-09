@@ -2,7 +2,7 @@ from bson import json_util, ObjectId
 from flask import request, session, g
 from flask_restful import Resource
 from service.UserService import UserService, DuplicateUserException, UserServiceException
-from foodbeazt import mongo
+from foodbeazt.fapp import mongo
 
 
 class UserListApi(Resource):

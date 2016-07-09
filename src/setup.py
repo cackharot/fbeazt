@@ -11,6 +11,8 @@ def package_files(ds):
   return paths
 
 extra_files = package_files(['foodbeazt/templates', 'foodbeazt/static'])
+log_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'foodbeazt/logging.yml'))
+extra_files.append(log_file)
 
 setup(
     name='foodbeazt',
@@ -26,5 +28,5 @@ setup(
     install_requires=['Flask','flask-login','flask-mail',
         'flask-pymongo','flask-restful','flask-babel', 'flask-principal',
         'flask-cors', 'uwsgi',
-        'requests', 'pymongo']
+        'requests', 'pymongo', 'pyyaml']
 )

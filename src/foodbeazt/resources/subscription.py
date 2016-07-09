@@ -2,8 +2,8 @@ from datetime import datetime
 from flask import request
 from service.SubscriptionService import SubscriptionService, InvalidEmailFormatException, DuplicateEmailException
 from flask.ext.mail import Message
-from foodbeazt import mongo, app, mail
 from flask.ext.restful import Resource
+from foodbeazt.fapp import mongo, app, mail
 
 
 class SubscriptionListApi(Resource):

@@ -1,8 +1,8 @@
 from datetime import datetime
 from flask import g, request
 from service.ImportExportService import ImportExportService
-from foodbeazt import mongo, app, mail, export_data_folder, import_data_folder
 from flask.ext.restful import Resource
+from foodbeazt.fapp import mongo, app, mail, export_data_folder, import_data_folder
 
 
 class ExportDataApi(Resource):

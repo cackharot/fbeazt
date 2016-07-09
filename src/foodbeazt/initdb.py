@@ -111,8 +111,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
       if sys.argv[1] == "drop":
         print('Dropping database...')
-        from pymongo import Connection
-        c = Connection()
+        c = MongoClient()
         c.drop_database('foodbeaztDb')
         print('Drop successfull')
 

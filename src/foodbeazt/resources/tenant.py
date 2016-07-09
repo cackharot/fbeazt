@@ -3,7 +3,7 @@ from flask import request, session, g
 from flask_restful import Resource
 from service.TenantService import TenantService, DuplicateTenantNameException, DuplicateTenantUrlException
 from service.UserService import DuplicateUserException
-from foodbeazt import mongo
+from foodbeazt.fapp import mongo
 
 
 class TenantListApi(Resource):

@@ -21,12 +21,13 @@ def deploy():
   put('dist/%s.tar.gz' % dist, '/opt/fbeazt/sdist')
   put('foodbeazt/uwsgi.ini', '/opt/fbeazt/bin')
   put('foodbeazt/uwsgi.py', '/opt/fbeazt/bin')
+  put('requirements.txt', '/opt/fbeazt/bin')
   put('web/dist', '/opt/fbeazt/app')
   put('infra/files/etc/nginx/conf.d/fbeazt.conf', '/opt/fbeazt/bin')
   put('infra/files/etc/systemd/system/fbeazt.service', '/opt/fbeazt/bin')
   run("sudo ln -sf /opt/fbeazt/bin/fbeazt.conf /etc/nginx/conf.d/fbeazt.conf")
   run("sudo ln -sf /opt/fbeazt/bin/fbeazt.service /etc/systemd/system/fbeazt.service")
-
+  run("/opt/fbeazt/.env/bin/pip install -r /opt/fbeazt/bin/requirements.txt")
   with cd('/opt/fbeazt/sdist'):
     run('/opt/fbeazt/.env/bin/pip install --upgrade --no-deps --force-reinstall %s.tar.gz' % dist)
 

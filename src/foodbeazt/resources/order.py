@@ -6,7 +6,7 @@ from flask_restful import Resource
 from service.OrderService import OrderService
 from service.ProductService import ProductService
 from service.SmsService import SmsService
-from foodbeazt import mongo, app, mail
+from foodbeazt.fapp import mongo, app, mail
 
 order_created_template = app.jinja_env.get_template('email/order_created.html')
 order_created_sms_template = app.jinja_env.get_template('sms/order_created.html')
