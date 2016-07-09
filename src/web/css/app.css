@@ -221,6 +221,7 @@ body {
 
 span.rating {
   float: right;
+  font-size: 16px;
 }
 
 .timings, .telephone, .address, .holidays {

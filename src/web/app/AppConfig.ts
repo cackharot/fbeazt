@@ -7,10 +7,14 @@ export class AppConfig {
   static ORDER_URL:string = AppConfig.BASE_URL+"/order";
 
   static getBaseUrl(){
+    let host = window.location.host,
+      port = window.location.port;
+    console.info(host);
     if (window.location.host.match(/localhost/)) {
       return 'http://localhost:4000/api';
     } else {
-      return 'http://foodbeazt.in/api/';
+      // return 'http://foodbeazt.in/api/';
+      return 'http://'+ host + ':' + port +'/api/';
     }
   }
 }

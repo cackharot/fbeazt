@@ -52,7 +52,7 @@ gulp.task('bower', function() {
 // copy static assets - i.e. non TypeScript compiled source
 gulp.task('copy:assets', ['clean', 'sass'], function() {
   return gulp.src(['templates/**/*', 'images/**/*',
-        'css/**/*'], { base : './' })
+        'css/**/*', 'fonts/**/*'], { base : './' })
     .pipe(gulp.dest('dist'))
 });
 
