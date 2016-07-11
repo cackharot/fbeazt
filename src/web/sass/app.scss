@@ -357,6 +357,18 @@ img.res_logo{
         color:#fff;
         background: #4c9cdf;
       }
+      &.inc,&.dec{
+        width: 60px;
+      }
+      &.inc{
+        margin-left: 20px;
+      }
+      &.dec{
+        margin-right: 20px;
+      }
+    }
+    .qty__btn__container{
+      margin: 0 auto;
     }
   }
 }

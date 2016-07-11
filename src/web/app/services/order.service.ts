@@ -3,6 +3,7 @@ import { Subject }    from 'rxjs/Subject';
 import { Headers, Http } from '@angular/http';
 import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
 
+import { ObjectId } from '../model/base';
 import { Product } from '../model/product';
 import { Order, LineItem, DeliveryDetails } from '../model/order';
 import { AppConfig } from '../AppConfig';
@@ -59,6 +60,12 @@ export class OrderService {
   }
 
   updateQuantity(item:LineItem, value:number){
+    item.quantity = item.quantity + value;
+    this.orderUpdatedSource.next(this.currentOrder);
+  }
+
+  updateItemQuantity(product_id:ObjectId, value:number){
+    let item = this.currentOrder.getItemByProductId(product_id);
     item.quantity = item.quantity + value;
     this.orderUpdatedSource.next(this.currentOrder);
   }

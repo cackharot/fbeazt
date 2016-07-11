@@ -325,6 +325,18 @@ img.res_logo {
   color: #fff;
   background: #4c9cdf;
 }
+.card .card-action .button.inc, .card .card-action .button.dec {
+  width: 60px;
+}
+.card .card-action .button.inc {
+  margin-left: 20px;
+}
+.card .card-action .button.dec {
+  margin-right: 20px;
+}
+.card .card-action .qty__btn__container {
+  margin: 0 auto;
+}
 
 .button {
   -webkit-border-radius: 3px;

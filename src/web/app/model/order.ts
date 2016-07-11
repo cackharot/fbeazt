@@ -79,6 +79,19 @@ export class Order {
     return this.items.filter(x=> _.isEqual(x.store_id,store_id));
   }
 
+  getItemQuantity(product_id:ObjectId){
+    let item = this.getItemByProductId(product_id);
+    if(item != null){
+      return item.quantity;
+    }
+    return -1;
+  }
+
+  getItemByProductId(product_id:ObjectId){
+    let item = this.items.filter(x=>_.isEqual(x.product_id, product_id));
+    return item.length == 1 ? item[0] : null;
+  }
+
   getDeliveryCharges(){
     return this.delivery_charges;
   }

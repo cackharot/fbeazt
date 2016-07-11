@@ -21,9 +21,18 @@ export class ProductListComponent implements OnInit {
   @Output() selectedProduct = new EventEmitter<Product>();
   selection:Product;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private orderService: OrderService) { }
 
   ngOnInit() {
+  }
+
+  getQuantity(item:Product){
+    let order = this.orderService.getOrder();
+    return order.getItemQuantity(item._id);
+  }
+
+  updateQuantity(item:Product, value:number){
+    this.orderService.updateItemQuantity(item._id, value);
   }
 
   select(item: Product, event: any=null){

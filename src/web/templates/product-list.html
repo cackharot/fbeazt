@@ -23,7 +23,13 @@
     <small class="light" *ngIf="!product.isAvailable()">
       Currently unavailable. Try again later!
     </small>
+    <div class="qty__btn__container" *ngIf="getQuantity(product)>0">
+      <button class="button dec" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,-1)"><i class="fa fa-minus"></i></button>
+      Qty: {{getQuantity(product)}}
+      <button class="button inc" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,1)"><i class="fa fa-plus"></i></button>
+    </div>
     <button type="button" (click)="select(product,$event)"
+     *ngIf="getQuantity(product)<=0"
      popover="Added to cart!"
      popoverTitle=""
      popoverPlacement="top"
