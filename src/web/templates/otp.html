@@ -3,15 +3,26 @@
     <my-spinner [isRunning]="isRequesting" [message]="'Please wait while we verify the OTP...'"></my-spinner>
   </div>
 </section>
-<section class="row" *ngIf="!isRequesting">
+<section class="row" *ngIf="!isRequesting && error != null">
   <div class="medium-12 columns">
-    <div class="callout alert" *ngIf="error != null">
+    <div class="callout alert">
       <h3>Oops!</h3>
       <p>{{error}}</p>
     </div>
   </div>
 </section>
-<section class="row otp__page" *ngIf="!isRequesting">
+<section class="row" *ngIf="isMaxOtpAttempt">
+  <div class="medium-12 columns">
+    <div class="callout alert">
+      <h3>Max OTP Attempt reached!</h3>
+      <p>You have reached the maximum OTP attempts for verifying this order.</p>
+      <p>Kindly cancel this order and place a new order with correct contact number and delivery details.</p>
+      <p>For assistance and any queries, kindly call us on +91 7373730484</p>
+      <button class="button alert" (click)="cancelOrder()" >Cancel</button>
+    </div>
+  </div>
+</section>
+<section class="row otp__page" *ngIf="!isRequesting && !isMaxOtpAttempt">
   <div class="medium-12 columns">
     <h3>OTP Verfication</h3>
     <p>
