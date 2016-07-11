@@ -213,6 +213,10 @@ body {
   margin-top: 1em;
 }
 
+.text-alert {
+  color: #d22200;
+}
+
 .title {
   margin: 0;
   margin-bottom: 10px;

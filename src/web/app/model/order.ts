@@ -55,7 +55,7 @@ export class Order {
     return stores;
   }
 
-  getUnique(data:any[]){
+  private getUnique(data:any[]){
     var unique = {};
     var distinct = [];
     data.forEach(function (x) {
@@ -65,6 +65,11 @@ export class Order {
       }
     });
     return distinct;
+  }
+
+  isValid(){
+    let hasClosedItems = this.items.filter(x=>x.store.isClosed()).length > 0;
+    return this.getSubTotal() > 0 && !hasClosedItems;
   }
 
   getItems(store_id=null){
@@ -96,6 +101,11 @@ export class Order {
 
   isOtpSent(){
     return this.otp_status == 'SENT';
+  }
+
+  getHash(){
+    let i = (this.items.length*32 + this.getTotalAmount()*32) << 2;
+    return i.toString();
   }
 }
 

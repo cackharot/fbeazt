@@ -72,11 +72,15 @@
               <tr *ngFor="let item of order.getItems()">
                 <td>
                   <div class="product_name">
-                    <a (click)="removeItem(item)" title="Remove item from cart!">
+                    <a (click)="removeItem(item)" [class.text-alert]="item.store.isClosed()" title="Remove item from cart!">
                       <i class="fa fa-times-circle"></i>
                     </a>
                     {{item.name}} <br/>
                     <span class="store_name light"><i>from</i> {{item.store.name}}</span>
+                    <br/>
+                    <small class="light text-alert" *ngIf="item.store.isClosed()">
+                      Currently unavailable!
+                    </small>
                   </div>
                 </td>
                 <td class="quantity">
@@ -109,6 +113,12 @@
               </tr>
             </tfoot>
           </table>
+          <div class="callout alert" *ngIf="!order.isValid()">
+            <p>There are some dishes that are presently become unavailable. Kindly remove them to proceed.
+            This may occur if you have added the dish while the store was open and before completing the
+            checkout process.</p>
+            <p>For assistance and any queries, kindly call us on +91 7373730484</p>
+          </div>
         </div>
       </div>
       <div class="row">
@@ -124,7 +134,7 @@
     <div class="medium-12 columns">
       <div class="align-center">
         <button (click)="resetOrder()" class="button secondary">Cancel</button>
-        <button type="submit" class="button primary" [disabled]="!orderForm.form.valid">
+        <button type="submit" class="button primary" [disabled]="!orderForm.form.valid && order.isValid()">
           Confirm
         </button>
       </div>
