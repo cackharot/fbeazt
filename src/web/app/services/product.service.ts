@@ -13,13 +13,13 @@ export class ProductSearchModel{
   sortBy:string = 'Rating';
   sortDirection:string = 'ASC';
   pageNo:number = 1;
-  pageSize:number = 50;
+  pageSize:number = 100;
 
   constructor(searchText:string=null,
     onlyVeg:boolean = false,
     category:string = '',
     pageNo:number = 1,
-    pageSize:number = 50){
+    pageSize:number = 100){
     this.searchText = searchText;
     this.category = category;
     this.onlyVeg = onlyVeg;

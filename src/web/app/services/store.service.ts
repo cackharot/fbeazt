@@ -15,7 +15,7 @@ export class StoreSearchModel{
   sortBy:string = 'Rating';
   sortDirection:string = 'ASC';
   pageNo:number = 1;
-  pageSize:number = 10;
+  pageSize:number = 100;
   store_ids:string[];
 
   constructor(searchText:string=null,
@@ -24,7 +24,7 @@ export class StoreSearchModel{
         userLocation:string = '',
         userPincode:string = '',
         pageNo:number = 1,
-        pageSize:number = 10){
+        pageSize:number = 100){
     this.searchText = searchText;
     this.onlyVeg = onlyVeg;
     this.onlyOpen = onlyOpen;

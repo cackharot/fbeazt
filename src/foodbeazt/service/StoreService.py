@@ -1,5 +1,6 @@
 from datetime import datetime
 from bson import ObjectId
+import re
 
 class DuplicateStoreNameException(Exception):
   def __init__(self, message='Store name already exits'):
@@ -10,8 +11,9 @@ class StoreService(object):
   def __init__(self, db):
     self.db = db
     self.stores = self.db.store_collection
+    self.weekday_names = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
 
-  def search(self, tenant_id, filter_text=None, only_veg=False, page_no=1,page_size=10):
+  def search(self, tenant_id, filter_text=None, only_veg=False, only_open=False, page_no=1,page_size=10):
     query = {"tenant_id": ObjectId(tenant_id)}
 
     if filter_text is not None and len(filter_text) > 2:
@@ -20,9 +22,23 @@ class StoreService(object):
     if only_veg:
       query['food_type'] = {'$elemMatch': {'$eq': 'veg'}}
 
+    if only_open:
+      now = datetime.now()
+      hrmin = float("%.2f" % ((now.hour + (now.minute/60))%12))
+      day = self.weekday_names[now.weekday()]
+      query['open_time'] = { "$lte": hrmin }
+      query['close_time'] = { "$gte": hrmin }
+      query['is_closed'] = { "$eq": False }
+      query['holidays'] = {
+        "$elemMatch":  {
+          '$not': re.compile(day, re.IGNORECASE)
+        }
+      }
+
     offset = (page_no - 1) * page_size
     if offset < 0: offset = 0
     lst = self.stores.find(query)
+    print(query)
     return [x for x in lst.sort("created_at", -1).skip(offset).limit(page_size)], lst.count()
 
   def save(self, store_item):

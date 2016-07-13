@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
                  .debounceTime(400)
                  .distinctUntilChanged()
                  .subscribe(term => {
-                   this.searchText = term;
+                   this.searchText = term ? term.trim() : "";
                    this.search();
                  });
     let order = this.orderService.getOrder();

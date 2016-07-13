@@ -16,7 +16,8 @@ class StoreListApi(Resource):
 
     page_no = int(request.args.get('page_no', 1))
     page_size = int(request.args.get('page_size', 10))
-    only_veg = bool(request.args.get('only_veg', False))
+    only_veg = request.args.get('only_veg', None) in ["true", "True", "1"]
+    only_open = request.args.get('only_open', None) in ["true", "True", "1"]
     filter_text = request.args.get('filter_text', None)
     user_pincode = request.args.get('user_pincode', None)
     user_location = request.args.get('user_location', None)
@@ -26,6 +27,7 @@ class StoreListApi(Resource):
           tenant_id=tenant_id,
           filter_text=filter_text,
           only_veg=only_veg,
+          only_open=only_open,
           page_no=page_no,
           page_size=page_size)
       return lst
