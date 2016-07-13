@@ -1,7 +1,7 @@
 @import "compass/css3";
 @import "variables";
 
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600);
+// @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600);
 
 body{
   font-family: "Open Sans",sans-serif;
@@ -661,12 +661,22 @@ ul.faq{
   }
 }
 
-.spinner {
-  width: 40px;
-  height: 40px;
-
+.spinner__container{
   position: relative;
-  margin: 100px auto;
+  .spinner {
+    width: 40px;
+    height: 40px;
+
+    position: relative;
+    margin: 100px auto;
+  }
+  .content{
+    position: absolute;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    top: 90%;
+  }
 }
 
 .double-bounce1, .double-bounce2 {

@@ -61,13 +61,16 @@ export class OrderService {
 
   updateQuantity(item:LineItem, value:number){
     item.quantity = item.quantity + value;
+    if(item.quantity <= 0){
+      this.removeItem(item);
+      return;
+    }
     this.orderUpdatedSource.next(this.currentOrder);
   }
 
   updateItemQuantity(product_id:ObjectId, value:number){
     let item = this.currentOrder.getItemByProductId(product_id);
-    item.quantity = item.quantity + value;
-    this.orderUpdatedSource.next(this.currentOrder);
+    this.updateQuantity(item, value);
   }
 
   updateDeliveryDetails(deliveryDetails: DeliveryDetails) {
