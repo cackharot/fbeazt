@@ -23,6 +23,7 @@ export class Product {
   name: string;
   description: string='';
   status: boolean;
+  is_popular: boolean=false;
 
   constructor(data={}){
     Object.assign(this, data);

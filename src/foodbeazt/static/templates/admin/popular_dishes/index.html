@@ -1,0 +1,65 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false"
+     ng-controller="popularDishesCtrl">
+  <h3>
+      Popular Dishes
+  </h3>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="search__container">
+          <form ng-submit="searchItems()">
+          <input type="search" ng-model="searchText"/>
+          <button type="submit" class="button">Search</button>
+          </form>
+        </div>
+        <div ng-if="search_results.length>0">
+          <h4>Search Results</h4>
+          <table class="table table-striped">
+          <tr ng-repeat="item in search_results">
+            <td>
+              {{item.name}}
+            </td>
+            <td>{{item.store.name}}</td>
+            <td class="price text-right">
+              {{item.sell_price}}
+            </td>
+            <td class="action">
+              <a href="" ng-click="addPopular(item._id.$oid)">Add</a>
+            </td>
+          </tr>
+          </table>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <th>Category</th>
+            <th>Barcode</th>
+            <th>Name</th>
+            <th class="text-right">Price</th>
+            <th>Timings</th>
+            <th>Veg/Non-Veg</th>
+            <th class="text-center">Remove</th>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in products" ng-class="{'text-danger': !item.status}">
+              <td>{{item.category}}</td>
+              <td><a href="#/product/{{item.store_id.$oid}}/{{item._id.$oid}}" title="Click to edit this item!">{{item.barcode}}</a></td>
+              <td>{{item.name}}</td>
+              <td><span ng-bind-html="item.sell_price | currency"></span></td>
+              <td>
+                <span>Open: {{item.open_time}} AM</span>
+                <span>Close: {{item.close_time}} PM</span>
+              </td>
+              <td><span ng-bind-html="item.food_type | show_food_type"></span></td>
+              <td class="text-center">
+                <a href="" ng-click="removePopularDish(item._id.$oid)"
+                  title="Click to remove"><em class="fa fa-ban"></em></a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

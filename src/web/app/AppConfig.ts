@@ -4,6 +4,7 @@ export class AppConfig {
   static STORE_URL:string = AppConfig.BASE_URL+"/store";
   static PRODUCTS_URL:string = AppConfig.BASE_URL+"/products";
   static PRODUCT_URL:string = AppConfig.BASE_URL+"/product";
+  static POPULAR_DISHES_URL:string = AppConfig.BASE_URL+"/popular_items";
   static ORDER_URL:string = AppConfig.BASE_URL+"/order";
 
   static getBaseUrl(){

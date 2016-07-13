@@ -6,6 +6,7 @@ class ProductService(object):
   def __init__(self, db):
     self.db = db
     self.products = db.product_collection
+    self.popular_items = db.popular_products_collections
 
   def create(self, item):
     if item.get('cuisines', None) is not None and isinstance(item['cuisines'], str):
@@ -53,4 +54,33 @@ class ProductService(object):
     return [x for x in lst.sort("created_at", -1).skip(offset).limit(page_size)], lst.count()
 
   def delete(self, _id):
-    self.products.remove({'_id': ObjectId(_id)})
+    return self.products.remove({'_id': ObjectId(_id)})
+
+  def add_popular_item(self, tenant_id, product_id):
+    item = {
+      "product_id": ObjectId(product_id),
+      "tenant_id": ObjectId(tenant_id),
+      "created_at": datetime.now()
+    }
+    return self.popular_items.save(item)
+
+  def delete_popular_item(self, tenant_id, product_id):
+    query = {
+      "product_id": ObjectId(product_id),
+      "tenant_id": ObjectId(tenant_id),
+    }
+    return self.popular_items.remove(query)
+
+  def get_popular_items(self,tenant_id):
+    query = {
+      "tenant_id": ObjectId(tenant_id),
+    }
+    lst = self.popular_items.find(query)
+    product_ids = [x['product_id'] for x in lst]
+    if len(product_ids) == 0: return []
+    items = self.products.find({"_id": { "$in": product_ids}})
+    popular = []
+    for x in items:
+      x['is_popular'] = True
+      popular.append(x)
+    return popular

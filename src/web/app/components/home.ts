@@ -41,6 +41,7 @@ export class HomeComponent implements OnInit {
   isRequesting:boolean = false;
   restaurants:Restaurant[];
   products:Product[];
+  popular_dishes:Product[]=[];
   errorMsg:string;
 
   constructor(private router: Router,
@@ -64,8 +65,11 @@ export class HomeComponent implements OnInit {
   }
 
   search(){
-    if(this.searchText == null
-      || this.searchText.length < 3){
+    if(this.searchText == null || this.searchText.length == 0){
+      this.searchPopularDishes();
+      return;
+    }
+    if(this.searchText.length < 3){
       return;
     }
     this.isRequesting = true;
@@ -101,6 +105,23 @@ export class HomeComponent implements OnInit {
         if(x && x.length > 0 && this.restaurants.length == 0){
           this.activeTab = 'Product';
         }
+        this.isRequesting = false;
+      })
+      .catch(errMsg => {
+        this.errorMsg = errMsg;
+        this.isRequesting = false;
+      });
+  }
+
+  searchPopularDishes(){
+    if(this.popular_dishes.length > 0){
+      return;
+    }
+    this.isRequesting = true;
+    this.productService.getPopularDishes()
+      .then(x=>{
+        this.errorMsg = null;
+        this.popular_dishes = x;
         this.isRequesting = false;
       })
       .catch(errMsg => {

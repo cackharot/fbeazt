@@ -36,6 +36,7 @@
 <section class="row" *ngIf="searchText == null || searchText.length == 0">
   <div class="medium-12 small-12 columns end">
     <h3>Popular items</h3>
+    <product-list [products]="popular_dishes" (selectedProduct)="addToCart($event)"></product-list>
   </div>
 </section>
 <section class="row" *ngIf="searchText && searchText.length < 3">

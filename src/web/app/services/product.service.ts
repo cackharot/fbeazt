@@ -32,6 +32,7 @@ export class ProductSearchModel{
 export class ProductService {
   private productsUrl = AppConfig.PRODUCTS_URL;
   private productUrl = AppConfig.PRODUCT_URL;
+  private popularDishesUrl = AppConfig.POPULAR_DISHES_URL;
 
   constructor(private http: Http) { }
 
@@ -58,6 +59,17 @@ export class ProductService {
 
   search(store_id): Promise<Product[]> {
     return this.http.get(`${this.productsUrl}/${store_id}`)
+               .toPromise()
+               .then(response =>{
+                 let items = response.json().items;
+                 let products = items.map(x=> Product.of(x));
+                 return products;
+               })
+               .catch(this.handleError);
+  }
+
+  getPopularDishes(): Promise<Product[]> {
+    return this.http.get(`${this.popularDishesUrl}/-1`)
                .toPromise()
                .then(response =>{
                  let items = response.json().items;
