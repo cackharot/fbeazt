@@ -3,13 +3,14 @@ import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angul
 
 import { OrderService } from '../services/order.service';
 import { SpinnerComponent } from './spinner';
+import { FaqComponent } from './faq';
 
 import { Order, DeliveryDetails, LineItem } from '../model/order';
 
 @Component({
   selector: 'order_success',
   templateUrl: 'templates/order_success.html',
-  directives: [ROUTER_DIRECTIVES, SpinnerComponent],
+  directives: [ROUTER_DIRECTIVES, SpinnerComponent, FaqComponent],
 })
 export class OrderSuccessComponent implements OnInit {
   order: Order;

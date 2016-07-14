@@ -21,6 +21,10 @@ export class CartSummaryComponent implements OnInit {
 
   ngOnInit() {
     this.currentOrder = this.orderService.getOrder();
+    if(!this.canShow() && this.currentOrder.isConfirmed()){
+      this.orderService.resetOrder();
+      this.currentOrder = this.orderService.getOrder();
+    }
     this.update();
     this.orderService.itemAdded$.subscribe((x)=>{
       this.update();

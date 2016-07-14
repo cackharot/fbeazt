@@ -37,7 +37,7 @@ import { OrderService } from './services/order.service';
 
   { name: 'Faq', path: 'faq', component: FaqComponent },
   { name: 'TermsOfUse', path: 'terms_of_use', component: TermsOfUseComponent },
-  { name: 'ContactUs', path: 'contact_us', component: TermsOfUseComponent },
+  { name: 'ContactUs', path: 'contact_us', component: ContactUsComponent },
   { name: 'AboutUs', path: 'about_us', component: AboutUsComponent },
 ])
 export class AppComponent {

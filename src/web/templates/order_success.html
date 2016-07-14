@@ -1,63 +1,31 @@
-
 <br/>
-<section class="row order__success">
-  <div class="medium-12 small-12 columns">
-    <div class="callout success">
-      <h3>Thanks {{order.delivery_details.name}},</h3>
+<section class="order__success">
+  <div class="row">
+    <div class="medium-12 small-12 columns">
+      <div class="callout success">
+        <h3>Thanks {{order.delivery_details.name}},</h3>
+        <p>
+          Your order is successfull, kindly note the order number for further reference <b>{{order.order_no}}</b>.
+          An invoice email is on the way to your inbox.
+        </p>
+        <p>
+          Enjoy your gourment meal!
+        </p>
+        <p>
+          <a (click)="trackOrder()">Click here</a> to track this order status
+        </p>
+        <p>
+          Or <a [routerLink]="['Home']">Continue</a> shopping.
+        </p>
+      </div>
+    </div>
+    <div class="medium12 columns">
+      <h4>Feedback</h4>
       <p>
-        Your order is successfull, kindly note the order number for further reference <b>{{order.order_no}}</b>.
-        An invoice email is on the way to your inbox.
-      </p>
-      <p>
-        Enjoy your gourment meal!
-      </p>
-      <p>
-        <a (click)="trackOrder()">Click here</a> to track this order status
-      </p>
-      <p>
-         Or <a [routerLink]="['Home']">Continue</a> shopping.
+        Your feedback is valuable to us. We always like to serve you better. If you have any suggestions
+        or compliants kindly write to us on <a href="mailto:foodbeazt@gmail.com">foodbeazt@gmail.com</a> or call us at +91 7373730484.
       </p>
     </div>
   </div>
-  <div class="medium12 columns">
-    <h4>Feedback</h4>
-    <p>
-      Your feedback is valuable to us. We always like to serve you better. If you have any suggestions
-      or compliants kindly write to us on <a href="mailto:foodbeazt@gmail.com">foodbeazt@gmail.com</a> or call us at +91 7373730484.
-    </p>
-  </div>
-  <div class="medium-12 columns">
-    <h4>Frequently Asked Questions</h4>
-    <ul class="faq">
-      <li class="question">Do you operate outside Puducherry?</li>
-      <li class="answer">NO. But we like to expand our services beyond Puducherry.
-        Kindly contact us for more information.
-      </li>
-      <li class="question">Is Foodbeazt a restaurant which makes food and does online delivery?</li>
-      <li class="answer">NO, Foodbeazt is a delivery service. We have tie up's with various
-        restaurants in Puducherry. You can view menus of individual restaurants and order
-        multiple dishes from multiple restaurants.
-      </li>
-      <li class="question">Can I cancel the order?</li>
-      <li class="answer">Yes you can cancel within 5 minutes of placing the order.</li>
-      <li class="question">What is the delivery time?</li>
-      <li class="answer">We have a specialized delivery team who make sure to
-        get your food as soon as possible. We also requested the restaurants to make this in priority.
-        Also it depends on distance between you and the restaurants, weather, traffic conditions,
-        restaurants peak time, food availablity, etc., We will make sure to contact you if your order
-        is getting delayed. So for now considering these factors the average delivery time would be 45 minutes.
-      </li>
-      <li class="question">What are the payment modes?</li>
-      <li class="answer">At present we accept only Cash on Delivery.</li>
-      <li class="question">What is your operation time?</li>
-      <li class="answer">We operate from 9AM to 11PM for 365 days (Unless we have a natural calamity).
-        However food availablity is upto the individual restaurant's holiday schedule.
-      </li>
-      <li class="question">One or many of the dishes delivered has gone bad. What should I do?</li>
-      <li class="answer">
-        We are committed to deliver the dishes from restaurants without any delay and ensure that they
-        are hot and fresh, so this does not happen. But in exceptional cases we will refund your money.
-      </li>
-    </ul>
-  </div>
+  <faq></faq>
 </section>

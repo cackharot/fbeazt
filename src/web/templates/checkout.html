@@ -114,7 +114,7 @@
             </tfoot>
           </table>
           <div class="callout alert" *ngIf="!order.isValid()">
-            <p>There are some dishes that are presently become unavailable. Kindly remove them to proceed.
+            <p>There are some dishes that are presently became unavailable. Kindly remove them to proceed.
             This may occur if you have added the dish while the store was open and before completing the
             checkout process.</p>
             <p>For assistance and any queries, kindly call us on +91 7373730484</p>
@@ -125,7 +125,7 @@
           <div class="medium-12 columns">
             <h2><i class="fa fa-credit-card"></i> Payment Details</h2>
             <div class="callout primary">
-              <p>Presently we accept only <b>Cash On Delivery</b>(CoD).</p>
+              <p>Presently we accept only <b>Cash On Delivery</b></p>
               <p>Online transactions through Credit/Debit card and NetBanking coming soon...</p>
             </div>
           </div>
@@ -134,7 +134,7 @@
     <div class="medium-12 columns">
       <div class="align-center">
         <button (click)="resetOrder()" class="button secondary">Cancel</button>
-        <button type="submit" class="button primary" [disabled]="!orderForm.form.valid && order.isValid()">
+        <button type="submit" class="button primary" [disabled]="!orderForm.form.valid || !order.isValid()">
           Confirm
         </button>
       </div>

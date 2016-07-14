@@ -8,9 +8,7 @@ body {
 
 #main {
   margin: 0 auto;
-}
-
-#main {
+  padding-bottom: 15px;
   background-color: #f3f3f3;
   min-height: 100%;
   position: relative;
