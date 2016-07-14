@@ -38,7 +38,6 @@ class StoreService(object):
     offset = (page_no - 1) * page_size
     if offset < 0: offset = 0
     lst = self.stores.find(query)
-    print(query)
     return [x for x in lst.sort("created_at", -1).skip(offset).limit(page_size)], lst.count()
 
   def save(self, store_item):

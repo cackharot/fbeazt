@@ -1,0 +1,38 @@
+@import "compass/css3";
+@import "variables";
+
+footer{
+  background-color: #1f1f1f;
+  color: #949494;
+  display: block;
+  font-size: 13px;
+  font-weight: 300;
+  width: 100%;
+  padding: 10px;
+
+  ul{
+    list-style: none;
+    margin: 0 auto;
+    overflow: hidden;
+
+    li{
+      display: inline-block;
+      padding: 0px 10px;
+      border-right: 1px solid #949494;
+      margin: 10px 0;
+
+      &:last-child{
+        border-right: none;
+        float: right;
+      }
+
+      &:nth-last-child(2) {
+        border-right: none;
+      }
+    }
+  }
+
+  a{
+    color: inherit;
+  }
+}
