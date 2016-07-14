@@ -15,8 +15,13 @@ class PopularItemsApi(Resource):
   def get(self, _id):
     tenant_id = g.user.tenant_id
     try:
-      lst = self.service.get_popular_items(tenant_id)
-      return { "items": lst }
+      items = self.service.get_popular_items(tenant_id)
+      if items and len(items) > 0:
+        store_ids = [str(x['store_id']) for x in items]
+        stores = self.storeService.search_by_ids(store_ids=store_ids)
+        for item in items:
+          item['store'] = next((x for x in stores if x['_id'] == item['store_id']), None)
+      return { "items": items, "total": len(items) }
     except Exception as e:
       self.log.exception(e)
       return {"status": "error", "message": "Error on searching popular dishes"}, 460

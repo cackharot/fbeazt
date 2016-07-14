@@ -10,6 +10,7 @@
           <form ng-submit="searchItems()">
           <input type="search" ng-model="searchText"/>
           <button type="submit" class="button">Search</button>
+          <button type="reset" ng-click="resetSearch()" class="button">Clear</button>
           </form>
         </div>
         <div ng-if="search_results.length>0">
@@ -32,25 +33,26 @@
         <div class="table-responsive">
           <table class="table table-striped table-bordered table-hover">
             <thead>
-            <th>Category</th>
-            <th>Barcode</th>
             <th>Name</th>
-            <th class="text-right">Price</th>
+            <th>Store</th>
+            <th class="price text-right">Price</th>
             <th>Timings</th>
-            <th>Veg/Non-Veg</th>
             <th class="text-center">Remove</th>
             </thead>
             <tbody>
             <tr ng-repeat="item in products" ng-class="{'text-danger': !item.status}">
-              <td>{{item.category}}</td>
-              <td><a href="#/product/{{item.store_id.$oid}}/{{item._id.$oid}}" title="Click to edit this item!">{{item.barcode}}</a></td>
-              <td>{{item.name}}</td>
-              <td><span ng-bind-html="item.sell_price | currency"></span></td>
               <td>
-                <span>Open: {{item.open_time}} AM</span>
-                <span>Close: {{item.close_time}} PM</span>
+                <span ng-bind-html="item.food_type | show_food_type"></span>
+                <a href="#/product/{{item.store_id.$oid}}/{{item._id.$oid}}"
+                    title="Click to edit this item!">{{item.name}}</a>
               </td>
-              <td><span ng-bind-html="item.food_type | show_food_type"></span></td>
+              <td>{{item.store.name}}</td>
+              <td class="price text-right">
+                <span ng-bind-html="item.sell_price | currency"></span>
+              </td>
+              <td>
+                <span>{{item.open_time}} AM to {{item.close_time}} PM</span>
+              </td>
               <td class="text-center">
                 <a href="" ng-click="removePopularDish(item._id.$oid)"
                   title="Click to remove"><em class="fa fa-ban"></em></a>

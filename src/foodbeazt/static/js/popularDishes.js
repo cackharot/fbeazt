@@ -11,15 +11,36 @@ popularDishApp.controller('popularDishesCtrl', function($scope, $http, $routePar
       $scope.search_results = [];
       return false;
     }
-    $http.get('/api/products/-1').success(function(d){
-        $scope.search_results = d.items;
+    $http({
+        url: '/api/products/-1',
+        method: 'GET',
+        params: {"filter_text": $scope.searchText}
+      })
+      .success(function(d){
+        var items = [];
+        for(var i=0; i < d.items.length; ++i){
+          var item = d.items[i];
+          var found = $scope.products.find(function(x){ return x._id.$oid == item._id.$oid; });
+          if(found == null){
+            items.push(item);
+          }
+        }
+        $scope.search_results = items;
         $scope.total = d.total;
-    }).error(function(e){
+      })
+      .error(function(e){
         alert(e);
-    });
+      });
+  };
+
+  $scope.resetSearch = function(){
+    $scope.search_results = [];
   };
 
   $scope.addPopular = function(product_id){
+    var found = $scope.search_results.find(function(x){ return x._id.$oid == product_id; });
+    $scope.search_results.splice($scope.search_results.indexOf(found), 1);
+
     $http.post('/api/popular_items/'+product_id).success(function(d){
       if(d.status != "success"){
         console.error(d);
@@ -34,10 +55,10 @@ popularDishApp.controller('popularDishesCtrl', function($scope, $http, $routePar
 
 	$scope.reloadPopular = function(){
     $http.get('/api/popular_items/-1').success(function(d){
-        $scope.products = d.items;
-        $scope.total = d.total;
+      $scope.products = d.items;
+      $scope.total = d.total;
     }).error(function(e){
-        alert(e);
+      alert(e);
     });
 	};
 
