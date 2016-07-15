@@ -13,6 +13,22 @@ order_created_template = app.jinja_env.get_template('email/order_created.html')
 order_created_sms_template = app.jinja_env.get_template('sms/order_created.html')
 order_otp_sms_template = app.jinja_env.get_template('sms/otp.html')
 
+class TrackOrderApi(Resource):
+  def __init__(self):
+    self.log = logging.getLogger(__name__)
+    self.service = OrderService(mongo.db)
+
+  def get(self, order_no):
+    if order_no is None or len(order_no) == 0:
+      return {"status":"error","messag": "Invalid order number provided"}, 433
+
+    try:
+      item = self.service.get_by_number(order_no)
+      return item, 200
+    except Exception as e:
+      self.log.exception(e)
+      return {"status":"error","message":"Error while finding the order"}, 434
+
 class OrderListApi(Resource):
   def __init__(self):
     self.log = logging.getLogger(__name__)
@@ -28,15 +44,18 @@ class OrderListApi(Resource):
     page_no = int(request.args.get('page_no', 1))
     page_size = int(request.args.get('page_size', 24))
     filter_text = request.args.get('filter_text', None)
+    order_no = request.args.get('order_no', None)
 
     try:
-      items, total = self.service.search(tenant_id=tenant_id, store_id=store_id, page_no=page_no,
-                                          page_size=page_size,
-                                          filter_text=filter_text)
+      items, total = self.service.search(tenant_id=tenant_id,
+                            store_id=store_id,
+                            page_no=page_no,
+                            page_size=page_size,
+                            filter_text=filter_text)
       return {'items': items, 'total': total}
     except Exception as e:
       self.log.exception(e)
-      return {"status": "error", "message": "Error on searching retaurants"}, 420
+      return {"status": "error", "message": "Error on searching orders"}, 420
 
 
 class OrderApi(Resource):
@@ -53,7 +72,7 @@ class OrderApi(Resource):
       return self.service.get_by_id(_id)
     except Exception as e:
       self.log.exception(e)
-      return {"status": "error", "message": "Error on get retaurant with id %s" % _id}, 421
+      return {"status": "error", "message": "Error on get order with id %s" % _id}, 421
 
   def put(self, _id):
     data = json_util.loads(request.data.decode('utf-8'))

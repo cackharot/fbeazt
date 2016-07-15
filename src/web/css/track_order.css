@@ -1,0 +1,33 @@
+.track__order__page {
+  background: #607d8b;
+  min-height: 100%;
+  color: white;
+}
+.track__order__page ul {
+  margin: 0 auto;
+  list-style: none;
+  width: 100%;
+  text-align: center;
+}
+.track__order__page ul li {
+  display: inline-block;
+  margin: 10px 45px;
+  line-height: 4em;
+  color: #dcdcdc;
+}
+.track__order__page ul li i {
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  font-size: 5em;
+  display: block;
+}
+.track__order__page ul li.progress {
+  color: #FFDD1B;
+  height: auto;
+  background-color: transparent;
+}
+.track__order__page ul li.done {
+  color: #B6FF00;
+}

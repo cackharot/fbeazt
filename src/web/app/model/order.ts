@@ -5,6 +5,7 @@ import * as _ from "lodash";
 export enum OrderStatus{
   NEW,
   CONFIRMED,
+  PREPRATION,
   PROGRESS,
   DELIVERED,
   CANCELLED,
@@ -19,6 +20,7 @@ export class Order {
   delivery_details: DeliveryDetails = new DeliveryDetails();
   created_at: Date;
   updated_at: Date;
+  delivered_at: Date;
   items: LineItem[] = [];
   status: OrderStatus = OrderStatus.NEW;
   delivery_charges:number = 40;
@@ -114,6 +116,26 @@ export class Order {
 
   isOtpSent(){
     return this.otp_status == 'SENT';
+  }
+
+  isDelivered(){
+    return this.status == OrderStatus.DELIVERED;
+  }
+
+  isCancelled(){
+    return this.status == OrderStatus.CANCELLED;
+  }
+
+  inProgress(){
+    return this.status == OrderStatus.PROGRESS;
+  }
+
+  inPrepration(){
+    return this.status == OrderStatus.PREPRATION;
+  }
+
+  isInValid(){
+    return this.status == OrderStatus.INVALID;
   }
 
   getHash(){

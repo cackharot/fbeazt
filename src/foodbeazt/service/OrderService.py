@@ -55,6 +55,9 @@ class OrderService(object):
     def get_by_id(self, _id):
         return self.orders.find_one({'_id': ObjectId(_id)})
 
+    def get_by_number(self, order_no):
+        return self.orders.find_one({"order_no": order_no})
+
     def get_delivery_charges(self, order):
         return 40.0
 

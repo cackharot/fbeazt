@@ -133,4 +133,18 @@ export class OrderService {
     console.error('An error occurred', error);
     return Promise.reject(error.json().message || error);
   }
+
+  loadOrder(orderNo:string) : Promise<Order> {
+    return this.http.get(`${AppConfig.TRACK_URL}/${orderNo}`)
+      .toPromise()
+      .then(response=>{
+        let data = response.json();
+        let order = new Order(data);
+        if(!order.order_no || order.order_no.length == 0){
+          return null;
+        }
+        return order;
+      })
+      .catch(this.handleError);
+  }
 }

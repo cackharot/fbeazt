@@ -1,0 +1,76 @@
+<section class="track__order__page">
+  <div class="row">
+    <div class="medium-12 columns">
+      <h2>Track Order</h2>
+      <form (ngSubmit)="searchOrder()">
+        <div class="input-group">
+          <input  class="input-group-field"type="text" id="orderno"
+            placeholder="Enter the order number..." name="orderno" [(ngModel)]="orderNo"/>
+          <div class="input-group-button">
+            <button type="submit" class="button">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row" *ngIf="isRequesting">
+    <div class="medium-12 columns">
+      <my-spinner [isRunning]="isRequesting" [message]="'Looking for your order...Please wait'">
+      </my-spinner>
+    </div>
+  </div>
+  <div class="row" *ngIf="orderNo.length>0 && submitted && order==null">
+    <div class="medium-12 columns">
+      <div class="callout alert">
+        Oops! No order found for the given number.
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="!isRequesting && order!=null">
+    <div class="medium-12 columns" *ngIf="order.isCancelled()">
+      <p>
+        We regret to inform you that your order has been cancelled.
+      </p>
+      <p>
+        {{order.cancel_notes}}
+      </p>
+    </div>
+    <div class="medium-12 columns" *ngIf="!order.isCancelled()">
+      <h2>Thanks {{order.delivery_details.name}},</h2>
+      <p *ngIf="!order.isDelivered()">
+        We got your order and are committed to deliver to you at the earliest!
+      </p>
+      <p *ngIf="order.isDelivered()">
+        We have successfully delivered your order on {{order.delivered_at}}
+      </p>
+      <ul>
+        <li class="done">
+          <i class="fa fa-calendar-check-o"></i> We got it!
+        </li>
+        <li [class.progress]="order.isDelivered() || order.inProgress() || order.inPrepration()"
+            [class.done]="order.isDelivered() || order.inProgress()">
+          <i class="fa fa-coffee"></i>
+          Preparing your dishes
+        </li>
+        <li [class.progress]="order.isDelivered() || order.inProgress()"
+            [class.done]="order.isDelivered()">
+          <i class="fa fa-motorcycle"></i>
+          On the way
+        </li>
+        <li [class.done]="order.isDelivered()">
+          <i class="fa fa-thumbs-up"></i>
+          You got it!
+        </li>
+      </ul>
+      <br/>
+      <h4>Delivery details</h4>
+      <p>
+        Address: {{order.delivery_details.address}}<br/>
+        Pincode: {{order.delivery_details.pincode}}<br/>
+        Landmark: {{order.delivery_details.landmark}}<br/>
+        Phone: {{order.delivery_details.phone}}<br/>
+        Email: {{order.delivery_details.email}}<br/>
+      </p>
+    </div>
+  </div>
+</section>
