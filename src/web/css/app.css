@@ -8,7 +8,6 @@ body {
 
 #main {
   margin: 0 auto;
-  padding-bottom: 15px;
   background-color: #f3f3f3;
   min-height: 100%;
   position: relative;
@@ -790,4 +789,43 @@ footer ul li:nth-last-child(2) {
 }
 footer a {
   color: inherit;
+}
+
+.contact__page {
+  background: #37b0cd;
+  color: white;
+  text-align: center;
+  padding: 10px 30px;
+  padding-top: 120px;
+  height: 100%;
+}
+.contact__page h3 {
+  font-weight: 300;
+}
+.contact__page h1 {
+  font-weight: 400;
+}
+.contact__page a {
+  color: white;
+}
+.contact__page .social__icons {
+  margin-top: 25px;
+}
+.contact__page .social__icons ul {
+  margin: 0 auto;
+  list-style: none;
+}
+.contact__page .social__icons ul li {
+  display: inline-block;
+  margin: 0 6px 12px;
+}
+.contact__page .social__icons ul li a {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  color: white;
+  background: #72d4ea;
+  font-size: 26px;
+  padding: 13px;
+  width: 51px;
 }

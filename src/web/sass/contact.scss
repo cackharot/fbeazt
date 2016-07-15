@@ -1,0 +1,41 @@
+@import "compass/css3";
+
+.contact__page{
+  background: #37b0cd;
+  color: white;
+  text-align: center;
+  padding: 10px 30px;
+  padding-top: 120px;
+  height: 100%;
+
+  h3{
+    font-weight: 300;
+  }
+  h1{
+    font-weight: 400;
+  }
+  a{
+    color: white;
+  }
+
+  .social__icons{
+    margin-top: 25px;
+
+    ul{
+      margin: 0 auto;
+      list-style: none;
+      li{
+        display: inline-block;
+        margin: 0 6px 12px;
+        a{
+          @include border-radius(5px);
+          color: white;
+          background: #72d4ea;
+          font-size: 26px;
+          padding: 13px;
+          width: 51px;
+        }
+      }
+    }
+  }
+}
