@@ -19,7 +19,7 @@
       </my-spinner>
     </div>
   </div>
-  <div class="row" *ngIf="orderNo.length>0 && submitted && order==null">
+  <div class="row" *ngIf="orderNo.length>0 && !isRequesting && submitted && order==null">
     <div class="medium-12 columns">
       <div class="callout alert">
         Oops! No order found for the given number.
