@@ -44,13 +44,52 @@
                         <h4>{{item.delivery_details.name}}</h4>
                         <p>
                             <i class="fa fa-phone"></i> {{item.delivery_details.phone}}
-                            <i class="fa fa-mail"></i> {{item.delivery_details.email}}
+                            <i class="fa fa-envelope"></i> {{item.delivery_details.email}}
                         </p>
                         <p>
                             {{item.delivery_details.address}}<br/>
                             {{item.delivery_details.landmark}}<br/>
                             {{item.delivery_details.pincode}}
                         </p>
+                    </div>
+                    <div class="details__row">
+                        <table class="table order_table">
+                            <tbody>
+                                <tr ng-repeat="dish in item.items">
+                                    <td>
+                                        <div class="product_name">
+                                            {{dish.name}} <br/>
+                                            <span class="store_name light"><i>from</i> {{dish.store.name}}</span>
+                                        </div>
+                                    </td>
+                                    <td class="quantity">
+                                        {{dish.price}}x
+                                        {{dish.quantity}}
+                                    </td>
+                                    <td class="price">{{dish.total}}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                <td colspan="2">
+                                    Subtotal
+                                </td>
+                                <td class="total">{{item.total - item.delivery_charges}}</td>
+                                </tr>
+                                <tr>
+                                <td colspan="2">
+                                    Delivery Charges
+                                </td>
+                                <td class="total">{{item.delivery_charges}}</td>
+                                </tr>
+                                <tr>
+                                <td colspan="2">
+                                    Total
+                                </td>
+                                <td class="total rupee">{{item.total}}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                     <div class="status_row">
                         <span ng-click="updateStatus(item, 'PENDING')"  class="done">PENDING</span>

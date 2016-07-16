@@ -60,3 +60,10 @@
 .card .inprogress{
   color: #ff902b;
 }
+
+.price, .total, .quantity{
+  text-align: right;
+}
+.total{
+  font-weight: 600;
+}

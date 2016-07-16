@@ -5,6 +5,7 @@ from flask_mail import Message
 from flask_restful import Resource
 from service.OrderService import OrderService, DuplicateOrderException
 from service.ProductService import ProductService
+from service.StoreService import StoreService
 from service.SmsService import SmsService
 from foodbeazt.fapp import mongo, app, mail
 import logging
@@ -60,6 +61,7 @@ class OrderListApi(Resource):
   def __init__(self):
     self.log = logging.getLogger(__name__)
     self.service = OrderService(mongo.db)
+    self.storeService = StoreService(mongo.db)
 
   def get(self):
     tenant_id = g.user.tenant_id
@@ -74,12 +76,25 @@ class OrderListApi(Resource):
     order_no = request.args.get('order_no', None)
 
     try:
-      items, total = self.service.search(tenant_id=tenant_id,
+      orders, total = self.service.search(tenant_id=tenant_id,
                             store_id=store_id,
                             page_no=page_no,
                             page_size=page_size,
                             filter_text=filter_text)
-      return {'items': items, 'total': total}
+
+      if orders and len(orders) > 0:
+        store_ids = []
+        for order in orders:
+          for item in order['items']:
+            sid = str(item['store_id'])
+            if sid not in store_ids:
+              store_ids.append(sid)
+        stores = self.storeService.search_by_ids(store_ids=store_ids)
+        for order in orders:
+          for item in order['items']:
+            item['store'] = next((x for x in stores if x['_id'] == item['store_id']), None)
+
+      return {'items': orders, 'total': total}
     except Exception as e:
       self.log.exception(e)
       return {"status": "error", "message": "Error on searching orders"}, 420
