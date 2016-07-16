@@ -33,12 +33,14 @@ export class OtpComponent implements OnInit {
 
   ngOnInit() {
     this.order = this.orderService.getOrder();
-    this.seconds = this.storage.getItem(OtpComponent.KEY);
+    this.seconds = +this.storage.getItem(OtpComponent.KEY);
     if(this.seconds < 0){
      this.seconds = OtpComponent.OTP_RESEND_SECONDS;
     }
     if(this.order.isConfirmed()){
       this.router.navigate(['OrderConfirmed']);
+    }else if(!this.order.isValid()){
+      this.router.navigate(['Checkout']);
     }else{
       this.startCountDown();
     }

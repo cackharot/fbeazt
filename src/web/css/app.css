@@ -893,10 +893,10 @@ footer a {
   color: #B6FF00;
 }
 
-.checkout__page label {
+.checkout__page label, .otp__page label {
   position: relative;
 }
-.checkout__page span.check {
+.checkout__page span.check, .otp__page span.check {
   position: absolute;
   right: 2%;
   top: 35px;
@@ -904,13 +904,15 @@ footer a {
 }
 .checkout__page input + span.check,
 .checkout__page select + span.check,
-.checkout__page textarea + span.check {
+.checkout__page textarea + span.check, .otp__page input + span.check,
+.otp__page select + span.check,
+.otp__page textarea + span.check {
   display: none;
 }
-.checkout__page .ng-valid[required] {
+.checkout__page .ng-valid[required], .otp__page .ng-valid[required] {
   border-bottom: 2px solid #42A948;
 }
-.checkout__page .ng-valid[required] + span.check {
+.checkout__page .ng-valid[required] + span.check, .otp__page .ng-valid[required] + span.check {
   display: inline-block;
   color: #42A948;
 }
@@ -918,7 +920,11 @@ footer a {
 .checkout__page [type='datetime'], .checkout__page [type='datetime-local'], .checkout__page [type='month'],
 .checkout__page [type='week'], .checkout__page [type='email'], .checkout__page [type='number'],
 .checkout__page [type='search'], .checkout__page [type='tel'], .checkout__page [type='time'],
-.checkout__page [type='url'], .checkout__page [type='color'], .checkout__page textarea {
+.checkout__page [type='url'], .checkout__page [type='color'], .checkout__page textarea, .otp__page [type='text'], .otp__page [type='password'], .otp__page [type='date'],
+.otp__page [type='datetime'], .otp__page [type='datetime-local'], .otp__page [type='month'],
+.otp__page [type='week'], .otp__page [type='email'], .otp__page [type='number'],
+.otp__page [type='search'], .otp__page [type='tel'], .otp__page [type='time'],
+.otp__page [type='url'], .otp__page [type='color'], .otp__page textarea {
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.26);
   outline: 0;
@@ -931,7 +937,11 @@ footer a {
 .checkout__page [type='datetime']:active, .checkout__page [type='datetime-local']:active, .checkout__page [type='month']:active,
 .checkout__page [type='week']:active, .checkout__page [type='email']:active, .checkout__page [type='number']:active,
 .checkout__page [type='search']:active, .checkout__page [type='tel']:active, .checkout__page [type='time']:active,
-.checkout__page [type='url']:active, .checkout__page [type='color']:active, .checkout__page textarea:active {
+.checkout__page [type='url']:active, .checkout__page [type='color']:active, .checkout__page textarea:active, .otp__page [type='text']:active, .otp__page [type='password']:active, .otp__page [type='date']:active,
+.otp__page [type='datetime']:active, .otp__page [type='datetime-local']:active, .otp__page [type='month']:active,
+.otp__page [type='week']:active, .otp__page [type='email']:active, .otp__page [type='number']:active,
+.otp__page [type='search']:active, .otp__page [type='tel']:active, .otp__page [type='time']:active,
+.otp__page [type='url']:active, .otp__page [type='color']:active, .otp__page textarea:active {
   border: none;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
@@ -941,7 +951,11 @@ footer a {
 .checkout__page [type='datetime']:focus, .checkout__page [type='datetime-local']:focus, .checkout__page [type='month']:focus,
 .checkout__page [type='week']:focus, .checkout__page [type='email']:focus, .checkout__page [type='number']:focus,
 .checkout__page [type='search']:focus, .checkout__page [type='tel']:focus, .checkout__page [type='time']:focus,
-.checkout__page [type='url']:focus, .checkout__page [type='color']:focus, .checkout__page textarea:focus {
+.checkout__page [type='url']:focus, .checkout__page [type='color']:focus, .checkout__page textarea:focus, .otp__page [type='text']:focus, .otp__page [type='password']:focus, .otp__page [type='date']:focus,
+.otp__page [type='datetime']:focus, .otp__page [type='datetime-local']:focus, .otp__page [type='month']:focus,
+.otp__page [type='week']:focus, .otp__page [type='email']:focus, .otp__page [type='number']:focus,
+.otp__page [type='search']:focus, .otp__page [type='tel']:focus, .otp__page [type='time']:focus,
+.otp__page [type='url']:focus, .otp__page [type='color']:focus, .otp__page textarea:focus {
   border: none;
   border-bottom: 2px solid #2196F3;
   -moz-box-shadow: none;
@@ -952,9 +966,13 @@ footer a {
 .checkout__page [type='datetime']:focus + span.check, .checkout__page [type='datetime-local']:focus + span.check, .checkout__page [type='month']:focus + span.check,
 .checkout__page [type='week']:focus + span.check, .checkout__page [type='email']:focus + span.check, .checkout__page [type='number']:focus + span.check,
 .checkout__page [type='search']:focus + span.check, .checkout__page [type='tel']:focus + span.check, .checkout__page [type='time']:focus + span.check,
-.checkout__page [type='url']:focus + span.check, .checkout__page [type='color']:focus + span.check, .checkout__page textarea:focus + span.check {
+.checkout__page [type='url']:focus + span.check, .checkout__page [type='color']:focus + span.check, .checkout__page textarea:focus + span.check, .otp__page [type='text']:focus + span.check, .otp__page [type='password']:focus + span.check, .otp__page [type='date']:focus + span.check,
+.otp__page [type='datetime']:focus + span.check, .otp__page [type='datetime-local']:focus + span.check, .otp__page [type='month']:focus + span.check,
+.otp__page [type='week']:focus + span.check, .otp__page [type='email']:focus + span.check, .otp__page [type='number']:focus + span.check,
+.otp__page [type='search']:focus + span.check, .otp__page [type='tel']:focus + span.check, .otp__page [type='time']:focus + span.check,
+.otp__page [type='url']:focus + span.check, .otp__page [type='color']:focus + span.check, .otp__page textarea:focus + span.check {
   display: none;
 }
-.checkout__page .ng-invalid {
+.checkout__page .ng-invalid, .otp__page .ng-invalid {
   border-bottom: 2px solid #a94442;
 }

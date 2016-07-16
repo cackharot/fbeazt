@@ -24,30 +24,41 @@
 </section>
 <section class="row otp__page" *ngIf="!isRequesting && !isMaxOtpAttempt">
   <div class="medium-12 columns">
-    <h3>OTP Verfication</h3>
-    <p>
-      A One Time Passcode (OTP) has been sent to your mobile <b>{{order.delivery_details.phone}}</b>,
-      Enter the 6 digit value in the below textbox to verify.
-    </p>
-    <form #otpform (submit)="verifyOtp()">
-    <label for="otptxt">
-      OTP: <input type="text" id="otptxt" [(ngModel)]="otp" maxlength="6" required>
-    </label>
-    <button type="submit" class="button">Verify</button>
-    </form>
-    <br/>
-    <p>
-    <small>
-      OTP verification allows us to manage automated systems placing spam orders.
-      This is done once to ensure that a valid customer is placing the order.
-    </small>
-    </p>
-    <p>
-    <small>
-      Not received the OTP yet?
-      <span *ngIf="!canResendOTP()">You can resend OTP in {{seconds}} seconds.</span>
-      <button class="button" (click)="resendOtp()" [disabled]="!canResendOTP()">Resend</button>
-    </small>
-    </p>
+    <div class="content__container">
+      <h3>OTP Verfication</h3>
+      <p>
+        A One Time Passcode (OTP) has been sent to your mobile <b>{{order.delivery_details.phone}}</b>,
+        Enter the 6 digit value in the below textbox to verify.
+      </p>
+      <form #otpform (submit)="verifyOtp()">
+      <div class="input-group">
+        <label for="otptxt">
+          <input type="text" class="input-group-field"
+            placeholder="Enter the 6 digit number"
+            name="otp" #otptxt="ngModel" [(ngModel)]="otp" minlength="6" maxlength="6" required>
+          <!--<span class="check">
+            <em class="fa fa-check-circle"></em>
+          </span>-->
+        </label>
+        <div class="input-group-button">
+          <button type="submit" class="button">Verify</button>
+        </div>
+      </div>
+      </form>
+      <br/>
+      <p>
+      <small>
+        OTP verification allows us to manage automated systems placing spam orders.
+        This is done once to ensure that a valid customer is placing the order.
+      </small>
+      </p>
+      <p>
+      <small>
+        Not received the OTP yet?
+        <span *ngIf="!canResendOTP()">You can resend OTP in {{seconds}} seconds.</span>
+        <button class="button" (click)="resendOtp()" [disabled]="!canResendOTP()">Resend</button>
+      </small>
+      </p>
+    </div>
   </div>
 </section>
