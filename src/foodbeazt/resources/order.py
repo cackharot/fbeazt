@@ -29,6 +29,33 @@ class TrackOrderApi(Resource):
       self.log.exception(e)
       return {"status":"error","message":"Error while finding the order"}, 434
 
+class OrderStatusApi(Resource):
+  def __init__(self):
+    self.log = logging.getLogger(__name__)
+    self.service = OrderService(mongo.db)
+
+  def post(self, _id):
+    if _id is None or len(_id) == 0:
+      return {"status":"error","messag": "Invalid order id provided"}, 443
+
+    try:
+      data = json_util.loads(request.data.decode('utf-8'))
+      status = data.get('status', None)
+      notes = data.get('notes', None)
+      if status is None or not status in ['PENDING','PREPARING','PROGRESS','DELIVERED','INVALID','CANCELLED']:
+        return {"status":"error","messag": "Invalid status provided"}, 443
+      item = self.service.get_by_id(_id)
+      if item is None or len(item.get('order_no','')) == 0:
+        return {"status":"error","messag": "Invalid order id provided. Not found"}, 443
+      item['status'] = status
+      if notes is not None and len(notes) > 0:
+        item['notes'] = notes
+      self.service.save(item)
+      return {"status":status,"notes": notes}, 200
+    except Exception as e:
+      self.log.exception(e)
+      return {"status":"error","message":"Error while finding the order"}, 444
+
 class OrderListApi(Resource):
   def __init__(self):
     self.log = logging.getLogger(__name__)

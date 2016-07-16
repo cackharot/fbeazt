@@ -22,4 +22,14 @@ export class Date {
   constructor(data={}){
     Object.assign(this, data);
   }
+
+  static of(data){
+    if(data && data.constructor.name != Date.name){
+      if(data.$date == undefined){
+        return new Date();
+      }
+      return new Date({"$date": data.$date});
+    }
+    return data;
+  }
 }

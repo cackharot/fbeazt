@@ -20,43 +20,53 @@
     <div class="row">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover">
-                        <thead>
-                        <th>No</th>
-                        <th>Customer</th>
-                        <th>Phone</th>
-                        <th>Address</th>
-                        <th>Date</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th class="text-center">Action</th>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="item in orders" ng-class="{'text-danger': item.status == 'CANCELLED'}">
-                            <td><a href="#/order/{{item._id.$oid}}" title="Click to edit this item!">{{item.order_no}}</a></td>
-                            <td>
-                                {{item.delivery_details.name}}<br/>
-                                {{item.delivery_details.email}}
-                            </td>
-                            <td>{{item.delivery_details.phone}}</td>
-                            <td>
-                                {{item.delivery_details.address}}<br/>
-                                {{item.delivery_details.landmark}}<br/>
-                                {{item.delivery_details.pincode}}
-                            </td>
-                            <td>{{item.created_at | datetime}}</td>
-                            <td><span ng-bind-html="item.total | currency"></span></td>
-                            <td>
-                                <span class="info">
-                                    {{item.status}}
-                                </span>
-                            </td>
-                            <td class="text-center">
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="search__container">
+                    <form ng-submit="searchOrder()">
+                    <input type="search" ng-model="searchText"/>
+                    <button type="submit" class="button">Search</button>
+                    <button type="reset" ng-click="resetSearch()" class="button">Clear</button>
+                    <input type="checkbox" ng-model="filter_pending"/> Pending
+                    <input type="checkbox" ng-model="filter_preparing"/> Preparing
+                    <input type="checkbox" ng-model="filter_progress"/> Progress
+                    <input type="checkbox" ng-model="filter_delivered"/> Delivered
+                    </form>
+                </div>
+                <div class="card" ng-repeat="item in orders" ng-class="{'text-danger': item.status == 'CANCELLED'}">
+                    <div class="cell1">
+                        <a href="#/order/{{item._id.$oid}}" title="Click to edit this item!">
+                            <h4>{{item.order_no}}</h4>
+                        </a>
+                        <p>{{item.created_at | datetime}}</p>
+                        <p><b ng-bind-html="item.total | currency"></b></p>
+                        <p>{{item.status}}</p>
+                    </div>
+                    <div class="cell2">
+                        <h4>{{item.delivery_details.name}}</h4>
+                        <p>
+                            <i class="fa fa-phone"></i> {{item.delivery_details.phone}}
+                            <i class="fa fa-mail"></i> {{item.delivery_details.email}}
+                        </p>
+                        <p>
+                            {{item.delivery_details.address}}<br/>
+                            {{item.delivery_details.landmark}}<br/>
+                            {{item.delivery_details.pincode}}
+                        </p>
+                    </div>
+                    <div class="status_row">
+                        <span ng-click="updateStatus(item, 'PENDING')"  class="done">PENDING</span>
+                        <span ng-click="updateStatus(item, 'PREPARING')"
+                            ng-class="{'inprogress': item.status == 'PREPARING','done': item.status == 'PROGRESS' || item.status == 'DELIVERED'}">
+                            PREPARING
+                        </span>
+                        <span ng-click="updateStatus(item, 'PROGRESS')"
+                            ng-class="{'inprogress': item.status == 'PROGRESS','done': item.status == 'DELIVERED'}">
+                            IN TRANSIT
+                        </span>
+                        <span ng-click="updateStatus(item, 'DELIVERED')"
+                            ng-class="{'done': item.status == 'DELIVERED'}">
+                            DELIVERED
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

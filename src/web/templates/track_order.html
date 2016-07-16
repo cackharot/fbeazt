@@ -41,7 +41,7 @@
         We got your order and are committed to deliver to you at the earliest!
       </p>
       <p *ngIf="order.isDelivered()">
-        We have successfully delivered your order on {{order.delivered_at}}
+        We have successfully delivered your order on {{order.delivered_at | datetime}}
       </p>
       <ul>
         <li class="done">

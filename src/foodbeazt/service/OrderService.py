@@ -42,6 +42,8 @@ class OrderService(object):
             item['order_no'] = self.generate_order_no()
         else:
             item['updated_at'] = datetime.now()
+            if item['status'] == 'DELIVERED':
+                item['delivered_at'] = datetime.now()
 
         return self.orders.save(item)
 

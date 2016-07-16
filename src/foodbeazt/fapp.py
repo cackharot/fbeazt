@@ -281,7 +281,7 @@ from foodbeazt.resources.tenant import TenantListApi, TenantApi
 from foodbeazt.resources.user import UserApi, UserListApi
 from foodbeazt.resources.store import StoreApi, StoreListApi
 from foodbeazt.resources.product import ProductApi, ProductListApi, ProductActivateApi
-from foodbeazt.resources.order import OrderApi, OrderListApi, TrackOrderApi
+from foodbeazt.resources.order import OrderApi, OrderListApi, TrackOrderApi, OrderStatusApi
 from foodbeazt.resources.export_data import ExportDataApi
 from foodbeazt.resources.popular_items import PopularItemsApi
 
@@ -307,3 +307,4 @@ api.add_resource(ProductListApi, '/api/products/<string:store_id>')
 api.add_resource(OrderApi, '/api/order/<string:_id>')
 api.add_resource(OrderListApi, '/api/orders/')
 api.add_resource(TrackOrderApi, '/api/track/<string:order_no>')
+api.add_resource(OrderStatusApi, '/api/order_status/<string:_id>')

@@ -2,15 +2,14 @@ import { ObjectId, Date } from "./base";
 import {Restaurant} from "./restaurant";
 import * as _ from "lodash";
 
-export enum OrderStatus{
-  NEW,
-  CONFIRMED,
-  PREPRATION,
-  PROGRESS,
-  DELIVERED,
-  CANCELLED,
-  INVALID,
-  UNKNOWN
+export class OrderStatus{
+  static NEW = "NEW";
+  static CONFIRMED = "CONFIRMED";
+  static PREPARING = "PREPARING";
+  static PROGRESS = "PROGRESS";
+  static DELIVERED = "DELIVERED";
+  static CANCELLED = "CANCELLED";
+  static INVALID = "INVALID";
 }
 
 export class Order {
@@ -22,7 +21,7 @@ export class Order {
   updated_at: Date;
   delivered_at: Date;
   items: LineItem[] = [];
-  status: OrderStatus = OrderStatus.NEW;
+  status: string = OrderStatus.NEW;
   delivery_charges:number = 40;
 
   constructor(data={}){
@@ -31,6 +30,9 @@ export class Order {
     this._id = ObjectId.of(this._id);
     this.items = this.items.map(x=> LineItem.of(x));
     this.delivery_details = DeliveryDetails.of(this.delivery_details);
+    this.created_at = Date.of(this.created_at);
+    this.updated_at = Date.of(this.updated_at);
+    this.delivered_at = Date.of(this.delivered_at);
   }
 
   addItem(item: LineItem){
@@ -131,7 +133,7 @@ export class Order {
   }
 
   inPrepration(){
-    return this.status == OrderStatus.PREPRATION;
+    return this.status == OrderStatus.PREPARING;
   }
 
   isInValid(){

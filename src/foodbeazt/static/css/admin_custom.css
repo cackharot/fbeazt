@@ -1,0 +1,62 @@
+.card{
+    display: block;
+    margin: 10px 0px;
+    position: relative;
+    border-bottom: 1px solid #eee;
+    /*padding: 0 12px;*/
+    width: 100%;
+}
+
+.card .cell1{
+  display: inline-block;
+  padding-right: 25px;
+  width: 25%;
+  vertical-align: top;
+  padding-top: 12px;
+}
+
+.card .cell1 h4{
+  margin-top: 0;
+}
+
+.card .cell2{
+  display: inline-block;
+  width: 70%;
+}
+
+.card .status_row{
+  /*display: table-row;*/
+}
+
+.card .status_row span{
+  display: inline-block;
+  padding: 6px;
+  margin: 6px 50px 6px 0px;
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  position: relative;
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.card .status_row span:hover{
+  background: #23b7e5;
+  color:white;
+}
+.card .status_row span:after{
+  content: ">>>";
+  position: absolute;
+  right: -40px;
+  top: 6px;
+  color: black;
+}
+.card .status_row span:last-child:after{
+  content: "";
+}
+.card .done{
+  color: #27c24c;
+}
+.card .inprogress{
+  color: #ff902b;
+}

@@ -16,6 +16,20 @@ orderApp.controller('orderListCtrl', function($scope, $http, $routeParams){
         })
 	}
 
+    $scope.updateStatus = function(item,status){
+        if(status == 'DELIVERED'){
+            if(!confirm("Are you sure the order is delivered successfully?")){
+                return false;
+            }
+        }
+        $http.post('/api/order_status/'+item._id.$oid,{'status':status})
+        .success(function(d){
+            item.status = status;
+        }).error(function(e){
+            alert(e);
+        });
+    }
+
 	$scope.reloadStore = function(){
         $http.get('/api/stores').success(function(d){
             $scope.stores = d

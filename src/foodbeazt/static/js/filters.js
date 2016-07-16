@@ -3,9 +3,9 @@ angular.module('fbFilters', [])
     return function(input) {
       if(input && input.$date){
         var d = new Date(input.$date);
-        return d.toLocaleDateString()
+        return d.toLocaleDateString() +" "+ d.toLocaleTimeString();
       }
-      return input
+      return input;
     }
 })
 .filter('show_food_type', function(){
