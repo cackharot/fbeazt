@@ -496,6 +496,9 @@ label > .inline-label {
   color: brown;
 }
 
+.checkout__page {
+  padding-bottom: 20px;
+}
 .checkout__page h2 {
   color: #46535e;
 }
