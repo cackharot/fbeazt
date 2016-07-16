@@ -1,0 +1,65 @@
+.checkout__page label {
+  position: relative;
+}
+.checkout__page span.check {
+  position: absolute;
+  right: 2%;
+  top: 35px;
+  font-size: 21px;
+}
+.checkout__page input + span.check,
+.checkout__page select + span.check,
+.checkout__page textarea + span.check {
+  display: none;
+}
+.checkout__page .ng-valid[required] {
+  border-bottom: 2px solid #42A948;
+}
+.checkout__page .ng-valid[required] + span.check {
+  display: inline-block;
+  color: #42A948;
+}
+.checkout__page [type='text'], .checkout__page [type='password'], .checkout__page [type='date'],
+.checkout__page [type='datetime'], .checkout__page [type='datetime-local'], .checkout__page [type='month'],
+.checkout__page [type='week'], .checkout__page [type='email'], .checkout__page [type='number'],
+.checkout__page [type='search'], .checkout__page [type='tel'], .checkout__page [type='time'],
+.checkout__page [type='url'], .checkout__page [type='color'], .checkout__page textarea {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.26);
+  outline: 0;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  padding-left: 0;
+}
+.checkout__page [type='text']:active, .checkout__page [type='password']:active, .checkout__page [type='date']:active,
+.checkout__page [type='datetime']:active, .checkout__page [type='datetime-local']:active, .checkout__page [type='month']:active,
+.checkout__page [type='week']:active, .checkout__page [type='email']:active, .checkout__page [type='number']:active,
+.checkout__page [type='search']:active, .checkout__page [type='tel']:active, .checkout__page [type='time']:active,
+.checkout__page [type='url']:active, .checkout__page [type='color']:active, .checkout__page textarea:active {
+  border: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.checkout__page [type='text']:focus, .checkout__page [type='password']:focus, .checkout__page [type='date']:focus,
+.checkout__page [type='datetime']:focus, .checkout__page [type='datetime-local']:focus, .checkout__page [type='month']:focus,
+.checkout__page [type='week']:focus, .checkout__page [type='email']:focus, .checkout__page [type='number']:focus,
+.checkout__page [type='search']:focus, .checkout__page [type='tel']:focus, .checkout__page [type='time']:focus,
+.checkout__page [type='url']:focus, .checkout__page [type='color']:focus, .checkout__page textarea:focus {
+  border: none;
+  border-bottom: 2px solid #2196F3;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.checkout__page [type='text']:focus + span.check, .checkout__page [type='password']:focus + span.check, .checkout__page [type='date']:focus + span.check,
+.checkout__page [type='datetime']:focus + span.check, .checkout__page [type='datetime-local']:focus + span.check, .checkout__page [type='month']:focus + span.check,
+.checkout__page [type='week']:focus + span.check, .checkout__page [type='email']:focus + span.check, .checkout__page [type='number']:focus + span.check,
+.checkout__page [type='search']:focus + span.check, .checkout__page [type='tel']:focus + span.check, .checkout__page [type='time']:focus + span.check,
+.checkout__page [type='url']:focus + span.check, .checkout__page [type='color']:focus + span.check, .checkout__page textarea:focus + span.check {
+  display: none;
+}
+.checkout__page .ng-invalid {
+  border-bottom: 2px solid #a94442;
+}

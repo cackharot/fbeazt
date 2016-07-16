@@ -40,82 +40,104 @@
           Unless you receive an email or SMS or a phone call from us, <i>Your order will not be processed.</i>
         </p>
       </div>
-      <label for="name">Name:
-        <input type="text" maxlength="50" id="name" [(ngModel)]="order.delivery_details.name" required/>
-      </label>
-      <label for="phone">Phone:
-        <input type="text" maxlength="10" minlength="10" id="phone" [(ngModel)]="order.delivery_details.phone" required/>
-      </label>
-      <label for="email">Email:
-        <input type="email" maxlength="200" minlength="3" id="email" [(ngModel)]="order.delivery_details.email" required/>
-      </label>
-      <label for="pincode">Pincode:
-        <input type="text" maxlength="6" minlength="6" id="pincode" [(ngModel)]="order.delivery_details.pincode" required/>
-      </label>
-      <label for="address">Address:
-        <textarea maxlength="500" minlength="10" id="address" [(ngModel)]="order.delivery_details.address" required></textarea>
-      </label>
-      <label for="landmark">Nearby landmark:
-        <input type="text" maxlength="50" id="landmark" [(ngModel)]="order.delivery_details.landmark" />
-      </label>
-      <label for="speed_checkout">
-        <input type="checkbox" id="speed_checkout" [(ngModel)]="canSaveDeliveryDetails" />
-        Speed checkout next time.
-      </label>
+      <div class="content__container">
+        <label for="name">Name:
+          <input type="text" maxlength="50" name="name" #name="ngModel" [(ngModel)]="order.delivery_details.name" required/>
+          <span class="check">
+            <em class="fa fa-check-circle"></em>
+          </span>
+        </label>
+        <label for="phone">Phone:
+          <input type="text" maxlength="10" minlength="10" name="phone" #phone="ngModel" [(ngModel)]="order.delivery_details.phone" required/>
+          <span class="check">
+            <em class="fa fa-check-circle"></em>
+          </span>
+        </label>
+        <label for="email">Email:
+          <input type="email" maxlength="200" minlength="3" name="email" #email="ngModel" [(ngModel)]="order.delivery_details.email" required/>
+          <span class="check">
+            <em class="fa fa-check-circle"></em>
+          </span>
+        </label>
+        <label for="pincode">Pincode:
+          <input type="text" maxlength="6" minlength="6" name="pincode" #pincode="ngModel" [(ngModel)]="order.delivery_details.pincode" required/>
+          <span class="check">
+            <em class="fa fa-check-circle"></em>
+          </span>
+        </label>
+        <label for="address">Address:
+          <textarea maxlength="500" minlength="10" name="address" #address="ngModel" [(ngModel)]="order.delivery_details.address" required></textarea>
+          <span class="check">
+            <em class="fa fa-check-circle"></em>
+          </span>
+        </label>
+        <label for="landmark">Nearby landmark:
+          <input type="text" maxlength="50" name="landmark" #landmark="ngModel" [(ngModel)]="order.delivery_details.landmark" />
+          <span class="check">
+            <em class="fa fa-check-circle"></em>
+          </span>
+        </label>
+        <label for="speed_checkout">
+          <input type="checkbox" id="speed_checkout" name="speed_checkout" [(ngModel)]="canSaveDeliveryDetails" />
+          Speed checkout next time.
+        </label>
+      </div>
     </div>
     <div class="medium-6 columns">
       <div class="row">
         <div class="medium-12 columns">
           <h2><i class="fa fa-shopping-cart"></i> Order details</h2>
-          <table class="table order_table">
-            <tbody>
-              <tr *ngFor="let item of order.getItems()">
-                <td>
-                  <div class="product_name">
-                    <a (click)="removeItem(item)" [class.text-alert]="item.store.isClosed()" title="Remove item from cart!">
-                      <i class="fa fa-times-circle"></i>
-                    </a>
-                    {{item.name}} <br/>
-                    <span class="store_name light"><i>from</i> {{item.store.name}}</span>
-                    <br/>
-                    <small class="light text-alert" *ngIf="item.store.isClosed()">
-                      Currently unavailable!
-                    </small>
-                  </div>
-                </td>
-                <td class="quantity">
-                  <!--<span class="price light">{{item.price}}x</span>-->
-                  <a (click)="changeQuantity(item,-1)"><i class="fa fa-minus-square"></i></a>
-                  {{item.quantity}}
-                  <a (click)="changeQuantity(item,1)"><i class="fa fa-plus-square"></i></a>
-                </td>
-                <td class="price">{{item.getTotalPrice()}}</td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="2">
-                  Subtotal:
-                </td>
-                <td class="total">{{order.getSubTotal()}}</td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  Delivery Charges:
-                </td>
-                <td class="total">{{order.getDeliveryCharges()}}</td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  Total:
-                </td>
-                <td class="total rupee">{{order.getTotalAmount()}}</td>
-              </tr>
-            </tfoot>
-          </table>
+          <div class="content__container">
+            <table class="table order_table">
+              <tbody>
+                <tr *ngFor="let item of order.getItems()">
+                  <td>
+                    <div class="product_name">
+                      <a (click)="removeItem(item)" [class.text-alert]="item.store.isClosed()" title="Remove item from cart!">
+                        <i class="fa fa-times-circle"></i>
+                      </a>
+                      {{item.name}} <br/>
+                      <span class="store_name light"><i>from</i> {{item.store.name}}</span>
+                      <br/>
+                      <small class="light text-alert" *ngIf="item.store.isClosed()">
+                        Currently unavailable!
+                      </small>
+                    </div>
+                  </td>
+                  <td class="quantity">
+                    <!--<span class="price light">{{item.price}}x</span>-->
+                    <a (click)="changeQuantity(item,-1)"><i class="fa fa-minus-square"></i></a>
+                    {{item.quantity}}
+                    <a (click)="changeQuantity(item,1)"><i class="fa fa-plus-square"></i></a>
+                  </td>
+                  <td class="price">{{item.getTotalPrice()}}</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2">
+                    Subtotal:
+                  </td>
+                  <td class="total">{{order.getSubTotal()}}</td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    Delivery Charges:
+                  </td>
+                  <td class="total">{{order.getDeliveryCharges()}}</td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    Total:
+                  </td>
+                  <td class="total rupee">{{order.getTotalAmount()}}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
           <div class="callout alert" *ngIf="!order.isValid()">
             <p>There are some dishes that are presently became unavailable. Kindly remove them to proceed.
-            This may occur if you have added the dish while the store was open and before completing the
+            This may occur if you have added the dish while the store was open but before completing the
             checkout process.</p>
             <p>For assistance and any queries, kindly call us on +91 7373730484</p>
           </div>
@@ -125,8 +147,8 @@
           <div class="medium-12 columns">
             <h2><i class="fa fa-credit-card"></i> Payment Details</h2>
             <div class="callout primary">
-              <p>Presently we accept only <b>Cash On Delivery</b></p>
-              <p>Online transactions through Credit/Debit card and NetBanking coming soon...</p>
+              <p>At the moment we accept only <b>Cash On Delivery</b></p>
+              <!--<p>Online transactions through Credit/Debit card and NetBanking coming soon...</p>-->
             </div>
           </div>
       </div>

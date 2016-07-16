@@ -60,17 +60,30 @@ body {
   margin: 4px 6px;
 }
 
+.content__container {
+  background-color: white;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #FFF;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  -moz-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 2px 0 rgba(0, 0, 0, 0.12);
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 2px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 2px 0 rgba(0, 0, 0, 0.12);
+}
+
 .search__container {
+  position: relative;
   margin-bottom: 10px;
   background-color: #fff;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
   padding: 10px 5px;
-  position: relative;
   min-height: 80px;
-  -webkit-box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
   -moz-box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
+  -webkit-box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
   box-shadow: 0 1px 1px 0 rgba(159, 167, 194, 0.6);
 }
 .search__container .switch {
@@ -342,6 +355,7 @@ img.res_logo {
   -moz-border-radius: 3px;
   border-radius: 3px;
   margin: 0;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.2);
 }
 .button.expand {
   width: 100%;
@@ -423,9 +437,20 @@ img.res_logo {
   padding: 0;
 }
 
-.order_table td {
-  background: #fff;
+table {
+  border: none;
 }
+table tbody {
+  border: none;
+  background: transparent;
+}
+table tbody tr:nth-child(even) {
+  background-color: transparent;
+}
+table tbody tr {
+  border-bottom: 1px solid #dcdcdc;
+}
+
 .order_table .price, .order_table .quantity, .order_table .total {
   text-align: right;
 }

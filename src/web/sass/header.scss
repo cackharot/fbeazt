@@ -81,6 +81,7 @@ header{
       right:0em;
       a{
         line-height: $baseline*2;
+        display: block;
       }
       .rupee{
         position: relative;
