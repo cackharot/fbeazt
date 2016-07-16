@@ -1,4 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600);
 body {
   font-family: "Open Sans",sans-serif;
   font-weight: 400;
@@ -8,6 +7,7 @@ body {
 
 #main {
   margin: 0 auto;
+  padding-top: 70px;
   background-color: #f3f3f3;
   min-height: 100%;
   position: relative;
@@ -351,10 +351,12 @@ img.res_logo {
 }
 
 .button {
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
   border-radius: 3px;
   margin: 0;
+  -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.2);
 }
 .button.expand {
@@ -554,7 +556,7 @@ ul.faq li {
 ul.faq li.question {
   font-weight: 600;
   color: #fff;
-  background: #162c3f;
+  background: #3E50B4;
 }
 ul.faq li.answer {
   font-size: 14px;

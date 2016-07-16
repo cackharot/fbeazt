@@ -1,10 +1,6 @@
 @import "compass/css3";
 
 .track__order__page{
-  // background: rgba(242, 195, 74, 0.7);
-  background: #607d8b;
-  min-height: 100%;
-  color: white;
 
   ul{
     margin: 0 auto;
@@ -16,20 +12,19 @@
       display: inline-block;
       margin: 10px 45px;
       line-height: 4em;
-      color: #dcdcdc;
-
+      color: #607d8b;
       i{
         @include transition(all 0.5s);
         font-size: 5em;
         display: block;
       }
       &.progress{
-        color: #FFDD1B;
+        color: #fbc53c;
         height: auto;
         background-color: transparent;
       }
       &.done{
-        color: #B6FF00;
+        color: #55b559;
       }
     }
   }

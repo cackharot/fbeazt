@@ -9,18 +9,15 @@ header,nav{
 }
 
 header{
-  // height: $baseline*2;
-  // @include box-shadow(
-  //   0 .25em  rgba(12,77,120,0.2),
-  //   inset 0 -1px rgba(0,0,0,0.6),
-  //   inset 0 -2px rgba(255,255,255,0.15));
-  @include background(
-    linear-gradient(top ,
-    lighten(rgba(0,0,0,0.0), 0%) 0%,
-    darken(rgba(0,0,0,0.4), 10%) 99%));
-  background-color: #0c4d78;
-  z-index:99;
+  padding: 10px 0;
+  @include transition(all .3s ease);
+  background: #2F3E9E;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
+  z-index: 10;
+  height: 70px;
 
   a{
     line-height:$baseline;
@@ -32,53 +29,38 @@ header{
   }
 
   .logo {
+    float: left;
     a {
       z-index:9;
       position:relative;
-      &:hover{
-        color:white;
-      }
-      @include box-shadow(
-        inset -1px 0 rgba(255,255,255,0.2),
-        inset  -2px 0 rgba(0,0,0,0.24));
+      // @include box-shadow(inset -1px 0 rgba(255,255,255,0.2),
+        // inset  -2px 0 rgba(0,0,0,0.24));
+      // background-color:rgba(0,0,0,0.13);
+      // font-weight: 600;
       text-align:center;
-      background-color:rgba(0,0,0,0.13);
       display:block;
       width: 6em;
-      font-weight: 600;
       font-size: 28px;
-    }
-    @media screen and (max-width: 40em){
-      a{
-        @include box-shadow(none);
-        background-color: transparent;
+      &:hover{
+        color:white;
       }
     }
   }
 
   label{
-    display: inline-block;
-    position: absolute;
-    transition:all .2s ease;
-    background-color: rgba(255,255,255,0.05);
-    position: absolute;
-    top:0; right:0%;
+    float: right;
+    @include transition(all .2s ease);
     text-align:center;
-    padding:0 2em;
-    z-index:100; color:#aaa;
-    height: $baseline*2;
-    cursor:pointer;
-    width: 10em;
+    z-index:100;
+    color:#aaa;
     line-height: $baseline*2;
-    user-select:none;
-    @include box-shadow(
-      inset 1px 0 rgba(255,255,255,0.2),
-      inset 2px 0 rgba(0,0,0,0.2));
+    cursor:pointer;
+    width: 8em;
     &:hover{
-     background-color: rgba(255,255,255,0.1); color: white;
+     background-color: rgba(255,255,255,0.1);
+     color: white;
     }
     &[for="cart-summary"],&[for="track"]{
-      right:0em;
       a{
         line-height: $baseline*2;
         display: block;
@@ -95,10 +77,6 @@ header{
         min-width: 1.6em;
         left: -6px;
       }
-    }
-    &[for="track"]{
-      right:10em;
-      width: 9em;
     }
   }
 }

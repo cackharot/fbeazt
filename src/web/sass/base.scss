@@ -1,7 +1,7 @@
 @import "compass/css3";
 @import "variables";
 
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600);
+// @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600);
 
 body{
   font-family: "Open Sans",sans-serif;
@@ -12,7 +12,7 @@ body{
 
 #main{
   margin: 0 auto;
-  // padding-bottom: 15px;
+  padding-top: 70px;
   // background-color: #574e21;
   background-color: #f3f3f3;
   min-height: 100%;
@@ -379,11 +379,9 @@ img.res_logo{
 }
 
 .button{
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
+  @include border-radius(3px);
   margin: 0;
-  box-shadow: 0 0 2px rgba(0,0,0,.12),0 2px 2px rgba(0,0,0,.2);
+  @include box-shadow(0 0 2px rgba(0,0,0,.12),0 2px 2px rgba(0,0,0,.2));
 
   &.expand{
     width: 100%;
@@ -595,7 +593,8 @@ ul.faq{
     &.question{
       font-weight: 600;
       color: #fff;
-      background: #162c3f;
+      // background: #162c3f;
+      background: #3E50B4;
     }
     &.answer{
       font-size: 14px;

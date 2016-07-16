@@ -1,11 +1,13 @@
 <section class="track__order__page">
-  <div class="row">
+  <div class="row content__container">
     <div class="medium-12 columns">
       <h2>Track Order</h2>
       <form (ngSubmit)="searchOrder()">
         <div class="input-group">
-          <input  class="input-group-field"type="text" id="orderno"
-            placeholder="Enter the order number..." name="orderno" [(ngModel)]="orderNo"/>
+          <input  class="input-group-field"type="text" #orderno="ngModel"
+            minlength="6" maxlength="12"
+            placeholder="Enter the order number..." name="orderno"
+            [(ngModel)]="orderNo" required/>
           <div class="input-group-button">
             <button type="submit" class="button">Submit</button>
           </div>
@@ -26,7 +28,7 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="!isRequesting && order!=null">
+  <div class="row content__container" *ngIf="!isRequesting && order!=null">
     <div class="medium-12 columns" *ngIf="order.isCancelled()">
       <p>
         We regret to inform you that your order has been cancelled.

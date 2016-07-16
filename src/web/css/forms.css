@@ -1,7 +1,7 @@
-.checkout__page label, .otp__page label {
+.checkout__page label, .otp__page label, .track__order__page label {
   position: relative;
 }
-.checkout__page span.check, .otp__page span.check {
+.checkout__page span.check, .otp__page span.check, .track__order__page span.check {
   position: absolute;
   right: 2%;
   top: 35px;
@@ -11,13 +11,15 @@
 .checkout__page select + span.check,
 .checkout__page textarea + span.check, .otp__page input + span.check,
 .otp__page select + span.check,
-.otp__page textarea + span.check {
+.otp__page textarea + span.check, .track__order__page input + span.check,
+.track__order__page select + span.check,
+.track__order__page textarea + span.check {
   display: none;
 }
-.checkout__page .ng-valid[required], .otp__page .ng-valid[required] {
+.checkout__page .ng-valid[required], .otp__page .ng-valid[required], .track__order__page .ng-valid[required] {
   border-bottom: 2px solid #42A948;
 }
-.checkout__page .ng-valid[required] + span.check, .otp__page .ng-valid[required] + span.check {
+.checkout__page .ng-valid[required] + span.check, .otp__page .ng-valid[required] + span.check, .track__order__page .ng-valid[required] + span.check {
   display: inline-block;
   color: #42A948;
 }
@@ -29,7 +31,11 @@
 .otp__page [type='datetime'], .otp__page [type='datetime-local'], .otp__page [type='month'],
 .otp__page [type='week'], .otp__page [type='email'], .otp__page [type='number'],
 .otp__page [type='search'], .otp__page [type='tel'], .otp__page [type='time'],
-.otp__page [type='url'], .otp__page [type='color'], .otp__page textarea {
+.otp__page [type='url'], .otp__page [type='color'], .otp__page textarea, .track__order__page [type='text'], .track__order__page [type='password'], .track__order__page [type='date'],
+.track__order__page [type='datetime'], .track__order__page [type='datetime-local'], .track__order__page [type='month'],
+.track__order__page [type='week'], .track__order__page [type='email'], .track__order__page [type='number'],
+.track__order__page [type='search'], .track__order__page [type='tel'], .track__order__page [type='time'],
+.track__order__page [type='url'], .track__order__page [type='color'], .track__order__page textarea {
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.26);
   outline: 0;
@@ -46,7 +52,11 @@
 .otp__page [type='datetime']:active, .otp__page [type='datetime-local']:active, .otp__page [type='month']:active,
 .otp__page [type='week']:active, .otp__page [type='email']:active, .otp__page [type='number']:active,
 .otp__page [type='search']:active, .otp__page [type='tel']:active, .otp__page [type='time']:active,
-.otp__page [type='url']:active, .otp__page [type='color']:active, .otp__page textarea:active {
+.otp__page [type='url']:active, .otp__page [type='color']:active, .otp__page textarea:active, .track__order__page [type='text']:active, .track__order__page [type='password']:active, .track__order__page [type='date']:active,
+.track__order__page [type='datetime']:active, .track__order__page [type='datetime-local']:active, .track__order__page [type='month']:active,
+.track__order__page [type='week']:active, .track__order__page [type='email']:active, .track__order__page [type='number']:active,
+.track__order__page [type='search']:active, .track__order__page [type='tel']:active, .track__order__page [type='time']:active,
+.track__order__page [type='url']:active, .track__order__page [type='color']:active, .track__order__page textarea:active {
   border: none;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
@@ -60,7 +70,11 @@
 .otp__page [type='datetime']:focus, .otp__page [type='datetime-local']:focus, .otp__page [type='month']:focus,
 .otp__page [type='week']:focus, .otp__page [type='email']:focus, .otp__page [type='number']:focus,
 .otp__page [type='search']:focus, .otp__page [type='tel']:focus, .otp__page [type='time']:focus,
-.otp__page [type='url']:focus, .otp__page [type='color']:focus, .otp__page textarea:focus {
+.otp__page [type='url']:focus, .otp__page [type='color']:focus, .otp__page textarea:focus, .track__order__page [type='text']:focus, .track__order__page [type='password']:focus, .track__order__page [type='date']:focus,
+.track__order__page [type='datetime']:focus, .track__order__page [type='datetime-local']:focus, .track__order__page [type='month']:focus,
+.track__order__page [type='week']:focus, .track__order__page [type='email']:focus, .track__order__page [type='number']:focus,
+.track__order__page [type='search']:focus, .track__order__page [type='tel']:focus, .track__order__page [type='time']:focus,
+.track__order__page [type='url']:focus, .track__order__page [type='color']:focus, .track__order__page textarea:focus {
   border: none;
   border-bottom: 2px solid #2196F3;
   -moz-box-shadow: none;
@@ -75,9 +89,13 @@
 .otp__page [type='datetime']:focus + span.check, .otp__page [type='datetime-local']:focus + span.check, .otp__page [type='month']:focus + span.check,
 .otp__page [type='week']:focus + span.check, .otp__page [type='email']:focus + span.check, .otp__page [type='number']:focus + span.check,
 .otp__page [type='search']:focus + span.check, .otp__page [type='tel']:focus + span.check, .otp__page [type='time']:focus + span.check,
-.otp__page [type='url']:focus + span.check, .otp__page [type='color']:focus + span.check, .otp__page textarea:focus + span.check {
+.otp__page [type='url']:focus + span.check, .otp__page [type='color']:focus + span.check, .otp__page textarea:focus + span.check, .track__order__page [type='text']:focus + span.check, .track__order__page [type='password']:focus + span.check, .track__order__page [type='date']:focus + span.check,
+.track__order__page [type='datetime']:focus + span.check, .track__order__page [type='datetime-local']:focus + span.check, .track__order__page [type='month']:focus + span.check,
+.track__order__page [type='week']:focus + span.check, .track__order__page [type='email']:focus + span.check, .track__order__page [type='number']:focus + span.check,
+.track__order__page [type='search']:focus + span.check, .track__order__page [type='tel']:focus + span.check, .track__order__page [type='time']:focus + span.check,
+.track__order__page [type='url']:focus + span.check, .track__order__page [type='color']:focus + span.check, .track__order__page textarea:focus + span.check {
   display: none;
 }
-.checkout__page .ng-invalid, .otp__page .ng-invalid {
+.checkout__page .ng-invalid, .otp__page .ng-invalid, .track__order__page .ng-invalid {
   border-bottom: 2px solid #a94442;
 }

@@ -1,8 +1,3 @@
-.track__order__page {
-  background: #607d8b;
-  min-height: 100%;
-  color: white;
-}
 .track__order__page ul {
   margin: 0 auto;
   list-style: none;
@@ -13,7 +8,7 @@
   display: inline-block;
   margin: 10px 45px;
   line-height: 4em;
-  color: #dcdcdc;
+  color: #607d8b;
 }
 .track__order__page ul li i {
   -moz-transition: all 0.5s;
@@ -24,10 +19,10 @@
   display: block;
 }
 .track__order__page ul li.progress {
-  color: #FFDD1B;
+  color: #fbc53c;
   height: auto;
   background-color: transparent;
 }
 .track__order__page ul li.done {
-  color: #B6FF00;
+  color: #55b559;
 }
