@@ -59,6 +59,7 @@ gulp.task('copy:assets', ['clean', 'sass'], function() {
 // copy dependencies
 gulp.task('bundle:vendor', ['clean'], function() {
   return gulp.src([
+      'js/modernizr.js',
       'js/jquery.js',
       'js/foundation.js',
       'js/what-input.js',

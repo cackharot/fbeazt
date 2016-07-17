@@ -4,7 +4,7 @@
     'app':                        'dist/app', // 'dist',
     '@angular':                   'node_modules/@angular',
     'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
-    'angular2-localstorage':      'node_modules/angular2-localstorage',
+    'angular2-localstorage':      'node_modules/angular2-localstorage/dist',
     'rxjs':                       'node_modules/rxjs',
     'lodash':                     'node_modules/lodash/lodash.js',
     'moment':                     'node_modules/moment/moment.js',
