@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
-import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
+import { LocalStorage, SessionStorage } from "angular2-localstorage/WebStorage";
 
 import { OrderService } from '../services/order.service';
 import { SpinnerComponent } from './spinner';
@@ -18,6 +18,7 @@ export class CheckoutComponent implements OnInit {
   orderSuccess:boolean = false;
   isRequesting:boolean = false;
   @LocalStorage() canSaveDeliveryDetails:boolean = false;
+  @SessionStorage() availablePincodes: any[] =[];
   error:any = null;
 
   constructor(private router: Router,
@@ -31,6 +32,17 @@ export class CheckoutComponent implements OnInit {
     if(this.order.order_no && this.order.order_no.length != 0){
       this.navOrder();
     }
+    // this.fetchAvailablePincodes();
+  }
+
+  private fetchAvailablePincodes(){
+    if(this.availablePincodes.length > 0){
+      return;
+    }
+    this.orderService.fetchAvailablePincodes()
+    .then(x=>{
+      this.availablePincodes = x;
+    }).catch(e=>{console.log(e);});
   }
 
   resetOrder(){

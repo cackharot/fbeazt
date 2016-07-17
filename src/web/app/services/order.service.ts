@@ -6,7 +6,7 @@ import * as _ from "lodash";
 
 import { ObjectId } from '../model/base';
 import { Product } from '../model/product';
-import { Order, LineItem, DeliveryDetails } from '../model/order';
+import { Order, PincodeDetail, LineItem, DeliveryDetails } from '../model/order';
 import { AppConfig } from '../AppConfig';
 
 @Injectable()
@@ -151,6 +151,17 @@ export class OrderService {
           return null;
         }
         return order;
+      })
+      .catch(this.handleError);
+  }
+
+  fetchAvailablePincodes(){
+    return this.http.get(`${AppConfig.PINCODE_URL}`)
+      .toPromise()
+      .then(response=>{
+        let data = response.json();
+        let items = data.map(x=> PincodeDetail.of(x));
+        return items;
       })
       .catch(this.handleError);
   }

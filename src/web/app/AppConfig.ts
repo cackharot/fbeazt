@@ -7,6 +7,7 @@ export class AppConfig {
   static POPULAR_DISHES_URL:string = AppConfig.BASE_URL+"/popular_items";
   static ORDER_URL:string = AppConfig.BASE_URL+"/order";
   static TRACK_URL:string = AppConfig.BASE_URL+"/track";
+  static PINCODE_URL:string = AppConfig.BASE_URL+"/pincodes";
 
   static getBaseUrl(){
     let host = window.location.host,

@@ -202,3 +202,23 @@ export class DeliveryDetails {
     return new DeliveryDetails(data);
   }
 }
+
+export class PincodeDetail{
+  _id: ObjectId = new ObjectId();
+  pincode:string;
+  area:string;
+  rate:number;
+  status:boolean;
+
+  constructor(data={}){
+    Object.assign(this, data);
+    this._id = ObjectId.of(this._id);
+  }
+
+  static of(data){
+    if(data == null || data.constructor.name == PincodeDetail.name){
+      return data;
+    }
+    return new PincodeDetail(data);
+  }
+}
