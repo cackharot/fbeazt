@@ -22,6 +22,14 @@ class PincodeService(object):
     lst = self.pincodes.find({"tenant_id": ObjectId(tenant_id)})
     return [x for x in lst]
 
+  def get_rate(self, pincode):
+    item = self.pincodes.find_one({"pincode":pincode})
+    if not item: return -1.0
+    return float(item['rate'])
+
+  def check_pincode(self, pincode):
+    return self.pincodes.find({"pincode":pincode}).count() > 0
+
   def check_duplicate_pincode(self, _id, pincode):
     return self.pincodes.find({"_id":{"$not":{"$eq":ObjectId(_id)}},"pincode": pincode}).count() > 0
 

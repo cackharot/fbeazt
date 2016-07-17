@@ -5,6 +5,7 @@ from flask_mail import Message
 from flask_restful import Resource
 from service.OrderService import OrderService, DuplicateOrderException
 from service.ProductService import ProductService
+from service.PincodeService import PincodeService
 from service.StoreService import StoreService
 from service.SmsService import SmsService
 from foodbeazt.fapp import mongo, app, mail
@@ -109,6 +110,7 @@ class OrderApi(Resource):
     self.log = logging.getLogger(__name__)
     self.service = OrderService(mongo.db)
     self.productService = ProductService(mongo.db)
+    self.pincodeService = PincodeService(mongo.db)
     self.smsService = SmsService(mongo.db, app.config['SMS_USER'], app.config['SMS_API_KEY'])
 
   def get(self, _id):
@@ -198,6 +200,10 @@ class OrderApi(Resource):
 
     _id = None
     try:
+      pincode = valid_order['delivery_details']['pincode']
+      if not self.pincodeService.check_pincode(pincode):
+        return {"status":"error","message":"Delivery not available for %s pincode!" % (pincode)}
+
       valid_order['delivery_charges'] = self.service.get_delivery_charges(valid_order)
       valid_order['total'] = self.service.get_order_total(valid_order)
       self.check_duplicate_order(valid_order)

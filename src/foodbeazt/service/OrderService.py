@@ -1,6 +1,8 @@
 from datetime import datetime
 from bson import ObjectId
 
+from .PincodeService import PincodeService
+
 import re
 import random
 import string
@@ -11,6 +13,7 @@ class DuplicateOrderException(Exception):
 class OrderService(object):
     def __init__(self, db):
         self.db = db
+        self.pincodeService = PincodeService(db)
         self.orders = self.db.order_collection
 
     def search(self, tenant_id, store_id=None, page_no=1,
@@ -75,7 +78,9 @@ class OrderService(object):
         return self.orders.find_one({"order_no": order_no})
 
     def get_delivery_charges(self, order):
-        return 40.0
+        rate = self.pincodeService.get_rate(order['delivery_details']['pincode'])
+        if rate < 0: return 40.0
+        return rate
 
     def get_order_total(self, order):
         item_total = sum([x['price']*x['quantity'] for x in order['items']])
