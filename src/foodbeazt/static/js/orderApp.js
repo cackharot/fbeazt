@@ -70,6 +70,16 @@ orderApp.controller('orderListCtrl', function($scope, $http, $routeParams){
 
     $scope.reloadStore()
 
+    $scope.resetSearch = function(){
+        $scope.searchText="";
+        $scope.filter_pending=false;
+        $scope.filter_preparing=false;
+        $scope.filter_progress=false;
+        $scope.filter_delivered=false;
+        $scope.filter_cancelled=false;
+        this.reloadOrder();
+    };
+
     $scope.setStore = function(store_id){
         if(!store_id || store_id == '-1' || store_id == '') return
          $scope.selected_store = store_id

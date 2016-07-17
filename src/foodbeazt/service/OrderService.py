@@ -32,14 +32,13 @@ class OrderService(object):
             query['status'] = {"$not": {"$eq": 'DELIVERED'}}
         if filter_text is not None and len(filter_text)>0:
             search_val = re.compile(r".*%s.*"%(filter_text), re.IGNORECASE)
-            query['$or'] = [{
-               'order_no': search_val,
-               'delivery_details.name': search_val,
-               'delivery_details.phone': search_val
-            }]
+            query['$or'] = [
+                {'order_no': search_val},
+                {'delivery_details.name': search_val},
+                {'delivery_details.phone': search_val}
+            ]
         skip_records = (page_no - 1) * page_size
         if skip_records < 0: skip_records = 0
-        print(query)
         lst = self.orders.find(query)
         return [x for x in lst.sort("created_at").skip(skip_records).limit(page_size)], lst.count()
 
