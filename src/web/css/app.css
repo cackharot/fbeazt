@@ -5,6 +5,39 @@ body {
   line-height: 1.75em;
 }
 
+#unsupported__browser {
+  display: none;
+  height: 0;
+}
+
+.no-localstorage header, .no-localstorage footer, .no-localstorage #main, .no-sessionstorage header, .no-sessionstorage footer, .no-sessionstorage #main, .no-boxsizing header, .no-boxsizing footer, .no-boxsizing #main, .no-history header, .no-history footer, .no-history #main {
+  display: none !important;
+  height: 0;
+}
+.no-localstorage #unsupported__browser, .no-sessionstorage #unsupported__browser, .no-boxsizing #unsupported__browser, .no-history #unsupported__browser {
+  display: table;
+  position: absolute;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+  background: #3E50B4;
+  color: white;
+  text-align: center;
+  margin: 0 auto;
+}
+.no-localstorage #unsupported__browser div, .no-sessionstorage #unsupported__browser div, .no-boxsizing #unsupported__browser div, .no-history #unsupported__browser div {
+  display: table-cell;
+  vertical-align: middle;
+  line-height: normal;
+}
+.no-localstorage #unsupported__browser ul, .no-sessionstorage #unsupported__browser ul, .no-boxsizing #unsupported__browser ul, .no-history #unsupported__browser ul {
+  list-style: none;
+  margin: 0 auto;
+}
+.no-localstorage #unsupported__browser ul li, .no-sessionstorage #unsupported__browser ul li, .no-boxsizing #unsupported__browser ul li, .no-history #unsupported__browser ul li {
+  display: block;
+}
+
 #main {
   margin: 0 auto;
   padding-top: 70px;

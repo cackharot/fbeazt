@@ -7,6 +7,20 @@
     <link rel="stylesheet" href="css/foundation.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/app.css">
+    <script src="js/modernizr.js"></script>
+    <script>
+      if(!Modernizr.localstorage || !Modernizr.sessionstorage
+      || !Modernizr.flexbox || !Modernizr.boxsizing || !Modernizr.history){
+        console.log("No Basic support!");
+      }
+      if(Modernizr.notification){
+        console.log("Has notification");
+      }
+      if(Modernizr.geolocation){
+        console.log("Has geolocation");
+      }
+    </script>
+
      <!-- Polyfill(s) for older browsers -->
      <!-- build:vendor -->
     <script src="node_modules/core-js/client/shim.min.js"></script>
@@ -37,6 +51,22 @@
         </div>
       </section>
     </fb-app>
+    <section id="unsupported__browser">
+      <div>
+        <p>
+          Awwh!! Applogize for the inconvenience caused.
+          But we do not support the browser you are using.
+          Kindly use one of the below supported browsers to access
+          <a href="//www.foodbeazt.in"><em>FoodBeazt</em></a>
+        </p>
+        <ul>
+          <li>Firefox</li>
+          <li>Chrome</li>
+          <li>Safari</li>
+          <li>IE 10+</li>
+        </ul>
+      </div>
+    </section>
 
     <!-- build:jf -->
     <script src="js/jquery.js"></script>
