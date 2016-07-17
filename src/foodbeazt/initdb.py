@@ -73,7 +73,7 @@ def create_items(db, tenant_id, store_id):
   # print("Created %d products" % (item_count))
   return item_count
 
-def setup():
+def setup(sample_data=False):
     client = MongoClient()
     db = client.foodbeaztDb
     print("Checking admin tenant")
@@ -101,19 +101,20 @@ def setup():
     user = user_service.get_by_email("foodbeazt@gmail.com")
     print(json.dumps(user, default=json_util.default))
 
-    print('\nCreating sample product data:')
-    create_sample_data(db, tenant_id)
-
-    pass
-
+    if sample_data:
+      print('\nCreating sample product data:')
+      create_sample_data(db, tenant_id)
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-      if sys.argv[1] == "drop":
-        print('Dropping database...')
-        c = MongoClient()
-        c.drop_database('foodbeaztDb')
-        print('Drop successfull')
+  sample_data = False
+  if len(sys.argv) > 1:
+    if sys.argv[1] == "drop":
+      print('Dropping database...')
+      c = MongoClient()
+      c.drop_database('foodbeaztDb')
+      print('Drop successfull')
+    if len(sys.argv) > 2 and sys.argv[2] == "test-data":
+      sample_data = True
 
-    print("Initializing database...")
-    setup()
+  print("Initializing database...")
+  setup(sample_data)
