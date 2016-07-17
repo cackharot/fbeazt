@@ -25,12 +25,8 @@ class StoreService(object):
     if only_open:
       now = datetime.now()
       hour = now.hour
-      if hour > 12:
-        open_time = float("%.2f" % ((hour + (now.minute/60))%12))
-        close_time = open_time
-      else:
-        open_time = float("%.2f" % ((hour + (now.minute/60))))
-        close_time = open_time%12
+      open_time = float("%.2f" % ((hour + (now.minute/60))))
+      close_time = open_time%12
 
       day = self.weekday_names[now.weekday()]
       query['open_time'] = { "$lte": open_time }
@@ -41,7 +37,7 @@ class StoreService(object):
           '$not': re.compile(day, re.IGNORECASE)
         }
       }
-    # print(query)
+    print(query)
     offset = (page_no - 1) * page_size
     if offset < 0: offset = 0
     lst = self.stores.find(query)
