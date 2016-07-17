@@ -44,7 +44,8 @@
   ngPackageNames.forEach(setPackageConfig);
   var config = {
     map: map,
-    packages: packages
+    packages: packages,
+    globalEvaluationScope: false
   };
   System.config(config);
 })(this);

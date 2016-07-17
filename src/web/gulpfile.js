@@ -52,14 +52,13 @@ gulp.task('bower', function() {
 // copy static assets - i.e. non TypeScript compiled source
 gulp.task('copy:assets', ['clean', 'sass'], function() {
   return gulp.src(['templates/**/*', 'images/**/*',
-        'css/**/*', 'fonts/**/*'], { base : './' })
+        'css/**/*', 'js/**/*', 'fonts/**/*'], { base : './' })
     .pipe(gulp.dest('dist'))
 });
 
 // copy dependencies
 gulp.task('bundle:vendor', ['clean'], function() {
   return gulp.src([
-      'js/modernizr.js',
       'js/jquery.js',
       'js/foundation.js',
       'js/what-input.js',
@@ -68,6 +67,7 @@ gulp.task('bundle:vendor', ['clean'], function() {
       'node_modules/rxjs/bundles/Rx.js',
       'node_modules/reflect-metadata/Reflect.js',
       'node_modules/systemjs/dist/system.src.js',
+      'systemjs.config.js',
     ])
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(concat('vendors.min.js'))
@@ -108,7 +108,7 @@ gulp.task('compile', ['clean'], function () {
 gulp.task('bundle:app', ['compile'], function() {
   var builder = new Builder('', 'systemjs.config.js');
   return builder
-      .buildStatic('dist/app/main.js', 'dist/bundle.min.js', { minify: true, sourceMaps: true})
+      .buildStatic('app', 'dist/bundle.min.js', { minify: true, sourceMaps: true})
       .catch(function(err) {
           console.log('Build error');
           console.log(err);
