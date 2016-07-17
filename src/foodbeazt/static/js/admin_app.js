@@ -9,12 +9,14 @@ menuItems.push({"title": "Product", "heading": false, "url": "/product", "icon":
 menuItems.push({"title": "Orders", "heading": false, "url": "/order", "icon": "fa fa-list", "templateUrl": '/static/templates/admin/order/list.html'})
 menuItems.push({"title": "Data Management", "heading": false, "url": "/manage_data", "icon": "fa fa-list", "templateUrl": '/static/templates/admin/import_export/list.html'})
 menuItems.push({"title": "Popular Dishes", "heading": false, "url": "/popular_dishes", "icon": "fa fa-star", "templateUrl": '/static/templates/admin/popular_dishes/index.html'})
+menuItems.push({"title": "Pincode", "heading": false, "url": "/pincode", "icon": "fa fa-map", "templateUrl": '/static/templates/admin/pincode/index.html'})
 
 var custom_routes = []
 custom_routes.push({"title": "Manage Tenant", "heading": false, "url": "/tenant/:id", "templateUrl": '/static/templates/admin/tenant/manage.html'})
 custom_routes.push({"title": "Manage User", "heading": false, "url": "/user/:id", "templateUrl": '/static/templates/admin/user/manage.html'})
 custom_routes.push({"title": "Manage Store", "heading": false, "url": "/store/:id", "templateUrl": '/static/templates/admin/store/manage.html'})
 custom_routes.push({"title": "Manage Product", "heading": false, "url": "/product/:store_id/:id", "templateUrl": '/static/templates/admin/product/manage.html'})
+custom_routes.push({"title": "Manage Pincode", "heading": false, "url": "/pincode/:id", "templateUrl": '/static/templates/admin/pincode/manage.html'})
 
 fbeaztAdmin.config(['$routeProvider', function($routeProvider){
     var items = menuItems.concat(custom_routes)

@@ -1,0 +1,74 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false"
+     ng-controller="pincodeDetailCtrl">
+    <h3>
+        <div class="pull-right">
+            <a href="#/pincode" class="btn btn-default" title="Go back"><em
+                    class="fa fa-arrow-left"></em>&nbsp;Back</a>
+            <button class="btn btn-primary" type="submit" ng-click="save()" ng-disabled="frmPincode.$invalid"><em
+                    class="fa fa-save"></em>&nbsp;Save
+            </button>
+        </div>
+        <span ng-if="model._id.$oid == '-1'">Add New Pincode</span>
+        <span ng-if="model._id.$oid != '-1'">Edit Pincode Details</span>
+    </h3>
+    <div class="row">
+        <form role="form" name="frmPincode" id="frmPincode" novalidate ng-submit="save()">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label" for="pincode">Pincode</label>
+                        <input class="form-control" type="text" name="pincode" id="pincode"
+                               ng-class="{ 'parsley-error' : frmPincode.pincode.$invalid && !frmPincode.pincode.$pristine }"
+                               ng-model="model.pincode" required/>
+
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmPincode.pincode.$dirty && frmPincode.pincode.$invalid">
+                            <li class="parsley-required" ng-show="frmPincode.pincode.$error.required">Pincode is
+                                required
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="area">Area name</label>
+                        <input class="form-control" type="text" name="area" id="area" ng-minlength="4"
+                               ng-class="{ 'parsley-error' : frmPincode.area.$invalid && !frmPincode.area.$pristine }"
+                               ng-model="model.area" required/>
+
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmPincode.area.$dirty && frmPincode.area.$invalid">
+                            <li class="parsley-required" ng-show="frmPincode.area.$error.required">Area is required
+                            </li>
+                            <li class="parsley-required" ng-show="frmPincode.area.$error.minlength">Area is should be
+                                at-least 4 characters
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="rate">Rate</label>
+                        <input class="form-control" type="text" id="rate" name="rate"
+                               ng-class="{ 'parsley-error' : frmPincode.rate.$invalid && !frmPincode.rate.$pristine }"
+                               ng-model="model.rate" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmPincode.rate.$dirty && frmPincode.rate.$invalid">
+                            <li class="parsley-required" ng-show="frmPincode.rate.$error.required">
+                                Enter a valid rate
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="clearfix">
+                        <div class="pull-left"></div>
+                        <div class="pull-right">
+                            <a class="btn btn-default" href="#/pincode"
+                               title="Go back!">Cancel</a>
+                            <button class="btn btn-primary" type="submit" ng-disabled="frmPincode.$invalid"><em
+                                    class="fa fa-save"></em>&nbsp;Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

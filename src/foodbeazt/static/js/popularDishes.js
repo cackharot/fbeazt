@@ -76,3 +76,57 @@ popularDishApp.controller('popularDishesCtrl', function($scope, $http, $routePar
 
   $scope.reloadPopular();
 });
+
+popularDishApp.controller('pincodeCtrl', function($scope,$http){
+  $scope.pincodes = [];
+
+  $scope.load = function(){
+    $http.get("/api/pincodes")
+    .success(function(data){
+      $scope.pincodes = data;
+    })
+    .error(function(e){
+      alert(e.message);
+    });
+  };
+
+  $scope.deletePincode = function(_id){
+    var  url = '/api/pincode/'+_id;
+    $http.delete(url)
+    .success(function(data){
+      $scope.load();
+    })
+    .error(function(e){alert(e.message);});
+    return false;
+  };
+
+  $scope.load();
+});
+
+popularDishApp.controller('pincodeDetailCtrl', function($scope,$http,$location,$routeParams){
+  $scope.model = {};
+  $scope._id = $routeParams.id || "-1";
+
+  if($scope._id != "-1"){
+    $http.get("/api/pincode/"+$scope._id)
+    .success(function(data){
+      $scope.model = data;
+    })
+    .error(function(e){
+      alert(e.message);
+    });
+  }
+
+  $scope.save = function(){
+    var url = '/api/pincode/-1';
+    if($scope.model._id !== undefined){
+      url = '/api/pincode/'+$scope.model._id.$oid;
+    }
+    $http.post(url, $scope.model)
+    .success(function(data){
+      $scope.model = data;
+      $location.path('/pincode');
+    })
+    .error(function(e){alert(e.message);});
+  };
+});
