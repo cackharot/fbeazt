@@ -42,7 +42,7 @@ export class CartSummaryComponent implements OnInit {
     let valid = this.router.isRouteActive(this.router.generate(['/Checkout']));
     valid = valid || this.router.isRouteActive(this.router.generate(['/Otp']));
     valid = valid || this.router.isRouteActive(this.router.generate(['/OrderConfirmed']));
-    valid = valid || this.router.isRouteActive(this.router.generate(['/TrackOrder']));
+    valid = valid || this.router.isRouteActive(this.router.generate(['/TrackOrder',{'order_no':this.currentOrder.order_no}]));
     return !valid;
   }
 

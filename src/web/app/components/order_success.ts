@@ -23,6 +23,11 @@ export class OrderSuccessComponent implements OnInit {
 
   ngOnInit() {
     this.order = this.orderService.getOrder();
+    if(this.order.order_no == null || this.order.order_no.length == 0){
+      console.error("Invalid order");
+      console.error(this.order);
+      this.router.navigate(['Home']);
+    }
     if(this.order.otp_status != 'VERIFIED'){
       console.error("Invalid order state!");
     }

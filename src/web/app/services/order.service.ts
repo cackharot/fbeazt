@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject }    from 'rxjs/Subject';
 import { Headers, Http } from '@angular/http';
-import {LocalStorage, SessionStorage} from "angular2-localstorage/WebStorage";
+import { LocalStorage, SessionStorage } from "angular2-localstorage/WebStorage";
+import * as _ from "lodash";
 
 import { ObjectId } from '../model/base';
 import { Product } from '../model/product';
@@ -89,8 +90,14 @@ export class OrderService {
       .then(response => {
         // console.log(response.json());
         let updatedOrder = new Order(response.json().data);
-        this.orderConfirmedSource.next(updatedOrder);
+
+        let stores = this.currentOrder.getStores()
+        updatedOrder.items.forEach(item => {
+          item.store = stores.find(x=> _.isEqual(x._id,item.store_id));
+        });
+
         this.currentOrder = updatedOrder;
+        this.orderConfirmedSource.next(this.currentOrder);
         return updatedOrder;
       })
       .catch(this.handleError);

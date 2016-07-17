@@ -33,7 +33,7 @@ import { OrderService } from './services/order.service';
   { name: 'Checkout', path: 'checkout', component: CheckoutComponent },
   { name: 'Otp', path: 'verify_otp', component: OtpComponent },
   { name: 'OrderConfirmed', path: 'order_success', component: OrderSuccessComponent },
-  { name: 'TrackOrder', path: 'track', component: TrackOrderComponent },
+  { name: 'TrackOrder', path: 'track/:order_no', component: TrackOrderComponent },
 
   { name: 'Faq', path: 'faq', component: FaqComponent },
   { name: 'TermsOfUse', path: 'terms_of_use', component: TermsOfUseComponent },

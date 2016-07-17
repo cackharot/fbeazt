@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router-deprecated';
+import { RouteParams, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 import { LocalStorage, SessionStorage } from "angular2-localstorage/WebStorage";
 
 import { OrderService } from '../services/order.service';
@@ -23,11 +23,13 @@ export class TrackOrderComponent implements OnInit {
   submitted:boolean = false;
   errorMsg:string;
 
-  constructor(private orderService:OrderService){
+  constructor(private orderService:OrderService,
+    private routeParams: RouteParams){
 
   }
 
   ngOnInit(){
+    this.orderNo = this.routeParams.get('order_no') || '';
     this.searchOrder();
   }
 

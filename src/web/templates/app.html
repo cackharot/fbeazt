@@ -1,7 +1,7 @@
 <header>
   <cart-summary></cart-summary>
   <label for="track" class="show-for-medium">
-    <a [routerLink]="['TrackOrder']">
+    <a [routerLink]="['TrackOrder',{'order_no':''}]">
       <i class="fa fa-motorcycle"></i> Track
     </a>
   </label>
@@ -14,7 +14,7 @@
 </section>
 <footer>
   <ul>
-    <li><a [routerLink]="['TrackOrder']">Track Order</a></li>
+    <li><a [routerLink]="['TrackOrder',{'order_no':''}]">Track Order</a></li>
     <li><a [routerLink]="['Faq']">FAQ</a></li>
     <li><a [routerLink]="['TermsOfUse']">Terms of use</a></li>
     <li><a [routerLink]="['ContactUs']">Contact Us</a></li>
