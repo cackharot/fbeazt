@@ -65,21 +65,24 @@ class OrderListApi(Resource):
 
   def get(self):
     tenant_id = g.user.tenant_id
-    store_id = None
+    store_id = request.args.get("store_id", None)
     if store_id == '-1' or store_id == -1:
       store_id = None
       tenant_id = None
 
     page_no = int(request.args.get('page_no', 1))
-    page_size = int(request.args.get('page_size', 24))
+    page_size = int(request.args.get('page_size', 50))
     filter_text = request.args.get('filter_text', None)
     order_no = request.args.get('order_no', None)
+    order_status = request.args.get('order_status', None)
 
     try:
       orders, total = self.service.search(tenant_id=tenant_id,
                             store_id=store_id,
                             page_no=page_no,
                             page_size=page_size,
+                            order_no=order_no,
+                            order_status=order_status,
                             filter_text=filter_text)
 
       if orders and len(orders) > 0:

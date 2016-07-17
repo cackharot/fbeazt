@@ -21,13 +21,13 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="search__container">
-                    <form ng-submit="searchOrder()">
+                    <form ng-submit="reloadOrder()">
                     <input type="search" ng-model="searchText"/>
                     <button type="submit" class="button">Search</button>
                     <button type="reset" ng-click="resetSearch()" class="button">Clear</button>
                     <input type="checkbox" ng-model="filter_pending"/> Pending
                     <input type="checkbox" ng-model="filter_preparing"/> Preparing
-                    <input type="checkbox" ng-model="filter_progress"/> Progress
+                    <input type="checkbox" ng-model="filter_progress"/> In-Transit
                     <input type="checkbox" ng-model="filter_delivered"/> Delivered
                     </form>
                 </div>
@@ -47,6 +47,7 @@
                             <i class="fa fa-envelope"></i> {{item.delivery_details.email}}
                         </p>
                         <p>
+                            <i class="fa fa-map"></i>
                             {{item.delivery_details.address}}<br/>
                             {{item.delivery_details.landmark}}<br/>
                             {{item.delivery_details.pincode}}

@@ -1,6 +1,7 @@
 from datetime import datetime
 from bson import ObjectId
 
+import re
 import random
 import string
 
@@ -14,17 +15,30 @@ class OrderService(object):
 
     def search(self, tenant_id, store_id=None, page_no=1,
                page_size=25,
+               order_no=None,
+               order_status=None,
                filter_text=None):
         query = {"tenant_id": ObjectId(tenant_id)}
-        if store_id:
-            query['store_id'] = ObjectId(store_id)
-
+        # if store_id:
+        #     query['store_id'] = ObjectId(store_id)
+        if order_no is not None and len(order_no)>0:
+            query['order_no'] = order_no
+        if order_status is not None and len(order_status) > 0:
+            query['status'] = {"$in": order_status.split(',')}
+        else:
+            query['status'] = {"$not": {"$eq": 'DELIVERED'}}
+        if filter_text is not None and len(filter_text)>0:
+            search_val = re.compile(r".*%s.*"%(filter_text), re.IGNORECASE)
+            query['$or'] = [{
+               'order_no': search_val,
+               'delivery_details.name': search_val,
+               'delivery_details.phone': search_val
+            }]
         skip_records = (page_no - 1) * page_size
-        if skip_records < 0:
-            skip_records = 0
-
+        if skip_records < 0: skip_records = 0
+        print(query)
         lst = self.orders.find(query)
-        return [x for x in lst.sort("created_at", -1).skip(skip_records).limit(page_size)], lst.count()
+        return [x for x in lst.sort("created_at").skip(skip_records).limit(page_size)], lst.count()
 
     def generate_order_no(self):
         digits_f = "".join([random.choice(string.digits) for i in range(3)])
