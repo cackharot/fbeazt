@@ -1,0 +1,83 @@
+@import "compass";
+@import "compass/functions";
+@import "variables";
+
+header,nav{
+  margin: 0 auto;
+  user-select:none;
+  @include transition(all .2s ease);
+  @include transform(translate3d(0,0,0));
+}
+
+header{
+  padding: 10px 0;
+  @include transition(all .3s ease);
+  background: #2F3E9E;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  height: 70px;
+
+  a{
+    line-height:$baseline;
+    text-decoration: none;
+    color :white;
+    &:hover{
+      color: white;
+    }
+  }
+
+  .logo {
+    float: left;
+    a {
+      z-index:9;
+      position:relative;
+      // @include box-shadow(inset -1px 0 rgba(255,255,255,0.2),
+        // inset  -2px 0 rgba(0,0,0,0.24));
+      // background-color:rgba(0,0,0,0.13);
+      // font-weight: 600;
+      text-align:center;
+      display:block;
+      width: 7em;
+      font-size: 28px;
+      &:hover{
+        color:white;
+      }
+    }
+  }
+
+  label{
+    float: right;
+    @include transition(all .2s ease);
+    text-align:center;
+    z-index:100;
+    color:#aaa;
+    line-height: $baseline*2;
+    cursor:pointer;
+    width: 8em;
+    &:hover{
+     background-color: rgba(255,255,255,0.1);
+     color: white;
+    }
+    &[for="cart-summary"],&[for="track"]{
+      a{
+        line-height: $baseline*2;
+        display: block;
+      }
+      .rupee{
+        position: relative;
+        right: 5px;
+      }
+      .badge{
+        line-height: 1.2em;
+        font-style: normal;
+        top: -10px;
+        position: relative;
+        min-width: 1.6em;
+        left: -6px;
+      }
+    }
+  }
+}

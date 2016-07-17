@@ -1,0 +1,11 @@
+<div [hidden]="!isDelayedRunning" class="spinner__container">
+  <div  class="spinner">
+    <div class="double-bounce1"></div>
+    <div class="double-bounce2"></div>
+  </div>
+  <div class="content" *ngIf="message && message.length > 0">
+    <small class="light">
+      {{message}}
+    </small>
+  </div>
+</div>

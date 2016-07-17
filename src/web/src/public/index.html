@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <base href="/">
+    <title>Foodbeazt | Welcome</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<link rel="stylesheet" href="css/foundation.css">-->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="css/app.css">-->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if(!Modernizr.localstorage || !Modernizr.sessionstorage
+        || !Modernizr.flexbox || !Modernizr.boxsizing || !Modernizr.history){
+          console.log("No Basic support!");
+        }
+        if(Modernizr.notification){
+          console.log("Has notification");
+        }
+        if(Modernizr.geolocation){
+          console.log("Has geolocation");
+        }
+      });
+    </script>
+  </head>
+  <!-- 3. Display the application -->
+  <body>
+    <fb-app>
+      <section class="row">
+        <div class="medium-12 columns">
+          <div class="spinner__container">
+            <div class="spinner">
+              <div class="double-bounce1"></div>
+              <div class="double-bounce2"></div>
+            </div>
+            <div class="content">
+              <small class="light">Loading...</small>
+            </div>
+          </div>
+        </div>
+      </section>
+    </fb-app>
+    <section id="unsupported__browser">
+      <div>
+        <p>
+          Awwh!! Applogize for the inconvenience caused.
+          But we do not support the browser you are using.
+          Kindly use one of the below supported browsers to access
+          <a href="//www.foodbeazt.in"><em>FoodBeazt</em></a>
+        </p>
+        <ul>
+          <li>Firefox</li>
+          <li>Chrome</li>
+          <li>Safari</li>
+          <li>IE 10+</li>
+        </ul>
+      </div>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+@import "compass";
+@import "compass/functions";
+@import "variables";
+
+$valid_color:#42A948;
+$invalid_color:#a94442;
+
+.checkout__page, .otp__page, .track__order__page {
+  label{
+    position: relative;
+  }
+  span.check {
+      position: absolute;
+      right: 2%;
+      top: 35px;
+      font-size: 21px;
+  }
+
+  input + span.check,
+  select + span.check,
+  textarea + span.check{
+    display: none;
+  }
+
+  .ng-valid[required] {
+    border-bottom: 2px solid $valid_color;
+
+    &+ span.check{
+      display: inline-block;
+      color: $valid_color;
+    }
+  }
+
+  [type='text'], [type='password'], [type='date'],
+  [type='datetime'], [type='datetime-local'], [type='month'],
+  [type='week'], [type='email'], [type='number'],
+  [type='search'], [type='tel'], [type='time'],
+  [type='url'], [type='color'], textarea{
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,.26);
+    outline: 0;
+    @include box-shadow(none);
+    padding-left: 0;
+
+    &:active{
+      border: none;
+      @include box-shadow(none);
+    }
+    &:focus{
+      border: none;
+      border-bottom: 2px solid #2196F3;
+      @include box-shadow(none);
+      &+ span.check{
+        display: none;
+      }
+    }
+  }
+
+  .ng-invalid {
+    border-bottom: 2px solid  $invalid_color;
+  }
+
+  // label[for]:focus,
+  // label[for]:active{
+  //   color: #2196F3;
+  // }
+}
