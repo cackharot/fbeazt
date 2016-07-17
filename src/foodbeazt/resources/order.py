@@ -202,7 +202,7 @@ class OrderApi(Resource):
     try:
       pincode = valid_order['delivery_details']['pincode']
       if not self.pincodeService.check_pincode(pincode):
-        return {"status":"error","message":"Delivery not available for %s pincode!" % (pincode)}
+        return {"status":"error","message":"Delivery not available for %s pincode!" % (pincode)}, 422
 
       valid_order['delivery_charges'] = self.service.get_delivery_charges(valid_order)
       valid_order['total'] = self.service.get_order_total(valid_order)

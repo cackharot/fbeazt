@@ -59,7 +59,7 @@ export class CheckoutComponent implements OnInit {
           this.navOrder();
         }, errorMsg => {
           this.orderSuccess = false;
-          this.error = errorMsg
+          this.error = errorMsg;
           this.isRequesting = false;
         });
     }else{
