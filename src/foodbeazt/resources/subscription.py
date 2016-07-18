@@ -41,7 +41,7 @@ class SubscriptionApi(Resource):
                 mail.send(msg)
                 return {"status": "success", "data": _id},200
             except Exception as e:
-                print(e)
+                self.log.exception(e)
                 service.delete_by_email(email)
                 return {"status": "error", "message": "Oops! Unable to register you now. Kindly check again later!"}, 434
         except InvalidEmailFormatException as ex:

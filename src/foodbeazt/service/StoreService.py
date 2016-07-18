@@ -37,7 +37,7 @@ class StoreService(object):
           '$not': re.compile(day, re.IGNORECASE)
         }
       }
-    print(query)
+    # print(query)
     offset = (page_no - 1) * page_size
     if offset < 0: offset = 0
     lst = self.stores.find(query)
