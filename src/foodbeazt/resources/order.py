@@ -263,7 +263,9 @@ class OrderApi(Resource):
       return
 
     subject = "Order confirmation <%s>" % (order.get('order_no', '000'))
-    msg = Message(subject,
+    msg = Message(subject=subject,
+                  reply_to=app.config['MAIL_REPLY_TO'],
+                  charset='utf-8',
                   sender=(app.config['MAIL_SENDER_NAME'], app.config['MAIL_SENDER']),
                   recipients=[email])
     msg.html = order_created_template.render(order=order)
