@@ -21,7 +21,7 @@ body{
     height: 0;
   }
   #unsupported__browser{
-    display: table;
+    display: table !important;
     position: absolute;
     padding: 20px;
     width: 100%;
