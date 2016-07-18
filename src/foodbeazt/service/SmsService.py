@@ -4,13 +4,13 @@ import re
 import random
 import string
 import logging
+from libs.sms_client import SmsClient
 
 class SmsService(object):
-  def __init__(self, db, user, api_key):
+  def __init__(self, db, access_key, private_key):
     self.log = logging.getLogger(__name__)
     self.db = db
-    self.user = user
-    self.api_key = api_key
+    self.smsClient = SmsClient(access_key, private_key)
     self.sms_store = db.sms_collection
     self.otp_store = db.sms_otp_collection
 
@@ -19,8 +19,9 @@ class SmsService(object):
     if self.check_otp(number, otp):
       self.log.warn("Trying to send duplicate OTP message %s" % (number))
       return 'SENT'
+    aws_msg_id = self.smsClient.send(number, message)
     item = dict(number=number, message=message, char_count=len(message), created_at=datetime.now(),
-                status='SENT', otp=otp, details="")
+                status='SENT', otp=otp, details="", aws_msg_id=aws_msg_id)
     _id = self.otp_store.save(item)
     return 'SENT'
 
@@ -66,7 +67,9 @@ class SmsService(object):
     if self.has_duplicate_message(number, message):
       self.log.warn("Trying to send duplicate message %s" % (number))
       return 'SENT'
-    item = dict(number=number, message=message, char_count=len(message), created_at=datetime.now(), status='I', details="")
+    aws_msg_id = self.smsClient.send(number, message)
+    item = dict(number=number, message=message, char_count=len(message), created_at=datetime.now(),
+      status='I', details="", aws_msg_id=aws_msg_id)
     _id = self.sms_store.save(item)
     return 'SENT'
 
