@@ -159,25 +159,29 @@ class OrderApi(Resource):
     new_number = data.get("number", None)
     if otp is None or len(otp) < 3 or len(otp) > 10:
       return dict(status='error', message="Invalid OTP given"), 424
-    order = self.service.get_by_id(order_id)
-    if order is None or order['status'] == 'DELIVERED':
-      return dict(status='error', message="Invalid Order id given. Order not found/delivered"), 425
-    if new_number is not None and len(new_number) != 0:
-      if len(new_number) != 10:
-        return dict(status='error', message="Invalid phone number!"), 426
-      else:
-        order['delivery_details']['phone'] = new_number
-        self.service.save(order)
+    try:
+      order = self.service.get_by_id(order_id)
+      if order is None or order['status'] == 'DELIVERED':
+        return dict(status='error', message="Invalid Order id given. Order not found/delivered"), 425
+      if new_number is not None and len(new_number) != 0:
+        if len(new_number) != 10:
+          return dict(status='error', message="Invalid phone number!"), 426
+        else:
+          order['delivery_details']['phone'] = new_number
+          self.service.save(order)
 
-    number = order['delivery_details'].get('phone')
-    if self.smsService.update_otp(number, otp):
-      order['otp_status'] = 'VERIFIED'
-      self.service.save(order)
-      self.send_email(order)
-      self.send_sms(order)
-      return dict(status='success'), 200
-    else:
-      return dict(status='error',message="Invalid OTP given"), 424
+      number = order['delivery_details'].get('phone')
+      if self.smsService.update_otp(number, otp):
+        order['otp_status'] = 'VERIFIED'
+        self.service.save(order)
+        self.send_email(order)
+        self.send_sms(order)
+        return dict(status='success'), 200
+      else:
+        return dict(status='error',message="Invalid OTP given"), 424
+    except Exception as e:
+      self.log.exception(e)
+      return dict(status="error",message="Unable to verify the OTP. Please try again later!"), 427
 
   def post(self, _id):
     order = json_util.loads(request.data.decode('utf-8'))
