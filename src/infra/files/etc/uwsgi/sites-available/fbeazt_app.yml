@@ -1,0 +1,14 @@
+uwsgi:
+    master: true
+    processes: 1
+    vaccum: true
+    chmod-socket: 666
+    uid: www-data
+    gid: www-data
+    plugins: python3
+    socket: /tmp/fbeazt.sock
+    chdir: /opt/fbeazt/src/
+#    pythonpath: /opt/fbeazt/.env/bin
+    virtualenv: /opt/fbeazt/.env
+    module: foodbeazt.fapp:app
+    touch-reload: /opt/fbeazt/src/foodbeazt/fapp.py
