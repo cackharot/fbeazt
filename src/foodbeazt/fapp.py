@@ -207,15 +207,7 @@ def test_order_email():
   tenant_id = g.user.tenant_id
   query = {'tenant_id': ObjectId(tenant_id)}
   order = [x for x in mongo.db.order_collection.find(query).sort("created_at", -1)][0]
-  return render_template("order_created.html", order=order)
-
-@app.route("/beta")
-def beta_home():
-  # if not current_user.is_authenticated():
-    # login_anonymous()
-    # return redirect('/beta')
-  return render_template('home.jinja2')
-
+  return render_template("email/order_created.html", order=order)
 
 @app.route("/admin")
 @login_required
