@@ -46,8 +46,8 @@
     <script src="{{ url_for('static', filename='js/popularDishes.js') }}"></script>
     <script>
         app_user = {};
-        app_user.id = "{{session.get('user_id')}}";
-        app_user.name = "{{session.get('name')}}";
+        app_user.id = "{{current_user.user_id}}";
+        app_user.name = "{{current_user.name}}";
         window.app_user = app_user;
     </script>
 </body>

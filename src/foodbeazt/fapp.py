@@ -154,7 +154,7 @@ def request_loader(request):
   if request and request.path.startswith('/static/'):
     return None
   if session and session.get('identity.id',None) is not None:
-    userid= str(session['identity.id'])
+    userid = str(session['identity.id'])
     # print("Session user_id %s" % (userid))
     user_mixin = getUserMixin(UserService(mongo.db).get_by_id(userid))
     if user_mixin:
@@ -198,7 +198,7 @@ def mjson(data, code, headers=None):
 
 @app.route("/")
 def home():
-  return redirect('/beta')
+  return redirect('/admin')
   #name = session.get('name', None)
   #return render_template('launch_home.jinja2', name=name)
 
