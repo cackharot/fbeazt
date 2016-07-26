@@ -74,7 +74,7 @@ orderApp.controller('orderListCtrl', function($scope, $http, $routeParams){
     }
 
 	$scope.reloadStore = function(){
-        $http.get('/api/stores').success(function(d){
+        $http.get('/api/stores',{params:{'page_size':200}}).success(function(d){
             $scope.stores = d
             if($routeParams.store_id)
                 $scope.setStore($routeParams.store_id)

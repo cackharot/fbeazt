@@ -8,7 +8,9 @@ productApp.controller('productListCtrl', function($scope, $http, $routeParams){
 
 	$scope.reloadProduct = function(){
 	    if(!$scope.selected_store) return
-        $http.get('/api/products/'+$scope.selected_store).success(function(d){
+        $http.get('/api/products/'+$scope.selected_store,
+            { params: {"page_size": 200} })
+        .success(function(d){
             $scope.products = d.items
             $scope.total = d.total
         }).error(function(e){
@@ -17,7 +19,7 @@ productApp.controller('productListCtrl', function($scope, $http, $routeParams){
 	}
 
 	$scope.reloadStore = function(){
-        $http.get('/api/stores').success(function(d){
+        $http.get('/api/stores',{params:{'page_size':200}}).success(function(d){
             $scope.stores = d
             if($routeParams.store_id)
                 $scope.setStore($routeParams.store_id)
