@@ -84,3 +84,4 @@ tmp/
 .sass-cache/
 *.cfg
 **/*.cfg
+bin/
