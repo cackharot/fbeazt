@@ -81,3 +81,16 @@ class SmsService(object):
     n = datetime.now() - timedelta(minutes=minutes)
     query = self.sms_store.find({'number':phone,'created_at': { '$gt': n}})
     return query.count()
+
+  def search(self, tenant_id, page_no=1,page_size=50,is_otp=False):
+    query = self.sms_store
+    if is_otp: query = self.otp_store
+    offset = (page_no - 1) * page_size
+    if offset < 0: offset = 0
+    lst = query.find().skip(offset).limit(page_size).sort("created_at", -1)
+    return [x for x in lst], query.count()
+
+  def delete(self, tenant_id, _id, is_otp=False):
+    if is_otp:
+      return self.otp_store.remove({"_id":ObjectId(_id)})
+    return self.sms_store.remove({"_id":ObjectId(_id)})
