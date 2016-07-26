@@ -11,9 +11,20 @@ orderApp.controller('orderListCtrl', function($scope, $http, $routeParams){
     $scope.filter_cancelled=false;
 	$scope.selected_store = null
 	$scope.selected_store_name = 'Select Store'
+    $scope.page_no = 1;
+    $scope.page_size = 5;
+    $scope.next = null;
+    $scope.previous = null;
+    $scope.load_url = '/api/orders';
 
-	$scope.reloadOrder = function(){
+	$scope.reloadOrder = function(url){
 	    if(!$scope.selected_store) return;
+        if(url === undefined || url === null){
+            $scope.page_no = 1;
+            $scope.page_size = 5;
+            $scope.next = null;
+            $scope.previous = null;
+        }
         var order_status = [];
         if($scope.filter_pending) order_status.push('PENDING');
         if($scope.filter_preparing) order_status.push('PREPARING');
@@ -22,16 +33,27 @@ orderApp.controller('orderListCtrl', function($scope, $http, $routeParams){
         var params = {
             'store_id': $scope.selected_store,
             'filter_text': $scope.searchText,
-            'order_status': order_status.join(',')
+            'order_status': order_status.join(','),
+            'page_no': $scope.page_no,
+            'page_size': $scope.page_size
         };
-        $http.get('/api/orders/',{ params: params })
+        $http.get(url || $scope.load_url,{ params: params })
         .success(function(d){
             $scope.orders = d.items;
             $scope.total = d.total;
+            $scope.page_no = d.page_no;
+            $scope.page_count = Math.ceil(d.total/$scope.page_size);
+            $scope.next = d.next;
+            $scope.previous = d.previous;
         }).error(function(e){
             alert(e);
         });
 	};
+
+    $scope.navigate = function(url){
+        $scope.reloadOrder(url);
+        return false;
+    };
 
     $scope.updateStatus = function(item,status){
         if(item.status == 'DELIVERED'){
@@ -77,6 +99,11 @@ orderApp.controller('orderListCtrl', function($scope, $http, $routeParams){
         $scope.filter_progress=false;
         $scope.filter_delivered=false;
         $scope.filter_cancelled=false;
+        $scope.load_url = '/api/orders';
+        $scope.next = null;
+        $scope.previous = null;
+        $scope.page_no = 1;
+        $scope.page_size = 5;
         this.reloadOrder();
     };
 

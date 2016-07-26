@@ -97,8 +97,19 @@ class OrderListApi(Resource):
         for order in orders:
           for item in order['items']:
             item['store'] = next((x for x in stores if x['_id'] == item['store_id']), None)
+      offset = page_no*page_size
+      result = {'items': orders, 'total': total,
+                "filter_text": filter_text,
+                "order_status": order_status.split(','),
+                "page_no": page_no,
+                "page_size": page_size}
+      url = "/api/orders?page_no=%d&page_size=%d&filter_text=%s&order_status=%s"
+      if total > offset:
+        result["next"] =  url % (page_no+1,page_size,filter_text,order_status)
+      if page_no > 1:
+        result["previous"] = url % (page_no-1,page_size,filter_text,order_status)
 
-      return {'items': orders, 'total': total}
+      return result
     except Exception as e:
       self.log.exception(e)
       return {"status": "error", "message": "Error on searching orders"}, 420

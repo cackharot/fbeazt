@@ -31,6 +31,11 @@
                     <input type="checkbox" ng-model="filter_delivered"/> Delivered
                     </form>
                 </div>
+                <div>
+                    Page No: {{page_no}} of {{page_count}} Total: {{total}}
+                    <a href="" ng-click="navigate(previous)" ng-if="previous">Previous</a>
+                    <a href="" ng-click="navigate(next)" ng-if="next">Next</a>
+                </div>
                 <div class="card" ng-repeat="item in orders" ng-class="{'text-danger': item.status == 'CANCELLED'}">
                     <div class="cell1">
                         <a href="#/order/{{item._id.$oid}}" title="Click to edit this item!">
