@@ -12,7 +12,7 @@ orderApp.controller('orderListCtrl', function($scope, $http, $routeParams){
 	$scope.selected_store = null
 	$scope.selected_store_name = 'Select Store'
     $scope.page_no = 1;
-    $scope.page_size = 5;
+    $scope.page_size = 10;
     $scope.next = null;
     $scope.previous = null;
     $scope.load_url = '/api/orders';
@@ -21,7 +21,7 @@ orderApp.controller('orderListCtrl', function($scope, $http, $routeParams){
 	    if(!$scope.selected_store) return;
         if(url === undefined || url === null){
             $scope.page_no = 1;
-            $scope.page_size = 5;
+            $scope.page_size = 10;
             $scope.next = null;
             $scope.previous = null;
         }
@@ -103,7 +103,7 @@ orderApp.controller('orderListCtrl', function($scope, $http, $routeParams){
         $scope.next = null;
         $scope.previous = null;
         $scope.page_no = 1;
-        $scope.page_size = 5;
+        $scope.page_size = 10;
         this.reloadOrder();
     };
 

@@ -3,7 +3,7 @@ var smsApp = angular.module('fbeaztAdmin');
 smsApp.controller('smsCtrl', function($scope,$http){
   $scope.messages = [];
   $scope.page_no = 1;
-  $scope.page_size = 5;
+  $scope.page_size = 25;
   $scope.next = null;
   $scope.previous = null;
   $scope.load_url = '/api/sms';
@@ -33,7 +33,7 @@ smsApp.controller('smsCtrl', function($scope,$http){
     $scope.next = null;
     $scope.previous = null;
     $scope.page_no = 1;
-    $scope.page_size = 5;
+    $scope.page_size = 25;
     $scope.load();
   };
 
