@@ -34,10 +34,11 @@ class UserApi(Resource):
 
   def put(self, _id):
     item = json_util.loads(request.data.decode('utf-8'))
-    tenant_id = session.get('tenant_id', None)
-    item['username'] = item['email']
-    item['tenant_id'] = ObjectId(tenant_id)
+    # tenant_id = session.get('tenant_id', None)
     try:
+      item['username'] = item['email']
+      tenant_id = g.user.tenant_id
+      item['tenant_id'] = ObjectId(tenant_id)
       self.service.update(item)
       return {"status": "success",  "data": item}
     except DuplicateUserException as e:
@@ -50,14 +51,15 @@ class UserApi(Resource):
 
   def post(self, _id):
     item = json_util.loads(request.data.decode('utf-8'))
-    tenant_id = session.get('tenant_id', None)
+    # tenant_id = session.get('tenant_id', None)
     item['username'] = item['email']
-    item['tenant_id'] = ObjectId(tenant_id)
     item['registered_ip'] = request.remote_addr
     try:
-        print(item)
-        _id = self.service.create(item)
-        return {"status": "success", "location": "/api/user/" + str(_id)}
+      tenant_id = g.user.tenant_id
+      item['tenant_id'] = ObjectId(tenant_id)
+      print(item)
+      _id = self.service.create(item)
+      return {"status": "success", "location": "/api/user/" + str(_id)}
     except DuplicateUserException as e:
       self.log.exception(e)
       return {"status": "error", "message": "User email already exists."},452
