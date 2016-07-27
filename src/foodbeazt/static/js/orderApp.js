@@ -16,6 +16,7 @@ orderApp.controller('orderListCtrl', function($scope, $http, $routeParams){
     $scope.next = null;
     $scope.previous = null;
     $scope.load_url = '/api/orders';
+    $scope.report = {total: 0,pending:0,preparing:0,cancelled:0,delivered:0};
 
 	$scope.reloadOrder = function(url){
 	    if(!$scope.selected_store) return;
@@ -30,6 +31,7 @@ orderApp.controller('orderListCtrl', function($scope, $http, $routeParams){
         if($scope.filter_preparing) order_status.push('PREPARING');
         if($scope.filter_progress) order_status.push('PROGRESS');
         if($scope.filter_delivered) order_status.push('DELIVERED');
+        if($scope.filter_cancelled) order_status.push('CANCELLED');
         var params = {
             'store_id': $scope.selected_store,
             'filter_text': $scope.searchText,
@@ -121,4 +123,16 @@ orderApp.controller('orderListCtrl', function($scope, $http, $routeParams){
          $scope.reloadOrder()
          return false
     }
+
+    $scope.fetchReports = function(){
+        $http.get('/api/reports/orders')
+        .success(function(d){
+            $scope.report = d;
+        })
+        .error(function(e){
+            alert(e);
+        });
+    };
+
+    $scope.fetchReports();
 })

@@ -20,6 +20,16 @@
     <div class="row">
         <div class="panel panel-default">
             <div class="panel-body">
+                Total orders: {{report.total || 0}}
+                Pending: {{report.pending || 0}}
+                Preparing: {{report.preparing || 0}}
+                In-Transit: {{report.progress || 0}}
+                Cancelled: {{report.cancelled || 0}}
+                Delivered: {{report.delivered || 0}}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div class="search__container">
                     <form ng-submit="reloadOrder()">
                     <input type="search" ng-model="searchText"/>
@@ -29,6 +39,7 @@
                     <input type="checkbox" ng-model="filter_preparing"/> Preparing
                     <input type="checkbox" ng-model="filter_progress"/> In-Transit
                     <input type="checkbox" ng-model="filter_delivered"/> Delivered
+                    <input type="checkbox" ng-model="filter_cancelled"/> Cancelled
                     </form>
                 </div>
                 <div>
