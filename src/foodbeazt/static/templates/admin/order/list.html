@@ -55,6 +55,7 @@
                         <p>{{item.created_at | datetime}}</p>
                         <p><b ng-bind-html="item.total | currency"></b></p>
                         <p>{{item.status}}</p>
+                        <p>OTP: {{item.otp_status || 'SENT'}}</p>
                     </div>
                     <div class="cell2">
                         <h4>{{item.delivery_details.name}}</h4>

@@ -8,14 +8,19 @@ import logging
 import json
 
 class SmsClient(object):
-  def __init__(self, access_key, private_key, sns_host='sns.us-east-1.amazonaws.com', subject='FO0DBEAZT'):
+  def __init__(self, access_key, private_key, sns_host='sns.us-east-1.amazonaws.com', subject='F00DBEAZT'):
     self.sns_host = sns_host
     self.subject = subject
     self.access_key = access_key
     self.private_key = private_key
     self.log = logging.getLogger(__name__)
+    self.enabled = access_key is not None and private_key is not None \
+                  and len(access_key) > 0 and len(private_key) > 0
 
   def send(self, phoneno, message):
+    if self.enabled == False:
+      self.log.warn("AWS SMS Client disabled!")
+      return
     phoneno = "+91%s" % (phoneno)
     params = {
               'Subject' : self.subject,

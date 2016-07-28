@@ -27,7 +27,7 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit() {
     this.order = this.orderService.getOrder();
-    this.orderSuccess = this.order.order_no && this.order.order_no.length > 0;
+    this.orderSuccess = this.order.isConfirmed();
     this.restoreDeliveryDetails();
     if(this.order.order_no && this.order.order_no.length != 0){
       this.navOrder();

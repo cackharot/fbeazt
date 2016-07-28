@@ -58,6 +58,10 @@
         <span *ngIf="!canResendOTP()">You can resend OTP in {{seconds}} seconds.</span>
         <button class="button" (click)="resendOtp()" [disabled]="!canResendOTP()">Resend</button>
       </small>
+      <br/>
+      <small>
+        Given incorrect phone number? <a href="" (click)="cancelOrder()">Go Back</a> to change it!
+      </small>
       </p>
     </div>
   </div>

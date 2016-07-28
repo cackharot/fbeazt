@@ -33,7 +33,7 @@ export class OtpComponent implements OnInit {
   ngOnInit() {
     this.order = this.orderService.getOrder();
     this.seconds = +this.storage.getItem(OtpComponent.KEY);
-    if(this.seconds < 0){
+    if(this.seconds <= 0 && this.getResendOtpCount() == 0){
      this.seconds = OtpComponent.OTP_RESEND_SECONDS;
     }
     if(this.order.isConfirmed()){
@@ -46,10 +46,10 @@ export class OtpComponent implements OnInit {
   }
 
   private startCountDown(){
-    this.seconds--;
-    this.storage.setItem(OtpComponent.KEY, this.seconds.toString());
-    this.isMaxOtpAttempt = this.hasReachedMaxOtp();
     if(this.seconds > 0){
+      this.seconds--;
+      this.storage.setItem(OtpComponent.KEY, this.seconds.toString());
+      this.isMaxOtpAttempt = this.hasReachedMaxOtp();
       var that = this;
       this.timeoutHandle = window.setTimeout(function() {
         that.startCountDown();
@@ -60,8 +60,8 @@ export class OtpComponent implements OnInit {
   cancelOrder(){
     this.resetTimeout();
     this.resetOtpCount();
-    this.orderService.cancelOrder();
-    this.router.navigate(['Home']);
+    this.order.otp_status = null;
+    this.router.navigate(['Checkout']);
   }
 
   resetTimeout(){
