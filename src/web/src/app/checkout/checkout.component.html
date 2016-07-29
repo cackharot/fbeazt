@@ -134,6 +134,11 @@
                 </tr>
               </tfoot>
             </table>
+            <div class="callout info">
+              Minimum delivery charge is Rs. {{order.getMinDeliveryCharges()}} + Rs. {{order.getPerStoreDeliveryCharges()}}
+              for each additional restaurants. For example, ordering dishes from 3 restaurants is calculated
+              as <strong>{{order.getMinDeliveryCharges()}} + {{order.getPerStoreDeliveryCharges()}}*2=Rs. {{order.getMinDeliveryCharges() + 2*order.getPerStoreDeliveryCharges()}}</strong>
+            </div>
           </div>
           <div class="callout alert" *ngIf="!order.isValid()">
             <p>There are some dishes that are presently became unavailable. Kindly remove them to proceed.

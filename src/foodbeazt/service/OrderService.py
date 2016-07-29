@@ -77,9 +77,18 @@ class OrderService(object):
     return self.orders.find_one({"order_no": order_no})
 
   def get_delivery_charges(self, order):
-    rate = self.pincodeService.get_rate(order['delivery_details']['pincode'])
-    if rate < 0: return 40.0
-    return rate
+    store_count = len(self.get_unique_stores(order))
+    if store_count <= 1:
+      return 40
+    return 40 + (25*(store_count-1))
+
+  def get_unique_stores(self, order):
+    store_ids = []
+    for x in order['items']:
+      sid = x['store_id']
+      if not sid in store_ids:
+        store_ids.append(sid)
+    return store_ids
 
   def get_order_total(self, order):
     for x in order['items']:

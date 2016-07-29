@@ -13,6 +13,8 @@ export class OrderStatus{
 }
 
 export class Order {
+  static MIN_DELIVERY_CHARGES = 40;
+  static PER_STORE_CHARGES = 25;
   _id: ObjectId = new ObjectId();
   order_no: string;
   otp_status:string = '';
@@ -22,7 +24,7 @@ export class Order {
   delivered_at: Date;
   items: LineItem[] = [];
   status: string = OrderStatus.NEW;
-  delivery_charges:number = 40;
+  delivery_charges:number;
 
   constructor(data={}){
     Object.assign(this, data);
@@ -97,7 +99,22 @@ export class Order {
   }
 
   getDeliveryCharges(){
+    let storeCount=this.getStores().length;
+    let minCharge = this.getMinDeliveryCharges();
+    if(storeCount <= 1){
+      this.delivery_charges = minCharge;
+    }else{
+      this.delivery_charges = minCharge + ((storeCount-1)*this.getPerStoreDeliveryCharges());
+    }
     return this.delivery_charges;
+  }
+
+  getMinDeliveryCharges(){
+    return Order.MIN_DELIVERY_CHARGES;
+  }
+
+  getPerStoreDeliveryCharges(){
+    return Order.PER_STORE_CHARGES;
   }
 
   getTotalAmount(){
