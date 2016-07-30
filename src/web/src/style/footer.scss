@@ -35,5 +35,8 @@ footer{
 
   a{
     color: inherit;
+    &.active{
+      color: #1585cf;
+    }
   }
 }
