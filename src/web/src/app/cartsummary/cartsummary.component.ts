@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { OrderService } from '../services/order.service';
 
@@ -9,14 +9,15 @@ import { Order, DeliveryDetails, LineItem } from '../model/order';
 @Component({
   selector: 'cart-summary',
   templateUrl: './cartsummary.component.html',
-  directives: [ROUTER_DIRECTIVES],
+  directives: [ROUTER_DIRECTIVES]
 })
 export class CartSummaryComponent implements OnInit {
-  currentOrder:Order;
+  currentOrder: Order;
   totalQuantity: number;
   totalAmount: number;
 
   constructor(private router: Router,
+    private route: ActivatedRoute,
     private orderService: OrderService) { }
 
   ngOnInit() {
@@ -38,12 +39,11 @@ export class CartSummaryComponent implements OnInit {
     });
   }
 
-  canShow(){
-    let valid = this.router.isRouteActive(this.router.generate(['ceckout']));
-    valid = valid || this.router.isRouteActive(this.router.generate(['otp']));
-    valid = valid || this.router.isRouteActive(this.router.generate(['order_success']));
-    valid = valid || this.router.isRouteActive(this.router.generate(['track',{'order_no':this.currentOrder.order_no}]));
-    return !valid;
+  canShow() : boolean {
+    let currentPath = this.router.url;
+    let count = ['/checkout', '/otp', '/order_success', '/track']
+                  .filter(x=> currentPath.startsWith(x.toLowerCase())).length;
+    return count === 0;
   }
 
   update(){

@@ -10,14 +10,10 @@ import { StoreService } from './services/store.service';
 import { ProductService } from './services/product.service';
 import { OrderService } from './services/order.service';
 
-declare const CustomAppComponents: (typeof SpinnerComponent
-                                  | typeof CartSummaryComponent
-                                  | typeof RestaurantComponent)[];
-
 @Component({
   selector: 'fb-app',
   templateUrl: './app.component.html',
-  directives: [ROUTER_DIRECTIVES],
+  directives: [ROUTER_DIRECTIVES, SpinnerComponent, CartSummaryComponent, RestaurantComponent],
   providers: [StoreService, ProductService, OrderService]
 })
 export class AppComponent {
