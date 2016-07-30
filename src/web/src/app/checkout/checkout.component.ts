@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { LocalStorage, SessionStorage } from "../libs/WebStorage";
 
 import { OrderService } from '../services/order.service';
@@ -23,6 +23,9 @@ export class CheckoutComponent implements OnInit {
 
   constructor(private router: Router,
     private orderService: OrderService) {
+    this.router.events.subscribe(x=>{
+      window.scroll(0,0);
+    });
   }
 
   ngOnInit() {
@@ -47,14 +50,14 @@ export class CheckoutComponent implements OnInit {
 
   resetOrder(){
     this.orderService.resetOrder();
-    this.router.navigate(['Home']);
+    this.router.navigate(['home']);
   }
 
   navOrder(){
     if(this.order.isOtpSent()){
-      this.router.navigate(['Otp']);
+      this.router.navigate(['otp']);
     }else if(this.order.isConfirmed()){
-      this.router.navigate(['OrderConfirmed']);
+      this.router.navigate(['order_success']);
     }
   }
 

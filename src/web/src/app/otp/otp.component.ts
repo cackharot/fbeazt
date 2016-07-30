@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { OrderService } from '../services/order.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -28,6 +28,9 @@ export class OtpComponent implements OnInit {
 
   constructor(private router: Router, private orderService: OrderService) {
     this.storage = window.sessionStorage;
+    this.router.events.subscribe(x=>{
+      window.scroll(0,0);
+    });
   }
 
   ngOnInit() {
@@ -37,9 +40,9 @@ export class OtpComponent implements OnInit {
      this.seconds = OtpComponent.OTP_RESEND_SECONDS;
     }
     if(this.order.isConfirmed()){
-      this.router.navigate(['OrderConfirmed']);
+      this.router.navigate(['order_success']);
     }else if(!this.order.isValid()){
-      this.router.navigate(['Checkout']);
+      this.router.navigate(['checkout']);
     }else{
       this.startCountDown();
     }
@@ -61,7 +64,7 @@ export class OtpComponent implements OnInit {
     this.resetTimeout();
     this.resetOtpCount();
     this.order.otp_status = null;
-    this.router.navigate(['Checkout']);
+    this.router.navigate(['checkout']);
   }
 
   resetTimeout(){
@@ -78,7 +81,7 @@ export class OtpComponent implements OnInit {
         this.isRequesting = false;
         if(data.status == "success"){
           this.order.otp_status = 'VERIFIED';
-          this.router.navigate(['OrderConfirmed']);
+          this.router.navigate(['order_success']);
         }else{
           this.error = data.message;
           this.startCountDown();

@@ -60,6 +60,12 @@ module.exports = function makeWebpackConfig() {
     chunkFilename: isProd ? '[id].[hash].chunk.js' : '[id].chunk.js'
   };
 
+  if(isProd){
+    config.htmlLoader = {
+      minimize: false // workaround for ng2
+    };
+  }
+
   /**
    * Resolve
    * Reference: http://webpack.github.io/docs/configuration.html#resolve
@@ -175,7 +181,7 @@ module.exports = function makeWebpackConfig() {
       // Reference: https://webpack.github.io/docs/code-splitting.html
       // Reference: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
       new CommonsChunkPlugin({
-        name: ['vendor', 'polyfills']
+        name: ['app', 'vendor', 'polyfills']
       }),
 
       // Inject script and link tags into html files
@@ -252,7 +258,7 @@ module.exports = function makeWebpackConfig() {
   config.devServer = {
     contentBase: './src/public',
     historyApiFallback: true,
-    stats: 'minimal' // none (or false), errors-only, minimal, normal (or true) and verbose
+    stats: 'errors-only' // none (or false), errors-only, minimal, normal (or true) and verbose
   };
 
   return config;

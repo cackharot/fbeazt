@@ -1,12 +1,12 @@
 <header>
   <cart-summary></cart-summary>
   <label for="track" class="show-for-medium">
-    <a [routerLink]="['TrackOrder',{'order_no':''}]">
+    <a routerLinkActive="active" routerLink="track">
       <i class="fa fa-motorcycle"></i> Track
     </a>
   </label>
   <div class="logo">
-    <a [routerLink]="['Home']"><i class="fa fa-leaf"></i> Foodbeazt</a>
+    <a routerLinkActive="active" routerLink="home"><i class="fa fa-leaf"></i> Foodbeazt</a>
   </div>
 </header>
 <section id="main">
@@ -14,11 +14,11 @@
 </section>
 <footer>
   <ul>
-    <li><a [routerLink]="['TrackOrder',{'order_no':''}]">Track Order</a></li>
-    <li><a [routerLink]="['Faq']">FAQ</a></li>
-    <li><a [routerLink]="['TermsOfUse']">Terms of use</a></li>
-    <li><a [routerLink]="['ContactUs']">Contact Us</a></li>
-    <!--<li><a [routerLink]="['AboutUs']">About Us</a></li>-->
+    <li><a routerLinkActive="active" routerLink="track">Track Order</a></li>
+    <li><a routerLinkActive="active" routerLink="faq">FAQ</a></li>
+    <li><a routerLinkActive="active" routerLink="terms_of_use">Terms of use</a></li>
+    <li><a routerLinkActive="active" routerLink="contact_us">Contact Us</a></li>
+    <!--<li><a routerLinkActive="active" routerLink="about_us">About Us</a></li>-->
     <li>&copy; 2016 <a href="//www.foodbeazt.in">www.foodbeazt.in</a></li>
   </ul>
 </footer>

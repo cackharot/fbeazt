@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { OrderService } from '../services/order.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -19,6 +19,9 @@ export class OrderSuccessComponent implements OnInit {
 
   constructor(private router: Router,
     private orderService: OrderService) {
+    this.router.events.subscribe(x=>{
+      window.scroll(0,0);
+    });
   }
 
   ngOnInit() {
@@ -26,7 +29,7 @@ export class OrderSuccessComponent implements OnInit {
     if(this.order.order_no == null || this.order.order_no.length == 0){
       console.error("Invalid order");
       console.error(this.order);
-      this.router.navigate(['Home']);
+      this.router.navigate(['home']);
     }
     if(this.order.otp_status != 'VERIFIED'){
       console.error("Invalid order state!");

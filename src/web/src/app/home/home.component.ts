@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { FORM_DIRECTIVES, Control } from '@angular/common';
-import { Router, RouteParams, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from '@angular/router-deprecated';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { LocalStorage, SessionStorage } from "../libs/WebStorage";
 
 import {Observable} from 'rxjs/Observable';
@@ -48,6 +48,9 @@ export class HomeComponent implements OnInit {
     private productService: ProductService,
     private orderService: OrderService,
     private storeService: StoreService) {
+    this.router.events.subscribe(x=>{
+      window.scroll(0,0);
+    });
   }
 
   ngOnInit() {

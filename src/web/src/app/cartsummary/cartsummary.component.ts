@@ -39,10 +39,10 @@ export class CartSummaryComponent implements OnInit {
   }
 
   canShow(){
-    let valid = this.router.isRouteActive(this.router.generate(['/Checkout']));
-    valid = valid || this.router.isRouteActive(this.router.generate(['/Otp']));
-    valid = valid || this.router.isRouteActive(this.router.generate(['/OrderConfirmed']));
-    valid = valid || this.router.isRouteActive(this.router.generate(['/TrackOrder',{'order_no':this.currentOrder.order_no}]));
+    let valid = this.router.isRouteActive(this.router.generate(['ceckout']));
+    valid = valid || this.router.isRouteActive(this.router.generate(['otp']));
+    valid = valid || this.router.isRouteActive(this.router.generate(['order_success']));
+    valid = valid || this.router.isRouteActive(this.router.generate(['track',{'order_no':this.currentOrder.order_no}]));
     return !valid;
   }
 
@@ -52,6 +52,6 @@ export class CartSummaryComponent implements OnInit {
   }
 
   navigateToCheckout(event: any){
-    this.router.navigate(['Checkout']);
+    this.router.navigate(['checkout']);
   }
 }

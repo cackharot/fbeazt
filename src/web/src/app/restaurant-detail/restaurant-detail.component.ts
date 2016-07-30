@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-import { Router, RouteParams, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
+import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { Tab } from '../components/tab';
 import { Tabs } from '../components/tabs';
@@ -35,10 +35,14 @@ export class RestaurantDetailComponent implements OnInit {
     private storeService: StoreService,
     private productService: ProductService,
     private orderService: OrderService,
-    private routeParams: RouteParams) { }
+    private route: ActivatedRoute) {
+    this.router.events.subscribe(x=>{
+      window.scroll(0,0);
+    });
+  }
 
   ngOnInit() {
-    let id = this.routeParams.get('id');
+    let id = this.route.snapshot.params['id'];
     this.storeId = id;
     this.isRequesting = true;
     this.storeService.get(id).then(x=>{

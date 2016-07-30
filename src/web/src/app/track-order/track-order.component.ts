@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { RouteParams, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
 import { LocalStorage, SessionStorage } from "../libs/WebStorage";
 
 import { OrderService } from '../services/order.service';
@@ -16,21 +16,31 @@ import { Order, OrderStatus, DeliveryDetails, LineItem } from '../model/order';
   directives: [ROUTER_DIRECTIVES, SpinnerComponent],
   pipes: [DateTimePipe],
 })
-export class TrackOrderComponent implements OnInit {
+export class TrackOrderComponent implements OnInit, OnDestroy {
   @SessionStorage() orderNo:string='';
   order: Order;
   isRequesting:boolean = false;
   submitted:boolean = false;
   errorMsg:string;
+  private sub: any;
 
   constructor(private orderService:OrderService,
-    private routeParams: RouteParams){
-
+              private router: Router,
+              private route: ActivatedRoute){
+    this.router.events.subscribe(x=>{
+      window.scroll(0,0);
+    });
   }
 
   ngOnInit(){
-    this.orderNo = this.routeParams.get('order_no') || '';
-    this.searchOrder();
+    this.sub = this.route.params.subscribe(params => {
+        this.orderNo = (params['order_no'] || '').trim();
+        this.searchOrder();
+      });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   searchOrder(){
