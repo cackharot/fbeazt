@@ -9,8 +9,8 @@ export class Restaurant {
   open_time: number;
   close_time: number;
   rating: number = 0.0;
-  holidays:string[] = [];
-  is_closed:boolean = false;
+  holidays: string[] = [];
+  is_closed: boolean = false;
   tenant_id: ObjectId = new ObjectId();
   created_at: Date;
   food_type: string[];
@@ -18,46 +18,46 @@ export class Restaurant {
   name: string;
   status: boolean;
 
-  constructor(data={}){
+  static of(data) {
+    if(data === null || data.constructor.name === Restaurant.name) {
+      return data;
+    }
+    return new Restaurant(data);
+  }
+
+  constructor(data = {}) {
     Object.assign(this, data);
     this._id = ObjectId.of(this._id);
   }
 
-  getId(){
+  getId() {
     return this._id.$oid;
   }
 
-  getTenantId(){
+  getTenantId() {
     return this.tenant_id.$oid;
   }
 
-  getCreatedAt(){
+  getCreatedAt() {
     return this.created_at.$date;
   }
 
-  isOpen(){
-    let hr = moment().hour() + (moment().minute()/60);
-    return !this.is_closed && (hr >= this.open_time && hr <= (this.close_time+12));
+  isOpen() {
+    let hr = moment().hour() + (moment().minute() / 60);
+    return !this.is_closed && (hr >= this.open_time && hr <= (this.close_time + 12));
   }
 
-  isClosed(){
+  isClosed() {
     return !this.isOpen();
   }
 
-  isHoliday(){
-    let hs = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
-    let weekday = hs[moment().weekday()-1];
-    return this.holidays.some(x=> x.toLocaleLowerCase().localeCompare(weekday) == 0);
+  isHoliday() {
+    let hs = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    let weekday = hs[moment().weekday() - 1];
+    return this.holidays.some(x => x.toLocaleLowerCase().localeCompare(weekday) === 0);
   }
 
-  getRating(){
-    return this.rating == 0 ? "--" : this.rating.toFixed(1);
-  }
-
-  static of(data){
-    if(data == null || data.constructor.name == Restaurant.name){
-      return data;
-    }
-    return new Restaurant(data);
+  getRating() {
+    return this.rating === 0 ? '--' : this.rating.toFixed(1);
   }
 }

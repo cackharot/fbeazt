@@ -30,7 +30,7 @@ export class Order {
     Object.assign(this, data);
 
     this._id = ObjectId.of(this._id);
-    this.items = this.items.map(x=> LineItem.of(x));
+    this.items = this.items.map(x => LineItem.of(x));
     this.delivery_details = DeliveryDetails.of(this.delivery_details);
     this.created_at = Date.of(this.created_at);
     this.updated_at = Date.of(this.updated_at);
@@ -38,8 +38,8 @@ export class Order {
   }
 
   addItem(item: LineItem){
-    let cur_item = this.items.find(x=> _.isEqual(x.product_id,item.product_id));
-    if(cur_item == undefined){
+    let cur_item = this.items.find(x => _.isEqual(x.product_id,item.product_id));
+    if(cur_item === undefined){
       item.no = this.items.length + 1;
       this.items.push(item);
     }else{
@@ -48,8 +48,8 @@ export class Order {
   }
 
   remove(item: LineItem){
-    let idx = this.items.findIndex(x=>x==item);
-    if(idx != -1){
+    let idx = this.items.findIndex(x => x === item);
+    if(idx !== -1){
       this.items.splice(idx, 1);
     }else{
       console.log("Invalid item given to remove!");
@@ -57,7 +57,7 @@ export class Order {
   }
 
   getStores(){
-    let stores = this.getUnique(this.items.map(x=> x.store));
+    let stores = this.getUnique(this.items.map(x => x.store));
     return stores;
   }
 
@@ -74,32 +74,32 @@ export class Order {
   }
 
   isValid(){
-    let hasClosedItems = this.items.filter(x=>x.store.isClosed()).length > 0;
+    let hasClosedItems = this.items.filter(x => x.store.isClosed()).length > 0;
     return this.getSubTotal() > 0 && !hasClosedItems;
   }
 
-  getItems(store_id=null){
-    if(store_id==null){
+  getItems(store_id = null){
+    if(store_id === null){
       return this.items;
     }
-    return this.items.filter(x=> _.isEqual(x.store_id,store_id));
+    return this.items.filter(x => _.isEqual(x.store_id,store_id));
   }
 
-  getItemQuantity(product_id:ObjectId){
+  getItemQuantity(product_id: ObjectId){
     let item = this.getItemByProductId(product_id);
-    if(item != null){
+    if(item !== null){
       return item.quantity;
     }
     return -1;
   }
 
-  getItemByProductId(product_id:ObjectId){
+  getItemByProductId(product_id: ObjectId){
     let item = this.items.filter(x=>_.isEqual(x.product_id, product_id));
     return item.length == 1 ? item[0] : null;
   }
 
   getDeliveryCharges(){
-    let storeCount=this.getStores().length;
+    let storeCount = this.getStores().length;
     let minCharge = this.getMinDeliveryCharges();
     if(storeCount <= 1){
       this.delivery_charges = minCharge;
@@ -130,31 +130,31 @@ export class Order {
   }
 
   isConfirmed(){
-    return this.order_no && this.order_no.length > 0 && this.otp_status == 'VERIFIED';
+    return this.order_no && this.order_no.length > 0 && this.otp_status === 'VERIFIED';
   }
 
   isOtpSent(){
-    return this.otp_status == 'SENT';
+    return this.otp_status === 'SENT';
   }
 
   isDelivered(){
-    return this.status == OrderStatus.DELIVERED;
+    return this.status === OrderStatus.DELIVERED;
   }
 
   isCancelled(){
-    return this.status == OrderStatus.CANCELLED;
+    return this.status === OrderStatus.CANCELLED;
   }
 
   inProgress(){
-    return this.status == OrderStatus.PROGRESS;
+    return this.status === OrderStatus.PROGRESS;
   }
 
   inPrepration(){
-    return this.status == OrderStatus.PREPARING;
+    return this.status === OrderStatus.PREPARING;
   }
 
   isInValid(){
-    return this.status == OrderStatus.INVALID;
+    return this.status === OrderStatus.INVALID;
   }
 
   getHash(){
@@ -175,19 +175,19 @@ export class LineItem {
   quantity: number;
   price: number;
 
-  constructor(data={}){
+  constructor(data = {}) {
     Object.assign(this, data);
     this.product_id = ObjectId.of(this.product_id);
     this.store_id = ObjectId.of(this.store_id);
     this.store = Restaurant.of(this.store);
   }
 
-  getTotalPrice(){
+  getTotalPrice() {
     return this.price * this.quantity;
   }
 
-  static of(data){
-    if(data == null || data.constructor.name == LineItem.name){
+  static of(data) {
+    if(data === null || data.constructor.name === LineItem.name){
       return data;
     }
     return new LineItem(data);
@@ -207,13 +207,13 @@ export class DeliveryDetails {
   country: string;
   notes: string;
 
-  constructor(data={}){
+  constructor(data = {}) {
     Object.assign(this, data);
     this.customer_id = ObjectId.of(this.customer_id);
   }
 
   static of(data){
-    if(data == null || data.constructor.name == DeliveryDetails.name){
+    if(data === null || data.constructor.name === DeliveryDetails.name){
       return data;
     }
     return new DeliveryDetails(data);
@@ -227,13 +227,13 @@ export class PincodeDetail{
   rate:number;
   status:boolean;
 
-  constructor(data={}){
+  constructor(data = {}) {
     Object.assign(this, data);
     this._id = ObjectId.of(this._id);
   }
 
   static of(data){
-    if(data == null || data.constructor.name == PincodeDetail.name){
+    if(data === null || data.constructor.name === PincodeDetail.name){
       return data;
     }
     return new PincodeDetail(data);
