@@ -26,9 +26,7 @@ export class OrderService {
   orderReseted$ = this.orderResetedSource.asObservable();
 
   constructor(private http: Http){
-    if(this.currentOrder.constructor.name != Order.name){
-      this.currentOrder = new Order(this.currentOrder);
-    }
+    this.currentOrder = Order.of(this.currentOrder);
   }
 
   private addLineItem(item: LineItem) {
@@ -79,7 +77,7 @@ export class OrderService {
     this.deliveryUpdatedSource.next(deliveryDetails);
   }
 
-  getOrder(){
+  getOrder() {
     return this.currentOrder;
   }
 
@@ -88,8 +86,9 @@ export class OrderService {
     return this.http.post(`${this.orderUrl}/-1`, this.currentOrder)
       .toPromise()
       .then(response => {
-        // console.log(response.json());
-        let updatedOrder = new Order(response.json().data);
+        let orderJson = response.json();
+        // console.log(orderJson);
+        let updatedOrder = Order.of(orderJson.data);
 
         let stores = this.currentOrder.getStores()
         updatedOrder.items.forEach(item => {
@@ -98,17 +97,18 @@ export class OrderService {
 
         this.currentOrder = updatedOrder;
         this.orderConfirmedSource.next(this.currentOrder);
+
         return updatedOrder;
       })
       .catch(this.handleError);
   }
 
-  resetOrder(){
+  resetOrder() {
     this.currentOrder = new Order();
     this.orderResetedSource.next(this.currentOrder);
   }
 
-  cancelOrder(){
+  cancelOrder() {
     this.resetOrder();
   }
 
@@ -138,7 +138,10 @@ export class OrderService {
 
   private handleError(error: any) {
     console.error('An error occurred', error);
-    return Promise.reject(error.json().message || error);
+    if(error.json === undefined){
+      return Promise.reject(error);
+    }
+    return Promise.reject(error.json().message);
   }
 
   loadOrder(orderNo:string) : Promise<Order> {

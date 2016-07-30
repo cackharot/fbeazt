@@ -26,9 +26,15 @@ export class Order {
   status: string = OrderStatus.NEW;
   delivery_charges:number;
 
-  constructor(data={}){
-    Object.assign(this, data);
+  static of(data) {
+    if(data && data.constructor.name !== Order.name) {
+      return new Order(data);
+    }
+    return data;
+  }
 
+  constructor(data = {}) {
+    Object.assign(this, data);
     this._id = ObjectId.of(this._id);
     this.items = this.items.map(x => LineItem.of(x));
     this.delivery_details = DeliveryDetails.of(this.delivery_details);
@@ -37,9 +43,9 @@ export class Order {
     this.delivered_at = Date.of(this.delivered_at);
   }
 
-  addItem(item: LineItem){
+  addItem(item: LineItem) {
     let cur_item = this.items.find(x => _.isEqual(x.product_id,item.product_id));
-    if(cur_item === undefined){
+    if(cur_item === undefined) {
       item.no = this.items.length + 1;
       this.items.push(item);
     }else{
@@ -47,21 +53,21 @@ export class Order {
     }
   }
 
-  remove(item: LineItem){
+  remove(item: LineItem) {
     let idx = this.items.findIndex(x => x === item);
-    if(idx !== -1){
+    if(idx !== -1) {
       this.items.splice(idx, 1);
     }else{
       console.log("Invalid item given to remove!");
     }
   }
 
-  getStores(){
+  getStores() {
     let stores = this.getUnique(this.items.map(x => x.store));
     return stores;
   }
 
-  private getUnique(data:any[]){
+  private getUnique(data:any[]) {
     var unique = {};
     var distinct = [];
     data.forEach(function (x) {
@@ -73,35 +79,35 @@ export class Order {
     return distinct;
   }
 
-  isValid(){
+  isValid() {
     let hasClosedItems = this.items.filter(x => x.store.isClosed()).length > 0;
     return this.getSubTotal() > 0 && !hasClosedItems;
   }
 
-  getItems(store_id = null){
-    if(store_id === null){
+  getItems(store_id = null) {
+    if(store_id === null) {
       return this.items;
     }
     return this.items.filter(x => _.isEqual(x.store_id,store_id));
   }
 
-  getItemQuantity(product_id: ObjectId){
+  getItemQuantity(product_id: ObjectId) {
     let item = this.getItemByProductId(product_id);
-    if(item !== null){
+    if(item !== null) {
       return item.quantity;
     }
     return -1;
   }
 
-  getItemByProductId(product_id: ObjectId){
+  getItemByProductId(product_id: ObjectId) {
     let item = this.items.filter(x=>_.isEqual(x.product_id, product_id));
     return item.length == 1 ? item[0] : null;
   }
 
-  getDeliveryCharges(){
+  getDeliveryCharges() {
     let storeCount = this.getStores().length;
     let minCharge = this.getMinDeliveryCharges();
-    if(storeCount <= 1){
+    if(storeCount <= 1) {
       this.delivery_charges = minCharge;
     }else{
       this.delivery_charges = minCharge + ((storeCount-1)*this.getPerStoreDeliveryCharges());
@@ -109,55 +115,55 @@ export class Order {
     return this.delivery_charges;
   }
 
-  getMinDeliveryCharges(){
+  getMinDeliveryCharges() {
     return Order.MIN_DELIVERY_CHARGES;
   }
 
-  getPerStoreDeliveryCharges(){
+  getPerStoreDeliveryCharges() {
     return Order.PER_STORE_CHARGES;
   }
 
-  getTotalAmount(){
+  getTotalAmount() {
     return this.getDeliveryCharges() + this.getSubTotal();
   }
 
-  getSubTotal(){
+  getSubTotal() {
     return this.items.reduce((n, x) => n + x.getTotalPrice(), 0);
   }
 
-  getTotalQuantity(){
+  getTotalQuantity() {
     return this.items.reduce((n, x) => n + x.quantity, 0);
   }
 
-  isConfirmed(){
+  isConfirmed() {
     return this.order_no && this.order_no.length > 0 && this.otp_status === 'VERIFIED';
   }
 
-  isOtpSent(){
+  isOtpSent() {
     return this.otp_status === 'SENT';
   }
 
-  isDelivered(){
+  isDelivered() {
     return this.status === OrderStatus.DELIVERED;
   }
 
-  isCancelled(){
+  isCancelled() {
     return this.status === OrderStatus.CANCELLED;
   }
 
-  inProgress(){
+  inProgress() {
     return this.status === OrderStatus.PROGRESS;
   }
 
-  inPrepration(){
+  inPrepration() {
     return this.status === OrderStatus.PREPARING;
   }
 
-  isInValid(){
+  isInValid() {
     return this.status === OrderStatus.INVALID;
   }
 
-  getHash(){
+  getHash() {
     let i = (this.items.length*32 + this.getTotalAmount()*32) << 2;
     return i.toString();
   }
@@ -175,6 +181,13 @@ export class LineItem {
   quantity: number;
   price: number;
 
+  static of(data) {
+    if(data && data.constructor.name !== LineItem.name) {
+      return new LineItem(data);
+    }
+    return data;
+  }
+
   constructor(data = {}) {
     Object.assign(this, data);
     this.product_id = ObjectId.of(this.product_id);
@@ -184,13 +197,6 @@ export class LineItem {
 
   getTotalPrice() {
     return this.price * this.quantity;
-  }
-
-  static of(data) {
-    if(data === null || data.constructor.name === LineItem.name){
-      return data;
-    }
-    return new LineItem(data);
   }
 }
 
@@ -207,35 +213,35 @@ export class DeliveryDetails {
   country: string;
   notes: string;
 
+  static of(data) {
+    if(data && data.constructor.name !== DeliveryDetails.name) {
+      return new DeliveryDetails(data);
+    }
+    return data;
+  }
+
   constructor(data = {}) {
     Object.assign(this, data);
     this.customer_id = ObjectId.of(this.customer_id);
   }
-
-  static of(data){
-    if(data === null || data.constructor.name === DeliveryDetails.name){
-      return data;
-    }
-    return new DeliveryDetails(data);
-  }
 }
 
-export class PincodeDetail{
+export class PincodeDetail {
   _id: ObjectId = new ObjectId();
-  pincode:string;
-  area:string;
-  rate:number;
-  status:boolean;
+  pincode: string;
+  area: string;
+  rate: number;
+  status: boolean;
+
+  static of(data) {
+    if(data && data.constructor.name !== PincodeDetail.name) {
+      return new PincodeDetail(data);
+    }
+    return data;
+  }
 
   constructor(data = {}) {
     Object.assign(this, data);
     this._id = ObjectId.of(this._id);
-  }
-
-  static of(data){
-    if(data === null || data.constructor.name === PincodeDetail.name){
-      return data;
-    }
-    return new PincodeDetail(data);
   }
 }

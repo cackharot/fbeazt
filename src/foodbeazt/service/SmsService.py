@@ -77,10 +77,11 @@ class SmsService(object):
     query = self.sms_store.find({'number':number,'message':message})
     return query.count() > 1
 
-  def get_order_count(self, phone, minutes=15):
+  def get_order_count(self, number, email, minutes=15):
     n = datetime.now() - timedelta(minutes=minutes)
-    query = self.sms_store.find({'number':phone,'created_at': { '$gt': n}})
-    return query.count()
+    query = { '$or': [{'email': email}, {'number': number}], 'created_at': { '$gt': n } }
+    items = self.sms_store.find(query)
+    return items.count()
 
   def search(self, tenant_id, page_no=1,page_size=50,is_otp=False):
     query = self.sms_store

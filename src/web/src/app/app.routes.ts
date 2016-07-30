@@ -19,7 +19,7 @@ const routes: RouterConfig = [
   { path: 'restaurants', component: RestaurantComponent},
   { path: 'restaurant/:id', component: RestaurantDetailComponent },
   { path: 'checkout', component: CheckoutComponent },
-  { path: 'verify_otp', component: OtpComponent },
+  { path: 'otp', component: OtpComponent },
   { path: 'order_success', component: OrderSuccessComponent },
   { path: 'track', component: TrackOrderComponent },
 

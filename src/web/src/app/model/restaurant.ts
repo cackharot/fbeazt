@@ -19,10 +19,10 @@ export class Restaurant {
   status: boolean;
 
   static of(data) {
-    if(data === null || data.constructor.name === Restaurant.name) {
-      return data;
+    if(data && data.constructor.name !== Restaurant.name) {
+      return new Restaurant(data);
     }
-    return new Restaurant(data);
+    return data;
   }
 
   constructor(data = {}) {

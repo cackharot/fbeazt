@@ -360,7 +360,8 @@ class OrderApi(Resource):
     }
 
   def check_duplicate_order(self, order):
-    phone = order['delivery_details']['phone']
-    order_count = self.smsService.get_order_count(phone=phone,minutes=15)
+    number = order['delivery_details']['phone']
+    email = order['delivery_details']['email']
+    order_count = self.smsService.get_order_count(number=number,email=email,minutes=15)
     if order_count > self.MAX_ORDER_PER_PHONE:
       raise DuplicateOrderException()
