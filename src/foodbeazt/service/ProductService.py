@@ -57,12 +57,20 @@ class ProductService(object):
     return self.products.remove({'_id': ObjectId(_id)})
 
   def add_popular_item(self, tenant_id, product_id):
+    hf = self.popular_items.find_one({'product_id': ObjectId(product_id)})
+    if hf is not None: return None
     item = {
       "product_id": ObjectId(product_id),
       "tenant_id": ObjectId(tenant_id),
+      "no": self.popular_items.find().count()+1,
       "created_at": datetime.now()
     }
     return self.popular_items.save(item)
+
+  def update_popular_item_no(self, _id, no):
+    item = self.popular_items.find_one({'product_id': ObjectId(_id)})
+    item['no'] = no
+    self.popular_items.save(item)
 
   def delete_popular_item(self, tenant_id, product_id):
     query = {
@@ -75,12 +83,15 @@ class ProductService(object):
     query = {
       "tenant_id": ObjectId(tenant_id),
     }
-    lst = self.popular_items.find(query)
-    product_ids = [x['product_id'] for x in lst]
+    lst = self.popular_items.find(query).sort('no',1)
+    kv = {}
+    for x in lst: kv[x['product_id']] = x['no']
+    product_ids = [x for x in kv.keys()]
     if len(product_ids) == 0: return []
     items = self.products.find({"_id": { "$in": product_ids}})
     popular = []
     for x in items:
       x['is_popular'] = True
+      x['no'] = kv[x['_id']]
       popular.append(x)
     return popular

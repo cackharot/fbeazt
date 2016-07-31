@@ -33,6 +33,7 @@
         <div class="table-responsive">
           <table class="table table-striped table-bordered table-hover">
             <thead>
+            <th>No</th>
             <th>Name</th>
             <th>Store</th>
             <th class="price text-right">Price</th>
@@ -41,6 +42,15 @@
             </thead>
             <tbody>
             <tr ng-repeat="item in products" ng-class="{'text-danger': !item.status}">
+              <td>
+                <a href="" ng-click="updateSerialNo(item._id.$oid,item.no+1)">
+                  <i class="fa fa-arrow-up"></i>
+                </a>
+                {{item.no}}
+                <a href="" ng-click="updateSerialNo(item._id.$oid,item.no-1)">
+                  <i class="fa fa-arrow-down"></i>
+                </a>
+              </td>
               <td>
                 <span ng-bind-html="item.food_type | show_food_type"></span>
                 <a href="#/product/{{item.store_id.$oid}}/{{item._id.$oid}}"

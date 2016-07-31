@@ -26,6 +26,16 @@ class PopularItemsApi(Resource):
       self.log.exception(e)
       return {"status": "error", "message": "Error on searching popular dishes"}, 460
 
+  def put(self, _id):
+    tenant_id = g.user.tenant_id
+    data = json_util.loads(request.data.decode('utf-8'))
+    try:
+      self.service.update_popular_item_no(_id, data['no'])
+      return None, 204
+    except Exception as e:
+      self.log.exception(e)
+      return {"status": "error", "message": "Error in updated popular items"}, 460
+
   def post(self, _id):
     tenant_id = g.user.tenant_id
     if _id is None:

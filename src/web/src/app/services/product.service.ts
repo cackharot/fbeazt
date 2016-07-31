@@ -73,7 +73,8 @@ export class ProductService {
                .toPromise()
                .then(response =>{
                  let items = response.json().items;
-                 let products = items.map(x=> Product.of(x));
+                 let products :Product[] = items.map(x=> Product.of(x));
+                 products = products.sort((a,b)=>{ return a.no > b.no ? 1 : 0; });
                  return products;
                })
                .catch(this.handleError);

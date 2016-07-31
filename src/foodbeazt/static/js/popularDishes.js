@@ -55,7 +55,9 @@ popularDishApp.controller('popularDishesCtrl', function($scope, $http, $routePar
 
 	$scope.reloadPopular = function(){
     $http.get('/api/popular_items/-1').success(function(d){
-      $scope.products = d.items;
+      $scope.products = d.items.sort(function(a,b){
+        return a.no > b.no ? 1 : 0;
+      });
       $scope.total = d.total;
     }).error(function(e){
       alert(e);
@@ -65,6 +67,20 @@ popularDishApp.controller('popularDishesCtrl', function($scope, $http, $routePar
 	$scope.removePopularDish = function(id){
 		if(id && id != "-1"){
 			$http.delete('/api/popular_items/'+id).success(function(d){
+        $scope.reloadPopular();
+			}).error(function(e){
+				alert(e);
+				$scope.reloadPopular();
+			});
+		}
+		return false;
+	}
+
+	$scope.updateSerialNo = function(id,no){
+		if(id && id != "-1"){
+			$http.put('/api/popular_items/'+id,{
+        no: no
+      }).success(function(d){
         $scope.reloadPopular();
 			}).error(function(e){
 				alert(e);

@@ -24,6 +24,7 @@ export class Product {
   description: string = ' ';
   status: boolean;
   is_popular: boolean = false;
+  no: number=0;
 
   static of(data) {
     if(data === null || data.constructor.name === Product.name) {
