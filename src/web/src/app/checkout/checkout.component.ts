@@ -54,7 +54,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   navOrder(){
-    if(this.order.isOtpSent()){
+    if(this.order.isOtpSent() && this.order.isValid()){
       this.router.navigate(['/otp']);
     }else if(this.order.isConfirmed()){
       this.router.navigate(['/order_success']);
