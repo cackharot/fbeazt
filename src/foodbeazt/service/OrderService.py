@@ -24,12 +24,14 @@ class OrderService(object):
     query = {"tenant_id": ObjectId(tenant_id)}
     # if store_id:
     #     query['store_id'] = ObjectId(store_id)
+    query['otp_status'] = 'VERIFIED'
     if order_no is not None and len(order_no)>0:
       query['order_no'] = order_no
     if order_status is not None and len(order_status) > 0:
       query['status'] = {"$in": order_status.split(',')}
     else:
-      query['status'] = {"$not": {"$eq": 'DELIVERED'}}
+      query['status'] = {"$not": {"$eq": 'DELIVERED', "$eq": 'CANCELLED'}}
+
     if filter_text is not None and len(filter_text)>0:
       search_val = re.compile(r".*%s.*"%(filter_text), re.IGNORECASE)
       query['$or'] = [

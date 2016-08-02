@@ -47,14 +47,14 @@
                     <a href="" ng-click="navigate(previous)" ng-if="previous">Previous</a>
                     <a href="" ng-click="navigate(next)" ng-if="next">Next</a>
                 </div>
-                <div class="card" ng-repeat="item in orders" ng-class="{'text-danger': item.status == 'CANCELLED'}">
+                <div class="card" ng-repeat="item in orders">
                     <div class="cell1">
                         <a href="#/order/{{item._id.$oid}}" title="Click to edit this item!">
                             <h4>{{item.order_no}}</h4>
                         </a>
                         <p>{{item.created_at | datetime}}</p>
                         <p><b ng-bind-html="item.total | currency"></b></p>
-                        <p>{{item.status}}</p>
+                        <p><b>{{item.status}}</b></p>
                         <p>OTP: {{item.otp_status || 'SENT'}}</p>
                     </div>
                     <div class="cell2">
@@ -115,8 +115,10 @@
                             </tfoot>
                         </table>
                     </div>
-                    <div class="status_row">
-                        <span ng-click="updateStatus(item, 'PENDING')"  class="done">PENDING</span>
+                    <div class="status_row" ng-if="item.status !== 'CANCELLED'">
+                        <span ng-click="updateStatus(item, 'PENDING')"  class="done">
+                            PENDING
+                        </span>
                         <span ng-click="updateStatus(item, 'PREPARING')"
                             ng-class="{'inprogress': item.status == 'PREPARING','done': item.status == 'PROGRESS' || item.status == 'DELIVERED'}">
                             PREPARING
@@ -128,6 +130,11 @@
                         <span ng-click="updateStatus(item, 'DELIVERED')"
                             ng-class="{'done': item.status == 'DELIVERED'}">
                             DELIVERED
+                        </span>
+                        <span ng-click="updateStatus(item, 'CANCELLED')"
+                            class="button alert alert-warning"
+                            ng-class="{'done': item.status == 'CANCELLED'}">
+                            CANCEL
                         </span>
                     </div>
                 </div>
