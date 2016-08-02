@@ -71,40 +71,46 @@
                         </p>
                     </div>
                     <div class="details__row">
+                        <div ng-repeat="store in getOrderStores(item)">
+                            <h4>{{store}}</h4>
+                            <table class="table order_table">
+                                <tbody>
+                                    <tr ng-repeat="dish in getOrderItems(item,store)">
+                                        <td>
+                                            <div class="product_name">
+                                                {{dish.name}}
+                                                <!--<br/>-->
+                                                <!--<span class="store_name light"><i>from</i> {{dish.store.name}}</span>-->
+                                            </div>
+                                        </td>
+                                        <td class="quantity">
+                                            {{dish.price}}x
+                                            {{dish.quantity}}
+                                        </td>
+                                        <td class="price">{{dish.total}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <table class="table order_table">
-                            <tbody>
-                                <tr ng-repeat="dish in item.items">
-                                    <td>
-                                        <div class="product_name">
-                                            {{dish.name}} <br/>
-                                            <span class="store_name light"><i>from</i> {{dish.store.name}}</span>
-                                        </div>
-                                    </td>
-                                    <td class="quantity">
-                                        {{dish.price}}x
-                                        {{dish.quantity}}
-                                    </td>
-                                    <td class="price">{{dish.total}}</td>
-                                </tr>
-                            </tbody>
                             <tfoot>
                                 <tr>
-                                <td colspan="2">
-                                    Subtotal
-                                </td>
-                                <td class="total">{{item.total - item.delivery_charges}}</td>
+                                    <td class="text-right">
+                                        Subtotal
+                                    </td>
+                                    <td class="total">{{item.total - item.delivery_charges}}</td>
                                 </tr>
                                 <tr>
-                                <td colspan="2">
-                                    Delivery Charges
-                                </td>
-                                <td class="total">{{item.delivery_charges}}</td>
+                                    <td class="text-right">
+                                        Delivery Charges
+                                    </td>
+                                    <td class="total">{{item.delivery_charges}}</td>
                                 </tr>
-                                <tr>
-                                <td colspan="2">
-                                    Total
-                                </td>
-                                <td class="total rupee">{{item.total}}</td>
+                                    <tr>
+                                    <td class="text-right">
+                                        Total
+                                    </td>
+                                    <td class="total rupee">{{item.total}}</td>
                                 </tr>
                             </tfoot>
                         </table>
