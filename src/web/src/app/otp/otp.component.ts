@@ -65,6 +65,7 @@ export class OtpComponent implements OnInit {
     this.resetOtpCount();
     this.order.otp_status = null;
     this.router.navigate(['checkout']);
+    return false;
   }
 
   resetTimeout(){

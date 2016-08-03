@@ -115,7 +115,7 @@
                             </tfoot>
                         </table>
                     </div>
-                    <div class="status_row" ng-if="item.status !== 'CANCELLED'">
+                    <div class="status_row" ng-if="item.status !== 'CANCELLED' && item.status != 'DELIVERED'">
                         <span ng-click="updateStatus(item, 'PENDING')"  class="done">
                             PENDING
                         </span>
