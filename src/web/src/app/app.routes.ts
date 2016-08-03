@@ -22,6 +22,7 @@ const routes: RouterConfig = [
   { path: 'otp', component: OtpComponent },
   { path: 'order_success', component: OrderSuccessComponent },
   { path: 'track', component: TrackOrderComponent },
+  { path: 'track/:order_no', component: TrackOrderComponent },
 
   { path: 'faq', component: FaqComponent },
   { path: 'terms_of_use', component: TermsOfUseComponent },
