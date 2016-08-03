@@ -24,6 +24,6 @@ export class AppConfig {
   }
 
   static isLocalEnv() : boolean {
-    return (window.location.host.match(/localhost/)).length > 0;
+    return (window.location.host.match(/localhost/)) !== null;
   }
 }
