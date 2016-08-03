@@ -3,7 +3,7 @@
   <p>You might have misspelled or try again!</p>
 </div>
 <div class="card" *ngFor="let product of products;">
-  <img src="/images/food-turkey.jpg" />
+  <img src="{{getProductImage(product) || '/images/placeholder.png'}}" />
   <div class="card-section align-center">
     <div class="center__container">
       <i class="veg__icon" [class.green]="product.isVeg()" [class.brown]="!product.isVeg()"></i>

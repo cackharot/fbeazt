@@ -9,6 +9,7 @@ import { Product, Category } from '../model/product';
 import { Order, DeliveryDetails, LineItem } from '../model/order';
 
 import { ChunkPipe } from '../pipes/chunk.pipe';
+import { AppConfig } from '../AppConfig';
 
 @Component({
   selector: 'product-list',
@@ -39,5 +40,12 @@ export class ProductListComponent implements OnInit {
     if(event) event.preventDefault();
     this.selection=item;
     this.selectedProduct.emit(item);
+  }
+
+  getProductImage(item: Product){
+    if(item.image_url === null){
+      return null;
+    }
+    return AppConfig.getBaseHost() + "/static/images/products/" + item.image_url;
   }
 }

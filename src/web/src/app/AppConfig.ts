@@ -10,14 +10,20 @@ export class AppConfig {
   static PINCODE_URL:string = AppConfig.BASE_URL+"/pincodes";
 
   static getBaseUrl(){
+    return AppConfig.getBaseHost() + "/api";
+  }
+
+  static getBaseHost() : string {
     let host = window.location.host,
       port = window.location.port;
-    console.info(host);
-    if (window.location.host.match(/localhost/)) {
-      return 'http://localhost:4000/api';
+    if (AppConfig.isLocalEnv()) {
+      return 'http://localhost:4000';
     } else {
-      // return 'http://foodbeazt.in/api/';
-      return 'http://'+ host + ':' + port +'/api/';
+      return 'http://'+ host + ':' + port;
     }
+  }
+
+  static isLocalEnv() : boolean {
+    return (window.location.host.match(/localhost/)).length > 0;
   }
 }
