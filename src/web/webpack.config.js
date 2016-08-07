@@ -31,9 +31,9 @@ module.exports = function makeWebpackConfig() {
    * Type of sourcemap to use per build type
    */
   if (isProd) {
-    config.devtool = 'source-map';
+    config.devtool = 'hidden-source-map';
   } else {
-    config.devtool = 'eval-source-map';
+    config.devtool = 'cheap-module-eval-source-map';
   }
 
   // add debug messages

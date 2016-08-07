@@ -17,7 +17,10 @@ class StoreService(object):
     query = {"tenant_id": ObjectId(tenant_id)}
 
     if filter_text is not None and len(filter_text) > 2:
-      query['name'] = {'$regex': r".*%s.*" % filter_text, '$options': 'i'}
+      query['$or'] = [
+        { 'name': {'$regex': r".*%s.*" % filter_text, '$options': 'i'} },
+        { 'cuisines': {'$regex': r".*%s.*" % filter_text, '$options': 'i'} }
+      ]
 
     if only_veg:
       query['food_type'] = {'$elemMatch': {'$eq': 'veg'}}
