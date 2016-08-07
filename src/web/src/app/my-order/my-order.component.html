@@ -1,0 +1,53 @@
+<section class="my__orders__page">
+  <div class="row content__container">
+    <div class="medium-12 columns">
+      <h2>My Orders</h2>
+    </div>
+  </div>
+  <div class="row" *ngIf="isRequesting">
+    <div class="medium-12 columns">
+      <my-spinner [isRunning]="isRequesting" [message]="'Looking for your orders...Please wait'">
+      </my-spinner>
+    </div>
+  </div>
+  <div class="callout alert" *ngIf="errorMsg">
+    <h4>Oops! Something went wrong.</h4>
+    {{errorMsg}}
+  </div>
+  <div class="row" *ngIf="orders.length == 0 && !isRequesting && !errorMsg">
+    <div class="medium-12 columns">
+      <div class="callout alert">
+        Oops! You have not made any orders :(
+      </div>
+    </div>
+  </div>
+  <div class="content__container" *ngIf="!isRequesting && orders.length > 0">
+    <div class="row oitem" *ngFor="let order of orders">
+      <div class="medium-6 columns">
+        <h4>{{order.order_no}}</h4>
+        <p>
+          Date: {{order.created_at | datetime}}<br/>
+          Status: {{order.status}}
+          <span *ngIf="order.isDelivered()">
+            <br/>
+            Delivered at: {{order.delivered_at|datetime}}
+          </span>
+        </p>
+        <p>
+          Dishes count: {{order.items.length}}<br/>
+          <strong>Total: <b class="rupee"></b>{{order.total}}</strong>
+        </p>
+      </div>
+      <div class="medium-6 columns end">
+        <h4>Delivery details</h4>
+        <p>
+          Address: {{order.delivery_details.address}}<br/>
+          Pincode: {{order.delivery_details.pincode}}<br/>
+          Landmark: {{order.delivery_details.landmark}}<br/>
+          Phone: {{order.delivery_details.phone}}<br/>
+          Email: {{order.delivery_details.email}}<br/>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

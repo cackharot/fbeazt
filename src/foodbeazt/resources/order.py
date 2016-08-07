@@ -198,8 +198,10 @@ class OrderApi(Resource):
     order = json_util.loads(request.data.decode('utf-8'))
     self.log.debug("RECEIVED ORDER", order)
     tenant_id = g.user.tenant_id
+    user_id = g.user.id
     valid_order = {
-      'tenant_id': ObjectId(tenant_id)
+      'tenant_id': ObjectId(tenant_id),
+      'user_id': ObjectId(user_id)
     }
     validation_error, sanitized_items = self.validate_line_items(order)
 
@@ -287,7 +289,7 @@ class OrderApi(Resource):
     try:
       if app.config['SEND_MAIL'] == False:
         self.log.info("DEV ** Sending email [%s] to %s" % (subject, email))
-        time.sleep(10)
+        time.sleep(3)
       else:
         self.log.info("Sending email [%s] to %s" % (subject, email))
         mail.send(msg)

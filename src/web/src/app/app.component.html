@@ -1,6 +1,20 @@
 <header>
+  <label for="username" *ngIf="name">
+    <a (click)="false" id="username">
+      <img src="{{avatar}}" class="avatar"/>
+      <span class="show-for-medium">{{name}}</span>
+    </a>
+    <ul>
+      <li><a routerLinkActive="active" routerLink="track">Track Order</a></li>
+      <li><a routerLinkActive="active" routerLink="my_orders">My Orders</a></li>
+      <li><a (click)="logoff()">Logoff</a></li>
+    </ul>
+  </label>
+  <label for="username" *ngIf="!name" class="btn btn-default" (click)="login()">
+    <a (click)="false">Login</a>
+  </label>
   <cart-summary></cart-summary>
-  <label for="track" class="show-for-medium">
+  <label for="track" class="show-for-medium" *ngIf="!name">
     <a routerLinkActive="active" routerLink="track">
       <i class="fa fa-motorcycle"></i> Track
     </a>

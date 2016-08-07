@@ -16,14 +16,20 @@ class OrderService(object):
     self.pincodeService = PincodeService(db)
     self.orders = self.db.order_collection
 
-  def search(self, tenant_id, store_id=None, page_no=1,
+  def search(self, tenant_id,
+              user_id=None,
+              store_id=None,
+              page_no=1,
               page_size=25,
               order_no=None,
               order_status=None,
-              filter_text=None):
+              filter_text=None,
+              latest_first=False):
     query = {"tenant_id": ObjectId(tenant_id)}
     # if store_id:
-    #     query['store_id'] = ObjectId(store_id)
+    #   query['store_id'] = ObjectId(store_id)
+    if user_id:
+      query['user_id'] = ObjectId(user_id)
     query['otp_status'] = 'VERIFIED'
     if order_no is not None and len(order_no)>0:
       query['order_no'] = order_no
@@ -42,7 +48,9 @@ class OrderService(object):
     skip_records = (page_no - 1) * page_size
     if skip_records < 0: skip_records = 0
     lst = self.orders.find(query)
-    return [x for x in lst.sort("created_at").skip(skip_records).limit(page_size)], lst.count()
+    sort_dir = 1
+    if latest_first: sort_dir = -1
+    return [x for x in lst.sort("created_at", sort_dir).skip(skip_records).limit(page_size)], lst.count()
 
   def generate_order_no(self):
     digits_f = "".join([random.choice(string.digits) for i in range(3)])

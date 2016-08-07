@@ -17,7 +17,7 @@ export class OrderService {
   private orderConfirmedSource = new Subject<Order>();
   private orderResetedSource = new Subject<Order>();
   private orderUpdatedSource = new Subject<Order>();
-  private orderUrl:string = AppConfig.ORDER_URL;
+  private orderUrl: string = AppConfig.ORDER_URL;
 
   itemAdded$ = this.itemAddedSource.asObservable();
   orderUpdated$ = this.orderUpdatedSource.asObservable();
@@ -25,7 +25,7 @@ export class OrderService {
   orderConfirmed$ = this.orderConfirmedSource.asObservable();
   orderReseted$ = this.orderResetedSource.asObservable();
 
-  constructor(private http: Http){
+  constructor(private http: Http) {
     this.currentOrder = Order.of(this.currentOrder);
   }
 
@@ -34,8 +34,8 @@ export class OrderService {
     this.itemAddedSource.next(item);
   }
 
-  addItem(item: Product){
-    if(!item.isAvailable()){
+  addItem(item: Product) {
+    if (!item.isAvailable()) {
       console.log("Attempt to add not available item" + item);
       return;
     }
@@ -53,21 +53,21 @@ export class OrderService {
     this.addLineItem(lineItem);
   }
 
-  removeItem(item:LineItem){
+  removeItem(item: LineItem) {
     this.currentOrder.remove(item);
     this.orderUpdatedSource.next(this.currentOrder);
   }
 
-  updateQuantity(item:LineItem, value:number){
+  updateQuantity(item: LineItem, value: number) {
     item.quantity = item.quantity + value;
-    if(item.quantity <= 0){
+    if (item.quantity <= 0) {
       this.removeItem(item);
       return;
     }
     this.orderUpdatedSource.next(this.currentOrder);
   }
 
-  updateItemQuantity(product_id:ObjectId, value:number){
+  updateItemQuantity(product_id: ObjectId, value: number) {
     let item = this.currentOrder.getItemByProductId(product_id);
     this.updateQuantity(item, value);
   }
@@ -92,7 +92,7 @@ export class OrderService {
 
         let stores = this.currentOrder.getStores()
         updatedOrder.items.forEach(item => {
-          item.store = stores.find(x=> _.isEqual(x._id,item.store_id));
+          item.store = stores.find(x => _.isEqual(x._id, item.store_id));
         });
 
         this.currentOrder = updatedOrder;
@@ -112,45 +112,45 @@ export class OrderService {
     this.resetOrder();
   }
 
-  verifyOtp(otp:string,new_number:string){
-    let data = {'cmd':'VERIFY_OTP','otp':otp,'order_id':this.currentOrder._id,'number':new_number}
-    return this.http.put(`${this.orderUrl}/-1`,data)
-              .toPromise()
-              .then(response=>{
-                let res = response.json();
-                // console.log(res);
-                return res;
-              })
-              .catch(this.handleError);
+  verifyOtp(otp: string, new_number: string) {
+    let data = { 'cmd': 'VERIFY_OTP', 'otp': otp, 'order_id': this.currentOrder._id, 'number': new_number }
+    return this.http.put(`${this.orderUrl}/-1`, data)
+      .toPromise()
+      .then(response => {
+        let res = response.json();
+        // console.log(res);
+        return res;
+      })
+      .catch(this.handleError);
   }
 
-  resendOtp(new_number:string){
-    let data = {'cmd':'RESEND_OTP','order_id':this.currentOrder._id,'number':new_number}
-    return this.http.put(`${this.orderUrl}/-1`,data)
-              .toPromise()
-              .then(response=>{
-                let res = response.json();
-                // console.log(res);
-                return res;
-              })
-              .catch(this.handleError);
+  resendOtp(new_number: string) {
+    let data = { 'cmd': 'RESEND_OTP', 'order_id': this.currentOrder._id, 'number': new_number }
+    return this.http.put(`${this.orderUrl}/-1`, data)
+      .toPromise()
+      .then(response => {
+        let res = response.json();
+        // console.log(res);
+        return res;
+      })
+      .catch(this.handleError);
   }
 
   private handleError(error: any) {
     console.error('An error occurred', error);
-    if(error.json === undefined){
+    if (error.json === undefined) {
       return Promise.reject(error);
     }
     return Promise.reject(error.json().message);
   }
 
-  loadOrder(orderNo:string) : Promise<Order> {
+  loadOrder(orderNo: string): Promise<Order> {
     return this.http.get(`${AppConfig.TRACK_URL}/${orderNo}`)
       .toPromise()
-      .then(response=>{
+      .then(response => {
         let data = response.json();
         let order = new Order(data);
-        if(!order.order_no || order.order_no.length == 0){
+        if (!order.order_no || order.order_no.length == 0) {
           return null;
         }
         return order;
@@ -158,13 +158,23 @@ export class OrderService {
       .catch(this.handleError);
   }
 
-  fetchAvailablePincodes(){
+  fetchAvailablePincodes() {
     return this.http.get(`${AppConfig.PINCODE_URL}`)
       .toPromise()
-      .then(response=>{
+      .then(response => {
         let data = response.json();
-        let items = data.map(x=> PincodeDetail.of(x));
+        let items = data.map(x => PincodeDetail.of(x));
         return items;
+      })
+      .catch(this.handleError);
+  }
+
+  public getMyOrders(): Promise<Order[]> {
+    return this.http.get(`${AppConfig.MY_ORDERS_URL}`)
+      .toPromise()
+      .then(response => {
+        let data = response.json();
+        return data.items.map(x => Order.of(x));
       })
       .catch(this.handleError);
   }

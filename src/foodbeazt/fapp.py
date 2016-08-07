@@ -279,6 +279,9 @@ from foodbeazt.resources.popular_items import PopularItemsApi
 from foodbeazt.resources.sms import SmsApi
 from foodbeazt.resources.report import ReportApi
 from foodbeazt.resources.pincodes import PincodeListApi, PincodeApi
+from foodbeazt.resources.myorders import MyOrdersApi
+
+api.add_resource(MyOrdersApi, '/api/my_orders')
 
 api.add_resource(ReportApi, '/api/reports/orders')
 

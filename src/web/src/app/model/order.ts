@@ -1,8 +1,8 @@
 import { ObjectId, Date } from "./base";
-import {Restaurant} from "./restaurant";
+import { Restaurant } from "./restaurant";
 import * as _ from "lodash";
 
-export class OrderStatus{
+export class OrderStatus {
   static NEW = "NEW";
   static CONFIRMED = "CONFIRMED";
   static PREPARING = "PREPARING";
@@ -17,17 +17,18 @@ export class Order {
   static PER_STORE_CHARGES = 25;
   _id: ObjectId = new ObjectId();
   order_no: string;
-  otp_status:string = '';
+  otp_status: string = '';
   delivery_details: DeliveryDetails = new DeliveryDetails();
   created_at: Date;
   updated_at: Date;
   delivered_at: Date;
   items: LineItem[] = [];
   status: string = OrderStatus.NEW;
-  delivery_charges:number;
+  delivery_charges: number;
+  total: number;
 
   static of(data) {
-    if(data && data.constructor.name !== Order.name) {
+    if (data && data.constructor.name !== Order.name) {
       return new Order(data);
     }
     return data;
@@ -44,20 +45,20 @@ export class Order {
   }
 
   addItem(item: LineItem) {
-    let cur_item = this.items.find(x => _.isEqual(x.product_id,item.product_id));
-    if(cur_item === undefined) {
+    let cur_item = this.items.find(x => _.isEqual(x.product_id, item.product_id));
+    if (cur_item === undefined) {
       item.no = this.items.length + 1;
       this.items.push(item);
-    }else{
+    } else {
       cur_item.quantity++;
     }
   }
 
   remove(item: LineItem) {
     let idx = this.items.findIndex(x => x === item);
-    if(idx !== -1) {
+    if (idx !== -1) {
       this.items.splice(idx, 1);
-    }else{
+    } else {
       console.log("Invalid item given to remove!");
     }
   }
@@ -67,7 +68,7 @@ export class Order {
     return stores;
   }
 
-  private getUnique(data:any[]) {
+  private getUnique(data: any[]) {
     var unique = {};
     var distinct = [];
     data.forEach(function (x) {
@@ -85,32 +86,32 @@ export class Order {
   }
 
   getItems(store_id = null) {
-    if(store_id === null) {
+    if (store_id === null) {
       return this.items;
     }
-    return this.items.filter(x => _.isEqual(x.store_id,store_id));
+    return this.items.filter(x => _.isEqual(x.store_id, store_id));
   }
 
   getItemQuantity(product_id: ObjectId) {
     let item = this.getItemByProductId(product_id);
-    if(item !== null) {
+    if (item !== null) {
       return item.quantity;
     }
     return -1;
   }
 
   getItemByProductId(product_id: ObjectId) {
-    let item = this.items.filter(x=>_.isEqual(x.product_id, product_id));
+    let item = this.items.filter(x => _.isEqual(x.product_id, product_id));
     return item.length == 1 ? item[0] : null;
   }
 
   getDeliveryCharges() {
     let storeCount = this.getStores().length;
     let minCharge = this.getMinDeliveryCharges();
-    if(storeCount <= 1) {
+    if (storeCount <= 1) {
       this.delivery_charges = minCharge;
-    }else{
-      this.delivery_charges = minCharge + ((storeCount-1)*this.getPerStoreDeliveryCharges());
+    } else {
+      this.delivery_charges = minCharge + ((storeCount - 1) * this.getPerStoreDeliveryCharges());
     }
     return this.delivery_charges;
   }
@@ -164,7 +165,7 @@ export class Order {
   }
 
   getHash() {
-    let i = (this.items.length*32 + this.getTotalAmount()*32) << 2;
+    let i = (this.items.length * 32 + this.getTotalAmount() * 32) << 2;
     return i.toString();
   }
 }
@@ -182,7 +183,7 @@ export class LineItem {
   price: number;
 
   static of(data) {
-    if(data && data.constructor.name !== LineItem.name) {
+    if (data && data.constructor.name !== LineItem.name) {
       return new LineItem(data);
     }
     return data;
@@ -214,7 +215,7 @@ export class DeliveryDetails {
   notes: string;
 
   static of(data) {
-    if(data && data.constructor.name !== DeliveryDetails.name) {
+    if (data && data.constructor.name !== DeliveryDetails.name) {
       return new DeliveryDetails(data);
     }
     return data;
@@ -234,7 +235,7 @@ export class PincodeDetail {
   status: boolean;
 
   static of(data) {
-    if(data && data.constructor.name !== PincodeDetail.name) {
+    if (data && data.constructor.name !== PincodeDetail.name) {
       return new PincodeDetail(data);
     }
     return data;
