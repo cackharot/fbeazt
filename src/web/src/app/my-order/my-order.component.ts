@@ -20,6 +20,7 @@ export class MyOrderComponent implements OnInit, OnDestroy {
   isRequesting: boolean = false;
   errorMsg: string;
   orders: Order[] = [];
+  showMap: any = {};
 
   constructor(private orderService: OrderService,
     private router: Router,
@@ -48,5 +49,17 @@ export class MyOrderComponent implements OnInit, OnDestroy {
         this.errorMsg = errorMsg
         this.isRequesting = false;
       });
+  }
+
+  toggleOrderDetails(order) {
+    if(this.showMap[order.order_no] === undefined){
+      this.showMap[order.order_no] = true;
+    }else{
+      this.showMap[order.order_no] = !this.showMap[order.order_no];
+    }
+  }
+
+  canShowOrderDetails(order: Order) {
+    return this.showMap[order.order_no] === true;
   }
 }

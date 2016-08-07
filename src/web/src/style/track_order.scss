@@ -42,4 +42,28 @@
     border-bottom: 1px solid #eee;
     margin-bottom: 10px;
   }
+
+  .my__orders__tbl{
+    tr{
+      cursor: pointer;
+      td{
+        padding: 1em 0.8em;
+      }
+      &:hover{
+        td{
+          background: rgba(173, 216, 230, 0.4);
+        }
+      }
+    }
+    tr.child__row__detail{
+      td{
+        padding: 0.4em 0.3em;
+      }
+      &:hover{
+        td{
+          background: transparent;
+        }
+      }
+    }
+  }
 }

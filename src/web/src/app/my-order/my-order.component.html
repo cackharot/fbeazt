@@ -22,32 +22,92 @@
     </div>
   </div>
   <div class="content__container" *ngIf="!isRequesting && orders.length > 0">
-    <div class="row oitem" *ngFor="let order of orders">
-      <div class="medium-6 columns">
-        <h4>{{order.order_no}}</h4>
-        <p>
-          Date: {{order.created_at | datetime}}<br/>
-          Status: {{order.status}}
-          <span *ngIf="order.isDelivered()">
-            <br/>
-            Delivered at: {{order.delivered_at|datetime}}
-          </span>
-        </p>
-        <p>
-          Dishes count: {{order.items.length}}<br/>
-          <strong>Total: <b class="rupee"></b>{{order.total}}</strong>
-        </p>
-      </div>
-      <div class="medium-6 columns end">
-        <h4>Delivery details</h4>
-        <p>
-          Address: {{order.delivery_details.address}}<br/>
-          Pincode: {{order.delivery_details.pincode}}<br/>
-          Landmark: {{order.delivery_details.landmark}}<br/>
-          Phone: {{order.delivery_details.phone}}<br/>
-          Email: {{order.delivery_details.email}}<br/>
-        </p>
-      </div>
+    <div class="medium-12 columns">
+      <table class="table my__orders__tbl">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Date</th>
+            <th>#no</th>
+            <th>Dishes</th>
+            <th>Pincode</th>
+            <th class="text-right">Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template ngFor let-order [ngForOf]="orders">
+            <tr (click)="toggleOrderDetails(order)">
+              <td>
+                <i (click)="toggleOrderDetails(order)" class="fa"
+                [class.fa-caret-right]="!canShowOrderDetails(order)"
+                [class.fa-caret-down]="canShowOrderDetails(order)">
+                </i>
+              </td>
+              <td>{{order.created_at|datetime}}</td>
+              <td>{{order.order_no}}</td>
+              <td>{{order.items.length}}</td>
+              <td>{{order.delivery_details.pincode}}</td>
+              <td class="text-right"><i class="rupee"></i>{{order.total}}</td>
+              <td>{{order.status}}</td>
+            </tr>
+            <tr *ngIf="canShowOrderDetails(order)" class="child__row__detail">
+              <td colspan="7">
+                <div class="row">
+                  <div class="medium-6 columns">
+                    <table class="table order_table">
+                      <tbody>
+                        <tr *ngFor="let item of order.getItems()">
+                          <td>
+                            <div class="product_name">
+                              {{item.name}} <br/>
+                              <!--<span class="store_name light"><i>from</i> {{item.store.name}}</span>-->
+                            </div>
+                          </td>
+                          <td class="quantity">
+                            {{item.quantity}}
+                          </td>
+                          <td class="price">{{item.getTotalPrice()}}</td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td colspan="2">
+                            Subtotal:
+                          </td>
+                          <td class="total">{{order.getSubTotal()}}</td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">
+                            Delivery Charges:
+                          </td>
+                          <td class="total">{{order.delivery_charges}}</td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">
+                            Total:
+                          </td>
+                          <td class="total rupee">{{order.total}}</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                  <div class="medium-6 columns end">
+                    <h4>Delivery details</h4>
+                    <p>
+                      Address: {{order.delivery_details.address}}<br/>
+                      Pincode: {{order.delivery_details.pincode}}<br/>
+                      Landmark: {{order.delivery_details.landmark}}<br/>
+                      Phone: {{order.delivery_details.phone}}<br/>
+                      Email: {{order.delivery_details.email}}<br/>
+                    </p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
