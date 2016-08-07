@@ -26,7 +26,10 @@
             <tr ng-repeat="item in messages" ng-class="{'text-danger': is_otp && item.status != 'VERIFIED'}">
               <td>{{item.created_at | datetime}}</td>
               <td>{{item.number}}</td>
-              <td>{{item.message}}</td>
+              <td>
+                Id: {{item.aws_msg_id || 'NA'}}<br/>
+                {{item.message}}
+              </td>
               <td>
                 {{item.status}}
               </td>
