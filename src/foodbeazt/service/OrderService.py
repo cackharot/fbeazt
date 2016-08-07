@@ -53,10 +53,18 @@ class OrderService(object):
     return [x for x in lst.sort("created_at", sort_dir).skip(skip_records).limit(page_size)], lst.count()
 
   def generate_order_no(self):
-    digits_f = "".join([random.choice(string.digits) for i in range(3)])
-    chars = "".join([random.choice(string.ascii_uppercase) for i in range(3)])
-    digits_l = "".join([random.choice(string.digits) for i in range(3)])
-    return digits_f + '' + chars + '' + digits_l
+    cnt = 0
+    no = None
+    while no is None or cnt <= 10:
+      no = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(9))
+      cnt = cnt + 1
+      if self.get_by_number(no) is not None:
+        no = None
+      else:
+        break
+    if no is None:
+      raise Exception("Unabled to generate unique order no")
+    return no
 
   def save(self, item):
     if '_id' not in item or item['_id'] is None or item['_id'] == "-1":
