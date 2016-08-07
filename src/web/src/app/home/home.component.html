@@ -37,6 +37,15 @@
 </section>
 <section class="row" *ngIf="searchText == null || searchText.length == 0">
   <div class="medium-12 small-12 columns end">
+    <h4>App Features</h4>
+    <ul>
+      <li><i class="fa fa-bolt"></i> Super fast ordering</li>
+      <li><i class="fa fa-cutlery"></i> Multi-restaurant dishes in single order</li>
+      <li><i class="fa fa-map-marker"></i> Live tracking</li>
+      <li><i class="fa fa-truck"></i> Super fast delivery</li>
+    </ul>
+  </div>
+  <div class="medium-12 small-12 columns end">
     <h3>Popular items</h3>
     <product-list [products]="popular_dishes" (selectedProduct)="addToCart($event)"></product-list>
   </div>
