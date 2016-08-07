@@ -9,6 +9,8 @@ import { Product } from '../model/product';
 import { Order, PincodeDetail, LineItem, DeliveryDetails } from '../model/order';
 import { AppConfig } from '../AppConfig';
 
+import { OAuthService } from 'angular2-oauth2/oauth-service';
+
 @Injectable()
 export class OrderService {
   @LocalStorage() private currentOrder: Order = new Order();
@@ -25,7 +27,7 @@ export class OrderService {
   orderConfirmed$ = this.orderConfirmedSource.asObservable();
   orderReseted$ = this.orderResetedSource.asObservable();
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private authService: OAuthService) {
     this.currentOrder = Order.of(this.currentOrder);
   }
 
@@ -83,7 +85,9 @@ export class OrderService {
 
   confirmOrder() {
     // console.log(this.currentOrder);
-    return this.http.post(`${this.orderUrl}/-1`, this.currentOrder)
+    return this.http.post(`${this.orderUrl}/-1`, this.currentOrder, {
+      headers: this.authHeaders()
+    })
       .toPromise()
       .then(response => {
         let orderJson = response.json();
@@ -114,7 +118,9 @@ export class OrderService {
 
   verifyOtp(otp: string, new_number: string) {
     let data = { 'cmd': 'VERIFY_OTP', 'otp': otp, 'order_id': this.currentOrder._id, 'number': new_number }
-    return this.http.put(`${this.orderUrl}/-1`, data)
+    return this.http.put(`${this.orderUrl}/-1`, data, {
+      headers: this.authHeaders()
+    })
       .toPromise()
       .then(response => {
         let res = response.json();
@@ -126,7 +132,9 @@ export class OrderService {
 
   resendOtp(new_number: string) {
     let data = { 'cmd': 'RESEND_OTP', 'order_id': this.currentOrder._id, 'number': new_number }
-    return this.http.put(`${this.orderUrl}/-1`, data)
+    return this.http.put(`${this.orderUrl}/-1`, data, {
+      headers: this.authHeaders()
+    })
       .toPromise()
       .then(response => {
         let res = response.json();
@@ -145,7 +153,9 @@ export class OrderService {
   }
 
   loadOrder(orderNo: string): Promise<Order> {
-    return this.http.get(`${AppConfig.TRACK_URL}/${orderNo}`)
+    return this.http.get(`${AppConfig.TRACK_URL}/${orderNo}`, {
+      headers: this.authHeaders()
+    })
       .toPromise()
       .then(response => {
         let data = response.json();
@@ -159,7 +169,9 @@ export class OrderService {
   }
 
   fetchAvailablePincodes() {
-    return this.http.get(`${AppConfig.PINCODE_URL}`)
+    return this.http.get(`${AppConfig.PINCODE_URL}`, {
+      headers: this.authHeaders()
+    })
       .toPromise()
       .then(response => {
         let data = response.json();
@@ -170,12 +182,22 @@ export class OrderService {
   }
 
   public getMyOrders(): Promise<Order[]> {
-    return this.http.get(`${AppConfig.MY_ORDERS_URL}`)
+    return this.http.get(`${AppConfig.MY_ORDERS_URL}`, {
+      headers: this.authHeaders()
+    })
       .toPromise()
       .then(response => {
         let data = response.json();
         return data.items.map(x => Order.of(x));
       })
       .catch(this.handleError);
+  }
+
+  private authHeaders(): Headers {
+    let authHeaders = new Headers();
+    if (this.authService.hasValidIdToken()) {
+      authHeaders.set('Authorization', 'Bearer ' + this.authService.getIdToken());
+    }
+    return authHeaders;
   }
 }

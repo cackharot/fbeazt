@@ -20,6 +20,8 @@ from flask_cors import CORS, cross_origin
 from bson import ObjectId, json_util
 import json
 
+from oauth2client import client, crypt
+
 from flogging import logging, setup_logging
 
 setup_logging()
@@ -93,11 +95,6 @@ def create_or_update_user(user_info):
   login_user(user_mixin)
   # Tell Flask-Principal the identity changed
   identity_changed.send(current_app._get_current_object(), identity=Identity(str(user_mixin.id)))
-  # session['user_id'] = str(user['_id'])
-  # session['tenant_id'] = str(user['tenant_id'])
-  # session['name'] = user['name']
-  # session['email'] = user['email']
-  # session['roles'] = user.get('roles', None)
   return user_mixin
 
 def login_anonymous():
@@ -137,8 +134,15 @@ def get_or_create_user(item):
   else:
     roles = ["member"]
 
-  user = {'username': email, 'email': email, 'name': item['name'], 'auth_type': 'google',
-          'tenant_id': tenant_id, 'roles': roles, 'identity': item['id']}
+  user = {
+          'username': email,
+          'email': email,
+          'name': item['name'],
+          'auth_type': 'google',
+          'tenant_id': tenant_id,
+          'roles': roles,
+          'identity': item.get('id', item.get('sub', None))
+         }
   service.create(user)
   return user
 
@@ -149,18 +153,41 @@ def get_user(userid):
   user = UserService(mongo.db).get_by_id(userid)
   return getUserMixin(user)
 
+def login_via_google_token(token):
+  if token == 'null': return None
+  try:
+    idinfo = client.verify_id_token(token, auth.client_id)
+    if idinfo['aud'] not in [auth.client_id]:
+      raise crypt.AppIdentityError("Unrecognized client.")
+    if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+      raise crypt.AppIdentityError("Wrong issuer.")
+    if 'hd' in idinfo and idinfo['hd'] not in ['foodbeazt.in','localhost']:
+      raise crypt.AppIdentityError("Wrong hosted domain.")
+    return getUserMixin(get_or_create_user(idinfo))
+  except crypt.AppIdentityError as e:
+    logger.exception(e)
+  return None
+
 @auth.request_loader
 def request_loader(request):
   if request and request.path.startswith('/static/'):
     return None
-  if session and session.get('identity.id',None) is not None:
+  user_mixin = None
+  userService = UserService(mongo.db)
+  if session and session.get('identity.id', None) is not None:
     userid = str(session['identity.id'])
-    # print("Session user_id %s" % (userid))
-    user_mixin = getUserMixin(UserService(mongo.db).get_by_id(userid))
-    if user_mixin:
-      login_user(user_mixin)
-      identity_changed.send(current_app._get_current_object(), identity=Identity(str(user_mixin.id)))
-      return user_mixin
+    user_mixin = getUserMixin(userService.get_by_id(userid))
+
+  if user_mixin is None:
+    authHeader =  request.headers.get('Authorization', None)
+    if authHeader and len(authHeader) > 0:
+      if authHeader.startswith('Bearer '):
+        user_mixin = login_via_google_token(authHeader.replace('Bearer ', ''))
+
+  if user_mixin:
+    login_user(user_mixin)
+    identity_changed.send(current_app._get_current_object(), identity=Identity(str(user_mixin.id)))
+    return user_mixin
   # print("Anonymous login initiated############### %s" % (request.path))
   return login_anonymous()
 

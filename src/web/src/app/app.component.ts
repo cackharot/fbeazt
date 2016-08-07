@@ -59,6 +59,7 @@ export class AppComponent {
 
   public logoff() {
     this.oauthService.logOut();
+    this.router.navigate(['/home']);
   }
 
   public get name() {

@@ -12,7 +12,6 @@ class UserListApi(Resource):
 
   def get(self):
     try:
-      self.log.info("Searching for users")
       lst = self.service.search(tenant_id=g.user.tenant_id)
       return lst
     except Exception as e:
