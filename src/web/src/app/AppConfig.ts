@@ -15,12 +15,13 @@ export class AppConfig {
   }
 
   static getBaseHost(): string {
-    let host = window.location.host,
-      port = window.location.port;
+    let host = window.location.hostname,
+      port = window.location.port,
+      scheme = window.location.protocol;
     if (AppConfig.isLocalEnv()) {
       return 'http://localhost:4000';
     } else {
-      return 'http://' + host + ':' + port;
+      return scheme + '//' + host + ':' + port;
     }
   }
 
