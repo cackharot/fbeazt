@@ -26,6 +26,10 @@ export class Order {
   status: string = OrderStatus.NEW;
   delivery_charges: number;
   total: number;
+  payment_type: string = 'cod';
+  payment_status: string;
+  payment_error_no: string;
+  payment_payuMoneyId: string;
 
   static of(data) {
     if (data && data.constructor.name !== Order.name) {
@@ -83,6 +87,16 @@ export class Order {
   isValid() {
     let hasClosedItems = this.items.filter(x => x.store.isClosed()).length > 0;
     return this.getSubTotal() > 0 && !hasClosedItems;
+  }
+
+  isPaymentValid(){
+    if(this.payment_type === 'cod'){
+      return true;
+    }
+    if(this.payment_type === 'payumoney'){
+      return ['success','failure'].indexOf(this.payment_status) > -1;
+    }
+    return false;
   }
 
   getItems(store_id = null) {

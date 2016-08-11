@@ -215,6 +215,10 @@ class OrderApi(Resource):
 
     valid_order['delivery_details'] = delivery_details
 
+    payment_type = order.get('payment_type', 'cod')
+    if payment_type not in ['cod','payumoney']:
+      return dict(status='error', type='validation', message="Invalid Payment choosen"), 422
+    valid_order['payment_type'] = payment_type
     _id = None
     try:
       pincode = valid_order['delivery_details']['pincode']

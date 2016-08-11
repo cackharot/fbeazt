@@ -34,5 +34,6 @@ export class OrderSuccessComponent implements OnInit {
     if(this.order.otp_status != 'VERIFIED'){
       console.error("Invalid order state!");
     }
+    console.log(this.order);
   }
 }

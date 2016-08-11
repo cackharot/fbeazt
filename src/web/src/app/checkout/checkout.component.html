@@ -152,8 +152,12 @@
           <div class="medium-12 columns">
             <h2><i class="fa fa-credit-card"></i> Payment Details</h2>
             <div class="callout primary">
-              <p>At the moment we accept only <b>Cash On Delivery</b></p>
-              <!--<p>Online transactions through Credit/Debit card and NetBanking coming soon...</p>-->
+              <input name="payment_type" type="radio" [(ngModel)]="order.payment_type" value="cod"/> Cash On Delivery<br/>
+              <input name="payment_type"  type="radio" [(ngModel)]="order.payment_type" value="payumoney"/> Credit/Debit Card, Net Banking<br/>
+              <div class="callout" *ngIf="order.payment_type=='payumoney'">
+                Note we will redirect you to PayUMoney payment gateway to do the online transaction.
+                After successfull transaction you will be redirect back to foodbeazt
+              </div>
             </div>
           </div>
       </div>
@@ -169,3 +173,8 @@
   </section>
   </form>
 </section>
+
+<form method="post" ngNoForm action="{{payment_url}}">
+  <input type="hidden" name="order_no" value="{{order.order_no}}" />
+  <input type="submit" class="hidden" #payubutton id="payubutton"/>
+</form>

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { ViewChild, ElementRef, Renderer } from '@angular/core';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { LocalStorage, SessionStorage } from "../libs/WebStorage";
 
@@ -8,23 +9,28 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 import { Product, Category } from '../model/product';
 import { Order, DeliveryDetails, LineItem } from '../model/order';
 
+import { AppConfig } from '../AppConfig';
+
 @Component({
   selector: 'checkout',
   templateUrl: './checkout.component.html',
   directives: [ROUTER_DIRECTIVES, SpinnerComponent],
 })
 export class CheckoutComponent implements OnInit {
+  @ViewChild('payubutton') onlinePaymentForm: ElementRef;
+  payment_url: string = AppConfig.ONLINE_PAYMENT_POST_URL;
   order: Order;
-  orderSuccess:boolean = false;
-  isRequesting:boolean = false;
-  @LocalStorage() canSaveDeliveryDetails:boolean = false;
-  @SessionStorage() availablePincodes: any[] =[];
-  error:any = null;
+  orderSuccess: boolean = false;
+  isRequesting: boolean = false;
+  @LocalStorage() canSaveDeliveryDetails: boolean = false;
+  @SessionStorage() availablePincodes: any[] = [];
+  error: any = null;
 
   constructor(private router: Router,
+    private renderer: Renderer,
     private orderService: OrderService) {
-    this.router.events.subscribe(x=>{
-      window.scroll(0,0);
+    this.router.events.subscribe(x => {
+      window.scroll(0, 0);
     });
   }
 
@@ -32,52 +38,64 @@ export class CheckoutComponent implements OnInit {
     this.order = this.orderService.getOrder();
     this.orderSuccess = this.order.isConfirmed();
     this.restoreDeliveryDetails();
-    if(this.order.order_no && this.order.order_no.length != 0){
-      this.navOrder();
-    }
     // this.fetchAvailablePincodes();
   }
 
-  private fetchAvailablePincodes(){
-    if(this.availablePincodes.length > 0){
+  ngAfterViewInit() {
+    if (this.order.order_no && this.order.order_no.length != 0) {
+      this.navOrder();
+    }
+  }
+
+  private fetchAvailablePincodes() {
+    if (this.availablePincodes.length > 0) {
       return;
     }
     this.orderService.fetchAvailablePincodes()
-    .then(x=>{
-      this.availablePincodes = x;
-    }).catch(e=>{console.log(e);});
+      .then(x => {
+        this.availablePincodes = x;
+      }).catch(e => { console.log(e); });
   }
 
-  resetOrder(){
+  resetOrder() {
     this.orderService.resetOrder();
     this.router.navigate(['home']);
   }
 
-  navOrder(){
-    if(this.order.isOtpSent() && this.order.isValid()){
+  navOrder() {
+    if (this.order.payment_type === 'payumoney'
+      && !this.order.isPaymentValid()) {
+      this.renderer.invokeElementMethod(
+        this.onlinePaymentForm.nativeElement,
+        'dispatchEvent',
+        [new MouseEvent('click', { bubbles: true })]
+      );
+      return;
+    }
+    if (this.order.isOtpSent() && this.order.isValid()) {
       this.router.navigate(['/otp']);
-    }else if(this.order.isConfirmed()){
+    } else if (this.order.isConfirmed()) {
       this.router.navigate(['/order_success']);
     }
   }
 
-  confirmOrder(){
+  confirmOrder() {
     this.saveDeliveryDetails();
-    if(this.order.items.length > 0){
+    if (this.order.items.length > 0) {
       this.isRequesting = true;
       this.orderService.confirmOrder()
         .then(updatedOrder => {
           this.order = updatedOrder;
           this.orderSuccess = true;
           this.error = null;
-          this.isRequesting = false;
           this.navOrder();
+          this.isRequesting = false;
         }, errorMsg => {
           this.orderSuccess = false;
           this.error = errorMsg;
           this.isRequesting = false;
         });
-    }else{
+    } else {
       this.error = "Invalid order";
     }
   }
@@ -86,38 +104,38 @@ export class CheckoutComponent implements OnInit {
     this.orderService.removeItem(item);
   }
 
-  changeQuantity(item: LineItem, value: number){
+  changeQuantity(item: LineItem, value: number) {
     this.orderService.updateQuantity(item, value);
   }
 
-  private saveDeliveryDetails(){
-    if(this.canSaveDeliveryDetails == false){
+  private saveDeliveryDetails() {
+    if (this.canSaveDeliveryDetails == false) {
       localStorage.setItem("delivery_details", null);
       return;
     }
-    try{
+    try {
       let value = JSON.stringify(this.order.delivery_details);
       localStorage.setItem("delivery_details", value);
-    }catch(e){
+    } catch (e) {
       console.log(e);
     }
   }
 
-  private restoreDeliveryDetails(){
-    if(this.canSaveDeliveryDetails == false){
+  private restoreDeliveryDetails() {
+    if (this.canSaveDeliveryDetails == false) {
       return;
     }
-    try{
+    try {
       let value = JSON.parse(localStorage.getItem("delivery_details"));
-      if(value && value.name){
+      if (value && value.name) {
         this.order.delivery_details = DeliveryDetails.of(value);
       }
-    }catch(e){
+    } catch (e) {
       console.log(e);
     }
   }
 
-  isEmpty(){
+  isEmpty() {
     return this.order && this.order.items.length == 0;
   }
 

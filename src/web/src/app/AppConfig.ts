@@ -10,8 +10,14 @@ export class AppConfig {
   static PINCODE_URL: string = AppConfig.BASE_URL + "/pincodes";
   static MY_ORDERS_URL: string = AppConfig.BASE_URL + "/my_orders";
 
+  static ONLINE_PAYMENT_POST_URL: string = AppConfig.getPaymentUrl();
+
   static getBaseUrl() {
     return AppConfig.getBaseHost() + "/api";
+  }
+
+  static getPaymentUrl() {
+    return AppConfig.isLocalEnv() ? 'http://localhost:4000/api/payment/order' : AppConfig.getBaseUrl() + '/payment/order';
   }
 
   static getBaseHost(): string {
