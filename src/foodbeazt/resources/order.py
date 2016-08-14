@@ -19,14 +19,20 @@ class TrackOrderApi(Resource):
   def __init__(self):
     self.log = logging.getLogger(__name__)
     self.service = OrderService(mongo.db)
+    self.storeService = StoreService(mongo.db)
 
   def get(self, order_no):
     if order_no is None or len(order_no) == 0:
       return {"status":"error","messag": "Invalid order number provided"}, 433
 
     try:
-      item = self.service.get_by_number(order_no)
-      return item, 200
+      order = self.service.get_by_number(order_no)
+      if order:
+        store_ids = [str(x['store_id']) for x in order['items']]
+        stores = self.storeService.search_by_ids(store_ids=store_ids)
+        for item in order['items']:
+          item['store'] = next((x for x in stores if x['_id'] == item['store_id']), None)
+      return order, 200
     except Exception as e:
       self.log.exception(e)
       return {"status":"error","message":"Error while finding the order"}, 434
@@ -167,19 +173,12 @@ class OrderApi(Resource):
   def verify_otp(self, data):
     order_id = data.get("order_id", None)
     otp = data.get("otp", None)
-    new_number = data.get("number", None)
     if otp is None or len(otp) < 3 or len(otp) > 10:
       return dict(status='error', message="Invalid OTP given"), 424
     try:
       order = self.service.get_by_id(order_id)
       if order is None or order['status'] == 'DELIVERED':
         return dict(status='error', message="Invalid Order id given. Order not found/delivered"), 425
-      if new_number is not None and len(new_number) != 0:
-        if len(new_number) != 10:
-          return dict(status='error', message="Invalid phone number!"), 426
-        else:
-          order['delivery_details']['phone'] = new_number
-          self.service.save(order)
 
       number = order['delivery_details'].get('phone')
       if self.smsService.update_otp(number, otp):
@@ -219,6 +218,8 @@ class OrderApi(Resource):
     if payment_type not in ['cod','payumoney']:
       return dict(status='error', type='validation', message="Invalid Payment choosen"), 422
     valid_order['payment_type'] = payment_type
+    if payment_type == 'cod':
+      valid_order['payment_status'] = 'success'
     _id = None
     try:
       pincode = valid_order['delivery_details']['pincode']
@@ -239,7 +240,7 @@ class OrderApi(Resource):
       return dict(status="error",
                   message="Oops! Error while trying to save order details! Please try again later"), 420
 
-    if valid_order['otp_status'] == 'VERIFIED':
+    if valid_order['otp_status'] == 'VERIFIED' and payment_type == 'cod':
       self.send_email(valid_order)
       self.send_sms(valid_order)
     return {"status": "success", "location": "/api/order/" + str(_id), "data": valid_order}
@@ -253,6 +254,8 @@ class OrderApi(Resource):
     return None, 204
 
   def send_otp(self, order):
+    if order['payment_type'] == 'cod':
+      return 'VERIFIED'
     if app.config['SEND_OTP'] == False:
       return 'VERIFIED'
     number = order['delivery_details'].get('phone')
@@ -265,38 +268,33 @@ class OrderApi(Resource):
 
   def send_sms(self, order):
     number = order['delivery_details'].get('phone')
-    track_link = "http://foodbeazt.in/track/%s" % (order['order_no'])
+    track_link = app.config['ORDER_TRACK_URL'] % (order['order_no'])
     message = order_created_sms_template.render(order=order,track_link=track_link)
     if app.config['SEND_SMS'] == False:
       self.log.info("DEV ** Sending SMS [%s] -> [%s]" % (number, message))
-    else:
-      try:
-        self.smsService.send(number, message)
-      except Exception as e:
-        self.log.exception(e)
+      return
+    try:
+      self.smsService.send(number, message)
+    except Exception as e:
+      self.log.exception(e)
 
   def send_email(self, order):
-    email = order['delivery_details'].get('email', None)
-    if email is None or len(email) <= 3:
-      return
-    if app.config.get('MAIL_SENDER',None) is None:
-      self.log.info("Invalid MAIL_SENDER configured. Not sending emails!!")
-      return
-
-    subject = "Order confirmation <%s>" % (order.get('order_no', '000'))
+    email = order['delivery_details']['email']
+    subject = "Order confirmation <%s>" % (order['order_no'])
     msg = Message(subject=subject,
                   reply_to=app.config['MAIL_REPLY_TO'],
                   charset='utf-8',
                   sender=(app.config['MAIL_SENDER_NAME'], app.config['MAIL_SENDER']),
                   recipients=[email])
     msg.html = order_created_template.render(order=order)
+
+    if app.config['SEND_MAIL'] == False:
+      self.log.info("DEV ** Sending email [%s] to %s" % (subject, email))
+      time.sleep(3)
+      return
     try:
-      if app.config['SEND_MAIL'] == False:
-        self.log.info("DEV ** Sending email [%s] to %s" % (subject, email))
-        time.sleep(3)
-      else:
-        self.log.info("Sending email [%s] to %s" % (subject, email))
-        mail.send(msg)
+      self.log.info("Sending email [%s] to %s" % (subject, email))
+      mail.send(msg)
     except Exception as e:
       self.log.exception(e)
 

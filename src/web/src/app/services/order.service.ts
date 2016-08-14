@@ -159,10 +159,28 @@ export class OrderService {
       .toPromise()
       .then(response => {
         let data = response.json();
-        let order = new Order(data);
+        let order = Order.of(data);
         if (!order.order_no || order.order_no.length == 0) {
           return null;
         }
+        return order;
+      })
+      .catch(this.handleError);
+  }
+
+  reloadOrder(): Promise<Order> {
+    let no = this.getOrder().order_no;
+    return this.http.get(`${AppConfig.TRACK_URL}/${no}`, {
+      headers: this.authHeaders()
+    })
+      .toPromise()
+      .then(response => {
+        let data = response.json();
+        let order = Order.of(data);
+        if (!order.order_no || order.order_no.length == 0) {
+          return null;
+        }
+        this.currentOrder = order;
         return order;
       })
       .catch(this.handleError);

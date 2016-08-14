@@ -112,7 +112,6 @@ def getUserMixin(user):
     tenant_id = user.get('tenant_id', None)
   else:
     tenant_id = unquote(tenant_id).replace('"', '')
-
   return User(user['_id'], tenant_id, user['name'], user['email'], user['roles'],
               user.get('tenant_id', None), user.get('identity', None))
 
@@ -125,7 +124,7 @@ def get_or_create_user(item):
   prev = service.get_by_email(email)
   if prev:
     return prev
-  print('Creating new user...')
+  self.log.info("Creating new user...[%s]" % email)
 
   tenant_id = default_tenantId()
 
@@ -174,16 +173,13 @@ def request_loader(request):
     return None
   user_mixin = None
   userService = UserService(mongo.db)
-  if session and session.get('identity.id', None) is not None:
+  authHeader =  request.headers.get('Authorization', None)
+  if authHeader and len(authHeader) > 0:
+    if authHeader.startswith('Bearer '):
+      user_mixin = login_via_google_token(authHeader.replace('Bearer ', ''))
+  if user_mixin is None and session and session.get('identity.id', None) is not None:
     userid = str(session['identity.id'])
     user_mixin = getUserMixin(userService.get_by_id(userid))
-
-  if user_mixin is None:
-    authHeader =  request.headers.get('Authorization', None)
-    if authHeader and len(authHeader) > 0:
-      if authHeader.startswith('Bearer '):
-        user_mixin = login_via_google_token(authHeader.replace('Bearer ', ''))
-
   if user_mixin:
     login_user(user_mixin)
     identity_changed.send(current_app._get_current_object(), identity=Identity(str(user_mixin.id)))

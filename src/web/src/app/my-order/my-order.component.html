@@ -30,7 +30,7 @@
             <th>Date</th>
             <th>#no</th>
             <th>Dishes</th>
-            <th>Pincode</th>
+            <th>Payment</th>
             <th class="text-right">Total</th>
             <th>Status</th>
           </tr>
@@ -47,7 +47,10 @@
               <td>{{order.created_at|datetime}}</td>
               <td>{{order.order_no}}</td>
               <td>{{order.items.length}}</td>
-              <td>{{order.delivery_details.pincode}}</td>
+              <td>
+                <span *ngIf="order.payment_type==='cod'">COD</span>
+                <span *ngIf="order.payment_type==='payumoney'">Online</span>
+              </td>
               <td class="text-right"><i class="rupee"></i>{{order.total}}</td>
               <td>{{order.status}}</td>
             </tr>
@@ -91,6 +94,9 @@
                         </tr>
                       </tfoot>
                     </table>
+                    <span *ngIf="order.payment_type==='payumoney'">
+                      Payment Status: {{order.payment_status.toUpperCase()}}
+                    </span>
                   </div>
                   <div class="medium-6 columns end">
                     <h4>Delivery details</h4>

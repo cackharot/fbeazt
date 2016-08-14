@@ -14,26 +14,35 @@ import { Order, DeliveryDetails, LineItem } from '../model/order';
 })
 export class OrderSuccessComponent implements OnInit {
   order: Order;
-  isRequesting:boolean = false;
-  error:any = null;
+  isRequesting: boolean = false;
+  error: any = null;
 
   constructor(private router: Router,
     private orderService: OrderService) {
-    this.router.events.subscribe(x=>{
-      window.scroll(0,0);
+    this.router.events.subscribe(x => {
+      window.scroll(0, 0);
     });
   }
 
   ngOnInit() {
-    this.order = this.orderService.getOrder();
-    if(this.order.order_no == null || this.order.order_no.length == 0){
-      console.error("Invalid order");
-      console.error(this.order);
-      this.router.navigate(['home']);
-    }
-    if(this.order.otp_status != 'VERIFIED'){
-      console.error("Invalid order state!");
-    }
-    console.log(this.order);
+    this.isRequesting = true;
+    this.orderService.reloadOrder()
+      .then(data => {
+        this.isRequesting = false;
+        this.order = data;
+        if (this.order === null || this.order.order_no === null || this.order.order_no.length === 0) {
+          console.error("Invalid order");
+          console.error(this.order);
+          this.router.navigate(['home']);
+        }
+        if (this.order.otp_status != 'VERIFIED') {
+          console.error("Invalid order state!");
+          this.router.navigate(['home']);
+        }
+      })
+      .catch(e => {
+        this.isRequesting = false;
+        this.error = e
+      });
   }
 }

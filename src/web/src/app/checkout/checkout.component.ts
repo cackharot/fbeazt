@@ -18,6 +18,7 @@ import { AppConfig } from '../AppConfig';
 })
 export class CheckoutComponent implements OnInit {
   @ViewChild('payubutton') onlinePaymentForm: ElementRef;
+  @ViewChild('ordernotxt') orderNoTxt: ElementRef;
   payment_url: string = AppConfig.ONLINE_PAYMENT_POST_URL;
   order: Order;
   orderSuccess: boolean = false;
@@ -38,6 +39,9 @@ export class CheckoutComponent implements OnInit {
     this.order = this.orderService.getOrder();
     this.orderSuccess = this.order.isConfirmed();
     this.restoreDeliveryDetails();
+    if (!this.onlinePaymentEnabled()) {
+      this.order.payment_type = 'cod';
+    }
     // this.fetchAvailablePincodes();
   }
 
@@ -63,8 +67,8 @@ export class CheckoutComponent implements OnInit {
   }
 
   navOrder() {
-    if (this.order.payment_type === 'payumoney'
-      && !this.order.isPaymentValid()) {
+    if (this.order.payment_type === 'payumoney' && !this.order.isPaymentValid()) {
+      this.orderNoTxt.nativeElement.value = this.order.order_no;
       this.renderer.invokeElementMethod(
         this.onlinePaymentForm.nativeElement,
         'dispatchEvent',
@@ -141,5 +145,9 @@ export class CheckoutComponent implements OnInit {
 
   goBack(id: string) {
     this.router.navigate([id]);
+  }
+
+  onlinePaymentEnabled() {
+    return AppConfig.ENABLE_PAYUMONEY;
   }
 }

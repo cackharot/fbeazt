@@ -151,7 +151,12 @@ export class Order {
   }
 
   isConfirmed() {
-    return this.order_no && this.order_no.length > 0 && this.otp_status === 'VERIFIED';
+    return this.order_no && this.order_no.length > 0 && this.otp_status === 'VERIFIED'
+     && (
+       (this.payment_type === 'payumoney' && this.payment_status === 'success')
+       ||
+       (this.payment_type === 'cod')
+     );
   }
 
   isOtpSent() {

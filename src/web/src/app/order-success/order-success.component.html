@@ -1,5 +1,11 @@
 <br/>
-<section class="order__success">
+<div class="row" *ngIf="isRequesting">
+  <div class="medium-12 columns">
+    <my-spinner [isRunning]="isRequesting" [message]="'Loading your order...Please wait'">
+    </my-spinner>
+  </div>
+</div>
+<section class="order__success" *ngIf="!isRequesting">
   <div class="row">
     <div class="medium-12 small-12 columns">
       <div class="callout success">

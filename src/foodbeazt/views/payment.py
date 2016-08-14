@@ -5,6 +5,8 @@ from service.OrderService import OrderService, DuplicateOrderException
 from foodbeazt.fapp import mongo, app
 import logging
 
+from resources.order import OrderApi
+
 class PaymentRedirectView(View):
   methods = ['POST']
 
@@ -105,6 +107,7 @@ class PaymentSuccessView(View):
     self.config_payu_base_url = app.config['PAYUMONEY_BASE_URL']
     self.payment_success_url = app.config['PAYMENT_SUCCESS_UI_URL']
     self.payment_failure_url = app.config['PAYMENT_FAILURE_UI_URL']
+    self.orderView = OrderApi()
 
   def dispatch_request(self):
     c = {}
@@ -149,6 +152,8 @@ class PaymentSuccessView(View):
       order['payment_additional_charges'] = additionalCharges
       if status == 'success':
         redirect_url = self.payment_success_url
+        self.orderView.send_email(order)
+        self.orderView.send_sms(order)
     # print(order)
     try:
       self.service.save(order)
@@ -165,4 +170,7 @@ class PaymentWebHookView(View):
     self.service = OrderService(mongo.db)
 
   def dispatch_request(self):
+    print("^"*32)
+    print(request.form)
+    self.log.info(request.form)
     return None, 204

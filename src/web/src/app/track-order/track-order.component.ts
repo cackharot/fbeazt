@@ -17,48 +17,48 @@ import { Order, OrderStatus, DeliveryDetails, LineItem } from '../model/order';
   pipes: [DateTimePipe],
 })
 export class TrackOrderComponent implements OnInit, OnDestroy {
-  @SessionStorage() orderNo:string='';
+  @SessionStorage() orderNo: string = '';
   order: Order;
-  isRequesting:boolean = false;
-  submitted:boolean = false;
-  errorMsg:string;
+  isRequesting: boolean = false;
+  submitted: boolean = false;
+  errorMsg: string;
   private sub: any;
 
-  constructor(private orderService:OrderService,
-              private router: Router,
-              private route: ActivatedRoute){
-    this.router.events.subscribe(x=>{
-      window.scroll(0,0);
+  constructor(private orderService: OrderService,
+    private router: Router,
+    private route: ActivatedRoute) {
+    this.router.events.subscribe(x => {
+      window.scroll(0, 0);
     });
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-        this.orderNo = (params['order_no'] || '').trim();
-        this.searchOrder();
-      });
+      this.orderNo = (params['order_no'] || '').trim();
+      this.searchOrder();
+    });
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
 
-  searchOrder(){
-    if(this.orderNo.length == 0){
+  searchOrder() {
+    if (this.orderNo.length == 0) {
       this.order = null;
       return;
     }
 
-    this.isRequesting=true;
-    this.submitted=true;
+    this.isRequesting = true;
+    this.submitted = true;
     this.orderService.loadOrder(this.orderNo)
-      .then(x=>{
+      .then(x => {
         this.order = x;
-        this.isRequesting=false;
+        this.isRequesting = false;
       })
-      .catch(errorMsg=>{
-        this.errorMsg=errorMsg
-        this.isRequesting=false;
+      .catch(errorMsg => {
+        this.errorMsg = errorMsg
+        this.isRequesting = false;
       });
   }
 }

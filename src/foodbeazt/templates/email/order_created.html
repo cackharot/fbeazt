@@ -295,7 +295,10 @@
                                                       <tbody>
                                                         <tr style="padding: 0; text-align: left; vertical-align: top;">
                                                           <th style="Margin: 0; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; padding: 0; text-align: left;">
-                                                            <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;"> <strong>Payment Method</strong><br> Cash On Delivery </p>
+                                                            <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;"> <strong>Payment Method</strong><br>
+                                                            {% if order['payment_type'] == 'cod' %}Cash On Delivery{%endif%}
+                                                            {% if order['payment_type'] == 'payumoney' %}Online via PayUMoney{%endif%}
+                                                            </p>
                                                             <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;"> <strong>Email Address</strong><br> {{order['delivery_details']['email']}} </p>
                                                             <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;"> <strong>Order ID</strong><br> {{order['order_no']}} </p>
                                                           </th>
