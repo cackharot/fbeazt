@@ -24,26 +24,27 @@ export class RestaurantComponent implements OnInit {
     this.router.events.subscribe(x => {
       window.scroll(0, 0);
     });
+    this.searchData.page_size = 10;
   }
 
   ngOnInit() {
-    this.searchData.page_size = 10;
     this.search();
   }
 
   search(searchUrl: string = null) {
     this.isRequesting = true;
-    this.storeService.search(searchUrl, this.searchData).then(x => {
-      this.errorMsg = null;
-      this.responseData = x;
-      this.restaurants = x.items;
-      this.isRequesting = false;
-    }).catch(errMsg => {
-      this.errorMsg = errMsg;
-      this.restaurants = [];
-      this.responseData = new StoreSearchResponse();
-      this.isRequesting = false;
-    });
+    this.storeService.search(searchUrl, this.searchData)
+      .then(x => {
+        this.errorMsg = null;
+        this.responseData = x;
+        this.restaurants = x.items;
+        this.isRequesting = false;
+      }).catch(errMsg => {
+        this.errorMsg = errMsg;
+        this.restaurants = [];
+        this.responseData = new StoreSearchResponse();
+        this.isRequesting = false;
+      });
   }
 
   isEmpty() {

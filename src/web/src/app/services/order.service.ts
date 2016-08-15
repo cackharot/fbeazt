@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject }    from 'rxjs/Subject';
-import { Headers, Http } from '@angular/http';
+import { Headers, URLSearchParams, Http } from '@angular/http';
 import { LocalStorage, SessionStorage } from "../libs/WebStorage";
 import * as _ from "lodash";
 
@@ -10,6 +10,39 @@ import { Order, PincodeDetail, LineItem, DeliveryDetails } from '../model/order'
 import { AppConfig } from '../AppConfig';
 
 import { OAuthService } from 'angular2-oauth2/oauth-service';
+
+export class MyOrderSearchModel {
+  page_no: number = 1;
+  page_size: number = 10;
+
+  toUrlSearchParams(): URLSearchParams {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('page_no', this.page_no.toString());
+    params.set('page_size', this.page_size.toString());
+    return params;
+  }
+}
+
+export class MyOrderSearchResult extends MyOrderSearchModel {
+  items: Order[];
+  total: number;
+  next: string;
+  previous: string;
+
+  constructor(data = {}) {
+    super();
+    Object.assign(this, data);
+    this.items = this.items.map(x => Order.of(x));
+  }
+
+  static of(data) {
+    if (data === null || data.constructor.name === MyOrderSearchResult.name) {
+      return data;
+    }
+    return new MyOrderSearchResult(data);
+  }
+
+}
 
 @Injectable()
 export class OrderService {
@@ -199,14 +232,23 @@ export class OrderService {
       .catch(this.handleError);
   }
 
-  public getMyOrders(): Promise<Order[]> {
-    return this.http.get(`${AppConfig.MY_ORDERS_URL}`, {
+  public getMyOrders(searchUrl: string, searchData: MyOrderSearchModel): Promise<MyOrderSearchResult> {
+    let headers = {
       headers: this.authHeaders()
-    })
+    };
+    if (searchUrl === null || searchUrl.length === 0) {
+      searchUrl = AppConfig.MY_ORDERS_URL;
+      headers['search'] = searchData.toUrlSearchParams();
+    } else {
+      searchUrl = AppConfig.getBaseHost() + searchUrl;
+    }
+
+    return this.http.get(searchUrl, headers)
       .toPromise()
       .then(response => {
         let data = response.json();
-        return data.items.map(x => Order.of(x));
+        let result = MyOrderSearchResult.of(data);
+        return result;
       })
       .catch(this.handleError);
   }

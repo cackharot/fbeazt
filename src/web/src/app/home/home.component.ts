@@ -87,6 +87,7 @@ export class HomeComponent implements OnInit {
     this.storeSearchData.searchText = this.searchText;
     this.storeSearchData.onlyVeg = this.onlyVeg;
     this.storeSearchData.onlyOpen = this.onlyOpen;
+    this.storeSearchData.page_size = 10;
   }
 
   searchProducts() {

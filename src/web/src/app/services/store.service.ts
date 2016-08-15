@@ -91,7 +91,6 @@ export class StoreService {
       .then(response => {
         let data = response.json();
         let result = StoreSearchResponse.of(data);
-        console.log(result);
         return result;
       })
       .catch(this.handleError);

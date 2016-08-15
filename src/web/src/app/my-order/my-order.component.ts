@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
 
-import { OrderService } from '../services/order.service';
+import { MyOrderSearchModel, OrderService } from '../services/order.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
 
 import { DateTimePipe } from '../pipes/datetime.pipe';
@@ -19,24 +19,28 @@ export class MyOrderComponent implements OnInit {
   errorMsg: string;
   orders: Order[] = [];
   showMap: any = {};
+  responseData: MyOrderSearchModel = new MyOrderSearchModel();
 
   constructor(private orderService: OrderService,
-              private router: Router,
-              private route: ActivatedRoute) {
+    private router: Router,
+    private route: ActivatedRoute) {
     this.router.events.subscribe(x => {
       window.scroll(0, 0);
     });
   }
 
   ngOnInit() {
-    this.searchOrder();
+    this.search();
   }
 
-  searchOrder() {
+  search(searchUrl: string = null) {
     this.isRequesting = true;
-    this.orderService.getMyOrders()
+    let searchData = new MyOrderSearchModel();
+    searchData.page_size = 5;
+    this.orderService.getMyOrders(searchUrl, searchData)
       .then(x => {
-        this.orders = x;
+        this.responseData = x;
+        this.orders = x.items;
         this.isRequesting = false;
         this.errorMsg = null;
       })
