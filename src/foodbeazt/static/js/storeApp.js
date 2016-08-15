@@ -5,7 +5,7 @@ storeApp.controller('storeListCtrl', function($scope,$http){
 
 	$scope.reloadStore = function(){
         $http.get('/api/stores').success(function(d){
-            $scope.stores = d
+            $scope.stores = d.items;
         }).error(function(e){
             alert(e)
         })
@@ -27,7 +27,7 @@ storeApp.controller('storeListCtrl', function($scope,$http){
 
 storeApp.controller('storeDetailCtrl', function($scope, $routeParams, $location, $http){
 	var id = $routeParams.id || -1;
-	
+
 	$scope.model = {}
     $scope.food_types = [{'id': 'veg', 'text': 'Vegetarian'},
                         {'id': 'non-veg', 'text': 'Non-Vegetarian'}]
