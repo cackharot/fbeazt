@@ -6,8 +6,8 @@ export class FeatureService {
   public static GOOGLE_LOGIN = "googleLogin";
 
   private static config: any = {
-    onlinePayment: true,
-    googleLogin: true,
+    onlinePayment: false,
+    googleLogin: false,
   };
 
   public isEnabled(key: string): boolean {

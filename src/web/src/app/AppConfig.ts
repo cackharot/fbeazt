@@ -1,5 +1,4 @@
 export class AppConfig {
-  static ENABLE_PAYUMONEY = true;
   static BASE_URL: string = AppConfig.getBaseUrl();
   static STORES_URL: string = AppConfig.BASE_URL + '/stores';
   static STORE_URL: string = AppConfig.BASE_URL + '/store';
