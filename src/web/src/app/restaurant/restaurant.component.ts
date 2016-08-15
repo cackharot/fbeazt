@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { Restaurant } from '../model/restaurant';
-import { StoreSearchModel, StoreService } from '../services/store.service';
+import { StoreSearchModel, StoreSearchResponse, StoreService } from '../services/store.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
@@ -14,26 +14,34 @@ export class RestaurantComponent implements OnInit {
   @Input() restaurants: Restaurant[];
   @Input() doNotLoad: boolean = false;
   @Input() searchData: StoreSearchModel = new StoreSearchModel();
+  responseData: StoreSearchResponse;
   selectedRestaurant: Restaurant;
   errorMsg: string = null;
   isRequesting: boolean = false;
 
   constructor(private router: Router,
-    private storeService: StoreService) { }
-
-  ngOnInit() {
-    this.searchData.pageSize = 10;
-    this.searchRestaurants();
+    private storeService: StoreService) {
+    this.router.events.subscribe(x => {
+      window.scroll(0, 0);
+    });
   }
 
-  searchRestaurants() {
+  ngOnInit() {
+    this.searchData.page_size = 10;
+    this.search();
+  }
+
+  search(searchUrl: string = null) {
     this.isRequesting = true;
-    this.storeService.search(this.searchData).then(x => {
+    this.storeService.search(searchUrl, this.searchData).then(x => {
       this.errorMsg = null;
-      this.restaurants = x;
+      this.responseData = x;
+      this.restaurants = x.items;
       this.isRequesting = false;
     }).catch(errMsg => {
       this.errorMsg = errMsg;
+      this.restaurants = [];
+      this.responseData = new StoreSearchResponse();
       this.isRequesting = false;
     });
   }

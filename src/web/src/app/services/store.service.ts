@@ -12,27 +12,49 @@ export class StoreSearchModel {
   onlyOpen: boolean = false;
   userPincode: number;
   userLocation: string;
-  sortBy: string = 'Rating';
-  sortDirection: string = 'ASC';
-  pageNo: number = 1;
-  pageSize: number = 100;
+  sort_by: string = 'Rating';
+  sort_direction: string = 'ASC';
+  page_no: number = 1;
+  page_size: number = 100;
   store_ids: string[];
 
   constructor(searchText: string = '',
-              onlyVeg: boolean = false,
-              onlyOpen: boolean = false,
-              userLocation: string = '',
-              userPincode: string = '',
-              pageNo: number = 1,
-              pageSize: number = 100) {
+    onlyVeg: boolean = false,
+    onlyOpen: boolean = false,
+    userLocation: string = '',
+    userPincode: string = '',
+    page_no: number = 1,
+    page_size: number = 100) {
     this.searchText = searchText;
     this.onlyVeg = onlyVeg;
     this.onlyOpen = onlyOpen;
     this.userLocation = userLocation;
     this.userPincode = +userPincode;
-    this.pageNo = pageNo;
-    this.pageSize = pageSize;
+    this.page_no = page_no;
+    this.page_size = page_size;
     this.store_ids = [];
+  }
+}
+
+export class StoreSearchResponse extends StoreSearchModel {
+  items: Restaurant[] = [];
+  total: number;
+  previous: string;
+  next: string;
+
+  static of(data) {
+    if (data === null || data.constructor.name === StoreSearchResponse.name) {
+      return data;
+    }
+    return new StoreSearchResponse(data);
+  }
+
+  constructor(data = {}) {
+    super();
+    Object.assign(this, data);
+    if(this.items && this.items.length > 0){
+      this.items = this.items.map(x => Restaurant.of(x));
+    }
   }
 }
 
@@ -43,7 +65,7 @@ export class StoreService {
 
   constructor(private http: Http) { }
 
-  search(data: StoreSearchModel): Promise<Restaurant[]> {
+  search(searchUrl: string, data: StoreSearchModel): Promise<StoreSearchResponse> {
     let params: URLSearchParams = new URLSearchParams();
     params.set('filter_text', data.searchText);
     params.set('store_ids', data.store_ids.join(','));
@@ -51,15 +73,26 @@ export class StoreService {
     params.set('only_open', data.onlyOpen.toString());
     params.set('user_location', data.userLocation);
     params.set('user_pincode', data.userPincode.toString());
-    params.set('sort_by', data.sortBy);
-    params.set('sort_direction', data.sortDirection);
-    params.set('page_no', data.pageNo.toString());
-    params.set('page_size', data.pageSize.toString());
+    params.set('sort_by', data.sort_by);
+    params.set('sort_direction', data.sort_direction);
+    params.set('page_no', data.page_no.toString());
+    params.set('page_size', data.page_size.toString());
 
-    return this.http.get(this.storesUrl, { search: params })
+    if(!searchUrl || searchUrl.length === 0){
+      searchUrl = this.storesUrl;
+    }
+
+    if(!searchUrl.startsWith("http")) {
+      searchUrl = AppConfig.getBaseHost() + searchUrl;
+    }
+
+    return this.http.get(searchUrl, { search: params })
       .toPromise()
       .then(response => {
-        return response.json().map(x => Restaurant.of(x));
+        let data = response.json();
+        let result = StoreSearchResponse.of(data);
+        console.log(result);
+        return result;
       })
       .catch(this.handleError);
   }

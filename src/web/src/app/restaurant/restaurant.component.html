@@ -60,4 +60,16 @@
       </div>
     </div>
   </div>
+  <div *ngIf="responseData.total > 0" class="pagination__container">
+    <div class="pagination previous" [class.disabled]="!responseData.previous">
+      <a (click)="responseData.previous && search(responseData.previous)">
+        <i class="fa fa-angle-left"></i>
+      </a>
+    </div>
+    <div class="pagination next" [class.disabled]="!responseData.next">
+      <a (click)="responseData.next && search(responseData.next)">
+        <i class="fa fa-angle-right"></i>
+      </a>
+    </div>
+  </div>
 </div>

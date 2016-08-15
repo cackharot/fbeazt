@@ -23,14 +23,26 @@ class StoreListApi(Resource):
     user_location = request.args.get('user_location', None)
 
     try:
-      lst, count = self.service.search(
+      items, total = self.service.search(
           tenant_id=tenant_id,
           filter_text=filter_text,
           only_veg=only_veg,
           only_open=only_open,
           page_no=page_no,
           page_size=page_size)
-      return lst
+
+      offset = page_no*page_size
+      result = {'items': items, 'total': total,
+                "filter_text": filter_text,
+                "page_no": page_no,
+                "page_size": page_size}
+      url = "/api/stores?page_no=%d&page_size=%d&filter_text=%s&only_veg=%s&only_open=%s"
+      if total > offset:
+        result["next"] =  url % (page_no+1,page_size,filter_text,only_veg,only_open)
+      if page_no > 1:
+        result["previous"] = url % (page_no-1,page_size,filter_text,only_veg,only_open)
+
+      return result
     except Exception as e:
       self.log.exception(e)
       return {"status": "error", "message": "Error on searching retaurants"}, 460

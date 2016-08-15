@@ -770,3 +770,50 @@ ul.faq{
 input.hidden{
   display: none;
 }
+
+.pagination__container {
+  text-align: right;
+  padding-right: 1em;
+  padding-bottom: 1em;
+  display: table;
+  margin-left: auto;
+
+  .pagination {
+    display: table-cell;
+    background: #f3f3f3;
+    border: 1px solid #e1e1e1;
+    color: $dark_color;
+    @include border-radius(20px);
+    font-weight: bolder;
+    font-size: 18px;
+
+    &:hover{
+      background: #2b303b;
+      color: $light_color;
+    }
+
+    a{
+      color: inherit;
+      padding: 4px 10px;
+      &:hover{
+        background: none;
+      }
+    }
+
+    &.next{
+      border-left: none;
+      @include border-radius(0px 20px 20px 0px);
+    }
+    &.previous{
+      border-right: none;
+      @include border-radius(20px 0 0 20px);
+    }
+
+    &.disabled {
+      color: $light_color;
+      &:hover{
+        background: #f3f3f3;
+      }
+    }
+  }
+}
