@@ -1,30 +1,30 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams, Headers, Http } from '@angular/http';
+import { URLSearchParams, Http } from '@angular/http';
 
 import { Restaurant } from '../model/restaurant';
 import { AppConfig } from '../AppConfig';
 
 import 'rxjs/add/operator/toPromise';
 
-export class StoreSearchModel{
-  searchText:string;
-  onlyVeg:boolean=false;
-  onlyOpen:boolean=false;
-  userPincode:number;
-  userLocation:string;
-  sortBy:string = 'Rating';
-  sortDirection:string = 'ASC';
-  pageNo:number = 1;
-  pageSize:number = 100;
-  store_ids:string[];
+export class StoreSearchModel {
+  searchText: string;
+  onlyVeg: boolean = false;
+  onlyOpen: boolean = false;
+  userPincode: number;
+  userLocation: string;
+  sortBy: string = 'Rating';
+  sortDirection: string = 'ASC';
+  pageNo: number = 1;
+  pageSize: number = 100;
+  store_ids: string[];
 
-  constructor(searchText:string=null,
-        onlyVeg:boolean = false,
-        onlyOpen:boolean = false,
-        userLocation:string = '',
-        userPincode:string = '',
-        pageNo:number = 1,
-        pageSize:number = 100){
+  constructor(searchText: string = null,
+              onlyVeg: boolean = false,
+              onlyOpen: boolean = false,
+              userLocation: string = '',
+              userPincode: string = '',
+              pageNo: number = 1,
+              pageSize: number = 100) {
     this.searchText = searchText;
     this.onlyVeg = onlyVeg;
     this.onlyOpen = onlyOpen;
@@ -43,7 +43,7 @@ export class StoreService {
 
   constructor(private http: Http) { }
 
-  search(data:StoreSearchModel): Promise<Restaurant[]> {
+  search(data: StoreSearchModel): Promise<Restaurant[]> {
     let params: URLSearchParams = new URLSearchParams();
     params.set('filter_text', data.searchText);
     params.set('store_ids', data.store_ids.join(','));
@@ -56,19 +56,19 @@ export class StoreService {
     params.set('page_no', data.pageNo.toString());
     params.set('page_size', data.pageSize.toString());
 
-    return this.http.get(this.storesUrl,{search: params})
-               .toPromise()
-               .then(response =>{
-                 return response.json().map(x => new Restaurant(x));
-               })
-               .catch(this.handleError);
+    return this.http.get(this.storesUrl, { search: params })
+      .toPromise()
+      .then(response => {
+        return response.json().map(x => new Restaurant(x));
+      })
+      .catch(this.handleError);
   }
 
   get(id): Promise<Restaurant> {
     return this.http.get(`${this.storeUrl}/${id}`)
-               .toPromise()
-               .then(response => new Restaurant(response.json()))
-               .catch(this.handleError);
+      .toPromise()
+      .then(response => new Restaurant(response.json()))
+      .catch(this.handleError);
   }
 
   private handleError(error: any) {

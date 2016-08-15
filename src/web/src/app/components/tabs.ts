@@ -1,6 +1,6 @@
-import {Component, ViewChild, ContentChild, OnInit,
-  ContentChildren, QueryList, Query, Directive, forwardRef,
-  AfterViewInit, AfterContentInit} from '@angular/core';
+import {Component,
+  ContentChildren, QueryList,
+  forwardRef, AfterContentInit} from '@angular/core';
 
 import { Tab } from './tab';
 
@@ -15,41 +15,40 @@ import { Tab } from './tab';
     <div class="tabs-content">
       <ng-content></ng-content>
     </div>
-  `,
+  `
 })
-export class Tabs implements AfterContentInit, OnInit {
+export class Tabs implements AfterContentInit {
   @ContentChildren(forwardRef(() => Tab)) tabs: QueryList<Tab>;
-
-  ngOnInit(){
-  }
 
   // contentChildren are set
   ngAfterContentInit() {
-    var that = this;
-    this.tabs.changes.subscribe(x=>{
-      window.setTimeout(function(){
-        if(that.tabs.length>0){
-          that.initTabs();
-        }
-      }, 200);
+    let that = this;
+    this.tabs.changes.subscribe(x => {
+      window.setTimeout(
+        function () {
+          if (that.tabs.length > 0) {
+            that.initTabs();
+          }
+        },
+        200);
     });
   }
 
-  initTabs(){
+  initTabs() {
     // get all active tabs
-    let activeTabs = this.tabs.filter((tab)=>tab.active);
+    let activeTabs = this.tabs.filter((tab) => tab.active);
 
     // if there is no active tab set, activate the first
-    if(activeTabs.length === 0) {
+    if (activeTabs.length === 0) {
       this.selectTab(this.tabs.first, null);
     }
   }
 
   selectTab(tab: Tab, event: any) {
-    if(event){
+    if (event) {
       event.preventDefault();
     }
-    if(tab === undefined || tab.active === true){
+    if (tab === undefined || tab.active === true) {
       return;
     }
     this.tabs.toArray().forEach((x) => {

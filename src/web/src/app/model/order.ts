@@ -1,15 +1,15 @@
-import { ObjectId, Date } from "./base";
-import { Restaurant } from "./restaurant";
-import * as _ from "lodash";
+import { ObjectId, Date } from './base';
+import { Restaurant } from './restaurant';
+import * as _ from 'lodash';
 
 export class OrderStatus {
-  static NEW = "NEW";
-  static CONFIRMED = "CONFIRMED";
-  static PREPARING = "PREPARING";
-  static PROGRESS = "PROGRESS";
-  static DELIVERED = "DELIVERED";
-  static CANCELLED = "CANCELLED";
-  static INVALID = "INVALID";
+  static NEW = 'NEW';
+  static CONFIRMED = 'CONFIRMED';
+  static PREPARING = 'PREPARING';
+  static PROGRESS = 'PROGRESS';
+  static DELIVERED = 'DELIVERED';
+  static CANCELLED = 'CANCELLED';
+  static INVALID = 'INVALID';
 }
 
 export class Order {
@@ -63,7 +63,7 @@ export class Order {
     if (idx !== -1) {
       this.items.splice(idx, 1);
     } else {
-      console.log("Invalid item given to remove!");
+      console.log('Invalid item given to remove!');
     }
   }
 
@@ -72,29 +72,17 @@ export class Order {
     return stores;
   }
 
-  private getUnique(data: any[]) {
-    var unique = {};
-    var distinct = [];
-    data.forEach(function (x) {
-      if (!unique[x._id.$oid]) {
-        distinct.push(x);
-        unique[x._id.$oid] = true;
-      }
-    });
-    return distinct;
-  }
-
   isValid() {
     let hasClosedItems = this.items.filter(x => x.store.isClosed()).length > 0;
     return this.getSubTotal() > 0 && !hasClosedItems;
   }
 
-  isPaymentValid(){
-    if(this.payment_type === 'cod'){
+  isPaymentValid() {
+    if (this.payment_type === 'cod') {
       return true;
     }
-    if(this.payment_type === 'payumoney'){
-      return ['success','failure'].indexOf(this.payment_status) > -1;
+    if (this.payment_type === 'payumoney') {
+      return ['success', 'failure'].indexOf(this.payment_status) > -1;
     }
     return false;
   }
@@ -152,11 +140,11 @@ export class Order {
 
   isConfirmed() {
     return this.order_no && this.order_no.length > 0 && this.otp_status === 'VERIFIED'
-     && (
-       (this.payment_type === 'payumoney' && this.payment_status === 'success')
-       ||
-       (this.payment_type === 'cod')
-     );
+      && (
+        (this.payment_type === 'payumoney' && this.payment_status === 'success')
+        ||
+        (this.payment_type === 'cod')
+      );
   }
 
   isOtpSent() {
@@ -186,6 +174,18 @@ export class Order {
   getHash() {
     let i = (this.items.length * 32 + this.getTotalAmount() * 32) << 2;
     return i.toString();
+  }
+
+  private getUnique(data: any[]) {
+    let unique = {};
+    let distinct = [];
+    data.forEach(function (x) {
+      if (!unique[x._id.$oid]) {
+        distinct.push(x);
+        unique[x._id.$oid] = true;
+      }
+    });
+    return distinct;
   }
 }
 

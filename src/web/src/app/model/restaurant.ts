@@ -1,5 +1,5 @@
-import { ObjectId, Date } from "./base";
-import * as moment from "moment";
+import { ObjectId, Date } from './base';
+import * as moment from 'moment';
 
 export class Restaurant {
   _id: ObjectId = new ObjectId();
@@ -19,7 +19,7 @@ export class Restaurant {
   status: boolean;
 
   static of(data) {
-    if(data && data.constructor.name !== Restaurant.name) {
+    if (data && data.constructor.name !== Restaurant.name) {
       return new Restaurant(data);
     }
     return data;
