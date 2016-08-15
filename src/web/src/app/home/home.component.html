@@ -58,7 +58,7 @@
     </div>
   </div>
 </section>
-<section class="row" *ngIf="isRequesting">
+<section class="row" *ngIf="(searchText == null || searchText.length == 0) && isRequesting">
   <div class="medium-12 columns">
     <my-spinner [isRunning]="isRequesting"></my-spinner>
   </div>
@@ -75,7 +75,7 @@
     </ul>
     <div class="tabs-content">
       <div class="content" *ngIf="activeTab =='Restaurant'">
-        <restaurants [restaurants]="restaurants"></restaurants>
+        <restaurants [doNotLoad]="true" [searchData]="storeSearchData"></restaurants>
       </div>
       <div class="content" *ngIf="activeTab =='Product'">
         <product-list [products]="products" (selectedProduct)="addToCart($event)"></product-list>

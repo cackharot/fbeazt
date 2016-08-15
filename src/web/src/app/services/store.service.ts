@@ -18,7 +18,7 @@ export class StoreSearchModel {
   pageSize: number = 100;
   store_ids: string[];
 
-  constructor(searchText: string = null,
+  constructor(searchText: string = '',
               onlyVeg: boolean = false,
               onlyOpen: boolean = false,
               userLocation: string = '',
@@ -59,7 +59,7 @@ export class StoreService {
     return this.http.get(this.storesUrl, { search: params })
       .toPromise()
       .then(response => {
-        return response.json().map(x => new Restaurant(x));
+        return response.json().map(x => Restaurant.of(x));
       })
       .catch(this.handleError);
   }
@@ -67,7 +67,7 @@ export class StoreService {
   get(id): Promise<Restaurant> {
     return this.http.get(`${this.storeUrl}/${id}`)
       .toPromise()
-      .then(response => new Restaurant(response.json()))
+      .then(response => Restaurant.of(response.json()))
       .catch(this.handleError);
   }
 

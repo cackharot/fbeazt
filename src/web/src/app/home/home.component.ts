@@ -39,9 +39,9 @@ export class HomeComponent implements OnInit {
   @SessionStorage() onlyVeg: boolean = false;
   @SessionStorage() onlyOpen: boolean = false;
   @SessionStorage() activeTab: string = 'Restaurant';
+  storeSearchData: StoreSearchModel = new StoreSearchModel();
   searchCtrl: Control = new Control('');
   isRequesting: boolean = false;
-  restaurants: Restaurant[];
   products: Product[];
   popular_dishes: Product[] = [];
   errorMsg: string;
@@ -61,7 +61,7 @@ export class HomeComponent implements OnInit {
       .debounceTime(400)
       .distinctUntilChanged()
       .subscribe(term => {
-        this.searchText = term ? term.trim() : "";
+        this.searchText = term ? term.trim() : '';
         this.search();
       });
     let order = this.orderService.getOrder();
@@ -71,7 +71,7 @@ export class HomeComponent implements OnInit {
   }
 
   search() {
-    if (this.searchText == null || this.searchText.length == 0) {
+    if (this.searchText === null || this.searchText.length === 0) {
       this.searchPopularDishes();
       return;
     }
@@ -84,23 +84,9 @@ export class HomeComponent implements OnInit {
   }
 
   searchRestaurants() {
-    let searchData = new StoreSearchModel(
-      this.searchText,
-      this.onlyVeg,
-      this.onlyOpen,
-      this.userLocation,
-      this.userPincode);
-    this.storeService.search(searchData).then(x => {
-      this.errorMsg = null;
-      this.restaurants = x;
-      if (x && x.length > 0) {
-        this.activeTab = 'Restaurant';
-      }
-    })
-      .catch(errMsg => {
-        this.errorMsg = errMsg;
-        this.isRequesting = false;
-      });
+    this.storeSearchData.searchText = this.searchText;
+    this.storeSearchData.onlyVeg = this.onlyVeg;
+    this.storeSearchData.onlyOpen = this.onlyOpen;
   }
 
   searchProducts() {
@@ -108,9 +94,6 @@ export class HomeComponent implements OnInit {
       .then(x => {
         this.errorMsg = null;
         this.products = x;
-        if (x && x.length > 0 && this.restaurants.length == 0) {
-          this.activeTab = 'Product';
-        }
         this.isRequesting = false;
       })
       .catch(errMsg => {

@@ -1,8 +1,18 @@
-<div class="callout warning" *ngIf="isEmpty()">
+<div class="row content__container" *ngIf="!doNotLoad">
+  <div class="medium-12 columns">
+    <h2>Restaurants</h2>
+  </div>
+</div>
+<section class="row" *ngIf="isRequesting">
+  <div class="medium-12 columns">
+    <my-spinner [isRunning]="isRequesting"></my-spinner>
+  </div>
+</section>
+<div class="callout warning" *ngIf="isEmpty() && !isRequesting">
   <h3>Oops! No restaurants found</h3>
   <p>You might have misspelled or try again!</p>
 </div>
-<div class="restaurants" *ngIf="!isEmpty()">
+<div class="restaurants" *ngIf="!isEmpty() && !isRequesting">
   <div class="row" *ngFor="let restaurant of restaurants"
   [class.selected]="restaurant === selectedRestaurant">
     <div class="medium-3 columns show-for-medium">

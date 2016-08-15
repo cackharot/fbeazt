@@ -20,15 +20,15 @@ import { ChunkPipe } from '../pipes/chunk.pipe';
   selector: 'restaurant-detail',
   templateUrl: './restaurant-detail.component.html',
   directives: [Tabs, Tab, ROUTER_DIRECTIVES, SpinnerComponent, ProductListComponent],
-  pipes: [ChunkPipe],
+  pipes: [ChunkPipe]
 })
 export class RestaurantDetailComponent implements OnInit {
   storeId: string;
   restaurant: Restaurant;
   categories: Category[];
   products: Product[];
-  onlyVeg:boolean = false;
-  isRequesting:boolean = false;
+  onlyVeg: boolean = false;
+  isRequesting: boolean = false;
   errorMsg: any;
 
   constructor(private router: Router,
@@ -36,8 +36,8 @@ export class RestaurantDetailComponent implements OnInit {
     private productService: ProductService,
     private orderService: OrderService,
     private route: ActivatedRoute) {
-    this.router.events.subscribe(x=>{
-      window.scroll(0,0);
+    this.router.events.subscribe(x => {
+      window.scroll(0, 0);
     });
   }
 
@@ -45,39 +45,42 @@ export class RestaurantDetailComponent implements OnInit {
     let id = this.route.snapshot.params['id'];
     this.storeId = id;
     this.isRequesting = true;
-    this.storeService.get(id).then(x=>{
+    this.storeService.get(id).then(x => {
       this.restaurant = x;
       this.isRequesting = false;
       this.getProducts();
-    }).catch(errorMsg=> this.errorMsg = errorMsg);
-  }
-
-  getProducts(){
-    this.productService.search(this.storeId).then(x=>{
-      this.products = x;
-      this.categories = [];
-      if(this.onlyVeg){
-        this.products = this.products.filter(x=>x.isVeg());
-      }
-      for(var i=0; i < this.products.length; ++i){
-        var item = this.products[i];
-        var category = this.categories.find(x=>x.name == item.category);
-        if(category == undefined){
-          var c = new Category({name: item.category});
-          c.addProduct(item);
-          this.categories.push(c);
-        }else{
-          category.addProduct(item);
-        }
-        this.isRequesting = false;
-      }
-    }).catch(errorMsg=> {
+    }).catch(errorMsg => {
       this.errorMsg = errorMsg;
       this.isRequesting = false;
     });
   }
 
-  addToCart(item: Product){
+  getProducts() {
+    this.productService.search(this.storeId).then(x => {
+      this.products = x;
+      this.categories = [];
+      if (this.onlyVeg) {
+        this.products = this.products.filter(x => x.isVeg());
+      }
+      for (let i = 0; i < this.products.length; ++i) {
+        let item = this.products[i];
+        let category = this.categories.find(x => x.name == item.category);
+        if (category === undefined) {
+          let c = new Category({ name: item.category });
+          c.addProduct(item);
+          this.categories.push(c);
+        } else {
+          category.addProduct(item);
+        }
+        this.isRequesting = false;
+      }
+    }).catch(errorMsg => {
+      this.errorMsg = errorMsg;
+      this.isRequesting = false;
+    });
+  }
+
+  addToCart(item: Product) {
     this.orderService.addItem(item);
   }
 
@@ -85,7 +88,7 @@ export class RestaurantDetailComponent implements OnInit {
     this.router.navigate([id]);
   }
 
-  filter(){
+  filter() {
     this.getProducts();
   }
 }
