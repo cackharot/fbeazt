@@ -11,6 +11,8 @@ import { StoreService } from './services/store.service';
 import { ProductService } from './services/product.service';
 import { OrderService } from './services/order.service';
 
+import  { FeatureService } from './feature';
+
 import { OAuthService } from 'angular2-oauth2/oauth-service';
 
 @Component({
@@ -22,6 +24,7 @@ import { OAuthService } from 'angular2-oauth2/oauth-service';
 export class AppComponent {
 
   constructor(private oauthService: OAuthService,
+    public feature: FeatureService,
     private router: Router,
     private http: Http) {
     try {

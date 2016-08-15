@@ -43,6 +43,7 @@
       <li><i class="fa fa-cutlery"></i> Multi-restaurant dishes in single order</li>
       <li><i class="fa fa-map-marker"></i> Live tracking</li>
       <li><i class="fa fa-truck"></i> Super fast delivery</li>
+      <li *ngIf="feature.onlinePaymentEnabled()"><i class="fa fa-lock"></i> Secure online payment</li>
     </ul>
   </div>
   <div class="medium-12 small-12 columns end">

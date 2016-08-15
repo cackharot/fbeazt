@@ -24,6 +24,8 @@ import { Restaurant } from '../model/restaurant';
 import { Product, Category } from '../model/product';
 import { Order, DeliveryDetails, LineItem } from '../model/order';
 
+import { FeatureService } from '../feature';
+
 @Component({
   selector: 'home-page',
   templateUrl: './home.component.html',
@@ -31,48 +33,49 @@ import { Order, DeliveryDetails, LineItem } from '../model/order';
     SpinnerComponent, RestaurantComponent, ProductListComponent],
 })
 export class HomeComponent implements OnInit {
-  @SessionStorage() searchText:string = '';
-  @SessionStorage() userLocation:string = '';
-  @SessionStorage() userPincode:string = '';
-  @SessionStorage() onlyVeg:boolean = false;
-  @SessionStorage() onlyOpen:boolean = false;
-  @SessionStorage() activeTab:string = 'Restaurant';
-  searchCtrl:Control = new Control('');
-  isRequesting:boolean = false;
-  restaurants:Restaurant[];
-  products:Product[];
-  popular_dishes:Product[]=[];
-  errorMsg:string;
+  @SessionStorage() searchText: string = '';
+  @SessionStorage() userLocation: string = '';
+  @SessionStorage() userPincode: string = '';
+  @SessionStorage() onlyVeg: boolean = false;
+  @SessionStorage() onlyOpen: boolean = false;
+  @SessionStorage() activeTab: string = 'Restaurant';
+  searchCtrl: Control = new Control('');
+  isRequesting: boolean = false;
+  restaurants: Restaurant[];
+  products: Product[];
+  popular_dishes: Product[] = [];
+  errorMsg: string;
 
   constructor(private router: Router,
+    public feature: FeatureService,
     private productService: ProductService,
     private orderService: OrderService,
     private storeService: StoreService) {
-    this.router.events.subscribe(x=>{
-      window.scroll(0,0);
+    this.router.events.subscribe(x => {
+      window.scroll(0, 0);
     });
   }
 
   ngOnInit() {
     this.searchCtrl.valueChanges
-                 .debounceTime(400)
-                 .distinctUntilChanged()
-                 .subscribe(term => {
-                   this.searchText = term ? term.trim() : "";
-                   this.search();
-                 });
+      .debounceTime(400)
+      .distinctUntilChanged()
+      .subscribe(term => {
+        this.searchText = term ? term.trim() : "";
+        this.search();
+      });
     let order = this.orderService.getOrder();
-    if(order.isConfirmed()){
+    if (order.isConfirmed()) {
       this.orderService.resetOrder();
     }
   }
 
-  search(){
-    if(this.searchText == null || this.searchText.length == 0){
+  search() {
+    if (this.searchText == null || this.searchText.length == 0) {
       this.searchPopularDishes();
       return;
     }
-    if(this.searchText.length < 3){
+    if (this.searchText.length < 3) {
       return;
     }
     this.isRequesting = true;
@@ -80,32 +83,32 @@ export class HomeComponent implements OnInit {
     this.searchProducts();
   }
 
-  searchRestaurants(){
+  searchRestaurants() {
     let searchData = new StoreSearchModel(
       this.searchText,
       this.onlyVeg,
       this.onlyOpen,
       this.userLocation,
       this.userPincode);
-    this.storeService.search(searchData).then(x=>{
-      this.errorMsg=null;
+    this.storeService.search(searchData).then(x => {
+      this.errorMsg = null;
       this.restaurants = x;
-      if(x && x.length > 0){
+      if (x && x.length > 0) {
         this.activeTab = 'Restaurant';
       }
     })
-    .catch(errMsg => {
-      this.errorMsg = errMsg;
-      this.isRequesting = false;
-    });
+      .catch(errMsg => {
+        this.errorMsg = errMsg;
+        this.isRequesting = false;
+      });
   }
 
-  searchProducts(){
+  searchProducts() {
     this.productService.searchAll(new ProductSearchModel(this.searchText, this.onlyVeg))
-      .then(x=>{
-        this.errorMsg=null;
+      .then(x => {
+        this.errorMsg = null;
         this.products = x;
-        if(x && x.length > 0 && this.restaurants.length == 0){
+        if (x && x.length > 0 && this.restaurants.length == 0) {
           this.activeTab = 'Product';
         }
         this.isRequesting = false;
@@ -116,13 +119,13 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  searchPopularDishes(){
-    if(this.popular_dishes.length > 0){
+  searchPopularDishes() {
+    if (this.popular_dishes.length > 0) {
       return;
     }
     this.isRequesting = true;
     this.productService.getPopularDishes()
-      .then(x=>{
+      .then(x => {
         this.errorMsg = null;
         this.popular_dishes = x;
         this.isRequesting = false;
@@ -133,11 +136,11 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  activateTab(id:string){
+  activateTab(id: string) {
     this.activeTab = id;
   }
 
-  addToCart(item: Product){
+  addToCart(item: Product) {
     this.orderService.addItem(item);
   }
 }

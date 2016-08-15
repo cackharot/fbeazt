@@ -10,6 +10,7 @@ import { Product, Category } from '../model/product';
 import { Order, DeliveryDetails, LineItem } from '../model/order';
 
 import { AppConfig } from '../AppConfig';
+import { FeatureService } from '../feature';
 
 @Component({
   selector: 'checkout',
@@ -29,6 +30,7 @@ export class CheckoutComponent implements OnInit {
 
   constructor(private router: Router,
     private renderer: Renderer,
+    public feature: FeatureService,
     private orderService: OrderService) {
     this.router.events.subscribe(x => {
       window.scroll(0, 0);
@@ -39,7 +41,7 @@ export class CheckoutComponent implements OnInit {
     this.order = this.orderService.getOrder();
     this.orderSuccess = this.order.isConfirmed();
     this.restoreDeliveryDetails();
-    if (!this.onlinePaymentEnabled()) {
+    if (!this.feature.onlinePaymentEnabled()) {
       this.order.payment_type = 'cod';
     }
     // this.fetchAvailablePincodes();
@@ -68,6 +70,7 @@ export class CheckoutComponent implements OnInit {
 
   navOrder() {
     if (this.order.payment_type === 'payumoney' && !this.order.isPaymentValid()) {
+      console.log(this.orderNoTxt.nativeElement.value);
       this.orderNoTxt.nativeElement.value = this.order.order_no;
       this.renderer.invokeElementMethod(
         this.onlinePaymentForm.nativeElement,
@@ -145,9 +148,5 @@ export class CheckoutComponent implements OnInit {
 
   goBack(id: string) {
     this.router.navigate([id]);
-  }
-
-  onlinePaymentEnabled() {
-    return AppConfig.ENABLE_PAYUMONEY;
   }
 }

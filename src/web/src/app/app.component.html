@@ -1,5 +1,5 @@
 <header>
-  <label for="username" *ngIf="name">
+  <label for="username" *ngIf="name && feature.googleLoginEnabled()">
     <a (click)="false" id="username">
       <img src="{{avatar}}" class="avatar"/>
       <span class="show-for-medium">{{name}}</span>
@@ -10,7 +10,7 @@
       <li><a (click)="logoff()">Logoff</a></li>
     </ul>
   </label>
-  <label for="username" *ngIf="!name" class="btn btn-default" (click)="login()">
+  <label for="username" *ngIf="!name && feature.googleLoginEnabled()" class="btn btn-default" (click)="login()">
     <a (click)="false">Login</a>
   </label>
   <cart-summary></cart-summary>

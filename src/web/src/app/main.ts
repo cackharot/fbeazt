@@ -6,6 +6,7 @@ import { LocalStorageService, LocalStorageSubscriber } from './libs/LocalStorage
 
 import { AppComponent } from './app.component';
 import { appRouterProviders } from './app.routes';
+import { FeatureService } from './feature';
 import { MyHttpBaseRequestOptions } from './MyHttpBaseRequestOptions';
 
 import { OAuthService } from 'angular2-oauth2/oauth-service';
@@ -17,6 +18,7 @@ let appPromise = bootstrap(AppComponent,[
   HTTP_PROVIDERS,
   LocalStorageService,
   OAuthService,
+  provide(FeatureService, { useClass: FeatureService })
   // provide(RequestOptions, { useClass: MyHttpBaseRequestOptions })
 ])
 .catch((err: any) => console.error(err));

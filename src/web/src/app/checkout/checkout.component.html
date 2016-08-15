@@ -21,7 +21,7 @@
     <div class="medium-12 small-12 columns end">
       <div class="callout primary" *ngIf="isEmpty()">
         <h3>Oops!</h3>
-        <p>Added items to the cart to checkout :)</p>
+        <p>Kindly add dishes to the cart to checkout.</p>
       </div>
       <div class="callout alert" *ngIf="error != null">
         <h3>Oops!</h3>
@@ -152,13 +152,21 @@
           <div class="medium-12 columns">
             <h2><i class="fa fa-credit-card"></i> Payment Details</h2>
             <div class="callout primary">
-              <input name="payment_type" type="radio" [(ngModel)]="order.payment_type" value="cod"/> Cash On Delivery<br/>
-              <div *ngIf="onlinePaymentEnabled()">
-                <input name="payment_type"  type="radio" [(ngModel)]="order.payment_type" value="payumoney"/> Credit/Debit Card, Net Banking<br/>
+              <div>
+                <label>
+                  <input name="payment_type" type="radio" [(ngModel)]="order.payment_type" value="cod"/>
+                  Cash On Delivery
+                </label>
+              </div>
+              <div *ngIf="feature.onlinePaymentEnabled()">
+                <label>
+                  <input name="payment_type"  type="radio" [(ngModel)]="order.payment_type" value="payumoney"/>
+                  Credit/Debit Card, Net Banking
+                </label>
               </div>
               <div class="callout" *ngIf="order.payment_type==='payumoney'">
                 Note we will redirect you to PayUMoney payment gateway to do the online transaction.
-                After successfull transaction you will be redirected back to foodbeazt
+                After successful transaction you will be redirected back to foodbeazt
               </div>
             </div>
           </div>

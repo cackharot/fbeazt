@@ -18,7 +18,7 @@ export class AppConfig {
   }
 
   static getPaymentUrl() {
-    return AppConfig.isLocalEnv() ? 'http://localhost:4000/api/payment/order' : AppConfig.getBaseUrl() + '/payment/order';
+    return AppConfig.getBaseUrl() + '/payment/order';
   }
 
   static getBaseHost(): string {

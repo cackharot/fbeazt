@@ -1,21 +1,31 @@
 <html>
+
+<head>
+  <base href="/">
+  <title>Foodbeazt | Payment Gateway</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
 <body>
-<form id="paymentForm" action="{{ action }}" method="post" name="payuForm">
-  {% for key in data %}
-  <input type="hidden" name="{{key}}" value="{{ data[key] }}" />
-  {% endfor %}
-  <input type="submit" style="display:none"/>
-</form>
-<div style="margin:0 auto; top:48%;text-align:center">
-  Please wait while we redirect you to the payment gateway....
-</div>
-<script>
-  document.addEventListener("DOMContentLoaded", function(event) {
-      window.setTimeout(function(){
+  <form id="paymentForm" action="{{ action }}" method="post" name="payuForm">
+    {% for key in data %}
+    <input type="hidden" name="{{key}}" value="{{ data[key] }}" /> {% endfor %}
+    <input type="submit" style="display:none" />
+  </form>
+  <div style="margin:0 auto; position:relative;top:48%;text-align:center">
+    <p>
+      Please wait while we redirect you to the payment gateway....
+    </p>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+      window.setTimeout(function() {
         document.getElementById("paymentForm").submit();
       }, 200);
-  });
-</script>
+    });
+  </script>
 
 </body>
+
 </html>
