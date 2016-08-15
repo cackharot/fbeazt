@@ -5,10 +5,10 @@ require('zone.js/dist/zone');
 import 'ts-helpers';
 
 if (process.env.ENV === 'build') {
-  // Production
+  // production
 
 } else {
-  // Development
+  // development
 
   Error['stackTraceLimit'] = Infinity;
 

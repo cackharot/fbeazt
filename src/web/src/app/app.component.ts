@@ -1,4 +1,4 @@
-import { Component, NgZone } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { Http, URLSearchParams } from '@angular/http';
 
@@ -11,7 +11,7 @@ import { StoreService } from './services/store.service';
 import { ProductService } from './services/product.service';
 import { OrderService } from './services/order.service';
 
-import  { FeatureService } from './feature';
+import { FeatureService } from './feature';
 
 import { OAuthService } from 'angular2-oauth2/oauth-service';
 
@@ -23,7 +23,8 @@ import { OAuthService } from 'angular2-oauth2/oauth-service';
 })
 export class AppComponent {
 
-  constructor(private oauthService: OAuthService,
+  constructor(
+    private oauthService: OAuthService,
     public feature: FeatureService,
     private router: Router,
     private http: Http) {
@@ -43,7 +44,7 @@ export class AppComponent {
           }
         },
         validationHandler: context => {
-          var search = new URLSearchParams();
+          let search = new URLSearchParams();
           search.set('access_token', context.accessToken);
           let v = http.get('https://www.googleapis.com/oauth2/v3/tokeninfo', { search })
             .toPromise().then(x => {
@@ -71,13 +72,13 @@ export class AppComponent {
 
   public get name() {
     let claims = this.oauthService.getIdentityClaims();
-    if (!claims) return null;
+    if (!claims) { return null; }
     return claims.given_name;
   }
 
   public get avatar() {
     let claims = this.oauthService.getIdentityClaims();
-    if (!claims) return null;
+    if (!claims) { return null; }
     return claims.picture;
   }
 }

@@ -104,7 +104,7 @@ export class Order {
 
   getItemByProductId(product_id: ObjectId) {
     let item = this.items.filter(x => _.isEqual(x.product_id, product_id));
-    return item.length == 1 ? item[0] : null;
+    return item.length === 1 ? item[0] : null;
   }
 
   getDeliveryCharges() {

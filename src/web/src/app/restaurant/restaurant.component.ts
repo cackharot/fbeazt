@@ -8,10 +8,10 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 @Component({
   selector: 'restaurants',
   templateUrl: './restaurant.component.html',
-  directives: [ROUTER_DIRECTIVES, SpinnerComponent],
+  directives: [ROUTER_DIRECTIVES, SpinnerComponent]
 })
 export class RestaurantComponent implements OnInit {
-  @Input() restaurants: Restaurant[];
+  @Input() restaurants: Restaurant[] = [];
   @Input() doNotLoad: boolean = false;
   @Input() searchData: StoreSearchModel = new StoreSearchModel();
   responseData: StoreSearchResponse;
@@ -19,7 +19,8 @@ export class RestaurantComponent implements OnInit {
   errorMsg: string = null;
   isRequesting: boolean = false;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private storeService: StoreService) {
     this.router.events.subscribe(x => {
       window.scroll(0, 0);
@@ -48,7 +49,9 @@ export class RestaurantComponent implements OnInit {
   }
 
   isEmpty() {
-    return this.restaurants == null || this.restaurants.length == 0;
+    return this.restaurants === null
+      || this.restaurants === undefined
+      || this.restaurants.length === 0;
   }
 
   onSelect(restaurant: Restaurant) {

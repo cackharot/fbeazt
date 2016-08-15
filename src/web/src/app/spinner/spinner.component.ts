@@ -11,7 +11,7 @@ export class SpinnerComponent implements OnDestroy {
     @Input()
     public delay: number = 300;
     @Input()
-    public message:string='';
+    public message: string = '';
 
     @Input()
     public set isRunning(value: boolean) {

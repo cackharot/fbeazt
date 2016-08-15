@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FORM_DIRECTIVES, Control } from '@angular/common';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
-import { LocalStorage, SessionStorage } from "../libs/WebStorage";
+import { SessionStorage } from '../libs/WebStorage';
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -9,8 +9,6 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
 
-import { Tab } from '../components/tab';
-import { Tabs } from '../components/tabs';
 import { SpinnerComponent } from '../spinner/spinner.component';
 
 import { OrderService } from '../services/order.service';
@@ -20,9 +18,7 @@ import { ProductSearchModel, ProductService } from '../services/product.service'
 import { RestaurantComponent } from '../restaurant/restaurant.component';
 import { ProductListComponent } from '../productlist/productlist.component';
 
-import { Restaurant } from '../model/restaurant';
-import { Product, Category } from '../model/product';
-import { Order, DeliveryDetails, LineItem } from '../model/order';
+import { Product } from '../model/product';
 
 import { FeatureService } from '../feature';
 
@@ -30,7 +26,7 @@ import { FeatureService } from '../feature';
   selector: 'home-page',
   templateUrl: './home.component.html',
   directives: [FORM_DIRECTIVES, ROUTER_DIRECTIVES,
-    SpinnerComponent, RestaurantComponent, ProductListComponent],
+    SpinnerComponent, RestaurantComponent, ProductListComponent]
 })
 export class HomeComponent implements OnInit {
   @SessionStorage() searchText: string = '';
@@ -46,7 +42,8 @@ export class HomeComponent implements OnInit {
   popular_dishes: Product[] = [];
   errorMsg: string;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     public feature: FeatureService,
     private productService: ProductService,
     private orderService: OrderService,

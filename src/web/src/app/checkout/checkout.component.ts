@@ -1,12 +1,11 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ViewChild, ElementRef, Renderer } from '@angular/core';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
-import { LocalStorage, SessionStorage } from "../libs/WebStorage";
+import { LocalStorage, SessionStorage } from '../libs/WebStorage';
 
 import { OrderService } from '../services/order.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
 
-import { Product, Category } from '../model/product';
 import { Order, DeliveryDetails, LineItem } from '../model/order';
 
 import { AppConfig } from '../AppConfig';
@@ -15,7 +14,7 @@ import { FeatureService } from '../feature';
 @Component({
   selector: 'checkout',
   templateUrl: './checkout.component.html',
-  directives: [ROUTER_DIRECTIVES, SpinnerComponent],
+  directives: [ROUTER_DIRECTIVES, SpinnerComponent]
 })
 export class CheckoutComponent implements OnInit {
   @ViewChild('payubutton') onlinePaymentForm: ElementRef;
@@ -28,7 +27,8 @@ export class CheckoutComponent implements OnInit {
   @SessionStorage() availablePincodes: any[] = [];
   error: any = null;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private renderer: Renderer,
     public feature: FeatureService,
     private orderService: OrderService) {
@@ -48,20 +48,20 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    if (this.order.order_no && this.order.order_no.length != 0) {
+    if (this.order.order_no && this.order.order_no.length !== 0) {
       this.navOrder();
     }
   }
 
-  private fetchAvailablePincodes() {
-    if (this.availablePincodes.length > 0) {
-      return;
-    }
-    this.orderService.fetchAvailablePincodes()
-      .then(x => {
-        this.availablePincodes = x;
-      }).catch(e => { console.log(e); });
-  }
+  // private fetchAvailablePincodes() {
+  //   if (this.availablePincodes.length > 0) {
+  //     return;
+  //   }
+  //   this.orderService.fetchAvailablePincodes()
+  //     .then(x => {
+  //       this.availablePincodes = x;
+  //     }).catch(e => { console.log(e); });
+  // }
 
   resetOrder() {
     this.orderService.resetOrder();
@@ -103,7 +103,7 @@ export class CheckoutComponent implements OnInit {
           this.isRequesting = false;
         });
     } else {
-      this.error = "Invalid order";
+      this.error = 'Invalid order';
     }
   }
 
@@ -116,37 +116,37 @@ export class CheckoutComponent implements OnInit {
   }
 
   private saveDeliveryDetails() {
-    if (this.canSaveDeliveryDetails == false) {
-      localStorage.setItem("delivery_details", null);
+    if (this.canSaveDeliveryDetails === false) {
+      localStorage.setItem('delivery_details', null);
       return;
     }
     try {
       let value = JSON.stringify(this.order.delivery_details);
-      localStorage.setItem("delivery_details", value);
+      localStorage.setItem('delivery_details', value);
     } catch (e) {
-      console.log(e);
-    }
-  }
-
-  private restoreDeliveryDetails() {
-    if (this.canSaveDeliveryDetails == false) {
-      return;
-    }
-    try {
-      let value = JSON.parse(localStorage.getItem("delivery_details"));
-      if (value && value.name) {
-        this.order.delivery_details = DeliveryDetails.of(value);
-      }
-    } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 
   isEmpty() {
-    return this.order && this.order.items.length == 0;
+    return this.order && this.order.items.length === 0;
   }
 
   goBack(id: string) {
     this.router.navigate([id]);
+  }
+
+  private restoreDeliveryDetails() {
+    if (this.canSaveDeliveryDetails === false) {
+      return;
+    }
+    try {
+      let value = JSON.parse(localStorage.getItem('delivery_details'));
+      if (value && value.name) {
+        this.order.delivery_details = DeliveryDetails.of(value);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 }

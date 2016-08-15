@@ -1,20 +1,19 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
-import { LocalStorage, SessionStorage } from "../libs/WebStorage";
+import { SessionStorage } from '../libs/WebStorage';
 
 import { OrderService } from '../services/order.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
 
 import { DateTimePipe } from '../pipes/datetime.pipe';
 
-import { Product, Category } from '../model/product';
-import { Order, OrderStatus, DeliveryDetails, LineItem } from '../model/order';
+import { Order } from '../model/order';
 
 @Component({
   selector: 'track-order',
   templateUrl: './track-order.component.html',
   directives: [ROUTER_DIRECTIVES, SpinnerComponent],
-  pipes: [DateTimePipe],
+  pipes: [DateTimePipe]
 })
 export class TrackOrderComponent implements OnInit, OnDestroy {
   @SessionStorage() orderNo: string = '';
@@ -24,7 +23,8 @@ export class TrackOrderComponent implements OnInit, OnDestroy {
   errorMsg: string;
   private sub: any;
 
-  constructor(private orderService: OrderService,
+  constructor(
+    private orderService: OrderService,
     private router: Router,
     private route: ActivatedRoute) {
     this.router.events.subscribe(x => {
@@ -44,7 +44,7 @@ export class TrackOrderComponent implements OnInit, OnDestroy {
   }
 
   searchOrder() {
-    if (this.orderNo.length == 0) {
+    if (this.orderNo.length === 0) {
       this.order = null;
       return;
     }
@@ -57,7 +57,7 @@ export class TrackOrderComponent implements OnInit, OnDestroy {
         this.isRequesting = false;
       })
       .catch(errorMsg => {
-        this.errorMsg = errorMsg
+        this.errorMsg = errorMsg;
         this.isRequesting = false;
       });
   }

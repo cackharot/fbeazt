@@ -1,4 +1,4 @@
-import {LocalStorageEmitter} from "./LocalStorageEmitter";
+import {LocalStorageEmitter} from './LocalStorageEmitter';
 
 interface IWebStorage {
     getItem: (key: string) => string;
@@ -20,10 +20,10 @@ function WebStorage(storageKey: string, webStorage: IWebStorage) {
         }
 
         if (!storageKey) {
-            storageKey = "" + "/" + decoratedPropertyName;
+            storageKey = '' + '/' + decoratedPropertyName;
         }
 
-        Object.defineProperty(target, "_" + decoratedPropertyName + "_mapped", {
+        Object.defineProperty(target, '_' + decoratedPropertyName + '_mapped', {
             enumerable: false,
             configurable: true,
             writable: true,
@@ -35,20 +35,20 @@ function WebStorage(storageKey: string, webStorage: IWebStorage) {
 
         let storageValue = webStorage.getItem(storageKey) || null;
         let storageValueJSON = storageValue;
-        if ("string" === typeof storageValue) {
+        if ('string' === typeof storageValue) {
             try {
                 storageValue = JSON.parse(storageValue);
             } catch (e) {
                 storageValue = null;
-                storageValueJSON = "null";
+                storageValueJSON = 'null';
             }
         }
         let oldJSONValues = {};
 
         Object.defineProperty(target, decoratedPropertyName, {
             get: function () {
-                if (false === this["_" + decoratedPropertyName + "_mapped"]) {
-                    this["_" + decoratedPropertyName + "_mapped"] = instances.length;
+                if (false === this['_' + decoratedPropertyName + '_mapped']) {
+                    this['_' + decoratedPropertyName + '_mapped'] = instances.length;
 
                     // first registration triggers a setting to localStorage value
                     values[instances.length] = storageValue;
@@ -56,23 +56,23 @@ function WebStorage(storageKey: string, webStorage: IWebStorage) {
 
                     instances.push(this);
                 }
-                return values[this["_" + decoratedPropertyName + "_mapped"]];
+                return values[this['_' + decoratedPropertyName + '_mapped']];
             },
             set: function (newValue) {
-                if (false === this["_" + decoratedPropertyName + "_mapped"]) {
-                    this["_" + decoratedPropertyName + "_mapped"] = instances.length;
+                if (false === this['_' + decoratedPropertyName + '_mapped']) {
+                    this['_' + decoratedPropertyName + '_mapped'] = instances.length;
 
                     // first registration triggers a setting to localStorage value
                     values[instances.length] = storageValue;
                     oldJSONValues[instances.length] = storageValueJSON;
 
                     instances.push(this);
-                    // first "set" call is ignored if we have already a value from the localStorage
+                    // first 'set' call is ignored if we have already a value from the localStorage
                     if (storageValue) {
                         return;
                     }
                 }
-                values[this["_" + decoratedPropertyName + "_mapped"]] = newValue;
+                values[this['_' + decoratedPropertyName + '_mapped']] = newValue;
             },
             enumerable: true,
             configurable: true
@@ -81,9 +81,9 @@ function WebStorage(storageKey: string, webStorage: IWebStorage) {
         LocalStorageEmitter.subscribe(() => {
             for (let instance of instances) {
                 let currentValue = JSON.stringify(instance[decoratedPropertyName]);
-                let oldJSONValue = oldJSONValues[instance["_" + decoratedPropertyName + "_mapped"]];
+                let oldJSONValue = oldJSONValues[instance['_' + decoratedPropertyName + '_mapped']];
                 if (currentValue !== oldJSONValue) {
-                    oldJSONValues[instance["_" + decoratedPropertyName + "_mapped"]] = currentValue;
+                    oldJSONValues[instance['_' + decoratedPropertyName + '_mapped']] = currentValue;
                     webStorage.setItem(storageKey, currentValue);
                 }
             }

@@ -1,6 +1,5 @@
 import { provideRouter, RouterConfig } from '@angular/router';
 
-import { CartSummaryComponent } from './cartsummary/cartsummary.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { HomeComponent } from './home/home.component';
 import { OrderSuccessComponent } from './order-success/order-success.component';
@@ -29,7 +28,7 @@ const routes: RouterConfig = [
   { path: 'faq', component: FaqComponent },
   { path: 'terms_of_use', component: TermsOfUseComponent },
   { path: 'contact_us', component: ContactUsComponent },
-  { path: 'about_us', component: AboutUsComponent },
+  { path: 'about_us', component: AboutUsComponent }
   // { path: '**', component: PageNotFoundComponent }
 ];
 

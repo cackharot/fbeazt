@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { Tab } from '../components/tab';
@@ -12,7 +12,6 @@ import { OrderService } from '../services/order.service';
 import { Restaurant } from '../model/restaurant';
 
 import { Product, Category } from '../model/product';
-import { LineItem } from '../model/order';
 
 import { ChunkPipe } from '../pipes/chunk.pipe';
 
@@ -31,7 +30,8 @@ export class RestaurantDetailComponent implements OnInit {
   isRequesting: boolean = false;
   errorMsg: any;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private storeService: StoreService,
     private productService: ProductService,
     private orderService: OrderService,
@@ -56,15 +56,15 @@ export class RestaurantDetailComponent implements OnInit {
   }
 
   getProducts() {
-    this.productService.search(this.storeId).then(x => {
-      this.products = x;
+    this.productService.search(this.storeId).then(items => {
+      this.products = items;
       this.categories = [];
       if (this.onlyVeg) {
         this.products = this.products.filter(x => x.isVeg());
       }
       for (let i = 0; i < this.products.length; ++i) {
         let item = this.products[i];
-        let category = this.categories.find(x => x.name == item.category);
+        let category = this.categories.find(c => c.name === item.category);
         if (category === undefined) {
           let c = new Category({ name: item.category });
           c.addProduct(item);

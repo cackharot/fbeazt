@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject }    from 'rxjs/Subject';
 import { Headers, URLSearchParams, Http } from '@angular/http';
-import { LocalStorage, SessionStorage } from "../libs/WebStorage";
-import * as _ from "lodash";
+import { LocalStorage } from '../libs/WebStorage';
+import * as _ from 'lodash';
 
 import { ObjectId } from '../model/base';
 import { Product } from '../model/product';
@@ -29,12 +29,6 @@ export class MyOrderSearchResult extends MyOrderSearchModel {
   next: string;
   previous: string;
 
-  constructor(data = {}) {
-    super();
-    Object.assign(this, data);
-    this.items = this.items.map(x => Order.of(x));
-  }
-
   static of(data) {
     if (data === null || data.constructor.name === MyOrderSearchResult.name) {
       return data;
@@ -42,6 +36,11 @@ export class MyOrderSearchResult extends MyOrderSearchModel {
     return new MyOrderSearchResult(data);
   }
 
+  constructor(data = {}) {
+    super();
+    Object.assign(this, data);
+    this.items = this.items.map(x => Order.of(x));
+  }
 }
 
 @Injectable()
@@ -71,7 +70,7 @@ export class OrderService {
 
   addItem(item: Product) {
     if (!item.isAvailable()) {
-      console.log("Attempt to add not available item" + item);
+      console.log('Attempt to add not available item' + item);
       return;
     }
     let lineItem = new LineItem({
@@ -81,7 +80,7 @@ export class OrderService {
       store: item.store,
       description: item.description,
       category: item.category,
-      vegetarian: item.food_type[0] == 'veg',
+      vegetarian: item.food_type[0] === 'veg',
       quantity: 1.0,
       price: item.sell_price
     });
@@ -127,7 +126,7 @@ export class OrderService {
         // console.log(orderJson);
         let updatedOrder = Order.of(orderJson.data);
 
-        let stores = this.currentOrder.getStores()
+        let stores = this.currentOrder.getStores();
         updatedOrder.items.forEach(item => {
           item.store = stores.find(x => _.isEqual(x._id, item.store_id));
         });
@@ -150,10 +149,13 @@ export class OrderService {
   }
 
   verifyOtp(otp: string, new_number: string) {
-    let data = { 'cmd': 'VERIFY_OTP', 'otp': otp, 'order_id': this.currentOrder._id, 'number': new_number }
-    return this.http.put(`${this.orderUrl}/-1`, data, {
-      headers: this.authHeaders()
-    })
+    let data = { 'cmd': 'VERIFY_OTP', 'otp': otp, 'order_id': this.currentOrder._id, 'number': new_number };
+    return this.http.put(
+      `${this.orderUrl}/-1`,
+      data,
+      {
+        headers: this.authHeaders()
+      })
       .toPromise()
       .then(response => {
         let res = response.json();
@@ -164,10 +166,12 @@ export class OrderService {
   }
 
   resendOtp(new_number: string) {
-    let data = { 'cmd': 'RESEND_OTP', 'order_id': this.currentOrder._id, 'number': new_number }
-    return this.http.put(`${this.orderUrl}/-1`, data, {
-      headers: this.authHeaders()
-    })
+    let data = { 'cmd': 'RESEND_OTP', 'order_id': this.currentOrder._id, 'number': new_number };
+    return this.http.put(
+      `${this.orderUrl}/-1`, data,
+      {
+        headers: this.authHeaders()
+      })
       .toPromise()
       .then(response => {
         let res = response.json();
@@ -186,14 +190,16 @@ export class OrderService {
   }
 
   loadOrder(orderNo: string): Promise<Order> {
-    return this.http.get(`${AppConfig.TRACK_URL}/${orderNo}`, {
-      headers: this.authHeaders()
-    })
+    return this.http.get(
+      `${AppConfig.TRACK_URL}/${orderNo}`,
+      {
+        headers: this.authHeaders()
+      })
       .toPromise()
       .then(response => {
         let data = response.json();
         let order = Order.of(data);
-        if (!order.order_no || order.order_no.length == 0) {
+        if (!order.order_no || order.order_no.length === 0) {
           return null;
         }
         return order;
@@ -203,14 +209,16 @@ export class OrderService {
 
   reloadOrder(): Promise<Order> {
     let no = this.getOrder().order_no;
-    return this.http.get(`${AppConfig.TRACK_URL}/${no}`, {
-      headers: this.authHeaders()
-    })
+    return this.http.get(
+      `${AppConfig.TRACK_URL}/${no}`,
+      {
+        headers: this.authHeaders()
+      })
       .toPromise()
       .then(response => {
         let data = response.json();
         let order = Order.of(data);
-        if (!order.order_no || order.order_no.length == 0) {
+        if (!order.order_no || order.order_no.length === 0) {
           return null;
         }
         this.currentOrder = order;
@@ -220,9 +228,11 @@ export class OrderService {
   }
 
   fetchAvailablePincodes() {
-    return this.http.get(`${AppConfig.PINCODE_URL}`, {
-      headers: this.authHeaders()
-    })
+    return this.http.get(
+      `${AppConfig.PINCODE_URL}`,
+      {
+        headers: this.authHeaders()
+      })
       .toPromise()
       .then(response => {
         let data = response.json();

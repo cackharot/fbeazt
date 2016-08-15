@@ -24,11 +24,11 @@ export class Product {
   description: string = ' ';
   status: boolean;
   is_popular: boolean = false;
-  no: number=0;
+  no: number = 0;
   image_url: string = null;
 
   static of(data) {
-    if(data === null || data.constructor.name === Product.name) {
+    if (data === null || data.constructor.name === Product.name) {
       return data;
     }
     return new Product(data);
@@ -50,8 +50,10 @@ export class Product {
   }
 
   isAvailable() {
-    if(this.status === false) return false;
-    if(this.store.isHoliday() || this.store.isClosed()) {
+    if (this.status === false) {
+      return false;
+    }
+    if (this.store.isHoliday() || this.store.isClosed()) {
       return false;
     }
     // return this.isOpen();
@@ -70,7 +72,7 @@ export class Category {
 
   constructor(data = {}) {
     Object.assign(this, data);
-    if(this.products.length > 0) {
+    if (this.products.length > 0) {
       this.products = this.products.map(x => new Product(x));
     }
   }

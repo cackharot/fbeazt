@@ -1,10 +1,10 @@
-import {Injectable, OnDestroy} from "@angular/core";
-import {NgZone} from "@angular/core";
+import {Injectable, OnDestroy} from '@angular/core';
+import {NgZone} from '@angular/core';
 
 export class LocalStorageEmitter {
-
-    protected static subscribed:any = [];
+    protected static subscribed: any = [];
     protected static ngZones: NgZone[] = [];
+    protected static subscribers: any = [];
 
     public static register(ngZone: NgZone) {
         let index: number = LocalStorageEmitter.ngZones.indexOf(ngZone);
@@ -17,8 +17,6 @@ export class LocalStorageEmitter {
             }
         });
     }
-
-    protected static subscribers: any = [];
 
     public static subscribe(callback: Function) {
         LocalStorageEmitter.subscribers.push(callback);
@@ -43,9 +41,8 @@ export class LocalStorageService implements OnDestroy {
     }
 }
 
-import {Type} from "@angular/core/src/facade/lang";
-import {provide} from "@angular/core/src/di";
-import {ComponentRef} from "@angular/core";
+import {Type} from '@angular/core/src/facade/lang';
+import {ComponentRef} from '@angular/core';
 
 export function LocalStorageSubscriber(appPromise: Promise<ComponentRef<any>>) {
     appPromise.then((bla) => {

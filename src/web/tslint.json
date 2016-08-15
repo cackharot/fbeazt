@@ -107,14 +107,15 @@
     ],
     "use-strict": false,
     "variable-name": [
-      true,
+      false,
       "check-format",
       "allow-leading-underscore",
+      "allow-pascal-case",
       "ban-keywords"
     ],
     "whitespace": [
       true,
-      // "check-branch",
+      "check-branch",
       "check-decl",
       "check-operator",
       "check-separator",

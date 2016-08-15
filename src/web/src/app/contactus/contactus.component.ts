@@ -7,9 +7,9 @@ import { Router, ROUTER_DIRECTIVES } from '@angular/router';
   directives: [ROUTER_DIRECTIVES]
 })
 export class ContactUsComponent {
-  constructor(private router:Router){
-    this.router.events.subscribe(x=>{
-      window.scroll(0,0);
+  constructor(private router: Router) {
+    this.router.events.subscribe(x => {
+      window.scroll(0, 0);
     });
   }
 }

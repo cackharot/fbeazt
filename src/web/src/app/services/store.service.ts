@@ -18,7 +18,8 @@ export class StoreSearchModel {
   page_size: number = 100;
   store_ids: string[];
 
-  constructor(searchText: string = '',
+  constructor(
+    searchText: string = '',
     onlyVeg: boolean = false,
     onlyOpen: boolean = false,
     userLocation: string = '',
@@ -52,7 +53,7 @@ export class StoreSearchResponse extends StoreSearchModel {
   constructor(data = {}) {
     super();
     Object.assign(this, data);
-    if(this.items && this.items.length > 0){
+    if (this.items && this.items.length > 0) {
       this.items = this.items.map(x => Restaurant.of(x));
     }
   }
@@ -60,8 +61,8 @@ export class StoreSearchResponse extends StoreSearchModel {
 
 @Injectable()
 export class StoreService {
-  private storesUrl = AppConfig.STORES_URL;  // URL to web api
-  private storeUrl = AppConfig.STORE_URL;  // URL to web api
+  private storesUrl = AppConfig.STORES_URL;
+  private storeUrl = AppConfig.STORE_URL;
 
   constructor(private http: Http) { }
 
@@ -78,19 +79,19 @@ export class StoreService {
     params.set('page_no', data.page_no.toString());
     params.set('page_size', data.page_size.toString());
 
-    if(!searchUrl || searchUrl.length === 0){
+    if (!searchUrl || searchUrl.length === 0) {
       searchUrl = this.storesUrl;
     }
 
-    if(!searchUrl.startsWith("http")) {
+    if (!searchUrl.startsWith('http')) {
       searchUrl = AppConfig.getBaseHost() + searchUrl;
     }
 
     return this.http.get(searchUrl, { search: params })
       .toPromise()
       .then(response => {
-        let data = response.json();
-        let result = StoreSearchResponse.of(data);
+        let storeResponse = response.json();
+        let result = StoreSearchResponse.of(storeResponse);
         return result;
       })
       .catch(this.handleError);

@@ -21,7 +21,8 @@ export class MyOrderComponent implements OnInit {
   showMap: any = {};
   responseData: MyOrderSearchModel = new MyOrderSearchModel();
 
-  constructor(private orderService: OrderService,
+  constructor(
+    private orderService: OrderService,
     private router: Router,
     private route: ActivatedRoute) {
     this.router.events.subscribe(x => {
