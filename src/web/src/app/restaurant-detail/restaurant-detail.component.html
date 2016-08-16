@@ -26,7 +26,8 @@
       <section class="restaurants details">
         <div class="row">
           <div class="medium-6 small-12 columns end">
-            <img src="/images/placeholder.png" alt="Pic" class="header_img show-for-small-only"/>
+            <img src="{{restaurant.getImage() || '/images/placeholder.png'}}" alt="{{restaurant.name}}"
+              class="header_img show-for-small-only"/>
             <div class="content">
               <h3 class="title dark">
                 {{restaurant.name}}
@@ -61,7 +62,7 @@
             </div>
           </div>
           <div class="medium-6 columns show-for-medium">
-            <img src="/images/placeholder.png" alt="Pic" class="header_img"/>
+            <img src="{{restaurant.getImage() || '/images/placeholder.png'}}" alt="{{restaurant.name}}" class="header_img"/>
           </div>
         </div>
       </section>

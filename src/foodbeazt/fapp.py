@@ -11,6 +11,7 @@ from flask_babel import Babel
 from flask_pymongo import MongoClient
 from werkzeug.utils import secure_filename
 from service.ProductService import ProductService
+from service.StoreService import StoreService
 from service.TenantService import TenantService
 from service.UserService import UserService
 from libs.flask_googlelogin import GoogleLogin
@@ -264,7 +265,8 @@ def doLogout():
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 export_data_folder = os.path.join(APP_ROOT, 'uploads', 'export')
 import_data_folder = os.path.join(APP_ROOT, 'uploads', 'import')
-upload_folder = os.path.join(APP_ROOT, 'static/images/products/')
+product_upload_folder = os.path.join(APP_ROOT, 'static/images/products/')
+store_upload_folder = os.path.join(APP_ROOT, 'static/images/stores/')
 
 
 def allowed_files(filename):
@@ -277,7 +279,7 @@ def upload_product_image(_id):
   item = service.get_by_id(_id)
   if item and request.files and len(request.files) > 0 and request.files['file']:
     if 'image_url' in item and item['image_url']:
-      fname = os.path.join(upload_folder, item['image_url'])
+      fname = os.path.join(product_upload_folder, item['image_url'])
       if os.path.isfile(fname):
         os.remove(fname)
 
@@ -285,8 +287,27 @@ def upload_product_image(_id):
     if allowed_files(secure_filename(file_body.filename)):
       filename = secure_filename(str(uuid4()) + "." + file_body.filename.split('.')[1])
       item['image_url'] = filename
-      file_body.save(os.path.join(upload_folder, filename))
+      file_body.save(os.path.join(product_upload_folder, filename))
       service.update(item)
+      return json.dumps({"status": "success", "id": _id, "filename": filename})
+  return '', 404
+
+@app.route("/api/upload_store_image/<string:_id>", methods=['GET', 'POST'])
+def upload_store_image(_id):
+  service = StoreService(mongo.db)
+  item = service.get_by_id(_id)
+  if item and request.files and len(request.files) > 0 and request.files['file']:
+    if 'image_url' in item and item['image_url']:
+      fname = os.path.join(store_upload_folder, item['image_url'])
+      if os.path.isfile(fname):
+        os.remove(fname)
+
+    file_body = request.files['file']
+    if allowed_files(secure_filename(file_body.filename)):
+      filename = secure_filename(str(uuid4()) + "." + file_body.filename.split('.')[1])
+      item['image_url'] = filename
+      file_body.save(os.path.join(store_upload_folder, filename))
+      service.save(item)
       return json.dumps({"status": "success", "id": _id, "filename": filename})
   return '', 404
 

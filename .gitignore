@@ -66,6 +66,8 @@ activate.bat
 .idea/workspace.xml
 src/foodbeazt/static/images/products/*
 !src/foodbeazt/static/images/products/.gitkeep
+src/foodbeazt/static/images/stores/*
+!src/foodbeazt/static/images/stores/.gitkeep
 uploads
 src/foodbeazt/uploads
 src/foodbeazt/static/uploads

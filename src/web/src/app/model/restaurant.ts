@@ -1,6 +1,8 @@
 import { ObjectId, Date } from './base';
 import * as moment from 'moment';
 
+import {AppConfig} from '../AppConfig';
+
 export class Restaurant {
   _id: ObjectId = new ObjectId();
   cuisines: string[];
@@ -17,6 +19,7 @@ export class Restaurant {
   address: string;
   name: string;
   status: boolean;
+  image_url: string = null;
 
   static of(data) {
     if (data && data.constructor.name !== Restaurant.name) {
@@ -59,5 +62,12 @@ export class Restaurant {
 
   getRating() {
     return this.rating === 0 ? '--' : this.rating.toFixed(1);
+  }
+
+  getImage() {
+    if (this.image_url === null) {
+      return null;
+    }
+    return AppConfig.getBaseHost() + '/static/images/stores/' + this.image_url;
   }
 }

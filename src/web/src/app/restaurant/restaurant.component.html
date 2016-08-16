@@ -16,7 +16,8 @@
   <div class="row" *ngFor="let restaurant of restaurants"
   [class.selected]="restaurant === selectedRestaurant">
     <div class="medium-3 columns show-for-medium">
-      <img src="/images/placeholder.png" alt="Comming soon..." class="res_logo"/>
+      <img src="{{restaurant.getImage() || '/images/placeholder.png'}}" alt="{{restaurant.name}}"
+        [class.res_logo]="!restaurant.getImage()"/>
     </div>
     <div class="medium-9 columns light content end">
       <h3 class="title">
