@@ -58,7 +58,7 @@ export class AppComponent {
       });
 
       if (!this.oauthService.hasValidAccessToken()) {
-        this.logoff();
+        this.oauthService.logOut();
       }
     } catch (e) {
       console.error(e);

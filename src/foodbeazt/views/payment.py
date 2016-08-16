@@ -1,11 +1,54 @@
-from flask import redirect, request, render_template
+from flask import redirect, request, render_template, g
 from flask.views import View
+from flask_restful import Resource
 import hashlib
 from service.OrderService import OrderService, DuplicateOrderException
+from service.PaymentService import PaymentService
 from foodbeazt.fapp import mongo, app
 import logging
 
 from resources.order import OrderApi
+
+class PaymentListApi(Resource):
+  def __init__(self):
+    self.log = logging.getLogger(__name__)
+    self.service = OrderService(mongo.db)
+    self.paymentService = PaymentService(mongo.db)
+
+  def get(self):
+    tenant_id = g.user.tenant_id
+    store_id = request.args.get("store_id", None)
+    if store_id == '-1' or store_id == -1:
+      store_id = None
+      tenant_id = None
+
+    page_no = int(request.args.get('page_no', 1))
+    page_size = int(request.args.get('page_size', 50))
+    order_no = request.args.get('order_no', None)
+    status = request.args.get('status', '')
+
+    try:
+      items, total = self.paymentService.search(tenant_id=tenant_id,
+                            store_id=store_id,
+                            page_no=page_no,
+                            page_size=page_size,
+                            order_no=order_no,
+                            status=status)
+      offset = page_no*page_size
+      result = {'items': items, 'total': total,
+                "status": status.split(','),
+                "page_no": page_no,
+                "page_size": page_size}
+      url = "/api/payments?page_no=%d&page_size=%d&status=%s"
+      if total > offset:
+        result["next"] =  url % (page_no+1,page_size,status)
+      if page_no > 1:
+        result["previous"] = url % (page_no-1,page_size,status)
+
+      return result
+    except Exception as e:
+      self.log.exception(e)
+      return {"status": "error", "message": "Error on searching order payments"}, 420
 
 class PaymentRedirectView(View):
   methods = ['POST']
@@ -31,12 +74,12 @@ class PaymentRedirectView(View):
     phone = order['delivery_details']['phone']
     firstname = order['delivery_details']['name']
     amount = float(order['total'])
-    data = self.build_payumoney_request(order_no,firstname,email,phone,amount)
+    data = self.build_payumoney_request(order, order_no,firstname,email,phone,amount)
     return render_template('payment_redirect.jinja2', data=data,action=self.config_payu_base_url)
 
-  def build_payumoney_request(self, order_no, firstname, email, phone, amount):
+  def build_payumoney_request(self, order, order_no, firstname, email, phone, amount):
     posted={}
-    # posted['productinfo'] = self.get_product_info(order_no)
+    # posted['productinfo'] = self.get_product_info(order)
     posted['productinfo'] = '{}'
     posted['firstname'] = firstname
     posted['email'] = email
@@ -63,24 +106,19 @@ class PaymentRedirectView(View):
     hash_string+=self.config_salt
     return hashlib.sha512(hash_string.encode('utf-8')).hexdigest().lower()
 
-  def get_product_info(self, order_no):
-    return  {
-      "paymentParts": [
-        {
-          "name":"abc",
-          "description":"abcd",
-          "value":"500",
-          "isRequired":"true",
+  def get_product_info(self, order):
+    paymentParts = []
+    for item in order['items']:
+      paymentParts.append({
+          "name": item['name'],
+          "description": item.get('description', 'No Description'),
+          # "value": float(item['quantity'])*float(item['price']),
+          "value": float(item['quantity']),
+          "isRequired": True,
           "settlementEvent" : "EmailConfirmation"
-        },
-        {
-          "name":"xyz",
-          "description":"wxyz",
-          "value":"1500",
-          "isRequired":"false",
-          "settlementEvent" : "EmailConfirmation"
-        }
-      ],
+        })
+    return {
+      "paymentParts": paymentParts,
       "paymentIdentifiers": [
         {
           "field":"CompletionDate",
@@ -88,7 +126,7 @@ class PaymentRedirectView(View):
         },
         {
           "field":"TxnId",
-          "value":order_no
+          "value":order['order_no']
         }
       ]
     }
@@ -99,6 +137,7 @@ class PaymentSuccessView(View):
   def __init__(self):
     self.log = logging.getLogger(__name__)
     self.service = OrderService(mongo.db)
+    self.paymentService = PaymentService(mongo.db)
     self.config_key = app.config['PAYUMONEY_MERCHANT_KEY']
     self.config_salt = app.config['PAYUMONEY_SALT']
     self.config_surl = app.config['PAYUMONEY_SURL']
@@ -131,32 +170,42 @@ class PaymentSuccessView(View):
 
     order = self.service.get_by_number(txnid)
     redirect_url = self.payment_failure_url
+    payment_details = {
+      'order_no': order['order_no'],
+      'tenant_id': g.user.tenant_id,
+      'user_id': order['user_id'],
+      'gateway_name': 'payumoney'
+    }
 
     if(hashh != posted_hash):
       self.log.warning("Invalid hash for the payment! order_no [%s], payumoney response" % (txnid, request.form))
       order['payment_status'] = 'invalid'
+      payment_details['status'] = 'invaild hash'
     else:
       order['payment_status'] = status
-      order['payment_pg_type'] = request.form.get('PG_TYPE', None)
-      order['payment_bank_ref_no'] = request.form.get('bank_ref_num', None)
-      order['payment_ref_mode'] = request.form.get('mode', None)
-      order['payment_bankcode'] = request.form.get('bankcode', None)
-      order['payment_error_no'] = request.form.get('error', None)
       order['payment_error_message'] = request.form.get('error_Message', None)
-      order['payment_encryptedPaymentId'] = request.form.get('encryptedPaymentId', None)
-      order['payment_payuMoneyId'] = request.form.get('payuMoneyId', None)
-      order['payment_cardnum'] = request.form.get('cardnum', None)
-      order['payment_mihpayid'] = request.form.get('mihpayid', None)
-      order['payment_net_amount_debit'] = request.form.get('net_amount_debit', None)
-      order['payment_amount'] = amount
-      order['payment_additional_charges'] = additionalCharges
-      if status == 'success':
+      payment_details['status'] = status
+      payment_details['pg_type'] = request.form.get('PG_TYPE', None)
+      payment_details['bank_ref_no'] = request.form.get('bank_ref_num', None)
+      payment_details['ref_mode'] = request.form.get('mode', None)
+      payment_details['bankcode'] = request.form.get('bankcode', None)
+      payment_details['error_no'] = request.form.get('error', None)
+      payment_details['error_message'] = request.form.get('error_Message', None)
+      payment_details['encryptedPaymentId'] = request.form.get('encryptedPaymentId', None)
+      payment_details['payuMoneyId'] = request.form.get('payuMoneyId', None)
+      payment_details['cardnum'] = request.form.get('cardnum', None)
+      payment_details['mihpayid'] = request.form.get('mihpayid', None)
+      payment_details['net_amount_debit'] = request.form.get('net_amount_debit', None)
+      payment_details['amount'] = amount
+      payment_details['additional_charges'] = additionalCharges
+      if status in ['pending', 'success']:
         redirect_url = self.payment_success_url
         self.orderView.send_email(order)
         self.orderView.send_sms(order)
     # print(order)
     try:
       self.service.save(order)
+      self.paymentService.save(payment_details)
     except Exception as e:
       self.log.exception(e)
 
@@ -168,9 +217,21 @@ class PaymentWebHookView(View):
   def __init__(self):
     self.log = logging.getLogger(__name__)
     self.service = OrderService(mongo.db)
+    self.paymentService = PaymentService(mongo.db)
 
   def dispatch_request(self):
     print("^"*32)
     print(request.form)
     self.log.info(request.form)
-    return None, 204
+    pdetails = {
+      'tenant_id': g.user.tenant_id
+    }
+    for key in request.form.keys():
+      pdetails[key] = request.form.get(key, None)
+    print(pdetails)
+    try:
+      _id = self.paymentService.save_webhook(pdetails)
+      return str(_id), 200
+    except Exception as e:
+      self.log.exception(e)
+    return None, 400

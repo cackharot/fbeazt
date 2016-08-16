@@ -1,0 +1,59 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false" ng-controller="paymentsListCtrl">
+  <h3>
+      Online payments
+  </h3>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="search__container">
+          <form ng-submit="reload()">
+            <input type="search" ng-model="searchText" />
+            <button type="submit" class="button">Search</button>
+            <button type="reset" ng-click="resetSearch()" class="button">Clear</button>
+            <input type="checkbox" ng-model="filter_success" /> Success
+            <input type="checkbox" ng-model="filter_pending" /> Pending
+            <input type="checkbox" ng-model="filter_failure" /> Failure
+          </form>
+        </div>
+        <div>
+          Page No: {{page_no}} of {{page_count}} Total: {{total}}
+          <a href="" ng-click="navigate(previous)" ng-if="previous">Previous</a>
+          <a href="" ng-click="navigate(next)" ng-if="next">Next</a>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Order No</th>
+              <th class="text-right">Amount</th>
+              <th>PayumoneyId/mihpayid</th>
+              <th>other</th>
+              <th>error</th>
+              <th>status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in payments">
+              <td>{{item.created_at | datetime}}</td>
+              <td>
+                <!--<a href="#/order/{{item._id.$oid}}" title="Click to edit this item!">-->
+                  {{item.order_no}}
+                <!--</a>-->
+              </td>
+              <td><b ng-bind-html="item.amount | currency"></b></td>
+              <td>{{item.payuMoneyId}}<br/>{{item.mihpayid}}</td>
+              <td>{{item.bankcode}}/{{item.pg_type}}/{{item.ref_mode}}</td>
+              <td>
+                {{item.error_no}}
+                <span ng-if="item.error_no!=='E000'">
+                  <br/>{{item.error_message}}
+                </span>
+              </td>
+              <td>{{item.status}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

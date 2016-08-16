@@ -32,6 +32,11 @@ export class OrderFailureComponent implements OnInit {
         this.order = x;
         if (x === undefined || x.order_no.length === 0) {
           this.router.navigate(['/home']);
+          return;
+        }
+        if(x.payment_status === 'success') {
+          console.error('Oops! This should not happen');
+          this.router.navigate(['/order_success']);
         }
         this.isRequesting = false;
       })

@@ -359,7 +359,9 @@ api.add_resource(OrderListApi, '/api/orders/')
 api.add_resource(TrackOrderApi, '/api/track/<string:order_no>')
 api.add_resource(OrderStatusApi, '/api/order_status/<string:_id>')
 
-from views.payment import PaymentRedirectView, PaymentSuccessView, PaymentWebHookView
+from views.payment import PaymentListApi, PaymentRedirectView, PaymentSuccessView, PaymentWebHookView
+
+api.add_resource(PaymentListApi, '/api/payments')
 
 app.add_url_rule('/api/payment/order', view_func=PaymentRedirectView.as_view('payment_redirect'))
 app.add_url_rule('/api/payment/success', view_func=PaymentSuccessView.as_view('payment_success'))

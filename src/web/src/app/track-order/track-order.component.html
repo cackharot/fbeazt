@@ -74,7 +74,7 @@
         <span *ngIf="order.payment_type==='payumoney'">Online via PayUMoney</span>
         <br/>
         <span *ngIf="order.payment_type==='payumoney'">
-          Payment status: {{order.payment_status}}
+          Payment status: {{order.payment_status.toUpperCase()}}
         </span>
       </p>
       <h4>Delivery details</h4>

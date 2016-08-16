@@ -7,6 +7,7 @@ menuItems.push({"title": "User", "heading": false, "url": "/user", "icon": "fa f
 menuItems.push({"title": "Store", "heading": false, "url": "/store", "icon": "fa fa-building", "templateUrl": '/static/templates/admin/store/list.html'})
 menuItems.push({"title": "Product", "heading": false, "url": "/product", "icon": "fa fa-apple", "templateUrl": '/static/templates/admin/product/list.html'})
 menuItems.push({"title": "Orders", "heading": false, "url": "/order", "icon": "fa fa-list", "templateUrl": '/static/templates/admin/order/list.html'})
+menuItems.push({"title": "Online Payments", "heading": false, "url": "/payments", "icon": "fa fa-money", "templateUrl": '/static/templates/admin/payment/list.html'})
 menuItems.push({"title": "Data Management", "heading": false, "url": "/manage_data", "icon": "fa fa-list", "templateUrl": '/static/templates/admin/import_export/list.html'})
 menuItems.push({"title": "Popular Dishes", "heading": false, "url": "/popular_dishes", "icon": "fa fa-star", "templateUrl": '/static/templates/admin/popular_dishes/index.html'})
 menuItems.push({"title": "Pincode", "heading": false, "url": "/pincode", "icon": "fa fa-map", "templateUrl": '/static/templates/admin/pincode/index.html'})

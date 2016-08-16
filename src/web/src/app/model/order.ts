@@ -29,7 +29,7 @@ export class Order {
   payment_type: string = 'cod';
   payment_status: string;
   payment_error_no: string;
-  payment_payuMoneyId: string;
+  payment_error_message: string;
 
   static of(data) {
     if (data && data.constructor.name !== Order.name) {
@@ -82,7 +82,7 @@ export class Order {
       return true;
     }
     if (this.payment_type === 'payumoney') {
-      return ['success', 'failure'].indexOf(this.payment_status) > -1;
+      return ['success', 'pending', 'failure'].indexOf(this.payment_status) > -1;
     }
     return false;
   }
