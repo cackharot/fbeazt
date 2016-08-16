@@ -56,6 +56,10 @@ export class AppComponent {
           return v;
         }
       });
+
+      if (!this.oauthService.hasValidAccessToken()) {
+        this.logoff();
+      }
     } catch (e) {
       console.error(e);
     }

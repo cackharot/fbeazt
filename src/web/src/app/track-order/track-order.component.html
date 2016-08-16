@@ -68,7 +68,14 @@
       <h4>Order details</h4>
       <p>
         Item count: {{order.items.length}}<br/>
-        Total: <strong>Rs. {{order.total}}</strong>
+        Total: <strong>Rs. {{order.total}}</strong><br/>
+        Payment type:
+        <span *ngIf="order.payment_type==='cod'">Cash On Delivery</span>
+        <span *ngIf="order.payment_type==='payumoney'">Online via PayUMoney</span>
+        <br/>
+        <span *ngIf="order.payment_type==='payumoney'">
+          Payment status: {{order.payment_status}}
+        </span>
       </p>
       <h4>Delivery details</h4>
       <p>

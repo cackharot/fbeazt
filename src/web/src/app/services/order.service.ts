@@ -117,9 +117,12 @@ export class OrderService {
 
   confirmOrder() {
     // console.log(this.currentOrder);
-    return this.http.post(`${this.orderUrl}/-1`, this.currentOrder, {
-      headers: this.authHeaders()
-    })
+    return this.http.post(
+      `${this.orderUrl}/-1`,
+      this.currentOrder,
+      {
+        headers: this.authHeaders()
+      })
       .toPromise()
       .then(response => {
         let orderJson = response.json();
@@ -209,6 +212,9 @@ export class OrderService {
 
   reloadOrder(): Promise<Order> {
     let no = this.getOrder().order_no;
+    if (no === undefined || no.length === 0) {
+      return Promise.reject<Order>('Invalid order');
+    }
     return this.http.get(
       `${AppConfig.TRACK_URL}/${no}`,
       {

@@ -1,0 +1,32 @@
+<div class="callout alert" *ngIf="errorMsg != null">
+  <h4>Oops! Something went wrong.</h4> {{errorMsg}}
+</div>
+<br/>
+<div class="row" *ngIf="isRequesting">
+  <div class="medium-12 columns">
+    <my-spinner [isRunning]="isRequesting" [message]="'Loading your order...Please wait'">
+    </my-spinner>
+  </div>
+</div>
+<section class="order__failure" *ngIf="!isRequesting">
+  <div class="row">
+    <div class="medium-12 small-12 columns">
+      <div class="callout warning">
+        <h3>Oops! Online payment is not successful</h3>
+        <p>
+          We encountered an error while processing your online payment
+          <span *ngIf="order && order.order_no">
+          with reference id <b>{{order.order_no}}</b>
+          </span>.<br/> This can happen if you have cancelled the transaction or the bank might have declined your transaction.
+        </p>
+        <p>
+          If you face any issues or require any assistance kindly contact us.
+        </p>
+        <p>
+          You can try again with different payment method.
+          <a class="button warning" [routerLink]="['/checkout']">Try again</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
