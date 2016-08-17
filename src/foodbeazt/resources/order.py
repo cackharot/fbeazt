@@ -12,128 +12,39 @@ from foodbeazt.fapp import mongo, app, mail
 import logging
 
 order_created_template = app.jinja_env.get_template('email/order_created.html')
-order_created_sms_template = app.jinja_env.get_template('sms/order_created.html')
-order_otp_sms_template = app.jinja_env.get_template('sms/otp.html')
+order_created_sms_template = app.jinja_env.get_template('sms/order_created.txt')
+order_otp_sms_template = app.jinja_env.get_template('sms/otp.txt')
 
 class TrackOrderApi(Resource):
-  def __init__(self):
-    self.log = logging.getLogger(__name__)
-    self.service = OrderService(mongo.db)
-    self.storeService = StoreService(mongo.db)
-
   def get(self, order_no):
-    if order_no is None or len(order_no) == 0:
-      return {"status":"error","messag": "Invalid order number provided"}, 433
-
-    try:
-      order = self.service.get_by_number(order_no)
-      if order:
-        store_ids = [str(x['store_id']) for x in order['items']]
-        stores = self.storeService.search_by_ids(store_ids=store_ids)
-        for item in order['items']:
-          item['store'] = next((x for x in stores if x['_id'] == item['store_id']), None)
-      return order, 200
-    except Exception as e:
-      self.log.exception(e)
-      return {"status":"error","message":"Error while finding the order"}, 434
-
-class OrderStatusApi(Resource):
-  def __init__(self):
-    self.log = logging.getLogger(__name__)
-    self.service = OrderService(mongo.db)
-
-  def post(self, _id):
-    if _id is None or len(_id) == 0:
-      return {"status":"error","messag": "Invalid order id provided"}, 443
-
-    try:
-      data = json_util.loads(request.data.decode('utf-8'))
-      status = data.get('status', None)
-      notes = data.get('notes', None)
-      if status is None or not status in ['PENDING','PREPARING','PROGRESS','DELIVERED','INVALID','CANCELLED']:
-        return {"status":"error","messag": "Invalid status provided"}, 443
-      item = self.service.get_by_id(_id)
-      if item is None or len(item.get('order_no','')) == 0:
-        return {"status":"error","messag": "Invalid order id provided. Not found"}, 443
-      item['status'] = status
-      if notes is not None and len(notes) > 0:
-        item['notes'] = notes
-      self.service.save(item)
-      return {"status":status,"notes": notes}, 200
-    except Exception as e:
-      self.log.exception(e)
-      return {"status":"error","message":"Error while finding the order"}, 444
-
-class OrderListApi(Resource):
-  def __init__(self):
-    self.log = logging.getLogger(__name__)
-    self.service = OrderService(mongo.db)
-    self.storeService = StoreService(mongo.db)
-
-  def get(self):
-    tenant_id = g.user.tenant_id
-    store_id = request.args.get("store_id", None)
-    if store_id == '-1' or store_id == -1:
-      store_id = None
-      tenant_id = None
-
-    page_no = int(request.args.get('page_no', 1))
-    page_size = int(request.args.get('page_size', 50))
-    filter_text = request.args.get('filter_text', None)
-    order_no = request.args.get('order_no', None)
-    order_status = request.args.get('order_status', None)
-
-    try:
-      orders, total = self.service.search(tenant_id=tenant_id,
-                            store_id=store_id,
-                            page_no=page_no,
-                            page_size=page_size,
-                            order_no=order_no,
-                            order_status=order_status,
-                            filter_text=filter_text)
-
-      if orders and len(orders) > 0:
-        store_ids = []
-        for order in orders:
-          for item in order['items']:
-            sid = str(item['store_id'])
-            if sid not in store_ids:
-              store_ids.append(sid)
-        stores = self.storeService.search_by_ids(store_ids=store_ids)
-        for order in orders:
-          for item in order['items']:
-            item['store'] = next((x for x in stores if x['_id'] == item['store_id']), None)
-      offset = page_no*page_size
-      result = {'items': orders, 'total': total,
-                "filter_text": filter_text,
-                "order_status": order_status.split(','),
-                "page_no": page_no,
-                "page_size": page_size}
-      url = "/api/orders?page_no=%d&page_size=%d&filter_text=%s&order_status=%s"
-      if total > offset:
-        result["next"] =  url % (page_no+1,page_size,filter_text,order_status)
-      if page_no > 1:
-        result["previous"] = url % (page_no-1,page_size,filter_text,order_status)
-
-      return result
-    except Exception as e:
-      self.log.exception(e)
-      return {"status": "error", "message": "Error on searching orders"}, 420
-
+    return OrderApi().get(order_no)
 
 class OrderApi(Resource):
   def __init__(self):
     self.MAX_ORDER_PER_PHONE = 3
     self.log = logging.getLogger(__name__)
     self.service = OrderService(mongo.db)
+    self.storeService = StoreService(mongo.db)
     self.productService = ProductService(mongo.db)
     self.pincodeService = PincodeService(mongo.db)
     self.smsService = SmsService(mongo.db, app.config['SMS_USER'], app.config['SMS_API_KEY'])
 
   def get(self, _id):
-    if _id == "-1": return {}
+    if _id == "-1": return None, 404
     try:
-      return self.service.get_by_id(_id)
+      order = None
+      if len(_id) <= 9:
+        order = self.service.get_by_number(_id)
+      else:
+        order = self.service.get_by_id(_id)
+      if order:
+        store_ids = [str(x['store_id']) for x in order['items']]
+        stores = self.storeService.search_by_ids(store_ids=store_ids)
+        for item in order['items']:
+          item['store'] = next((x for x in stores if x['_id'] == item['store_id']), None)
+        return order, 200
+      else:
+        return None, 404
     except Exception as e:
       self.log.exception(e)
       return {"status": "error", "message": "Error on get order with id %s" % _id}, 421
@@ -246,11 +157,11 @@ class OrderApi(Resource):
     return {"status": "success", "location": "/api/order/" + str(_id), "data": valid_order}
 
   def delete(self, _id):
-    item = self.service.get_by_id(_id)
-    if item is None:
-        return None, 404
-    item['status'] = False
-    self.service.delete(item)
+    # item = self.service.get_by_id(_id)
+    # if item is None:
+    #     return None, 404
+    # item['status'] = False
+    # self.service.delete(item)
     return None, 204
 
   def send_otp(self, order):
@@ -270,9 +181,6 @@ class OrderApi(Resource):
     number = order['delivery_details'].get('phone')
     track_link = app.config['ORDER_TRACK_URL'] % (order['order_no'])
     message = order_created_sms_template.render(order=order,track_link=track_link)
-    if app.config['SEND_SMS'] == False:
-      self.log.info("DEV ** Sending SMS [%s] -> [%s]" % (number, message))
-      return
     try:
       self.smsService.send(number, message)
     except Exception as e:
@@ -287,13 +195,12 @@ class OrderApi(Resource):
                   sender=(app.config['MAIL_SENDER_NAME'], app.config['MAIL_SENDER']),
                   recipients=[email])
     msg.html = order_created_template.render(order=order)
+    self.log.info("Sending email [%s] to %s" % (subject, email))
 
     if app.config['SEND_MAIL'] == False:
-      self.log.info("DEV ** Sending email [%s] to %s" % (subject, email))
       time.sleep(3)
       return
     try:
-      self.log.info("Sending email [%s] to %s" % (subject, email))
       mail.send(msg)
     except Exception as e:
       self.log.exception(e)

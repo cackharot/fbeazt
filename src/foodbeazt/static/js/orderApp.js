@@ -48,7 +48,7 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
                 $scope.next = d.next;
                 $scope.previous = d.previous;
             }).error(function (e) {
-                alert(e);
+                alert(e.message || e);
             });
     };
 
@@ -92,7 +92,7 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
             .success(function (d) {
                 item.status = status;
             }).error(function (e) {
-                alert(e);
+                alert(e.message);
             });
     }
 

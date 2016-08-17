@@ -317,7 +317,9 @@ from foodbeazt.resources.tenant import TenantListApi, TenantApi
 from foodbeazt.resources.user import UserApi, UserListApi
 from foodbeazt.resources.store import StoreApi, StoreListApi
 from foodbeazt.resources.product import ProductApi, ProductListApi, ProductActivateApi
-from foodbeazt.resources.order import OrderApi, OrderListApi, TrackOrderApi, OrderStatusApi
+from foodbeazt.resources.order import OrderApi, TrackOrderApi
+from foodbeazt.resources.order_list import OrderListApi
+from foodbeazt.resources.order_status import OrderStatusApi
 from foodbeazt.resources.export_data import ExportDataApi
 from foodbeazt.resources.popular_items import PopularItemsApi
 from foodbeazt.resources.sms import SmsApi
