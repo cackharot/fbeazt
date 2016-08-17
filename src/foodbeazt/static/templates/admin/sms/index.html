@@ -18,6 +18,7 @@
             <thead>
             <th>Date</th>
             <th>Phone</th>
+            <th ng-if="!is_otp">Type</th>
             <th>Message</th>
             <th>Status</th>
             <th class="text-center">Remove</th>
@@ -26,6 +27,7 @@
             <tr ng-repeat="item in messages" ng-class="{'text-danger': is_otp && item.status != 'VERIFIED'}">
               <td>{{item.created_at | datetime}}</td>
               <td>{{item.number}}</td>
+              <td ng-if="!is_otp">{{item.type}}</td>
               <td>
                 Id: {{item.aws_msg_id || 'NA'}}<br/>
                 {{item.message}}

@@ -24,7 +24,7 @@
                         <tr ng-repeat="item in model" ng-class="{'text-danger': item.status == 'CANCELLED'}">
                             <td><a href="{{item.url}}">{{item.url}}</a></td>
                             <td>{{item.table_count}}</td>
-                            <td>{{item.size}}</td>
+                            <td>{{(item.size/1024/1024).toFixed(2)}}MB</td>
                             <td>{{item.created_at | datetime}}</td>
                             <td>
                                 <span class="info">

@@ -81,6 +81,6 @@ class OrderStatusApi(Resource):
     number = order.get('delivery_details').get('phone')
     message = order_delivered_sms_template.render(order=order)
     try:
-      self.smsService.send(number, message)
+      self.smsService.send(number, message, 'DELIVERED')
     except Exception as e:
       self.log.exception(e)

@@ -62,14 +62,14 @@ class SmsService(object):
     query = self.otp_store.find({'number': number, 'created_at': {"$gt":n}})
     return query.count() != 0
 
-  def send(self, number, message):
+  def send(self, number, message, sms_type='CONFIRMED'):
     self.log.info("Sending SMS [%s] -> [%s](Count:%d)" % (number, message, len(message)))
     if self.has_duplicate_message(number, message):
       self.log.warn("Trying to send duplicate message %s" % (number))
       return 'SENT'
     aws_msg_id = self.smsClient.send(number, message)
     item = dict(number=number, message=message, char_count=len(message), created_at=datetime.now(),
-      status='I', details="", aws_msg_id=aws_msg_id)
+      status='I', details="", aws_msg_id=aws_msg_id, type=sms_type)
     _id = self.sms_store.save(item)
     return 'SENT'
 
