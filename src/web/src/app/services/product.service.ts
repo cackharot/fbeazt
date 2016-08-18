@@ -61,7 +61,11 @@ export class ProductService {
   }
 
   search(store_id): Promise<Product[]> {
-    return this.http.get(`${this.productsUrl}/${store_id}`)
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('page_no', '1');
+    params.set('page_size', '200');
+
+    return this.http.get(`${this.productsUrl}/${store_id}`, { search: params })
       .toPromise()
       .then(response => {
         let items = response.json().items;
