@@ -6,6 +6,14 @@ import { AppConfig } from '../AppConfig';
 
 import 'rxjs/add/operator/toPromise';
 
+import {Observable} from 'rxjs/Observable';
+import { Subject }    from 'rxjs/Subject';
+import { BehaviorSubject }    from 'rxjs/BehaviorSubject';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/switchMap';
+
 export class StoreSearchModel {
   searchText: string;
   onlyVeg: boolean = false;
@@ -63,8 +71,15 @@ export class StoreSearchResponse extends StoreSearchModel {
 export class StoreService {
   private storesUrl = AppConfig.STORES_URL;
   private storeUrl = AppConfig.STORE_URL;
+  private storeSearchSubject:Subject<StoreSearchModel> = new BehaviorSubject<StoreSearchModel>(null);
+
+  storeSearchObservable = this.storeSearchSubject.asObservable();
 
   constructor(private http: Http) { }
+
+  emitSearchEvent(searchData: StoreSearchModel) {
+    this.storeSearchSubject.next(searchData);
+  }
 
   search(searchUrl: string, data: StoreSearchModel): Promise<StoreSearchResponse> {
     let params: URLSearchParams = new URLSearchParams();

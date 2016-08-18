@@ -4,6 +4,7 @@ import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { SessionStorage } from '../libs/WebStorage';
 
 import {Observable} from 'rxjs/Observable';
+import { Subject }    from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -12,13 +13,14 @@ import 'rxjs/add/operator/switchMap';
 import { SpinnerComponent } from '../spinner/spinner.component';
 
 import { OrderService } from '../services/order.service';
-import { StoreSearchModel, StoreService } from '../services/store.service';
+import { StoreSearchModel, StoreSearchResponse, StoreService } from '../services/store.service';
 import { ProductSearchModel, ProductService } from '../services/product.service';
 
 import { RestaurantComponent } from '../restaurant/restaurant.component';
 import { ProductListComponent } from '../productlist/productlist.component';
 
 import { Product } from '../model/product';
+import { Restaurant } from '../model/restaurant';
 
 import { FeatureService } from '../feature';
 
@@ -42,6 +44,7 @@ export class HomeComponent implements OnInit {
   popular_dishes: Product[] = [];
   errorMsg: string;
 
+
   constructor(
     private router: Router,
     public feature: FeatureService,
@@ -55,7 +58,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.searchCtrl.valueChanges
-      .debounceTime(400)
+      .debounceTime(600)
       .distinctUntilChanged()
       .subscribe(term => {
         this.searchText = term ? term.trim() : '';
@@ -85,6 +88,7 @@ export class HomeComponent implements OnInit {
     this.storeSearchData.onlyVeg = this.onlyVeg;
     this.storeSearchData.onlyOpen = this.onlyOpen;
     this.storeSearchData.page_size = 10;
+    this.storeService.emitSearchEvent(this.storeSearchData);
   }
 
   searchProducts() {

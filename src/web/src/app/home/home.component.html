@@ -75,7 +75,7 @@
     </ul>
     <div class="tabs-content">
       <div class="content" *ngIf="activeTab =='Restaurant'">
-        <restaurants [doNotLoad]="true" [searchData]="storeSearchData"></restaurants>
+        <restaurants [showHeading]="false"></restaurants>
       </div>
       <div class="content" *ngIf="activeTab =='Product'">
         <product-list [products]="products" (selectedProduct)="addToCart($event)"></product-list>
