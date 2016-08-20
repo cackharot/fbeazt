@@ -2,10 +2,12 @@
   <h3>Oops! No dishes found</h3>
   <p>You might have misspelled or try again!</p>
 </div>
-<div class="card no-min-height" *ngFor="let product of products;">
-  <div class="card-section align-left">
-    <img src="{{product.getImage() || '/images/placeholder.png'}}" />
-    <i class="veg__icon" [class.green]="product.isVeg()" [class.brown]="!product.isVeg()"></i>
+<div class="card" *ngFor="let product of products;">
+  <img src="{{product.getImage() || '/images/placeholder.png'}}" />
+  <div class="card-section align-center">
+    <div class="center__container">
+      <i class="veg__icon" [class.green]="product.isVeg()" [class.brown]="!product.isVeg()"></i>
+    </div>
     <ul class="cuisines light">
       <li *ngFor="let cus of product.cuisines">
         <span class="cusines">{{cus}}</span>
@@ -14,7 +16,7 @@
     <h4 class="dark">
       {{product.name}}
     </h4>
-    <!--<p class="light show-for-medium description"><i>{{product.description}}</i></p>-->
+    <p class="light show-for-medium description"><i>{{product.description}}</i></p>
     <span class="price_tag rupee light">{{product.sell_price}}</span>
   </div>
   <div class="card-action align-center">
@@ -23,11 +25,20 @@
     </small>
     <div class="qty__btn__container" *ngIf="getQuantity(product)>0">
       <button class="button dec" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,-1)"><i class="fa fa-minus"></i></button>
-        Qty: {{getQuantity(product)}}
+      Qty: {{getQuantity(product)}}
       <button class="button inc" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,1)"><i class="fa fa-plus"></i></button>
     </div>
-    <button type="button" (click)="select(product,$event)" *ngIf="getQuantity(product)<=0"
-      [disabled]="!product.isAvailable()" class="button add-to-cart">
+    <button type="button" (click)="select(product,$event)"
+     *ngIf="getQuantity(product)<=0"
+     popover="Added to cart!"
+     popoverTitle=""
+     popoverPlacement="top"
+     [popoverOnHover]="false"
+     [popoverCloseOnClickOutside]="true"
+     [popoverCloseOnMouseOutside]="false"
+     [popoverDisabled]="false"
+     [popoverAnimation]="true"
+     [disabled]="!product.isAvailable()" class="button add-to-cart">
       <i class="fi-plus"></i> Add
     </button>
   </div>

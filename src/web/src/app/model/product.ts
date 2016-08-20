@@ -2,6 +2,7 @@ import { ObjectId, Date } from './base';
 import * as moment from 'moment';
 
 import {Restaurant} from './restaurant';
+import {AppConfig} from '../AppConfig';
 
 export class Product {
   _id: ObjectId = new ObjectId();
@@ -63,6 +64,13 @@ export class Product {
   isOpen() {
     let hr = moment().hour() + (moment().minute() / 60);
     return (hr >= this.open_time && hr <= (this.close_time + 12));
+  }
+
+  getImage() {
+    if (!this.image_url) {
+      return null;
+    }
+    return AppConfig.getProductImage(this.image_url);
   }
 }
 

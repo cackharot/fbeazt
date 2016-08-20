@@ -34,4 +34,12 @@ export class AppConfig {
   static isLocalEnv(): boolean {
     return (window.location.host.match(/localhost/)) !== null;
   }
+
+  static getProductImage(image_url: string): string {
+    return AppConfig.getBaseHost() + '/static/images/products/' + image_url;
+  }
+
+  static getRestaurantImage(image_url: string): string {
+    return AppConfig.getBaseHost() + '/static/images/stores/' + image_url;
+  }
 }

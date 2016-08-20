@@ -5,8 +5,7 @@
 </section>
 <div *ngIf="!isRequesting && restaurant">
   <div class="callout alert" *ngIf="errorMsg != null">
-    <h4>Oops! Something went wrong.</h4>
-    {{errorMsg}}
+    <h4>Oops! Something went wrong.</h4> {{errorMsg}}
   </div>
   <section class="row">
     <div class="medium-12 small-12 columns end">
@@ -26,8 +25,7 @@
       <section class="restaurants details">
         <div class="row">
           <div class="medium-6 small-12 columns end">
-            <img src="{{restaurant.getImage() || '/images/placeholder.png'}}" alt="{{restaurant.name}}"
-              class="header_img show-for-small-only"/>
+            <img src="{{restaurant.getImage() || '/images/placeholder.png'}}" alt="{{restaurant.name}}" class="header_img show-for-small-only" />
             <div class="content">
               <h3 class="title dark">
                 {{restaurant.name}}
@@ -42,10 +40,10 @@
                 <span><i class="fa fa-hourglass-o"></i>
                   {{restaurant.open_time.toFixed(2)}} AM to {{restaurant.close_time.toFixed(2)}} PM
                   <span class="light green" *ngIf="!restaurant.isHoliday() && restaurant.isOpen()">(Open)</span>
-                  <span class="light red" *ngIf="!restaurant.isHoliday() && restaurant.isClosed()">
+                <span class="light red" *ngIf="!restaurant.isHoliday() && restaurant.isClosed()">
                     (Closed?)
                   </span>
-                  <span class="light red" *ngIf="restaurant.isHoliday()">(Holiday)</span>
+                <span class="light red" *ngIf="restaurant.isHoliday()">(Holiday)</span>
                 </span>
               </div>
               <div class="holidays" *ngIf="restaurant.holidays.length>0">
@@ -62,7 +60,7 @@
             </div>
           </div>
           <div class="medium-6 columns show-for-medium">
-            <img src="{{restaurant.getImage() || '/images/placeholder.png'}}" alt="{{restaurant.name}}" class="header_img"/>
+            <img src="{{restaurant.getImage() || '/images/placeholder.png'}}" alt="{{restaurant.name}}" class="header_img" />
           </div>
         </div>
       </section>
@@ -72,8 +70,7 @@
           <div class="medium-3 columns">
             Only Veg:
             <div class="switch tiny">
-              <input class="switch-input" id="onlyVeg" type="checkbox"
-              (change)="filter()" [(ngModel)]="onlyVeg" name="onlyVeg">
+              <input class="switch-input" id="onlyVeg" type="checkbox" (change)="filter()" [(ngModel)]="onlyVeg" name="onlyVeg">
               <label class="switch-paddle" for="onlyVeg">
                 <span class="show-for-sr">Only Veg:</span>
               </label>
@@ -84,16 +81,17 @@
           <div class="medium-12 small-12 columns end">
             <tabs>
               <tab tabTitle="{{category.name}}" *ngFor="let category of categories">
-                <product-list [products]="category.products"
-                  (selectedProduct)="addToCart($event)"></product-list>
+                <div *ngIf="showList">
+                  <product-list [products]="category.products" (selectedProduct)="addToCart($event)"></product-list>
+                </div>
+                <div *ngIf="!showList">
+                  <product-grid [products]="category.products" (selectedProduct)="addToCart($event)"></product-grid>
+                </div>
               </tab>
             </tabs>
           </div>
         </div>
       </section>
     </div>
-    <!--<div class="medium-4 columns end">
-      <h3>Popular Restaurants</h3>
-    </div>-->
   </div>
 </div>

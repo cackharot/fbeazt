@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FORM_DIRECTIVES, Control } from '@angular/common';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { SessionStorage } from '../libs/WebStorage';
@@ -18,6 +18,7 @@ import { ProductSearchModel, ProductService } from '../services/product.service'
 
 import { RestaurantComponent } from '../restaurant/restaurant.component';
 import { ProductListComponent } from '../productlist/productlist.component';
+import { ProductGridComponent } from '../product-grid/product-grid.component';
 
 import { Product } from '../model/product';
 import { Restaurant } from '../model/restaurant';
@@ -28,7 +29,7 @@ import { FeatureService } from '../feature';
   selector: 'home-page',
   templateUrl: './home.component.html',
   directives: [FORM_DIRECTIVES, ROUTER_DIRECTIVES,
-    SpinnerComponent, RestaurantComponent, ProductListComponent]
+    SpinnerComponent, RestaurantComponent, ProductListComponent, ProductGridComponent]
 })
 export class HomeComponent implements OnInit {
   @SessionStorage() searchText: string = '';
@@ -41,13 +42,16 @@ export class HomeComponent implements OnInit {
   storeSearchResponse: StoreSearchResponse = new StoreSearchResponse();
   searchCtrl: Control = new Control('');
   isRequesting: boolean = false;
+  showList: boolean = true;
   products: Product[];
   popular_dishes: Product[] = [];
   errorMsg: string;
+  mql: MediaQueryList;
 
 
   constructor(
     private router: Router,
+    private zone: NgZone,
     public feature: FeatureService,
     private productService: ProductService,
     private orderService: OrderService,
@@ -56,6 +60,13 @@ export class HomeComponent implements OnInit {
       window.scroll(0, 0);
     });
     this.storeSearchData.page_size = 10;
+    this.mql = window.matchMedia("screen and (max-width: 40em)");
+    this.showList = this.mql.matches;
+    this.mql.addListener(x => {
+      zone.run(() => {
+        this.showList = x.matches;
+      });
+    });
   }
 
   ngOnInit() {
@@ -70,6 +81,9 @@ export class HomeComponent implements OnInit {
     if (order.isConfirmed()) {
       this.orderService.resetOrder();
     }
+  }
+
+  ngOnDestroy() {
   }
 
   search() {
@@ -107,11 +121,18 @@ export class HomeComponent implements OnInit {
   }
 
   searchProducts() {
-    this.productService.searchAll(new ProductSearchModel(this.searchText, this.onlyVeg))
+    let data = new ProductSearchModel(this.searchText, this.onlyVeg);
+    data.pageSize = 10;
+    this.productService.searchAll(data)
       .then(x => {
         this.errorMsg = null;
         this.products = x;
         this.isRequesting = false;
+        if (this.storeSearchResponse.items.length === 0 && x.length > 0) {
+          this.activateTab('Product');
+        } else if (x.length == 0) {
+          this.activateTab('Restaurant');
+        }
       })
       .catch(errMsg => {
         this.errorMsg = errMsg;

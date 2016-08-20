@@ -65,9 +65,9 @@ export class Restaurant {
   }
 
   getImage() {
-    if (this.image_url === null) {
+    if (!this.image_url) {
       return null;
     }
-    return AppConfig.getBaseHost() + '/static/images/stores/' + this.image_url;
+    return AppConfig.getRestaurantImage(this.image_url);
   }
 }

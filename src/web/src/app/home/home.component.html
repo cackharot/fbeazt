@@ -1,24 +1,21 @@
 <div class="callout alert" *ngIf="errorMsg != null">
-  <h4>Oops! Something went wrong.</h4>
-  {{errorMsg}}
+  <h4>Oops! Something went wrong.</h4> {{errorMsg}}
 </div>
 <section class="row search__container">
   <div class="medium-12 small-12 columns end">
     <form #searchForm="ngForm">
-    <div class="input-group">
-      <span class="input-group-label show-for-medium">
+      <div class="input-group">
+        <span class="input-group-label show-for-medium">
         <i class="fa fa-home"></i> Puducherry
       </span>
-      <span class="input-group-label icon">
+        <span class="input-group-label icon">
         <i class="fa fa-search"></i>
       </span>
-      <input class="input-group-field" type="search" name="searchCtrl"
-          placeholder="Restaurant or dish or cuisine..."
-          [ngModel]="searchText" [ngFormControl]="searchCtrl">
-      <div class="input-group-button">
-        <button type="submit" class="button">Search</button>
+        <input class="input-group-field" type="search" name="searchCtrl" placeholder="Restaurant or dish or cuisine..." [ngModel]="searchText" [ngFormControl]="searchCtrl">
+        <div class="input-group-button">
+          <button type="submit" class="button">Search</button>
+        </div>
       </div>
-    </div>
     </form>
   </div>
   <div class="medium-6 columns end">
@@ -46,9 +43,19 @@
       <li *ngIf="feature.onlinePaymentEnabled()"><i class="fa fa-lock"></i> Secure online payment</li>
     </ul>
   </div>
-  <div class="medium-12 small-12 columns end">
+  <section class="row" *ngIf="(searchText == null || searchText.length == 0) && isRequesting">
+    <div class="medium-12 columns">
+      <my-spinner [isRunning]="isRequesting"></my-spinner>
+    </div>
+  </section>
+  <div class="medium-12 small-12 columns end" *ngIf="!isRequesting">
     <h3>Popular items</h3>
-    <product-list [products]="popular_dishes" (selectedProduct)="addToCart($event)"></product-list>
+    <div *ngIf="showList">
+      <product-list [products]="popular_dishes" (selectedProduct)="addToCart($event)"></product-list>
+    </div>
+    <div *ngIf="!showList">
+      <product-grid [products]="popular_dishes" (selectedProduct)="addToCart($event)"></product-grid>
+    </div>
   </div>
 </section>
 <section class="row" *ngIf="searchText && searchText.length < 3">
@@ -56,11 +63,6 @@
     <div class="callout primary">
       <p>Atleast enter 3 letters to begin the search!</p>
     </div>
-  </div>
-</section>
-<section class="row" *ngIf="(searchText == null || searchText.length == 0) && isRequesting">
-  <div class="medium-12 columns">
-    <my-spinner [isRunning]="isRequesting"></my-spinner>
   </div>
 </section>
 <section class="row" *ngIf="searchText && searchText.length > 2 && !isRequesting">
@@ -75,12 +77,15 @@
     </ul>
     <div class="tabs-content">
       <div class="content" *ngIf="activeTab =='Restaurant'">
-        <restaurants [responseData]="storeSearchResponse"
-          [isRequesting]="isRequesting"
-          (onPaginate)="searchRestaurants($event)"></restaurants>
+        <restaurants [responseData]="storeSearchResponse" [isRequesting]="isRequesting" (onPaginate)="searchRestaurants($event)"></restaurants>
       </div>
       <div class="content" *ngIf="activeTab =='Product'">
-        <product-list [products]="products" (selectedProduct)="addToCart($event)"></product-list>
+        <div *ngIf="showList">
+          <product-list [products]="products" (selectedProduct)="addToCart($event)"></product-list>
+        </div>
+        <div *ngIf="!showList">
+          <product-grid [products]="products" (selectedProduct)="addToCart($event)"></product-grid>
+        </div>
       </div>
     </div>
   </div>

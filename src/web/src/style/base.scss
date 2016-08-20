@@ -308,7 +308,7 @@ span.rating{
 
   li{
     display: inline-block;
-    padding: 6px 15px !important;
+    padding: 6px 15px;
     margin: 0 6px;
     border: 1px solid #eee;
     text-align: center;
@@ -340,6 +340,10 @@ img.res_logo{
   -moz-box-shadow: 0 1px 1px 0 rgba(159,167,194,0.6);
   box-shadow: 0 1px 1px 0 rgba(159,167,194,0.6);
 
+  &.no-min-height{
+    min-height: 0;
+  }
+
   img{
     width: 100%;
     height: 140px;
@@ -350,6 +354,20 @@ img.res_logo{
     -webkit-border-radius: 3px 3px 0 0;
     -moz-border-radius: 3px 3px 0 0;
     border-radius: 3px 3px 0 0;
+  }
+
+  .align-left{
+    text-align: left;
+    img{
+      height: 90px;
+      width: 100px;
+      float: left;
+      margin-right: 10px;
+      @include border-radius(3px);
+    }
+    .cuisines li{
+      padding: 0 6px 6px;
+    }
   }
 
   .card-section{
@@ -375,8 +393,9 @@ img.res_logo{
   }
 
   .cuisines{
-    margin: 0 10px;
+    margin: 0 0px;
     text-transform: capitalize;
+    display: inline-block;
     li{
       border: 0;
     }

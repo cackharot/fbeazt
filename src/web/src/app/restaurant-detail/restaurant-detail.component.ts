@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { Tab } from '../components/tab';
 import { Tabs } from '../components/tabs';
 import { ProductListComponent } from '../productlist/productlist.component';
+import { ProductGridComponent } from '../product-grid/product-grid.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
 
 import { StoreService } from '../services/store.service';
@@ -18,7 +19,7 @@ import { ChunkPipe } from '../pipes/chunk.pipe';
 @Component({
   selector: 'restaurant-detail',
   templateUrl: './restaurant-detail.component.html',
-  directives: [Tabs, Tab, ROUTER_DIRECTIVES, SpinnerComponent, ProductListComponent],
+  directives: [Tabs, Tab, ROUTER_DIRECTIVES, SpinnerComponent, ProductGridComponent, ProductListComponent],
   pipes: [ChunkPipe]
 })
 export class RestaurantDetailComponent implements OnInit {
@@ -28,16 +29,25 @@ export class RestaurantDetailComponent implements OnInit {
   products: Product[];
   onlyVeg: boolean = false;
   isRequesting: boolean = false;
+  showList: boolean = true;
   errorMsg: any;
 
   constructor(
     private router: Router,
+    private zone: NgZone,
     private storeService: StoreService,
     private productService: ProductService,
     private orderService: OrderService,
     private route: ActivatedRoute) {
     this.router.events.subscribe(x => {
       window.scroll(0, 0);
+    });
+    let mql = window.matchMedia("screen and (max-width: 40em)");
+    this.showList = mql.matches;
+    mql.addListener(x => {
+      zone.run(() => {
+        this.showList = x.matches;
+      });
     });
   }
 
