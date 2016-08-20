@@ -5,7 +5,7 @@ import {HomeComponent} from './home/home.component';
 import {OrderSuccessComponent} from './order-success/order-success.component';
 import {OrderFailureComponent} from './order-failure/order-failure.component';
 import {OtpComponent} from './otp/otp.component';
-import {RestaurantComponent} from './restaurant/restaurant.component';
+import {RestaurantListComponent} from './restaurant-list/restaurant-list.component';
 import {RestaurantDetailComponent} from './restaurant-detail/restaurant-detail.component';
 import {TrackOrderComponent} from './track-order/track-order.component';
 import {MyOrderComponent} from './my-order/my-order.component';
@@ -17,7 +17,7 @@ import {AboutUsComponent} from './aboutus/aboutus.component';
 const routes: RouterConfig = [
   { path: '', component: HomeComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'restaurants', component: RestaurantComponent},
+  { path: 'restaurants', component: RestaurantListComponent},
   { path: 'restaurant/:id', component: RestaurantDetailComponent },
   { path: 'checkout', component: CheckoutComponent },
   { path: 'otp', component: OtpComponent },

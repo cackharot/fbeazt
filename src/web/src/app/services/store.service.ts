@@ -71,15 +71,8 @@ export class StoreSearchResponse extends StoreSearchModel {
 export class StoreService {
   private storesUrl = AppConfig.STORES_URL;
   private storeUrl = AppConfig.STORE_URL;
-  private storeSearchSubject:Subject<StoreSearchModel> = new BehaviorSubject<StoreSearchModel>(null);
-
-  storeSearchObservable = this.storeSearchSubject.asObservable();
 
   constructor(private http: Http) { }
-
-  emitSearchEvent(searchData: StoreSearchModel) {
-    this.storeSearchSubject.next(searchData);
-  }
 
   search(searchUrl: string, data: StoreSearchModel): Promise<StoreSearchResponse> {
     let params: URLSearchParams = new URLSearchParams();

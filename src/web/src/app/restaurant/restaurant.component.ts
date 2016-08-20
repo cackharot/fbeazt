@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 
 import {Subscription} from 'rxjs/Subscription';
@@ -13,14 +13,9 @@ import { SpinnerComponent } from '../spinner/spinner.component';
   directives: [ROUTER_DIRECTIVES, SpinnerComponent]
 })
 export class RestaurantComponent implements OnInit {
-  @Input() restaurants: Restaurant[] = [];
-  @Input() showHeading: boolean = true;
-  @Input() searchData: StoreSearchModel = new StoreSearchModel();
-  responseData: StoreSearchResponse;
-  selectedRestaurant: Restaurant;
-  errorMsg: string = null;
-  isRequesting: boolean = false;
-  subscription: Subscription;
+  @Input() responseData: StoreSearchResponse = new StoreSearchResponse();
+  @Input() isRequesting: boolean = false;
+  @Output() onPaginate = new EventEmitter<string>();
 
   constructor(
     private router: Router,
@@ -28,60 +23,21 @@ export class RestaurantComponent implements OnInit {
     this.router.events.subscribe(x => {
       window.scroll(0, 0);
     });
-    this.searchData.page_size = 10;
-    this.subscription = this.storeService.storeSearchObservable
-      .delay(100)
-      .subscribe(x => {
-        if (!this.subscription || !x) {
-          return;
-        }
-        this.searchData = x;
-        this.search();
-      });
   }
 
   ngOnInit() {
-    this.init();
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-
-  init() {
-    if (this.showHeading) {
-      this.search();
-    }
-  }
-
-  search(searchUrl: string = null) {
-    if (!this.searchData) {
-      return;
-    }
-    this.isRequesting = true;
-    this.storeService.search(searchUrl, this.searchData)
-      .then(x => {
-        // console.log(x);
-        this.errorMsg = null;
-        this.responseData = x;
-        this.restaurants = x.items;
-        this.isRequesting = false;
-      }).catch(errMsg => {
-        this.errorMsg = errMsg;
-        this.restaurants = [];
-        this.responseData = new StoreSearchResponse();
-        this.isRequesting = false;
-      });
   }
 
   isEmpty() {
-    return this.restaurants === null
-      || this.restaurants === undefined
-      || this.restaurants.length === 0;
+    let items = this.responseData.items;
+    return !items || items.length === 0;
+  }
+
+  doPaginate(url: string) {
+    this.onPaginate.emit(url);
   }
 
   onSelect(restaurant: Restaurant) {
-    this.selectedRestaurant = restaurant;
     this.router.navigate(['/restaurant', restaurant._id.$oid]);
   }
 }

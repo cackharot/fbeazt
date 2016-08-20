@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit {
   @SessionStorage() onlyOpen: boolean = false;
   @SessionStorage() activeTab: string = 'Restaurant';
   storeSearchData: StoreSearchModel = new StoreSearchModel();
+  storeSearchResponse: StoreSearchResponse = new StoreSearchResponse();
   searchCtrl: Control = new Control('');
   isRequesting: boolean = false;
   products: Product[];
@@ -54,6 +55,7 @@ export class HomeComponent implements OnInit {
     this.router.events.subscribe(x => {
       window.scroll(0, 0);
     });
+    this.storeSearchData.page_size = 10;
   }
 
   ngOnInit() {
@@ -78,17 +80,30 @@ export class HomeComponent implements OnInit {
     if (this.searchText.length < 3) {
       return;
     }
+
+    this.storeSearchData.searchText = this.searchText;
+    this.storeSearchData.onlyVeg = this.onlyVeg;
+    this.storeSearchData.onlyOpen = this.onlyOpen;
+
     this.isRequesting = true;
     this.searchRestaurants();
     this.searchProducts();
   }
 
-  searchRestaurants() {
-    this.storeSearchData.searchText = this.searchText;
-    this.storeSearchData.onlyVeg = this.onlyVeg;
-    this.storeSearchData.onlyOpen = this.onlyOpen;
-    this.storeSearchData.page_size = 10;
-    this.storeService.emitSearchEvent(this.storeSearchData);
+  searchRestaurants(searchUrl: string = null) {
+    let res: Promise<StoreSearchResponse>;
+    if (searchUrl) {
+      res = this.storeService.search(searchUrl, this.storeSearchData);
+    } else {
+      res = this.storeService.search(searchUrl, this.storeSearchData)
+    }
+    res.then(x => {
+      this.errorMsg = null;
+      this.storeSearchResponse = x;
+    }).catch(errMsg => {
+      this.errorMsg = errMsg;
+      this.storeSearchResponse = new StoreSearchResponse();
+    });
   }
 
   searchProducts() {

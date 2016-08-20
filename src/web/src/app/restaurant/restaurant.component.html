@@ -1,19 +1,9 @@
-<div class="row content__container" *ngIf="showHeading">
-  <div class="medium-12 columns">
-    <h2>Restaurants</h2>
-  </div>
-</div>
-<section class="row" *ngIf="isRequesting">
-  <div class="medium-12 columns">
-    <my-spinner [isRunning]="isRequesting"></my-spinner>
-  </div>
-</section>
 <div class="callout warning" *ngIf="isEmpty() && !isRequesting">
   <h3>Oops! No restaurants found</h3>
   <p>You might have misspelled or try again!</p>
 </div>
 <div class="restaurants" *ngIf="!isEmpty() && !isRequesting">
-  <div class="row" *ngFor="let restaurant of restaurants"
+  <div class="row" *ngFor="let restaurant of responseData.items"
   [class.selected]="restaurant === selectedRestaurant">
     <div class="medium-3 columns show-for-medium">
       <img src="{{restaurant.getImage() || '/images/placeholder.png'}}" alt="{{restaurant.name}}"
@@ -63,12 +53,12 @@
   </div>
   <div *ngIf="responseData.total > 0" class="pagination__container">
     <div class="pagination previous" [class.disabled]="!responseData.previous">
-      <a (click)="responseData.previous && search(responseData.previous)">
+      <a (click)="responseData.previous && doPaginate(responseData.previous)">
         <i class="fa fa-angle-left"></i>
       </a>
     </div>
     <div class="pagination next" [class.disabled]="!responseData.next">
-      <a (click)="responseData.next && search(responseData.next)">
+      <a (click)="responseData.next && doPaginate(responseData.next)">
         <i class="fa fa-angle-right"></i>
       </a>
     </div>
