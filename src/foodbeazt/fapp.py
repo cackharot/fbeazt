@@ -2,7 +2,7 @@ import os, sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__))))
 from urllib.parse import unquote
 from uuid import uuid4
-from flask import Flask, session, render_template, make_response, request, redirect, g, current_app, flash
+from flask import Flask, session, render_template, send_file, make_response, request, redirect, g, current_app, flash
 from flask_login import login_required, UserMixin, login_user, logout_user, current_user
 from flask_mail import Mail
 from flask_pymongo import PyMongo
@@ -20,6 +20,7 @@ from flask_principal import identity_loaded, identity_changed, RoleNeed, UserNee
 from flask_cors import CORS, cross_origin
 from bson import ObjectId, json_util
 import json
+import pdfkit
 
 from oauth2client import client, crypt
 
@@ -274,11 +275,22 @@ export_data_folder = os.path.join(APP_ROOT, 'uploads', 'export')
 import_data_folder = os.path.join(APP_ROOT, 'uploads', 'import')
 product_upload_folder = os.path.join(APP_ROOT, 'static/images/products/')
 store_upload_folder = os.path.join(APP_ROOT, 'static/images/stores/')
+invoice_emails_folder = os.path.join(APP_ROOT, 'invoice_emails')
 
+@app.route("/test_order_invoice")
+def test_order_invoice():
+  tenant_id = g.user.tenant_id
+  query = {'tenant_id': ObjectId(tenant_id),'status':'DELIVERED'}
+  order = [x for x in mongo.db.order_collection.find(query).sort("created_at", -1)][0]
+
+  html_text = render_template("email/order_invoice.html", order=order)
+  output_filename = os.path.join(invoice_emails_folder, "Invoice-%s.pdf" % (order['order_no']))
+  pdfkit.from_string(html_text, output_filename)
+
+  return send_file(output_filename,mimetype='application/pdf')
 
 def allowed_files(filename):
   return '.' in filename and filename.split('.')[1] in ['jpg', 'png', 'gif', 'jpeg', 'bmp']
-
 
 @app.route("/api/upload_product_image/<string:_id>", methods=['GET', 'POST'])
 def upload_product_image(_id):

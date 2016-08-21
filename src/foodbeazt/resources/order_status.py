@@ -4,10 +4,13 @@ from flask_mail import Message
 from bson import ObjectId, json_util
 from service.OrderService import OrderService
 from service.SmsService import SmsService
-from foodbeazt.fapp import mongo, app, mail
+from foodbeazt.fapp import mongo, app, mail, invoice_emails_folder
 import logging
+import os
+import pdfkit
 
 order_delivered_email_template = app.jinja_env.get_template('email/order_delivered.html')
+order_invoice_pdf_template = app.jinja_env.get_template('email/order_invoice.html')
 order_delivered_sms_template = app.jinja_env.get_template('sms/order_delivered.txt')
 
 class OrderStatusApi(Resource):
@@ -53,8 +56,17 @@ class OrderStatusApi(Resource):
     return status is not None and status in ['PENDING','PREPARING','PROGRESS','DELIVERED','INVALID','CANCELLED']
 
   def send_notification(self, order):
+    self.generate_pdf_invoice(order)
     self.send_sms(order)
     self.send_email(order)
+
+  def generate_pdf_invoice(self, order):
+    try:
+      html_text = order_invoice_pdf_template.render(order=order)
+      output_filename = os.path.join(invoice_emails_folder, "Invoice-%s.pdf" % (order['order_no']))
+      pdfkit.from_string(html_text, output_filename)
+    except Exception as e:
+      self.log.exception(e)
 
   def send_email(self, order):
     email = order['delivery_details']['email']
@@ -72,6 +84,11 @@ class OrderStatusApi(Resource):
       return
 
     try:
+      invoice_filename = "Invoice-%s.pdf" % (order['order_no'])
+      output_filename = os.path.join(invoice_emails_folder, invoice_filename)
+      if os.path.isfile(output_filename):
+        with app.open_resource(output_filename) as fp:
+          msg.attach(invoice_filename, "application/pdf", fp.read())
       mail.send(msg)
     except Exception as e:
       self.log.exception(e)

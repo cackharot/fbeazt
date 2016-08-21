@@ -577,7 +577,9 @@
                                   <th style="Margin:0;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left">
                                     <h1 class="text-center" style="Margin:0;Margin-bottom:10px;color:inherit;font-family:Helvetica,Arial,sans-serif;font-size:34px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:center;word-wrap:normal">foodbeazt</h1>
                                     <h3 class="text-center ygt" style="Margin:0;Margin-bottom:10px;color:inherit;font-family:Helvetica,Arial,sans-serif;font-size:28px;font-weight:700;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:center;word-wrap:normal">You got it!</h3>
-                                    <p class="text-center" style="Margin:0;Margin-bottom:10px;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:center">#{{order['order_no']}} | Rs. {{order['total']}}</p>
+                                    <p class="text-center" style="Margin:0;Margin-bottom:10px;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:center">
+                                      #{{order['order_no']}} | <b>Rs.{{order['total']}}</b>
+                                    </p>
                                   </th>
                                   <th class="expander" style="Margin:0;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;padding:0!important;text-align:left;visibility:hidden;width:0"></th>
                                 </tr>
@@ -597,11 +599,10 @@
                                 <tr style="padding:0;text-align:left;vertical-align:top">
                                   <th style="Margin:0;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left">
                                     <p class="text-left" style="Margin:0;Margin-bottom:10px;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:left">Hey {{order['delivery_details']['name']}},</p>
-                                    <p class="text-left" style="Margin:0;Margin-bottom:10px;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:left">Your order has been successfully delivered at the below address on {{order['delivered_at'] | datetime}}.</p>
+                                    <p class="text-left" style="Margin:0;Margin-bottom:10px;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:left">Your order has been successfully delivered at the below address on <em>{{order['delivered_at'] | datetime}}.</em></p>
                                     <p class="text-left" style="Margin:0;Margin-bottom:10px;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:left"><strong>Delivered at</strong><br>{{order['delivery_details']['address']}},<br>{{order['delivery_details']['landmark']}},<br>Puducherry {{order['delivery_details']['pincode']}}<br>Phone: {{order['delivery_details']['phone']}}<br></p>
-                                    <p
-                                      class="text-left" style="Margin:0;Margin-bottom:10px;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:left">{% if order['payment_type'] == 'payumoney' %} Online payment of Rs. {{order['total']}} was made successfully. {%else%} Cash of Rs. {{order['total']}} was collected from you. {%endif%}</p>
-                                      <p style="Margin:0;Margin-bottom:10px;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:left">An electronic invoice is attached with this email.</p>
+                                    <p class="text-left" style="Margin:0;Margin-bottom:10px;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:left">{% if order['payment_type'] == 'payumoney' %} Online payment of <b>Rs.{{order['total']}}</b> was made successfully. {%else%} Cash of <b>Rs.{{order['total']}}</b> was collected from you. {%endif%}</p>
+                                    <p style="Margin:0;Margin-bottom:10px;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:left">An electronic invoice is attached with this email.</p>
                                   </th>
                                   <th class="expander" style="Margin:0;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;padding:0!important;text-align:left;visibility:hidden;width:0"></th>
                                 </tr>
@@ -645,9 +646,8 @@
                                         </tr>
                                       </tbody>
                                     </table>
-                                    <p class="text-center" style="Margin:0;Margin-bottom:10px;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:center">© 2016 <a href="http://foodbeazt.in" style="Margin:0;color:#2199e8;font-family:Helvetica,Arial,sans-serif;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left;text-decoration:none">foodbeazt.in</a> |
-                                      <a
-                                        href="mailto:foodbeazt@gmail.com" style="Margin:0;color:#2199e8;font-family:Helvetica,Arial,sans-serif;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left;text-decoration:none">foodbeazt@gmail.com</a> | +91 7373730484<br>Puducherry, India</p>
+                                    <p class="text-center" style="Margin:0;Margin-bottom:10px;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;margin-bottom:10px;padding:0;text-align:center">&copy; 2016 <a href="http://foodbeazt.in" style="Margin:0;color:#2199e8;font-family:Helvetica,Arial,sans-serif;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left;text-decoration:none">foodbeazt.in</a> |
+                                      <a href="mailto:foodbeazt@gmail.com" style="Margin:0;color:#2199e8;font-family:Helvetica,Arial,sans-serif;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left;text-decoration:none">foodbeazt@gmail.com</a>                                      | +91 7373730484<br>Puducherry, India</p>
                                   </th>
                                   <th class="expander" style="Margin:0;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;padding:0!important;text-align:left;visibility:hidden;width:0"></th>
                                 </tr>

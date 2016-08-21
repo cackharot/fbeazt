@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+  <title>FoodBeazt - Invoice #{{order['order_no']}}</title>
+</head>
+
+<body>
+  <table>
+    <tbody>
+      <tr>
+        <td style="vertical-align:top;">
+          <b>To:</b>
+          <br> {{order['delivery_details']['name']}}
+          <br> {{order['delivery_details']['address']}},
+          <br> {{order['delivery_details']['landmark']}},
+          <br> Puducherry - {{order['delivery_details']['pincode']}}
+          <br> {{order['delivery_details']['email']}}
+          <br> {{order['delivery_details']['phone']}}
+          <br>
+        </td>
+        <td style="vertical-align:top;text-align:right;">
+          <b>From:</b>
+          <br> <strong>foodbeazt</strong>
+          <br> Puducherry
+          <br> India
+          <br> foodbeazt@gmail.com
+          <br> +91 7373730484<br>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <br>
+  <br>
+  <table>
+    <tbody>
+      <tr>
+        <td style="text-align:center;background-color:#eee;">
+          <h3 style="margin-bottom:0;">Invoice #{{order['order_no']}}</h3>
+          <p style="margin-top:6px;margin-bottom:10px;color:#333;">
+            <i>{{order['created_at']|datetime}}</i>
+          </p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <br>
+  <table>
+    <thead>
+      <th>Description</th>
+      <th class="right">Qty</th>
+      <th class="right">Price</th>
+      <th class="right">Total</th>
+    </thead>
+    <tbody>
+      {% for item in order['items'] %}
+      <tr>
+        <td> {{item['name']}} </td>
+        <td class="right"> {{item['quantity']}} </td>
+        <td class="right"> {{item['price']}} </td>
+        <td class="right"> {{item['total']}} </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+  <table style="width:100%;text-align:right;margin-right:auto;">
+    <tfoot>
+      <tr>
+        <td>
+          Sub Total
+        </td>
+        <td class="right" style="width:20%">
+          {{order['total'] - order['delivery_charges']}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Delivery charge
+        </td>
+        <td class="right">
+          {{order['delivery_charges']}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Total
+        </td>
+        <td class="right">
+          <strong>Rs. {{order['total']}}</strong>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+  <br>
+  <table>
+    <thead>
+      <tr>
+        <th>Payment Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          Mode:
+          {% if order['payment_type'] == 'payumoney' %}
+            Online payment via PayUMoney
+          {%else%}
+            Cash On Delivery
+          {%endif%}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Paid amount: <b>Rs. {{order['total']}}</b>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Due amount: <i>Rs. 0.0</i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    <center style="color:#666;"><i>This is a computer generated invoice. No signature required.</i></center>
+  </p>
+  <br>
+  <p>
+    Thank you!<br> for shopping with us<br>
+  </p>
+  <br>
+  <br>
+  <p>
+    <small>
+    <i>
+    The goods sold as part of this shipment are intended for end user consumption and not for re-sale.
+    </i>
+    </small>
+  </p>
+
+  <style>
+    body {
+      width: 50em;
+    }
+
+    table {
+      width: 100%;
+    }
+
+    th {
+      border-bottom: thin solid #eee;
+    }
+
+    hr {
+      border: 0;
+      border-bottom: thin solid #eee;
+    }
+
+    tr:nth-child(even) {
+      /*background-color: #eee;*/
+    }
+
+    .right {
+      text-align: right;
+    }
+  </style>
+
+</body>
+
+</html>

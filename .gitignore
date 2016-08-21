@@ -68,7 +68,9 @@ src/foodbeazt/static/images/products/*
 !src/foodbeazt/static/images/products/.gitkeep
 src/foodbeazt/static/images/stores/*
 !src/foodbeazt/static/images/stores/.gitkeep
-uploads
+src/foodbeazt/invoice_emails/*
+!src/foodbeazt/invoice_emails/.gitkeep
+uuploads
 src/foodbeazt/uploads
 src/foodbeazt/static/uploads
 
