@@ -1,5 +1,5 @@
 You got it! Order #{{order['order_no']}} was delivered at {{order['delivered_at']}}.
-{% if order['payment_type'] == 'cod' %}
+{% if order['payment_type'] == 'payumoney' %}
 Online payment of Rs. {{order['total']}} was made successfully.
 {%else%}
 Cash of Rs. {{order['total']}} was collected.
