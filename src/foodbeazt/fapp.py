@@ -283,11 +283,15 @@ def test_order_invoice():
   query = {'tenant_id': ObjectId(tenant_id),'status':'DELIVERED'}
   order = [x for x in mongo.db.order_collection.find(query).sort("created_at", -1)][0]
 
-  html_text = render_template("email/order_invoice.html", order=order)
-  output_filename = os.path.join(invoice_emails_folder, "Invoice-%s.pdf" % (order['order_no']))
-  pdfkit.from_string(html_text, output_filename)
-
-  return send_file(output_filename,mimetype='application/pdf')
+  try:
+    config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf'.encode('utf-8'))
+    html_text = render_template("email/order_invoice.html", order=order)
+    output_filename = os.path.join(invoice_emails_folder, "Invoice-%s.pdf" % (order['order_no']))
+    pdfkit.from_string(html_text, output_filename, configuration=config)
+    return send_file(output_filename,mimetype='application/pdf')
+  except Exception as e:
+    logger.exception(e)
+    return "Error in generating PDF invoice"
 
 def allowed_files(filename):
   return '.' in filename and filename.split('.')[1] in ['jpg', 'png', 'gif', 'jpeg', 'bmp']
