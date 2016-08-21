@@ -7,7 +7,6 @@ import { OrderService } from '../services/order.service';
 import { Product } from '../model/product';
 
 import { ChunkPipe } from '../pipes/chunk.pipe';
-import { AppConfig } from '../AppConfig';
 
 @Component({
   selector: 'product-grid',

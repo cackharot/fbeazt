@@ -97,6 +97,9 @@
                         <i class="fa fa-times-circle"></i>
                       </a>
                       {{item.name}} <br/>
+                      <small class="light" *ngIf="item.price_detail && item.price_detail.description && item.price_detail.description.length > 0">
+                        {{item.price_detail.description}} <br/>
+                      </small>
                       <span class="store_name light"><i>from</i> {{item.store.name}}</span>
                       <br/>
                       <small class="light text-alert" *ngIf="item.store.isClosed()">

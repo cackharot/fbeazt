@@ -1,0 +1,11 @@
+<div *ngIf="hasPriceTable()">
+  <select [(ngModel)]="selection" (ngModelChange)="onChange($event)">
+    <option *ngFor="let item of product.price_table" [ngValue]="item">
+      {{item.description}}
+    </option>
+  </select>
+  <span class="price_tag rupee light">{{selection.price}}</span>
+</div>
+<div *ngIf="!hasPriceTable()">
+  <span class="price_tag rupee light">{{product.sell_price}}</span>
+</div>

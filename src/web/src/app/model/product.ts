@@ -4,6 +4,23 @@ import * as moment from 'moment';
 import {Restaurant} from './restaurant';
 import {AppConfig} from '../AppConfig';
 
+export class PriceDetail {
+  no: number;
+  description: string;
+  price: number;
+
+  static of(data) {
+    if (!data || data.constructor.name === PriceDetail.name) {
+      return data;
+    }
+    return new PriceDetail(data);
+  }
+
+  constructor(data = {}) {
+    Object.assign(this, data);
+  }
+}
+
 export class Product {
   _id: ObjectId = new ObjectId();
   deliver_time: number;
@@ -27,6 +44,8 @@ export class Product {
   is_popular: boolean = false;
   no: number = 0;
   image_url: string = null;
+  price_table: PriceDetail[] = [];
+  selectedPriceDetail: PriceDetail;
 
   static of(data) {
     if (data === null || data.constructor.name === Product.name) {
@@ -35,11 +54,15 @@ export class Product {
     return new Product(data);
   }
 
-  constructor(data = {}) {
+  constructor(data: any = {}) {
     Object.assign(this, data);
     this._id = ObjectId.of(this._id);
     this.store_id = ObjectId.of(this.store_id);
     this.store = Restaurant.of(this.store);
+    if (data.price_table && data.price_table.length > 0) {
+      this.price_table = data.price_table.map(x => PriceDetail.of(x));
+      this.selectedPriceDetail = this.price_table[0];
+    }
   }
 
   isVeg() {

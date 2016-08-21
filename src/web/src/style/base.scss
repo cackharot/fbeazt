@@ -365,6 +365,10 @@ img.res_logo{
       margin-right: 10px;
       @include border-radius(3px);
     }
+    select{
+      width: auto;
+      margin-right: 10px;
+    }
     .cuisines li{
       padding: 0 6px 6px;
     }

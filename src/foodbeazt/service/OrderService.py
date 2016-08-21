@@ -110,10 +110,10 @@ class OrderService(object):
     return store_ids
 
   def get_order_total(self, order):
-    for x in order['items']:
-      x['price'] = float(x['price'])
-      x['quantity'] = float(x['quantity'])
-    item_total = sum([x['price']*x['quantity'] for x in order['items']])
+    # for x in order['items']:
+    #   x['price'] = float(x['price'])
+    #   x['quantity'] = float(x['quantity'])
+    item_total = sum([x['total'] for x in order['items']])
     return item_total + order['delivery_charges']
 
   def generate_report(self, tenant_id):

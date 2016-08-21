@@ -69,7 +69,7 @@
       <p>
         Item count: {{order.items.length}}<br/>
         Total: <strong>Rs. {{order.total}}</strong><br/>
-        Payment type:
+        Payment mode:
         <span *ngIf="order.payment_type==='cod'">Cash On Delivery</span>
         <span *ngIf="order.payment_type==='payumoney'">Online via PayUMoney</span>
         <br/>

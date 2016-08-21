@@ -5,7 +5,7 @@ import { LocalStorage } from '../libs/WebStorage';
 import * as _ from 'lodash';
 
 import { ObjectId } from '../model/base';
-import { Product } from '../model/product';
+import { Product, PriceDetail } from '../model/product';
 import { Order, PincodeDetail, LineItem, DeliveryDetails } from '../model/order';
 import { AppConfig } from '../AppConfig';
 
@@ -82,7 +82,8 @@ export class OrderService {
       category: item.category,
       vegetarian: item.food_type[0] === 'veg',
       quantity: 1.0,
-      price: item.sell_price
+      price: item.sell_price,
+      price_detail: item.selectedPriceDetail
     });
     this.addLineItem(lineItem);
   }
@@ -104,6 +105,14 @@ export class OrderService {
   updateItemQuantity(product_id: ObjectId, value: number) {
     let item = this.currentOrder.getItemByProductId(product_id);
     this.updateQuantity(item, value);
+  }
+
+  updateItemPriceDetail(product_id: ObjectId, value: PriceDetail) {
+    let item = this.currentOrder.getItemByProductId(product_id);
+    if (item) {
+      item.price_detail = value;
+      this.orderUpdatedSource.next(this.currentOrder);
+    }
   }
 
   updateDeliveryDetails(deliveryDetails: DeliveryDetails) {

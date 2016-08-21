@@ -1,5 +1,6 @@
 import { ObjectId, Date } from './base';
 import { Restaurant } from './restaurant';
+import { Product, PriceDetail } from './product';
 import * as _ from 'lodash';
 
 export class OrderStatus {
@@ -102,6 +103,14 @@ export class Order {
     return -1;
   }
 
+  getItemPriceTable(product_id: ObjectId): PriceDetail {
+    let item = this.getItemByProductId(product_id);
+    if (item && item.price_detail) {
+      return item.price_detail;
+    }
+    return null;
+  }
+
   getItemByProductId(product_id: ObjectId) {
     let item = this.items.filter(x => _.isEqual(x.product_id, product_id));
     return item.length === 1 ? item[0] : null;
@@ -200,6 +209,7 @@ export class LineItem {
   vegetarian: boolean;
   quantity: number;
   price: number;
+  price_detail: PriceDetail;
 
   static of(data) {
     if (data && data.constructor.name !== LineItem.name) {
@@ -213,9 +223,13 @@ export class LineItem {
     this.product_id = ObjectId.of(this.product_id);
     this.store_id = ObjectId.of(this.store_id);
     this.store = Restaurant.of(this.store);
+    this.price_detail = PriceDetail.of(this.price_detail);
   }
 
   getTotalPrice() {
+    if (this.price_detail && this.price_detail.price > 0) {
+      return this.price_detail.price * this.quantity;
+    }
     return this.price * this.quantity;
   }
 }

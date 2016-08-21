@@ -229,17 +229,26 @@ class OrderApi(Resource):
                 validation_error = "%s is currently unavailable" % (product['name'])
                 break
             else:
-              sanitized_items.append({
+              qty = float(item['quantity'])
+              price = float(product['sell_price'])
+              vi = {
                 'no': count,
                 'product_id': product['_id'],
                 'name': product['name'],
                 'description': product.get('description', None),
-                'price': product['sell_price'],
-                'quantity': float(item['quantity']),
-                'total': (float(item['quantity'])*float(product['sell_price'])),
+                'price': price,
+                'quantity': qty,
+                'total': (qty*price),
                 'category': product.get('category', None),
                 'store_id': product['store_id']
-              })
+              }
+              if 'price_detail' in item and 'no' in item['price_detail']:
+                pd = item['price_detail']
+                price = float(pd['price'])
+                vi['price_detail'] = { 'no': pd['no'], 'price': price, 'description': pd['description'] }
+                vi['price'] = price
+                vi['total'] = (qty * price)
+              sanitized_items.append(vi)
               count =  count + 1
       return validation_error, sanitized_items
 

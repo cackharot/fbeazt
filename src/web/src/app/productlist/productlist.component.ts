@@ -5,15 +5,14 @@ import { POPOVER_DIRECTIVES } from 'ng2-popover';
 import { OrderService } from '../services/order.service';
 
 import { Product } from '../model/product';
+import { PriceTableComponent } from '../price-table/price-table.component';
 
 import { ChunkPipe } from '../pipes/chunk.pipe';
-import { AppConfig } from '../AppConfig';
 
 @Component({
   selector: 'product-list',
   templateUrl: './product-list.component.html',
-  directives: [ROUTER_DIRECTIVES, POPOVER_DIRECTIVES],
-  pipes: [ChunkPipe]
+  directives: [ROUTER_DIRECTIVES, POPOVER_DIRECTIVES, PriceTableComponent]
 })
 export class ProductListComponent {
   @Input() products: Product[];
@@ -31,18 +30,8 @@ export class ProductListComponent {
     this.orderService.updateItemQuantity(item._id, value);
   }
 
-  select(item: Product, event: any = null) {
-    if (event) {
-      event.preventDefault();
-    }
+  select(item: Product) {
     this.selection = item;
     this.selectedProduct.emit(item);
-  }
-
-  getProductImage(item: Product) {
-    if (item.image_url === null) {
-      return null;
-    }
-    return AppConfig.getBaseHost() + '/static/images/products/' + item.image_url;
   }
 }

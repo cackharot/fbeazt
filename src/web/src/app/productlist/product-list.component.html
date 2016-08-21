@@ -15,7 +15,8 @@
       {{product.name}}
     </h4>
     <!--<p class="light show-for-medium description"><i>{{product.description}}</i></p>-->
-    <span class="price_tag rupee light">{{product.sell_price}}</span>
+    <!--<span class="price_tag rupee light">{{product.sell_price}}</span>-->
+    <price-table [product]="product"></price-table>
   </div>
   <div class="card-action align-center">
     <small class="light" *ngIf="!product.isAvailable()">
@@ -26,7 +27,7 @@
         Qty: {{getQuantity(product)}}
       <button class="button inc" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,1)"><i class="fa fa-plus"></i></button>
     </div>
-    <button type="button" (click)="select(product,$event)" *ngIf="getQuantity(product)<=0"
+    <button type="button" (click)="select(product)" *ngIf="getQuantity(product)<=0"
       [disabled]="!product.isAvailable()" class="button add-to-cart">
       <i class="fi-plus"></i> Add
     </button>
