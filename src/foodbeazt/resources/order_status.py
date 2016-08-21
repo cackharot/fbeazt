@@ -67,7 +67,6 @@ class OrderStatusApi(Resource):
     msg.html = order_delivered_email_template.render(order=order)
 
     self.log.info("Sending email [%s] to %s" % (subject, email))
-    self.log.info(msg.html) ## remove this before commit
 
     if app.config['SEND_MAIL'] == False:
       return

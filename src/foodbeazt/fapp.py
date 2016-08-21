@@ -233,6 +233,13 @@ def test_order_email():
   order = [x for x in mongo.db.order_collection.find(query).sort("created_at", -1)][0]
   return render_template("email/order_created.html", order=order)
 
+@app.route("/test_order_delivered")
+def test_order_delivered():
+  tenant_id = g.user.tenant_id
+  query = {'tenant_id': ObjectId(tenant_id),'status':'DELIVERED'}
+  order = [x for x in mongo.db.order_collection.find(query).sort("created_at", -1)][0]
+  return render_template("email/order_delivered.html", order=order)
+
 @app.route("/admin")
 @login_required
 def admin_home():
@@ -311,6 +318,13 @@ def upload_store_image(_id):
       return json.dumps({"status": "success", "id": _id, "filename": filename})
   return '', 404
 
+@app.template_filter('datetime')
+def _jinja2_filter_datetime(value, fmt=None):
+  if value is None:
+    return ''
+  if fmt is None or len(fmt) == 0:
+    fmt='%b %d, %Y %H:%m'
+  return value.strftime(fmt)
 
 from foodbeazt.resources.subscription import SubscriptionApi, SubscriptionListApi
 from foodbeazt.resources.tenant import TenantListApi, TenantApi
