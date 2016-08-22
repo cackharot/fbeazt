@@ -22,7 +22,7 @@ class OrderListApi(Resource):
     page_size = int(request.args.get('page_size', 50))
     filter_text = request.args.get('filter_text', None)
     order_no = request.args.get('order_no', None)
-    order_status = request.args.get('order_status', None)
+    order_status = request.args.get('order_status', '')
 
     try:
       orders, total = self.service.search(tenant_id=tenant_id,
