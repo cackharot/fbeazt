@@ -356,6 +356,7 @@ from foodbeazt.resources.sms import SmsApi
 from foodbeazt.resources.report import ReportApi
 from foodbeazt.resources.pincodes import PincodeListApi, PincodeApi
 from foodbeazt.resources.myorders import MyOrdersApi
+from foodbeazt.resources.push_notify import RegisterPushNotify, UnRegisterPushNotify
 
 api.add_resource(MyOrdersApi, '/api/my_orders')
 
@@ -390,6 +391,9 @@ api.add_resource(OrderApi, '/api/order/<string:_id>')
 api.add_resource(OrderListApi, '/api/orders/')
 api.add_resource(TrackOrderApi, '/api/track/<string:order_no>')
 api.add_resource(OrderStatusApi, '/api/order_status/<string:_id>')
+
+api.add_resource(RegisterPushNotify, '/api/push_service/register')
+api.add_resource(UnRegisterPushNotify, '/api/push_service/unregister')
 
 from views.payment import PaymentListApi, PaymentRedirectView, PaymentSuccessView, PaymentWebHookView
 

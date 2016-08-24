@@ -21,6 +21,7 @@ pdfkit==0.5.0
 pyasn1==0.1.9
 pyasn1-modules==0.0.8
 pymongo==2.8.1
+python-gcm==0.4
 pytz==2015.4
 requests==2.7.0
 rsa==3.4.2
