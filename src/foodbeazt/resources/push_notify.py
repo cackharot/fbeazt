@@ -11,7 +11,7 @@ from gcm import *
 class RegisterPushNotify(Resource):
   def __init__(self):
     self.log = logging.getLogger(__name__)
-    self.service = PushNotificationService(mongo.db)
+    self.service = PushNotificationService(mongo.db, app.config['GCM_API_KEY'])
     self.userService = UserService(mongo.db)
 
   def post(self):
@@ -43,15 +43,14 @@ class RegisterPushNotify(Resource):
       return {'status':'error','message':str(e)}, 400
 
   def notify_device(self, item):
-    gcm = GCM(app.config['GCM_API_KEY'])
     data = {'message': 'Device successfully registered with foodbeazt server','title':'Register'}
     reg_id = item['device_token']
-    gcm.plaintext_request(registration_id=reg_id, data=data)
+    self.service.send_to_device(data, reg_id=reg_id)
 
 class UnRegisterPushNotify(Resource):
   def __init__(self):
     self.log = logging.getLogger(__name__)
-    self.service = PushNotificationService(mongo.db)
+    self.service = PushNotificationService(mongo.db, app.config['GCM_API_KEY'])
     self.userService = UserService(mongo.db)
 
   def post(self):

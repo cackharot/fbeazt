@@ -4,12 +4,15 @@ from flask import g, request
 from flask_mail import Message
 from flask_restful import Resource
 from service.OrderService import OrderService, DuplicateOrderException
+from service.PushNotificationService import PushNotificationService
 from service.ProductService import ProductService
 from service.PincodeService import PincodeService
 from service.StoreService import StoreService
 from service.SmsService import SmsService
 from foodbeazt.fapp import mongo, app, mail
 import logging
+
+from gcm import *
 
 order_created_template = app.jinja_env.get_template('email/order_created.html')
 order_created_sms_template = app.jinja_env.get_template('sms/order_created.txt')
@@ -27,6 +30,7 @@ class OrderApi(Resource):
     self.storeService = StoreService(mongo.db)
     self.productService = ProductService(mongo.db)
     self.pincodeService = PincodeService(mongo.db)
+    self.pushNotifyService = PushNotificationService(mongo.db, app.config['GCM_API_KEY'])
     self.smsService = SmsService(mongo.db, app.config['SMS_USER'], app.config['SMS_API_KEY'])
 
   def get(self, _id):
@@ -154,7 +158,23 @@ class OrderApi(Resource):
     if valid_order['otp_status'] == 'VERIFIED' and payment_type == 'cod':
       self.send_email(valid_order)
       self.send_sms(valid_order)
+      self.notify_new_order(valid_order)
     return {"status": "success", "location": "/api/order/" + str(_id), "data": valid_order}
+
+  def notify_new_order(self, order):
+    email = order['delivery_details']['email']
+    address = order['delivery_details']['address']
+    pincode = order['delivery_details']['pincode']
+    total = order['total']
+    data = {
+      'message': "Yay! New order from %s for Rs.%.2f. Delivery to %s - %s" % (email,total,address,pincode),
+      'order_id': order['_id'],
+      'order_no': order['order_no'],
+      'order_date': order['created_at'],
+      'total': total,
+      'title': 'New Order'
+    }
+    self.pushNotifyService.send_to_device(data,email='cackharot@gmail.com')
 
   def delete(self, _id):
     # item = self.service.get_by_id(_id)

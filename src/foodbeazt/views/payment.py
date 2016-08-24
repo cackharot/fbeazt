@@ -202,6 +202,7 @@ class PaymentSuccessView(View):
         redirect_url = self.payment_success_url
         self.orderView.send_email(order)
         self.orderView.send_sms(order)
+        self.orderView.notify_new_order(order)
     # print(order)
     try:
       self.service.save(order)
