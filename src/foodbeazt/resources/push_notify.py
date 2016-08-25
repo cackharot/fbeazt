@@ -63,7 +63,7 @@ class UnRegisterPushNotify(Resource):
     try:
       self.log.info("UnRegistering device %s", device_token)
       self.service.delete_by_device_token(device_token)
-      return None, 204
+      return {'status':'success'}, 200
     except Exception as e:
       self.log.exception(e)
       return {'status':'error','message':str(e)}, 400
