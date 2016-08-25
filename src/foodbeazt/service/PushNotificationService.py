@@ -53,5 +53,6 @@ class PushNotificationService(object):
         except Exception as e:
           self.log.exception(e)
       return True
-
+    else:
+      self.log.info("No device registered for %s" % (email))
     return False

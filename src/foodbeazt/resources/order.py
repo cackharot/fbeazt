@@ -175,6 +175,8 @@ class OrderApi(Resource):
       'title': 'New Order'
     }
     self.pushNotifyService.send_to_device(data,email='cackharot@gmail.com')
+    self.pushNotifyService.send_to_device(data,email='foodbeazt@gmail.com')
+    self.pushNotifyService.send_to_device(data,email='baraneetharan87@gmail.com')
 
   def delete(self, _id):
     # item = self.service.get_by_id(_id)
