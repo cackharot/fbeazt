@@ -47,7 +47,7 @@ class OrderStatusApi(Resource):
       if status == 'DELIVERED':
         self.send_notification(order)
 
-      return None, 204
+      return {'status':'success','data': status}, 200
     except Exception as e:
       self.log.exception(e)
       return {"status":"error","message":"Error while finding the order"}, 444
