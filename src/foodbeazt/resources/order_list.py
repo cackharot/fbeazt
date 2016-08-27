@@ -50,7 +50,7 @@ class OrderListApi(Resource):
                 "order_status": order_status.split(','),
                 "page_no": page_no,
                 "page_size": page_size}
-      url = "/api/orders?page_no=%d&page_size=%d&filter_text=%s&order_status=%s"
+      url = "/api/orders/?page_no=%d&page_size=%d&filter_text=%s&order_status=%s"
       if total > offset:
         result["next"] =  url % (page_no+1,page_size,filter_text,order_status)
       if page_no > 1:
