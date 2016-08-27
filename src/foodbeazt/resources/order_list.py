@@ -22,7 +22,11 @@ class OrderListApi(Resource):
     page_size = int(request.args.get('page_size', 50))
     filter_text = request.args.get('filter_text', None)
     order_no = request.args.get('order_no', None)
-    order_status = request.args.get('order_status', '')
+    order_status = request.args.get('order_status', None)
+    latest = request.args.get('latest', 0) in ['true','True','1']
+
+    if order_status is None or len(order_status) == 0:
+      order_status = "PENDING,PREPARING,PROGRESS"
 
     try:
       orders, total = self.service.search(tenant_id=tenant_id,
@@ -47,9 +51,11 @@ class OrderListApi(Resource):
       offset = page_no*page_size
       result = {'items': orders, 'total': total,
                 "filter_text": filter_text,
-                "order_status": order_status.split(','),
+                'order_status': None,
                 "page_no": page_no,
                 "page_size": page_size}
+      if order_status:
+        result['order_status'] = order_status.split(',')
       url = "/api/orders/?page_no=%d&page_size=%d&filter_text=%s&order_status=%s"
       if total > offset:
         result["next"] =  url % (page_no+1,page_size,filter_text,order_status)
