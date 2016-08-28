@@ -403,3 +403,17 @@ app.add_url_rule('/api/payment/order', view_func=PaymentRedirectView.as_view('pa
 app.add_url_rule('/api/payment/success', view_func=PaymentSuccessView.as_view('payment_success'))
 app.add_url_rule('/api/payment/failure', view_func=PaymentSuccessView.as_view('payment_failure'))
 app.add_url_rule('/api/payment/hook', view_func=PaymentWebHookView.as_view('payment_webhook'))
+
+@app.route('/test_new_order_notify')
+def test_new_order_notify():
+  tenant_id = g.user.tenant_id
+  query = {'tenant_id': ObjectId(tenant_id)}
+  order = [x for x in mongo.db.order_collection.find(query).sort("created_at", -1)][0]
+
+  try:
+    api = OrderApi()
+    api.notify_new_order(order)
+    return json_util.dumps({'status': 'success','order': order})
+  except Exception as e:
+    logger.exception(e)
+    return json_util.dumps({'status':'error', 'message':"Error in generating PDF invoice"})
