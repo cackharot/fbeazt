@@ -23,7 +23,7 @@ class OrderListApi(Resource):
     filter_text = request.args.get('filter_text', None)
     order_no = request.args.get('order_no', None)
     order_status = request.args.get('order_status', None)
-    latest = request.args.get('latest', 0) in ['true','True','1']
+    latest = request.args.get('latest', '1') in ['true','True','1']
 
     if order_status is None or len(order_status) == 0:
       order_status = "PENDING,PREPARING,PROGRESS"
@@ -35,7 +35,8 @@ class OrderListApi(Resource):
                             page_size=page_size,
                             order_no=order_no,
                             order_status=order_status,
-                            filter_text=filter_text)
+                            filter_text=filter_text,
+                            latest_first=latest)
 
       if orders and len(orders) > 0:
         store_ids = []
@@ -52,15 +53,16 @@ class OrderListApi(Resource):
       result = {'items': orders, 'total': total,
                 "filter_text": filter_text,
                 'order_status': None,
+                'latest': latest,
                 "page_no": page_no,
                 "page_size": page_size}
       if order_status:
         result['order_status'] = order_status.split(',')
-      url = "/api/orders/?page_no=%d&page_size=%d&filter_text=%s&order_status=%s"
+      url = "/api/orders/?page_no=%d&page_size=%d&filter_text=%s&order_status=%s&latest=%s"
       if total > offset:
-        result["next"] =  url % (page_no+1,page_size,filter_text,order_status)
+        result["next"] =  url % (page_no+1,page_size,filter_text,order_status,latest)
       if page_no > 1:
-        result["previous"] = url % (page_no-1,page_size,filter_text,order_status)
+        result["previous"] = url % (page_no-1,page_size,filter_text,order_status,latest)
 
       return result
     except Exception as e:
