@@ -22,7 +22,7 @@ class PushNotificationService(object):
   def save(self, item):
     email = item['email']
     device_token = item['device_token']
-    cnt = self.push_notify_store.remove({'email':email,'device_token':device_token})
+    cnt = self.push_notify_store.remove({'email':email}) #,'device_token':device_token})
     print("Deleting previous device token", cnt)
     item['created_at'] = datetime.now()
     return self.push_notify_store.save(item)
@@ -47,7 +47,7 @@ class PushNotificationService(object):
     if reg_ids and len(reg_ids) > 0:
       gcm = GCM(self.api_key)
       for device_reg_id in reg_ids:
-        self.log.info("Notifying device [%s]" % (device_reg_id))
+        self.log.info("Notifying device (%s) [%s]" % (email, device_reg_id))
         try:
           gcm.plaintext_request(registration_id=device_reg_id, data=data)
         except Exception as e:

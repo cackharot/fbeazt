@@ -18,7 +18,6 @@ class RegisterPushNotify(Resource):
     data = json_util.loads(request.data.decode('utf-8'))
     device_token = data.get('device_token', None)
     email = data.get('email', None)
-
     if device_token is None or email is None:
       return {'status':'error','message': 'Invalid device_token or email address'}, 400
 
