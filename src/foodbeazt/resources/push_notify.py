@@ -35,7 +35,7 @@ class RegisterPushNotify(Resource):
       }
       self.log.info("Registering device %s, %s", email, device_token)
       _id = self.service.save(item)
-      self.notify_device(item)
+      # self.notify_device(item)
       return {'status':'success','_id': _id}, 200
     except Exception as e:
       self.log.exception(e)
