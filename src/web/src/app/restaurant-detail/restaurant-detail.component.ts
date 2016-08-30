@@ -3,7 +3,7 @@ import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { Tab } from '../components/tab';
 import { Tabs } from '../components/tabs';
-import { ProductListComponent } from '../productlist/productlist.component';
+import { ProductListComponent } from '../productlist/product-list.component';
 import { ProductGridComponent } from '../product-grid/product-grid.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
 

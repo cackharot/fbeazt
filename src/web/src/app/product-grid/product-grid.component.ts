@@ -7,32 +7,19 @@ import { OrderService } from '../services/order.service';
 import { Product } from '../model/product';
 
 import { ChunkPipe } from '../pipes/chunk.pipe';
+import { PriceTableComponent } from '../price-table/price-table.component';
+
+import {ProductListComponent} from '../productlist/product-list.component';
 
 @Component({
   selector: 'product-grid',
   templateUrl: './product-grid.component.html',
-  directives: [ROUTER_DIRECTIVES, POPOVER_DIRECTIVES],
+  directives: [ROUTER_DIRECTIVES, POPOVER_DIRECTIVES, PriceTableComponent],
   pipes: [ChunkPipe]
 })
-export class ProductGridComponent {
-  @Input() products: Product[];
-  @Output() selectedProduct = new EventEmitter<Product>();
+export class ProductGridComponent extends ProductListComponent {
 
-  constructor(private router: Router, private orderService: OrderService) { }
-
-  getQuantity(item: Product) {
-    let order = this.orderService.getOrder();
-    return order.getItemQuantity(item._id);
-  }
-
-  updateQuantity(item: Product, value: number) {
-    this.orderService.updateItemQuantity(item._id, value);
-  }
-
-  select(item: Product, event: any = null) {
-    if (event) {
-      event.preventDefault();
-    }
-    this.selectedProduct.emit(item);
+  constructor(protected router: Router, protected orderService: OrderService) {
+    super(router, orderService);
   }
 }

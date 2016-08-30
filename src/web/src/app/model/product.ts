@@ -89,6 +89,10 @@ export class Product {
     return (hr >= this.open_time && hr <= (this.close_time + 12));
   }
 
+  hasPriceTable() {
+    return this.price_table && this.price_table.length > 0;
+  }
+
   getImage() {
     if (!this.image_url) {
       return null;

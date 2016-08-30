@@ -19,15 +19,22 @@ export class ProductListComponent {
   @Output() selectedProduct = new EventEmitter<Product>();
   selection: Product;
 
-  constructor(private router: Router, private orderService: OrderService) { }
+  constructor(protected router: Router, protected orderService: OrderService) { }
 
-  getQuantity(item: Product) {
+  getQuantity(item: Product, price_detail = null): number {
     let order = this.orderService.getOrder();
-    return order.getItemQuantity(item._id);
+    return order.getItemQuantity(item._id, price_detail);
   }
 
-  updateQuantity(item: Product, value: number) {
-    this.orderService.updateItemQuantity(item._id, value);
+  updateQuantity(item: Product, value: number, price_detail = null) {
+    this.orderService.updateItemQuantity(item._id, value, price_detail);
+  }
+
+  isInCart(item: Product) {
+    if (item.hasPriceTable()) {
+      return item.price_table.filter(x => this.getQuantity(item, x) > 0).length > 0;
+    }
+    return this.getQuantity(item) > 0;
   }
 
   select(item: Product) {

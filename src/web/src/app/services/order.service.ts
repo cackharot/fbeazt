@@ -94,6 +94,10 @@ export class OrderService {
   }
 
   updateQuantity(item: LineItem, value: number) {
+    if (!item) {
+      console.error('requested item to update quantity not found');
+      return;
+    }
     item.quantity = item.quantity + value;
     if (item.quantity <= 0) {
       this.removeItem(item);
@@ -102,13 +106,13 @@ export class OrderService {
     this.orderUpdatedSource.next(this.currentOrder);
   }
 
-  updateItemQuantity(product_id: ObjectId, value: number) {
-    let item = this.currentOrder.getItemByProductId(product_id);
+  updateItemQuantity(product_id: ObjectId, value: number, price_detail: PriceDetail) {
+    let item = this.currentOrder.getItemsByProductId(product_id, price_detail);
     this.updateQuantity(item, value);
   }
 
   updateItemPriceDetail(product_id: ObjectId, value: PriceDetail) {
-    let item = this.currentOrder.getItemByProductId(product_id);
+    let item = this.currentOrder.getItemsByProductId(product_id);
     if (item) {
       item.price_detail = value;
       this.orderUpdatedSource.next(this.currentOrder);

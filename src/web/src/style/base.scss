@@ -841,3 +841,24 @@ input.hidden{
     }
   }
 }
+
+.card {
+  &.pgrid{
+    .qty__btn__container{
+      .button{
+        &.dec,&.inc{
+          width: 45px;
+          height: 40px;
+        }
+      }
+      span {
+        width: 55px;
+        display: inline-block;
+        font-size: 12px;
+        line-height: 13px;
+        font-stretch: condensed;
+        font-weight: lighter;
+      }
+    }
+  }
+}

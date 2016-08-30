@@ -50,7 +50,7 @@ export class Order {
   }
 
   addItem(item: LineItem) {
-    let cur_item = this.items.find(x => _.isEqual(x.product_id, item.product_id));
+    let cur_item = this.items.find(x => _.isEqual(x.product_id, item.product_id) && _.isEqual(x.price_detail, item.price_detail));
     if (cur_item === undefined) {
       item.no = this.items.length + 1;
       this.items.push(item);
@@ -88,35 +88,32 @@ export class Order {
     return false;
   }
 
-  getItems(store_id = null) {
+  getItems(store_id = null): LineItem[] {
     if (store_id === null) {
       return this.items;
     }
     return this.items.filter(x => _.isEqual(x.store_id, store_id));
   }
 
-  getItemQuantity(product_id: ObjectId) {
-    let item = this.getItemByProductId(product_id);
-    if (item !== null) {
-      return item.quantity;
+  getItemQuantity(product_id: ObjectId, price_detail: PriceDetail = null): number {
+    let item = this.getItemsByProductId(product_id, price_detail);
+    return item ? item.quantity : -1;
+  }
+
+  getItemPriceTable(product_id: ObjectId, price_detail: PriceDetail = null): PriceDetail {
+    let item = this.getItemsByProductId(product_id, price_detail);
+    return item ? item.price_detail : null;
+  }
+
+  getItemsByProductId(product_id: ObjectId, price_detail: PriceDetail = null): LineItem {
+    let filteredItems = this.items.filter(x => _.isEqual(x.product_id, product_id));
+    if (price_detail && price_detail.no > -1 && filteredItems.length > 0) {
+      filteredItems = filteredItems.filter(x => _.isEqual(x.price_detail, price_detail));
     }
-    return -1;
+    return filteredItems.length > 0 ? filteredItems[0] : null;
   }
 
-  getItemPriceTable(product_id: ObjectId): PriceDetail {
-    let item = this.getItemByProductId(product_id);
-    if (item && item.price_detail) {
-      return item.price_detail;
-    }
-    return null;
-  }
-
-  getItemByProductId(product_id: ObjectId) {
-    let item = this.items.filter(x => _.isEqual(x.product_id, product_id));
-    return item.length === 1 ? item[0] : null;
-  }
-
-  getDeliveryCharges() {
+  getDeliveryCharges(): number {
     let storeCount = this.getStores().length;
     let minCharge = this.getMinDeliveryCharges();
     if (storeCount <= 1) {
@@ -127,11 +124,11 @@ export class Order {
     return this.delivery_charges;
   }
 
-  getMinDeliveryCharges() {
+  getMinDeliveryCharges(): number {
     return Order.MIN_DELIVERY_CHARGES;
   }
 
-  getPerStoreDeliveryCharges() {
+  getPerStoreDeliveryCharges(): number {
     return Order.PER_STORE_CHARGES;
   }
 

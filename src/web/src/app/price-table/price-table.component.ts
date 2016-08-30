@@ -18,26 +18,14 @@ export class PriceTableComponent {
   constructor(private router: Router, private orderService: OrderService) { }
 
   ngOnInit() {
-    if (this.hasPriceTable()) {
-      let order = this.orderService.getOrder();
-      let pd = order.getItemPriceTable(this.product._id);
-      if (pd) {
-        let t = this.product.price_table;
-        this.selection = t.find(x => x.price === pd.price && x.no === x.no);
-        this.product.selectedPriceDetail = this.selection;
-      } else {
-        this.selection = this.product.selectedPriceDetail;
-      }
+    if(this.product.hasPriceTable()){
+      this.selection = this.product.price_table[0];
     }
-  }
-
-  hasPriceTable() {
-    return this.product.price_table && this.product.price_table.length > 0
   }
 
   onChange(item: PriceDetail) {
     this.product.selectedPriceDetail = item;
     this.selection = item;
-    this.orderService.updateItemPriceDetail(this.product._id, item);
+    // this.orderService.updateItemPriceDetail(this.product._id, item);
   }
 }

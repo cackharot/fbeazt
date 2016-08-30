@@ -17,7 +17,7 @@ import { StoreSearchModel, StoreSearchResponse, StoreService } from '../services
 import { ProductSearchModel, ProductService } from '../services/product.service';
 
 import { RestaurantComponent } from '../restaurant/restaurant.component';
-import { ProductListComponent } from '../productlist/productlist.component';
+import { ProductListComponent } from '../productlist/product-list.component';
 import { ProductGridComponent } from '../product-grid/product-grid.component';
 
 import { Product } from '../model/product';
