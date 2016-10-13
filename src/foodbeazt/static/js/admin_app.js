@@ -70,8 +70,8 @@ fbeaztAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams,
 	        $scope.setTenant(data[0]._id.$oid, data[0].name)
 	    }else{
 	        id = $cookieStore.get('tenant_id')
-	        name = _.find(data, function(item){ return id == item._id.$oid }).name;
-	        $scope.setTenant(id, name)
+			//name = _.find(data, function(item){ return id == item._id.$oid }).name;
+			//$scope.setTenant(id, name)
 	    }
 	})
 
