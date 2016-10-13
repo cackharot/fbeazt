@@ -30,7 +30,7 @@ class OrderService(object):
     #   query['store_id'] = ObjectId(store_id)
     if user_id:
       query['user_id'] = ObjectId(user_id)
-    query['otp_status'] = 'VERIFIED'
+    # query['otp_status'] = 'VERIFIED'
     if order_no is not None and len(order_no)>0:
       query['order_no'] = order_no
     if order_status is not None and len(order_status) > 0:
