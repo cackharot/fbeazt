@@ -126,7 +126,7 @@ def get_or_create_user(item):
   prev = service.get_by_email(email)
   if prev:
     return prev
-  self.log.info("Creating new user...[%s]" % email)
+  logger.info("Creating new user...[%s]" % email)
 
   tenant_id = default_tenantId()
 
