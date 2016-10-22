@@ -79,7 +79,11 @@ productApp.controller('productListCtrl', function ($scope, $http, $routeParams) 
 })
 
 productApp.controller('productDetailCtrl', function ($scope, $routeParams, $location, $http, FileUploader) {
-  var uploader = $scope.uploader = new FileUploader()
+  var uploader = $scope.uploader = new FileUploader();
+  var id = $routeParams.id || -1;
+  var store_id = $routeParams.store_id || -1;
+  var returnUrl = '/product?store_id=' + store_id;
+  $scope.store_id = store_id;
 
   uploader.filters.push({
     name: 'imageFilter',
@@ -90,14 +94,11 @@ productApp.controller('productDetailCtrl', function ($scope, $routeParams, $loca
   });
 
   uploader.onSuccessItem = function () {
-    $location.path('/product');
+    $location.url(returnUrl);
   };
   uploader.onErrorItem = function (fileItem, response, status, headers) {
     console.info('onErrorItem', fileItem, response, status, headers);
   };
-
-  var id = $routeParams.id || -1;
-  $scope.store_id = $routeParams.store_id || -1;
 
   $scope.model = {};
   $scope.food_types = [{ 'id': 'veg', 'text': 'Vegetarian' },
@@ -112,7 +113,7 @@ productApp.controller('productDetailCtrl', function ($scope, $routeParams, $loca
     }
   }).error(function (e) {
     alert('Error while fetching product details')
-    $location.path('/product')
+    $location.url(returnUrl);
   });
 
   $scope.removePriceTable = function (item) {
@@ -136,36 +137,37 @@ productApp.controller('productDetailCtrl', function ($scope, $routeParams, $loca
 
   $scope.save = function () {
     if ($scope.frmProduct.$invalid) {
-      alert("Form contains invalid data\n\nPlease check the form and submit again")
-      return
+      alert("Form contains invalid data\n\nPlease check the form and submit again");
+      return;
     }
 
-    var item = angular.copy($scope.model)
+    var item = angular.copy($scope.model);
 
     if (item._id.$oid == "-1") {
-      item._id = null
-      res = $http.post('/api/product/' + $scope.store_id + '/-1', item)
+      item._id = null;
+      res = $http.post('/api/product/' + $scope.store_id + '/-1', item);
     } else {
-      res = $http.put('/api/product/' + $scope.store_id + '/' + item._id.$oid, item)
+      res = $http.put('/api/product/' + $scope.store_id + '/' + item._id.$oid, item);
     }
 
     res.success(function (data) {
       if (data.status == "success") {
-        var product_id = data.data._id.$oid.toString() || $scope.model._id.$oid.toString()
-        var url = '/api/upload_product_image/' + product_id
-        uploader.url = url
+        var product_id = data.data._id.$oid.toString() || $scope.model._id.$oid.toString();
+        var url = '/api/upload_product_image/' + product_id;
+        uploader.url = url;
         if (uploader.queue.length > 0) {
-          uploader.queue[0].url = url
-          uploader.queue[0].upload()
+          uploader.queue[0].url = url;
+          uploader.queue[0].upload();
         } else {
-          $location.path('/product')
+          console.log("save product success!")
+          $location.url(returnUrl);
         }
       } else {
-        alert(data.message)
+        alert(data.message);
       }
     }).error(function (e) {
-      alert(e)
-      console.log(e)
+      alert(e);
+      console.log(e);
     })
-  }
-})
+  };
+});
