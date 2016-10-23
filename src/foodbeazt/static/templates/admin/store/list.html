@@ -25,13 +25,13 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="item in stores">
-                            <td><a href="#/store/{{item._id.$oid}}" title="Click to edit this store!">{{item.name}}</a>
+                            <td>
+                                <a href="#/store/{{item._id.$oid}}" title="Click to edit this store!">{{item.name}}</a>
                             </td>
                             <td>{{item.address}}</td>
                             <td>{{item.phone}}</td>
                             <td>
-                                <span>Open: {{item.open_time}} AM</span>
-                                <span>Close: {{item.close_time}} PM</span>
+                                <span>{{item.open_time}} to {{item.close_time}} hrs</span>
                             </td>
                             <td>{{item.cuisines.join(',')}}</td>
                             <td><span ng-bind-html="item.food_type | show_food_type"></span></td>

@@ -22,7 +22,12 @@
   </div>
   <div class="card-action align-center">
     <small class="light" *ngIf="!product.isAvailable()">
-      Currently unavailable. Try again later!
+      <span *ngIf="product.isOpen()">
+        Currently unavailable. Try again later!
+      </span>
+      <span *ngIf="!product.isOpen()">
+        Available from {{product.getFormattedAvailableTimings()}}
+      </span>
     </small>
     <button type="button" (click)="select(product)" *ngIf="!isInCart(product) || product.hasPriceTable()" [disabled]="!product.isAvailable()"
       class="button add-to-cart">

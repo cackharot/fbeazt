@@ -38,7 +38,7 @@
               <!-- <div class="telephone"><i class="fa fa-telephone"></i> {{restaurant.phone}}</div> -->
               <div class="timings">
                 <span><i class="fa fa-hourglass-o"></i>
-                  {{restaurant.open_time.toFixed(2)}} AM to {{restaurant.close_time.toFixed(2)}} PM
+                  {{restaurant.getFormattedStoreTimings()}}
                   <span class="light green" *ngIf="!restaurant.isHoliday() && restaurant.isOpen()">(Open)</span>
                 <span class="light red" *ngIf="!restaurant.isHoliday() && restaurant.isClosed()">
                     (Closed?)

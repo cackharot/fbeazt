@@ -1,7 +1,7 @@
 import { ObjectId, Date } from './base';
 import * as moment from 'moment';
 
-import {AppConfig} from '../AppConfig';
+import { AppConfig } from '../AppConfig';
 
 export class Restaurant {
   _id: ObjectId = new ObjectId();
@@ -47,7 +47,7 @@ export class Restaurant {
 
   isOpen() {
     let hr = moment().hour() + (moment().minute() / 60);
-    return !this.is_closed && (hr >= this.open_time && hr <= (this.close_time + 12));
+    return !this.is_closed && (hr >= this.open_time && hr <= this.close_time);
   }
 
   isClosed() {
@@ -69,5 +69,21 @@ export class Restaurant {
       return null;
     }
     return AppConfig.getRestaurantImage(this.image_url);
+  }
+
+  getFormattedTime(time_val: number) {
+    if (time_val < 12) {
+      return time_val.toFixed(0) + ' AM';
+    } else if (time_val === 12) {
+      return time_val.toFixed(0) + ' NOON';
+    } else if (time_val === 24) {
+      return '00 AM';
+    } else {
+      return (time_val - 12).toFixed(0) + ' PM';
+    }
+  }
+
+  getFormattedStoreTimings() {
+    return this.getFormattedTime(this.open_time) + ' to ' + this.getFormattedTime(this.close_time);
   }
 }

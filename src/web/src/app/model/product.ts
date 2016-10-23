@@ -80,13 +80,12 @@ export class Product {
     if (this.store.isHoliday() || this.store.isClosed()) {
       return false;
     }
-    // return this.isOpen();
-    return true;
+    return this.isOpen();
   }
 
   isOpen() {
     let hr = moment().hour() + (moment().minute() / 60);
-    return (hr >= this.open_time && hr <= (this.close_time + 12));
+    return (hr >= this.open_time && hr <= this.close_time);
   }
 
   hasPriceTable() {
@@ -98,6 +97,22 @@ export class Product {
       return null;
     }
     return AppConfig.getProductImage(this.image_url);
+  }
+
+  getFormattedTime(time_val: number) {
+    if (time_val < 12) {
+      return time_val.toFixed(0) + ' AM';
+    } else if (time_val === 12) {
+      return time_val.toFixed(0) + ' NOON';
+    } else if (time_val === 24) {
+      return '00 AM';
+    } else {
+      return (time_val - 12).toFixed(0) + ' PM';
+    }
+  }
+
+  getFormattedAvailableTimings() {
+    return this.getFormattedTime(this.open_time) + ' to ' + this.getFormattedTime(this.close_time);
   }
 }
 

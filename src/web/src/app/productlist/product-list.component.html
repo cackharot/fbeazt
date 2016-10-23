@@ -1,44 +1,49 @@
 <div class="callout warning" *ngIf="products == null || products.length == 0">
-  <h3>Oops! No dishes found</h3>
-  <p>You might have misspelled or try again!</p>
+	<h3>Oops! No dishes found</h3>
+	<p>You might have misspelled or try again!</p>
 </div>
 <div class="card no-min-height" *ngFor="let product of products;">
-  <div class="card-section align-left">
-    <img src="{{product.getImage() || '/images/placeholder.png'}}" />
-    <i class="veg__icon" [class.green]="product.isVeg()" [class.brown]="!product.isVeg()"></i>
-    <ul class="cuisines light">
-      <li *ngFor="let cus of product.cuisines">
-        <span class="cusines">{{cus}}</span>
-      </li>
-    </ul>
-    <h4 class="dark">
-      {{product.name}}
-    </h4>
-    <!--<p class="light show-for-medium description"><i>{{product.description}}</i></p>-->
-    <!--<span class="price_tag rupee light">{{product.sell_price}}</span>-->
-    <price-table [product]="product"></price-table>
-  </div>
-  <div class="card-action align-center">
-    <small class="light" *ngIf="!product.isAvailable()">
-      Currently unavailable. Try again later!
+	<div class="card-section align-left">
+		<img src="{{product.getImage() || '/images/placeholder.png'}}" />
+		<i class="veg__icon" [class.green]="product.isVeg()" [class.brown]="!product.isVeg()"></i>
+		<ul class="cuisines light">
+			<li *ngFor="let cus of product.cuisines">
+				<span class="cusines">{{cus}}</span>
+			</li>
+		</ul>
+		<h4 class="dark">
+			{{product.name}}
+		</h4>
+		<!--<p class="light show-for-medium description"><i>{{product.description}}</i></p>-->
+		<!--<span class="price_tag rupee light">{{product.sell_price}}</span>-->
+		<price-table [product]="product"></price-table>
+	</div>
+	<div class="card-action align-center">
+		<small class="light" *ngIf="!product.isAvailable()">
+      <span *ngIf="product.isOpen()">
+        Currently unavailable. Try again later!
+      </span>
+      <span *ngIf="!product.isOpen()">
+        Available from {{product.getFormattedAvailableTimings()}}
+      </span>
     </small>
-    <button type="button" (click)="select(product)" *ngIf="!isInCart(product) || product.hasPriceTable()" [disabled]="!product.isAvailable()"
-      class="button add-to-cart">
+		<button type="button" (click)="select(product)" *ngIf="!isInCart(product) || product.hasPriceTable()" [disabled]="!product.isAvailable()"
+			class="button add-to-cart">
       <i class="fi-plus"></i> Add
     </button>
-    <div *ngIf="product.hasPriceTable()">
-      <div *ngFor="let pd of product.price_table">
-        <div class="qty__btn__container" *ngIf="getQuantity(product, pd) > 0" style="margin-top:10px;">
-          <button class="button dec" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,-1,pd)"><i class="fa fa-minus"></i></button>
-          <span>{{pd.description}}(Rs.{{pd.price}}), Qty: {{getQuantity(product,pd)}}</span>
-          <button class="button inc" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,1,pd)"><i class="fa fa-plus"></i></button>
-        </div>
-      </div>
-    </div>
-    <div class="qty__btn__container" *ngIf="!product.hasPriceTable() && getQuantity(product)>0">
-      <button class="button dec" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,-1)"><i class="fa fa-minus"></i></button>
-      <span>Qty: {{getQuantity(product)}}</span>
-      <button class="button inc" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,1)"><i class="fa fa-plus"></i></button>
-    </div>
-  </div>
+		<div *ngIf="product.hasPriceTable()">
+			<div *ngFor="let pd of product.price_table">
+				<div class="qty__btn__container" *ngIf="getQuantity(product, pd) > 0" style="margin-top:10px;">
+					<button class="button dec" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,-1,pd)"><i class="fa fa-minus"></i></button>
+					<span>{{pd.description}}(Rs.{{pd.price}}), Qty: {{getQuantity(product,pd)}}</span>
+					<button class="button inc" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,1,pd)"><i class="fa fa-plus"></i></button>
+				</div>
+			</div>
+		</div>
+		<div class="qty__btn__container" *ngIf="!product.hasPriceTable() && getQuantity(product)>0">
+			<button class="button dec" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,-1)"><i class="fa fa-minus"></i></button>
+			<span>Qty: {{getQuantity(product)}}</span>
+			<button class="button inc" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,1)"><i class="fa fa-plus"></i></button>
+		</div>
+	</div>
 </div>
