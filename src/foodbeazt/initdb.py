@@ -74,7 +74,9 @@ def create_items(db, tenant_id, store_id):
   return item_count
 
 def setup(sample_data=False):
-    client = MongoClient()
+    host = os.environ.get('MONGO_HOST', 'localhost')
+    port = int(os.environ.get('MONGO_PORT', 27017))
+    client = MongoClient(host=host,port=port)
     db = client.foodbeaztDb
     print("Checking admin tenant")
     tenant_service = TenantService(db)
@@ -110,7 +112,9 @@ if __name__ == "__main__":
   if len(sys.argv) > 1:
     if sys.argv[1] == "drop":
       print('Dropping database...')
-      c = MongoClient()
+      host = os.environ.get('MONGO_HOST', 'localhost')
+      port = int(os.environ.get('MONGO_PORT', 27017))
+      c = MongoClient(host=host,port=port)
       c.drop_database('foodbeaztDb')
       print('Drop successfull')
     if len(sys.argv) > 2 and sys.argv[2] == "test-data":
