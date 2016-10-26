@@ -1,0 +1,32 @@
+version: '2'
+services:
+  namak-api:
+    build: ./api
+    ports:
+      - "5000:4000"
+    volumes:
+      - ../:/opt/fbeazt
+      - ./api/config/dev:/opt/fbeazt/src/foodbeazt/config
+      - ./api/config/uwsgi:/etc/uwsgi/sites-enabled
+    environment:
+      FOODBEAZT_CONFIG: /opt/fbeazt/src/foodbeazt/config/foodbeazt.cfg
+      MONGO_HOST: triton-mongodb
+    depends_on:
+      - triton-mongodb
+      - norma-lb
+      
+  triton-mongodb:
+    build: ./database
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./database/tmp:/data/db
+
+  norma-lb:
+    build: ./loadbalancer
+    ports:
+      - "8000:80"
+      - "8800:8080"
+      - "4333:433"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d

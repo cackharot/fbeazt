@@ -1,0 +1,10 @@
+uwsgi:
+  master: true
+  processes: 1
+  vaccum: true
+  chmod-socket: 666
+  # socket: :1320
+  http: :4000
+  chdir: /opt/fbeazt/src/
+  module: foodbeazt.fapp:app
+  touch-reload: /opt/fbeazt/src/foodbeazt/fapp.py
