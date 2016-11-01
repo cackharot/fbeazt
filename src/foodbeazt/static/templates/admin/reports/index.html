@@ -1,0 +1,27 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false" ng-controller="reportsCtrl">
+	<h3>
+		Reports
+	</h3>
+	<div class="row">
+		<div class="panel panel-default">
+			<div class="panel-body">
+        <h4>Order trend</h4>
+				<canvas id="order-char" class="chart chart-line"
+          chart-colors="colors" 
+          chart-data="data" chart-labels="labels" chart-series="series" chart-options="options"
+					chart-dataset-override="datasetOverride" chart-click="onClick">
+				</canvas>
+			</div>
+		</div>
+	</div>
+  <div class="row">
+		<div class="panel panel-default">
+			<div class="panel-body">
+        <h4>Revenue trend</h4>
+				<canvas id="revenue-chart" class="chart chart-bar" chart-data="revenueData" 
+          chart-labels="revenueLabels" chart-series="revenueSeries">
+				</canvas>
+			</div>
+		</div>
+	</div>
+</div>

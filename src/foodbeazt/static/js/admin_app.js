@@ -1,4 +1,4 @@
-var fbeaztAdmin = angular.module('fbeaztAdmin',['ngRoute', 'ngSanitize', 'ngCookies', 'checklist-model', 'fbFilters', 'angularFileUpload'])
+var fbeaztAdmin = angular.module('fbeaztAdmin',['ngRoute', 'ngSanitize', 'ngCookies', 'checklist-model', 'fbFilters', 'angularFileUpload', 'chart.js'])
 
 var menuItems = []
 menuItems.push({"title": "Main", "heading": true })
@@ -12,6 +12,7 @@ menuItems.push({"title": "Data Management", "heading": false, "url": "/manage_da
 menuItems.push({"title": "Popular Dishes", "heading": false, "url": "/popular_dishes", "icon": "fa fa-star", "templateUrl": '/static/templates/admin/popular_dishes/index.html'})
 menuItems.push({"title": "Pincode", "heading": false, "url": "/pincode", "icon": "fa fa-map", "templateUrl": '/static/templates/admin/pincode/index.html'})
 menuItems.push({"title": "SMS", "heading": false, "url": "/manage_sms", "icon": "fa fa-envelope", "templateUrl": '/static/templates/admin/sms/index.html'})
+menuItems.push({"title": "Reports", "heading": false, "url": "/reports", "icon": "fa fa-bar-chart", "templateUrl": '/static/templates/admin/reports/index.html'})
 
 var custom_routes = []
 custom_routes.push({"title": "Manage Tenant", "heading": false, "url": "/tenant/:id", "templateUrl": '/static/templates/admin/tenant/manage.html'})

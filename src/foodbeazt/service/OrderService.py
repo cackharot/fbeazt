@@ -118,9 +118,34 @@ class OrderService(object):
 
   def generate_report(self, tenant_id):
     total = self.orders.count()
-    result = { 'total': total }
+    result = {'total': total,'pending':0,'preparing':0,'cancelled':0,'delivered':0}
     data = self.orders.aggregate({'$group': { '_id': "$status", 'count': { "$sum": 1 }}})
     if data["ok"] == 1.0:
       for x in data["result"]:
         result[x['_id'].lower()] = x['count']
+    return result
+
+  def order_trend(self, tenant_id):
+    result = {}
+    data = self.orders.aggregate([
+      {'$project': {'status':"$status", 'month': {'$month':"$created_at"}}},
+      {'$group': {'count': {'$sum': 1}, '_id': {'status':"$status",'month':"$month" }}}
+    ])
+    if data["ok"] == 1.0:
+      for x in data["result"]:
+        status = x['_id']['status'].lower()
+        if not status in result:
+          result[status] = {}
+        result[status][x['_id']['month']] = x['count']
+    return result
+
+  def revenue_trend(self, tenant_id):
+    result = {}
+    data = self.orders.aggregate([
+      {'$project': {'total':"$total",'delivery_charges':"$delivery_charges", 'month': {'$month':"$created_at"}}},
+      {'$group': {'_id': {'month':"$month" },'delivery_charges':{"$sum":"$delivery_charges"},'total':{"$sum": "$total"}}}
+    ])
+    if data["ok"] == 1.0:
+      for x in data["result"]:
+        result[x['_id']['month']] = { 'total': x['total'], 'delivery_charges': x['delivery_charges'] }
     return result
