@@ -1,4 +1,5 @@
 import { Component, NgZone, OnInit } from '@angular/core';
+import { FormBuilder, Validators  } from '@angular/common';
 import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { Tab } from '../components/tab';
@@ -27,12 +28,14 @@ export class RestaurantDetailComponent implements OnInit {
   restaurant: Restaurant;
   categories: Category[];
   products: Product[];
+  searchText: string = '';
   onlyVeg: boolean = false;
   isRequesting: boolean = false;
   showList: boolean = true;
   errorMsg: any;
 
   constructor(
+    private fb: FormBuilder,
     private router: Router,
     private zone: NgZone,
     private storeService: StoreService,
@@ -66,7 +69,7 @@ export class RestaurantDetailComponent implements OnInit {
   }
 
   getProducts() {
-    this.productService.search(this.storeId).then(items => {
+    this.productService.search(this.storeId,this.searchText).then(items => {
       this.products = items;
       this.categories = [];
       if (this.onlyVeg) {
@@ -100,5 +103,6 @@ export class RestaurantDetailComponent implements OnInit {
 
   filter() {
     this.getProducts();
+    return false;
   }
 }

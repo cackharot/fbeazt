@@ -60,10 +60,11 @@ export class ProductService {
       .catch(this.handleError);
   }
 
-  search(store_id): Promise<Product[]> {
+  search(store_id, searchText=''): Promise<Product[]> {
     let params: URLSearchParams = new URLSearchParams();
     params.set('page_no', '1');
     params.set('page_size', '200');
+    params.set('filter_text', searchText);
 
     return this.http.get(`${this.productsUrl}/${store_id}`, { search: params })
       .toPromise()
