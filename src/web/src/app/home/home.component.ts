@@ -3,6 +3,8 @@ import { FORM_DIRECTIVES, Control } from '@angular/common';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { SessionStorage } from '../libs/WebStorage';
 
+import { AppConfig } from '../AppConfig';
+
 import {Observable} from 'rxjs/Observable';
 import { Subject }    from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
@@ -19,6 +21,7 @@ import { ProductSearchModel, ProductService } from '../services/product.service'
 import { RestaurantComponent } from '../restaurant/restaurant.component';
 import { ProductListComponent } from '../productlist/product-list.component';
 import { ProductGridComponent } from '../product-grid/product-grid.component';
+import { PopularStoresComponent } from '../popular-stores/popular-stores.component';
 
 import { Product } from '../model/product';
 import { Restaurant } from '../model/restaurant';
@@ -29,7 +32,7 @@ import { FeatureService } from '../feature';
   selector: 'home-page',
   templateUrl: './home.component.html',
   directives: [FORM_DIRECTIVES, ROUTER_DIRECTIVES,
-    SpinnerComponent, RestaurantComponent, ProductListComponent, ProductGridComponent]
+    SpinnerComponent, RestaurantComponent, ProductListComponent, ProductGridComponent, PopularStoresComponent]
 })
 export class HomeComponent implements OnInit {
   @SessionStorage() searchText: string = '';

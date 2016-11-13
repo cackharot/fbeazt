@@ -5,6 +5,7 @@ export class AppConfig {
   static PRODUCTS_URL: string = AppConfig.BASE_URL + '/products';
   static PRODUCT_URL: string = AppConfig.BASE_URL + '/product';
   static POPULAR_DISHES_URL: string = AppConfig.BASE_URL + '/popular_items';
+  static POPULAR_STORES_URL: string = AppConfig.BASE_URL + '/popular_stores';
   static ORDER_URL: string = AppConfig.BASE_URL + '/order';
   static TRACK_URL: string = AppConfig.BASE_URL + '/track';
   static PINCODE_URL: string = AppConfig.BASE_URL + '/pincodes';

@@ -112,6 +112,16 @@ export class StoreService {
       .catch(this.handleError);
   }
 
+  getPopularStores() {
+      return this.http.get(AppConfig.POPULAR_STORES_URL+'/-1')
+        .toPromise()
+        .then(response => {
+            let data = response.json();
+            return data.items.map(x => Restaurant.of(x));
+        })
+        .catch(this.handleError);
+  }
+
   private handleError(error: any) {
     console.error('An error occurred', error);
     return Promise.reject(error.message || error);

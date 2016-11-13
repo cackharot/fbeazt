@@ -1,0 +1,15 @@
+<div *ngIf="stores && stores.length > 0">
+    <h3>Popular Restaurants</h3>
+    <div class="carousel text-center">
+    <!--<div class="carousel_ text-center">-->
+        <!--<ul class="slides" [ngStyle]="{'width': (stores ? stores.length*100 : 100) + '%'}">-->
+        <ul>
+            <!--<li *ngFor="let item of stores" [ngStyle]="{'width': (stores ? 100/stores.length : 100) + '%'}">-->
+            <li *ngFor="let item of stores">
+                <a href="#" (click)="navigate(item._id.$oid)">
+                    <img src="{{item.getImage()}}" class="mt__fl"/>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

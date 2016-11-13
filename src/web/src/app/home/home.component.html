@@ -33,7 +33,10 @@
   </div>
 </section>
 <section class="row" *ngIf="searchText == null || searchText.length == 0">
-  <div class="medium-12 small-12 columns end">
+  <div class="medium-6 small-12 columns">
+    <popular-stores></popular-stores>
+  </div>
+  <div class="medium-6 small-12 columns">
     <h4>App Features</h4>
     <ul>
       <li><i class="fa fa-bolt"></i> Super fast ordering</li>
