@@ -352,6 +352,7 @@ from foodbeazt.resources.order_list import OrderListApi
 from foodbeazt.resources.order_status import OrderStatusApi
 from foodbeazt.resources.export_data import ExportDataApi
 from foodbeazt.resources.popular_items import PopularItemsApi
+from foodbeazt.resources.popular_stores import PopularStoresApi
 from foodbeazt.resources.sms import SmsApi
 from foodbeazt.resources.report import ReportApi
 from foodbeazt.resources.pincodes import PincodeListApi, PincodeApi
@@ -368,6 +369,7 @@ api.add_resource(PincodeListApi, '/api/pincodes')
 api.add_resource(PincodeApi, '/api/pincode/<string:_id>')
 
 api.add_resource(PopularItemsApi, '/api/popular_items/<string:_id>')
+api.add_resource(PopularStoresApi, '/api/popular_stores/<string:_id>')
 
 api.add_resource(ExportDataApi, '/api/data_manage')
 

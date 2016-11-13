@@ -11,6 +11,7 @@ class StoreService(object):
   def __init__(self, db):
     self.db = db
     self.stores = self.db.store_collection
+    self.popular_items = db.popular_stores_collections
     self.weekday_names = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
 
   def search(self, tenant_id, filter_text=None, only_veg=False, only_open=False, page_no=1,page_size=10):
@@ -83,3 +84,44 @@ class StoreService(object):
 
   def search_by_ids(self, store_ids):
     return [x for x in self.stores.find({ '_id': { '$in': [ObjectId(x) for x in store_ids] }})]
+
+  def add_popular_item(self, tenant_id, store_id):
+    hf = self.popular_items.find_one({'store_id': ObjectId(store_id)})
+    if hf is not None: return None
+    item = {
+      "store_id"   : ObjectId(store_id),
+      "tenant_id"  : ObjectId(tenant_id),
+      "no"         : self.popular_items.find().count()+1,
+      "created_at" : datetime.now()
+    }
+    return self.popular_items.save(item)
+
+  def update_popular_item_no(self, _id, no):
+    item               = self.popular_items.find_one({'store_id': ObjectId(_id)})
+    item['no']         = no
+    item['updated_at'] = datetime.now()
+    self.popular_items.save(item)
+
+  def delete_popular_item(self, tenant_id, store_id):
+    query = {
+      "store_id"  : ObjectId(store_id),
+      "tenant_id" : ObjectId(tenant_id),
+    }
+    return self.popular_items.remove(query)
+
+  def get_popular_items(self,tenant_id):
+    query = {
+      "tenant_id": ObjectId(tenant_id),
+    }
+    lst = self.popular_items.find(query).sort('no',1)
+    kv = {}
+    for x in lst: kv[x['store_id']] = x['no']
+    store_ids = [x for x in kv.keys()]
+    if len(store_ids) == 0: return []
+    items = self.stores.find({"_id": { "$in": store_ids}})
+    popular = []
+    for x in items:
+      x['is_popular'] = True
+      x['no'] = kv[x['_id']]
+      popular.append(x)
+    return popular

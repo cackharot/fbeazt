@@ -10,6 +10,7 @@ menuItems.push({"title": "Orders", "heading": false, "url": "/order", "icon": "f
 menuItems.push({"title": "Online Payments", "heading": false, "url": "/payments", "icon": "fa fa-money", "templateUrl": '/static/templates/admin/payment/list.html'})
 menuItems.push({"title": "Data Management", "heading": false, "url": "/manage_data", "icon": "fa fa-list", "templateUrl": '/static/templates/admin/import_export/list.html'})
 menuItems.push({"title": "Popular Dishes", "heading": false, "url": "/popular_dishes", "icon": "fa fa-star", "templateUrl": '/static/templates/admin/popular_dishes/index.html'})
+menuItems.push({"title": "Popular Stores", "heading": false, "url": "/popular_stores", "icon": "fa fa-star", "templateUrl": '/static/templates/admin/popular_stores/index.html'})
 menuItems.push({"title": "Pincode", "heading": false, "url": "/pincode", "icon": "fa fa-map", "templateUrl": '/static/templates/admin/pincode/index.html'})
 menuItems.push({"title": "SMS", "heading": false, "url": "/manage_sms", "icon": "fa fa-envelope", "templateUrl": '/static/templates/admin/sms/index.html'})
 menuItems.push({"title": "Reports", "heading": false, "url": "/reports", "icon": "fa fa-bar-chart", "templateUrl": '/static/templates/admin/reports/index.html'})
@@ -24,65 +25,65 @@ custom_routes.push({"title": "Manage Pincode", "heading": false, "url": "/pincod
 fbeaztAdmin.config(['$routeProvider', function($routeProvider){
     var items = menuItems.concat(custom_routes)
 
-	for(var i=0; i < items.length; ++i){
+    for(var i=0; i < items.length; ++i){
         var item = items[i]
         if(item.heading) continue
         $routeProvider.when(item.url,{
-        		action: item.templateUrl,
-        		title : item.title
-        	})
+            action: item.templateUrl,
+            title : item.title
+        })
     }
 
-	$routeProvider.otherwise({
-		redirectTo: '/'
-	})
+    $routeProvider.otherwise({
+        redirectTo: '/'
+    })
 }]).run(function($location, $rootScope, $route){
-	$rootScope.pageTitle = function() {
-	    var title = $route.current ? $route.current.title : null
-	    return title || "FoodBeazt :: Admin :: Home"
-	}
+    $rootScope.pageTitle = function() {
+        var title = $route.current ? $route.current.title : null
+        return title || "FoodBeazt :: Admin :: Home"
+    }
     $rootScope.location = $location
-	$rootScope.$on('$routeChangeSuccess', function( event, current, previous ){
+    $rootScope.$on('$routeChangeSuccess', function( event, current, previous ){
     })
 })
 
 
 fbeaztAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams, $cookieStore){
-	$scope.app = {}
-	$scope.app.viewAnimation = true
-	$scope.app.page = {}
-	$scope.app.layout = {}
-	$scope.app.user = window.app_user
-	$scope.app.layout.isFixed = true
-	$scope.app.layout.isCollapsed = false
-	$scope.app.layout.top_nav_url = "static/templates/admin/top-navbar.html"
-	$scope.app.layout.aside_nav_url = "static/templates/admin/aside-navbar.html"
-	$scope.app.layout.content_url = ""
+    $scope.app = {}
+    $scope.app.viewAnimation = true
+    $scope.app.page = {}
+    $scope.app.layout = {}
+    $scope.app.user = window.app_user
+    $scope.app.layout.isFixed = true
+    $scope.app.layout.isCollapsed = false
+    $scope.app.layout.top_nav_url = "static/templates/admin/top-navbar.html"
+    $scope.app.layout.aside_nav_url = "static/templates/admin/aside-navbar.html"
+    $scope.app.layout.content_url = ""
     $scope.menuItems = menuItems
 
-	render = function($currentRoute){
-	    var content_url = $route.current.action
-	    $scope.app.layout.content_url = content_url
-	}
+    render = function($currentRoute){
+        var content_url = $route.current.action
+        $scope.app.layout.content_url = content_url
+    }
 
-	$http.get('/api/tenants').success(function(data){
-	    $scope.app.tenants = data;
-	    if(!$cookieStore.get('tenant_id')){
-	        $scope.setTenant(data[0]._id.$oid, data[0].name)
-	    }else{
-	        id = $cookieStore.get('tenant_id')
-			//name = _.find(data, function(item){ return id == item._id.$oid }).name;
-			//$scope.setTenant(id, name)
-	    }
-	})
+    $http.get('/api/tenants').success(function(data){
+        $scope.app.tenants = data;
+        if(!$cookieStore.get('tenant_id')){
+            $scope.setTenant(data[0]._id.$oid, data[0].name)
+        }else{
+            id = $cookieStore.get('tenant_id')
+            //name = _.find(data, function(item){ return id == item._id.$oid }).name;
+            //$scope.setTenant(id, name)
+        }
+    })
 
-	$scope.setTenant = function(id, name){
-	    $scope.app.selected_tenant = id
-	    $scope.app.selected_tenant_name = name
-	    $cookieStore.put('tenant_id', id.toString())
-	}
+    $scope.setTenant = function(id, name){
+        $scope.app.selected_tenant = id
+        $scope.app.selected_tenant_name = name
+        $cookieStore.put('tenant_id', id.toString())
+    }
 
-	$scope.$on("$routeChangeSuccess", function( $currentRoute, $previousRoute ){
-	    render($currentRoute)
+    $scope.$on("$routeChangeSuccess", function( $currentRoute, $previousRoute ){
+        render($currentRoute)
     })
 })
