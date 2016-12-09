@@ -11,25 +11,27 @@ services:
     environment:
       FOODBEAZT_CONFIG: /opt/fbeazt/src/foodbeazt/config/foodbeazt.cfg
       MONGO_HOST: triton-mongodb
+    extra_hosts:
+      - "logstash-server:$DOCKERHOST"
     depends_on:
       - triton-mongodb
       - norma-lb
-      
+
   triton-mongodb:
     build: ./database
     ports:
       - "27017:27017"
     volumes:
-      - ./database/tmp:/data/db
+      - /data/db:/data/db
 
-  yuki-web:
-    build: ./web
-    ports:
-      - "9900:8080"
-    environment:
-      # NODE_ENV: production
-      NODE_ENV: development
-    # volumes:
+  #yuki-web:
+    #build: ./web
+    #ports:
+      #- "9900:8080"
+    #environment:
+      ## NODE_ENV: production
+      #NODE_ENV: development
+    ## volumes:
       # - ../:/opt/fbeazt
 
   norma-lb:

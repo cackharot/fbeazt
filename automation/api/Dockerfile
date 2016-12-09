@@ -13,7 +13,7 @@ MAINTAINER cackharot <cackharot@gmail.com>
 RUN apt-get -y update
 
 # Install Python and Basic Python Tools
-RUN apt-get install -y python3 python3-dev python3-pip git
+RUN apt-get install -y python3 python3-dev python3-pip git wget
 
 # Create application directory
 RUN mkdir -p /opt/fbeazt
@@ -25,13 +25,21 @@ RUN pip3 install -r /opt/fbeazt/src/requirements.txt
 
 # Expose http ports
 EXPOSE 4000
-EXPOSE 1320
 
 # Set the default directory where CMD will execute
 WORKDIR /opt/fbeazt
 
 COPY ./config/uwsgi/fbeazt_vasal.yml /etc/uwsgi/sites-enabled/fbeazt_vasal.yml
 
+RUN wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.0.1-amd64.deb
+
+RUN dpkg -i filebeat-5.0.1-amd64.deb
+
+RUN rm -f filebeat-5.0.1-amd64.deb
+
+COPY ./config/filebeat.yml /etc/filebeat/filebeat.yml
+
+RUN mkdir -p /var/log/fbeazt
 # Set the default command to execute
 # when creating a new container
-CMD /usr/local/bin/uwsgi --emperor /etc/uwsgi/sites-enabled/ --logto /var/log/uwsgi.log
+CMD /etc/init.d/filebeat start && /usr/local/bin/uwsgi --emperor /etc/uwsgi/sites-enabled/ --logto /var/log/uwsgi.log
