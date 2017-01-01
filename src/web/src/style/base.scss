@@ -241,11 +241,19 @@ body{
         }
       }
     }
+    .store__timing__chart{
+      font-size: 13;
+      // tr { border: none; }
+      td {
+        padding: 2px;
+      }
+    }
   }
   img{
     width: 100%;
     // height: 140px;
     min-height: 223px;
+    max-height: 260px;
     background: #e5e7e8;
     background-size: cover;
     background-position: top center;

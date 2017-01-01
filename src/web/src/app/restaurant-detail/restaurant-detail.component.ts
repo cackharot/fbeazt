@@ -33,6 +33,7 @@ export class RestaurantDetailComponent implements OnInit {
   isRequesting: boolean = false;
   showList: boolean = true;
   errorMsg: any;
+  show_timing_chart: boolean = false;
 
   constructor(
     private fb: FormBuilder,

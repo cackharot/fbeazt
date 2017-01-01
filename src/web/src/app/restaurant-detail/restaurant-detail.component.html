@@ -38,12 +38,26 @@
               <!-- <div class="telephone"><i class="fa fa-telephone"></i> {{restaurant.phone}}</div> -->
               <div class="timings">
                 <span><i class="fa fa-hourglass-o"></i>
-                  {{restaurant.getFormattedStoreTimings()}}
+                  {{restaurant.getTodayStoreTimings().getDay()}}:
+                  {{restaurant.getTodayStoreTimings().getFormattedTime()}}
                   <span class="light green" *ngIf="!restaurant.isHoliday() && restaurant.isOpen()">(Open)</span>
                 <span class="light red" *ngIf="!restaurant.isHoliday() && restaurant.isClosed()">
                     (Closed?)
                   </span>
                 <span class="light red" *ngIf="restaurant.isHoliday()">(Holiday)</span>
+                </span>
+              </div>
+              <div class="timings" *ngIf="restaurant.timings_table && restaurant.timings_table.length > 0">
+                <span>
+                  <a (click)="show_timing_chart=!show_timing_chart">Timing chart</a>
+                  <table class="store__timing__chart" *ngIf="show_timing_chart">
+                    <tbody>
+                      <tr *ngFor="let x of restaurant.timings_table">
+                        <td>{{x.getDay()}}</td>
+                        <td>{{x.getFormattedTime()}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </span>
               </div>
               <div class="holidays" *ngIf="restaurant.holidays.length>0">

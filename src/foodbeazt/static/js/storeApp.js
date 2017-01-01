@@ -49,9 +49,25 @@ storeApp.controller('storeDetailCtrl', function ($scope, $routeParams, $location
   $scope.food_types = [{ 'id': 'veg', 'text': 'Vegetarian' },
     { 'id': 'non-veg', 'text': 'Non-Vegetarian' }]
 
+  _add_timings_table = function(item) {
+    if(item.timings_table && item.timings_table.length > 0){
+      return;
+    }
+    item.timings_table = [
+      {'day': 'Monday','time': '11-22'},
+      {'day': 'Tuesday','time': '11-22'},
+      {'day': 'Wednesday','time': '11-22'},
+      {'day': 'Thursday','time': '11-22'},
+      {'day': 'Friday','time': '11-22'},
+      {'day': 'Saturday','time': '11-22'},
+      {'day': 'Sunday','time': '11-22'}
+    ];
+  };
+
   $http.get('/api/store/' + id).success(function (d) {
     if (!d._id || !d._id.$oid)
       d._id = { "$oid": "-1" }
+    _add_timings_table(d);
     $scope.model = d
   }).error(function (e) {
     alert('Error while fetching store details')
