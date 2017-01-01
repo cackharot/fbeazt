@@ -15,7 +15,7 @@ export class StoreTiming {
     return data;
   }
 
-  constructor(data = {}) {
+  constructor(data: any = {}) {
     Object.assign(this, data);
     this.day = this.day;
     this.time = this.time;
@@ -100,7 +100,7 @@ export class Restaurant {
     return data;
   }
 
-  constructor(data = {}) {
+  constructor(data: any = {}) {
     Object.assign(this, data);
     this._id = ObjectId.of(this._id);
     if (data.timings_table && data.timings_table.length > 0) {
