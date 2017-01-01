@@ -40,7 +40,10 @@ class ProductService(object):
       query['store_id'] = ObjectId(store_id)
 
     if filter_text is not None and len(filter_text) > 2:
-      query['name'] = {'$regex': r".*%s.*" % filter_text, '$options': 'i'}
+      name_fltr = {'$regex': r".*%s.*" % filter_text, '$options': 'i'}
+      name_search = { 'name': name_fltr }
+      price_table_search = { 'price_table': {'$elemMatch': {'description': name_fltr } } }
+      query['$or'] = [name_search, price_table_search]
 
     if category is not None and len(category) > 2:
       query['category'] = {'$regex': r".*%s.*" % category, '$options': 'i'}
