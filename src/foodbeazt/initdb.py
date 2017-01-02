@@ -114,6 +114,7 @@ if __name__ == "__main__":
       print('Dropping database...')
       host = os.environ.get('MONGO_HOST', 'localhost')
       port = int(os.environ.get('MONGO_PORT', 27017))
+      print("Connecting to '%s':%d" % (host,port))
       c = MongoClient(host=host,port=port)
       c.drop_database('foodbeaztDb')
       print('Drop successfull')

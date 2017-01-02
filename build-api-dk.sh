@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -f ./automation/api/Dockerfile -t fbeazt .
+docker build -f ./src/foodbeazt/Dockerfile -t fbeazt ./src/foodbeazt/

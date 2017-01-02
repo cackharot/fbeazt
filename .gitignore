@@ -89,3 +89,4 @@ tmp/
 *.cfg
 **/*.cfg
 bin/
+tags

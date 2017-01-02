@@ -1,13 +1,4 @@
-############################################################
-# Dockerfile to build Python WSGI Application Containers
-# Based on Ubuntu
-############################################################
-
-# Set the base image to Alpine
-#FROM ubuntu:14.04
 FROM alpine:edge
-
-# File Author / Maintainer
 MAINTAINER cackharot <cackharot@gmail.com>
 
 # Install Python and Basic Python Tools
@@ -20,7 +11,7 @@ RUN apk add --update alpine-sdk linux-headers python-dev
 # Create application directory
 RUN mkdir -p /opt/fbeazt/src/foodbeazt
 
-ADD ./src/foodbeazt /opt/fbeazt/src
+ADD ./ /opt/fbeazt/src/foodbeazt
 
 # Get pip to download and install requirements:
 RUN python3 -m ensurepip && pip3 install -r /opt/fbeazt/src/foodbeazt/requirements.txt
@@ -31,14 +22,11 @@ EXPOSE 4000
 # Set the default directory where CMD will execute
 WORKDIR /opt/fbeazt
 
-COPY ./automation/api/config/uwsgi/fbeazt_vasal.yml /etc/uwsgi/sites-enabled/fbeazt_vasal.yml
+COPY ./config/uwsgi/fbeazt_vasal.yml /etc/uwsgi/sites-enabled/fbeazt_vasal.yml
 
-COPY ./automation/api/config/filebeat.yml /etc/filebeat/filebeat.yml
+COPY ./config/filebeat.yml /etc/filebeat/filebeat.yml
 
-COPY ./automation/api/config/dev/foodbeazt.cfg /opt/fbeazt/src/foodbeazt/config/foodbeazt.dev.cfg
-COPY ./automation/api/config/prod/foodbeazt.cfg /opt/fbeazt/src/foodbeazt/config/foodbeazt.prod.cfg
-
-ENV FOODBEAZT_CONFIG=/opt/fbeazt/src/foodbeazt/config/foodbeazt.dev.cfg
+ENV FOODBEAZT_CONFIG=/opt/fbeazt/src/foodbeazt/config/dev/foodbeazt.cfg
 
 RUN mkdir -p /var/log/fbeazt
 
