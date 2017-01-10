@@ -54,7 +54,12 @@
                         </a>
                         <p>{{item.created_at | datetime}}</p>
                         <p><b ng-bind-html="item.total | currency"></b></p>
-                        <p><b>{{item.status}}</b></p>
+                        <p>
+                            <b>{{item.status}}</b>
+                            <span ng-if="item.delivered_at && item.delivered_at.$date" title="Delivered at: {{item.delivered_at|datetime}}">
+                                [{{item.delivered_at|delivery_time:item.created_at}}]
+                            </span>
+                        </p>
                         <p>OTP: {{item.otp_status || 'SENT'}}</p>
                     </div>
                     <div class="cell2">

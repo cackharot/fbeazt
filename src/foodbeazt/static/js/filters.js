@@ -1,3 +1,12 @@
+String.prototype.format = function() {
+    var formatted = this;
+    for (var i = 0; i < arguments.length; i++) {
+        var regexp = new RegExp('\\{'+i+'\\}', 'gi');
+        formatted = formatted.replace(regexp, arguments[i]);
+    }
+    return formatted;
+};
+
 angular.module('fbFilters', [])
 .filter('datetime', function() {
     return function(input) {
@@ -6,6 +15,22 @@ angular.module('fbFilters', [])
         return d.toLocaleDateString() +" "+ d.toLocaleTimeString();
       }
       return input;
+    }
+})
+.filter('delivery_time', function() {
+    return function(delivered_at, created_at) {
+      if(delivered_at && delivered_at.$date){
+        var d = new Date(delivered_at.$date);
+        var c = new Date(created_at.$date);
+        var diffInSec = Math.abs(d-c);
+        var hrs = Math.floor(diffInSec/3600000);
+        var mins = Math.floor((diffInSec%3600000)/60000);
+        if(hrs <= 0){
+          return "{0} mins".format(mins);
+        }
+        return "{0} hr{1} {2} min{3}".format(hrs,hrs>1?'s':'',mins,mins>1?'s':'');
+      }
+      return delivered_at;
     }
 })
 .filter('show_food_type', function(){
