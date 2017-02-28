@@ -1,11 +1,13 @@
-<div *ngIf="product.hasPriceTable()">
+<div *ngIf="product.hasPriceTable()" class="text-center">
   <select [(ngModel)]="selection" (ngModelChange)="onChange($event)">
     <option *ngFor="let item of product.price_table" [ngValue]="item">
       {{item.description}}
     </option>
   </select>
-  <span class="price_tag rupee light">{{selection.price}}</span>
+  <span class="price_tag rupee light" [innerHTML]="selection.getFormattedPrice()"></span>
+  <div class="price_discount light" *ngIf="selection.discount>0">{{selection.discount}}% discount</div>
 </div>
 <div *ngIf="!product.hasPriceTable()">
-  <span class="price_tag rupee light">{{product.sell_price}}</span>
+  <span class="price_tag rupee light" [innerHTML]="product.getFormattedPrice()"></span>
+  <div class="price_discount light" *ngIf="product.discount>0">{{product.discount}}% discount</div>
 </div>

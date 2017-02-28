@@ -130,7 +130,8 @@ productApp.controller('productDetailCtrl', function ($scope, $routeParams, $loca
     $scope.model.price_table.push({
       no: $scope.model.price_table.length + 1,
       description: '',
-      price: 0.0
+      price: 0.0,
+      discount: 0
     })
     return false;
   };

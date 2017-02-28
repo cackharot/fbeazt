@@ -144,6 +144,18 @@ export class Order {
     return this.items.reduce((n, x) => n + x.quantity, 0);
   }
 
+  getSavingsAmount() {
+    return this.getActualSubTotal() - this.getSubTotal();
+  }
+
+  getAcutalTotalAmount() {
+    return this.getDeliveryCharges() + this.getActualSubTotal();
+  }
+
+  private getActualSubTotal() {
+    return this.items.reduce((n, x) => n + x.getActualTotalPrice(), 0);
+  }
+
   isConfirmed() {
     return this.order_no && this.order_no.length > 0 && this.otp_status === 'VERIFIED'
       && (
@@ -206,6 +218,7 @@ export class LineItem {
   vegetarian: boolean;
   quantity: number;
   price: number;
+  discount: number;
   price_detail: PriceDetail;
 
   static of(data) {
@@ -224,10 +237,24 @@ export class LineItem {
   }
 
   getTotalPrice() {
-    if (this.price_detail && this.price_detail.price > 0) {
+    if (this.price_detail && this.price_detail.price > 0.0) {
+      return this.price_detail.getDiscountedPrice() * this.quantity;
+    }
+    return this.getDiscountedPrice() * this.quantity;
+  }
+
+  getActualTotalPrice() {
+    if (this.price_detail && this.price_detail.price > 0.0) {
       return this.price_detail.price * this.quantity;
     }
     return this.price * this.quantity;
+  }
+
+  private getDiscountedPrice() {
+    if(this.discount <= 0.0){
+      return this.price;
+    }
+    return this.price - (this.price * (this.discount/100.0));
   }
 }
 

@@ -83,6 +83,7 @@ export class OrderService {
       vegetarian: item.food_type[0] === 'veg',
       quantity: 1.0,
       price: item.sell_price,
+      discount: item.discount,
       price_detail: item.selectedPriceDetail
     });
     this.addLineItem(lineItem);

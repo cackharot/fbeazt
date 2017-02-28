@@ -35,7 +35,7 @@
 			<div *ngFor="let pd of product.price_table">
 				<div class="qty__btn__container" *ngIf="getQuantity(product, pd) > 0" style="margin-top:10px;">
 					<button class="button dec" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,-1,pd)"><i class="fa fa-minus"></i></button>
-					<span>{{pd.description}}(Rs.{{pd.price}}), Qty: {{getQuantity(product,pd)}}</span>
+					<span>{{getQuantity(product,pd)}}x {{pd.description}}(Rs.{{pd.getDiscountedPrice()}}) </span>
 					<button class="button inc" [disabled]="!product.isAvailable()" (click)="updateQuantity(product,1,pd)"><i class="fa fa-plus"></i></button>
 				</div>
 			</div>

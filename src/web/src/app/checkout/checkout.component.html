@@ -98,8 +98,13 @@
                       </a>
                       {{item.name}} <br/>
                       <small class="light" *ngIf="item.price_detail && item.price_detail.description && item.price_detail.description.length > 0">
-                        {{item.price_detail.description}} <br/>
+                        {{item.price_detail.description}}
+                        <i *ngIf="item.price_detail.discount > 0">{{item.price_detail.discount}}% discount</i>
                       </small>
+                      <small class="light" *ngIf="!item.price_detail && item.discount > 0">
+                        <i>{{item.discount}}% discount</i>
+                      </small>
+                      <br/>
                       <span class="store_name light"><i>from</i> {{item.store.name}}</span>
                       <br/>
                       <small class="light text-alert" *ngIf="item.store.isClosed()">
@@ -137,6 +142,9 @@
                 </tr>
               </tfoot>
             </table>
+            <div class="callout info" *ngIf="order.getSavingsAmount() > 0">
+              You saved <b class="total rupee">{{order.getSavingsAmount()}}</b>
+            </div>
             <div class="callout info">
               Minimum delivery charge is Rs. {{order.getMinDeliveryCharges()}} + Rs. {{order.getPerStoreDeliveryCharges()}}
               for each additional restaurants. For example, ordering dishes from 3 restaurants is calculated

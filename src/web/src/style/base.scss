@@ -66,6 +66,10 @@ body{
   }
 }
 
+.strike {
+  text-decoration: line-through;
+}
+
 .row{
   max-width: 85em;
 }
@@ -374,8 +378,8 @@ img.res_logo{
       @include border-radius(3px);
     }
     select{
-      width: auto;
-      margin-right: 10px;
+      // width: auto;
+      margin: 10px 0 10px 0;
     }
     .cuisines li{
       padding: 0 6px 6px;
@@ -416,6 +420,10 @@ img.res_logo{
   .price_tag{
     font-size: 16px;
     font-weight: normal;
+  }
+
+  .price_discount{
+    font-style: italic;
   }
 
   .card-action{
