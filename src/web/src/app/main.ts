@@ -10,6 +10,13 @@ import { FeatureService } from './feature';
 import { MyHttpBaseRequestOptions } from './MyHttpBaseRequestOptions';
 
 import { OAuthService } from 'angular2-oauth2/oauth-service';
+import { enableProdMode } from '@angular/core';
+
+
+// Enable production mode unless running locally
+if (!/localhost/.test(document.location.host)) {
+  enableProdMode();
+}
 
 let appPromise = bootstrap(AppComponent,[
   appRouterProviders,
