@@ -248,21 +248,17 @@ def admin_home():
 @app.route('/logout/')
 def app_logout():
     doLogout()
-    return redirect('/')
+    return redirect('/logout_success')
+
+@app.route('/logout_success')
+def logout_success():
+  return render_template('admin/logout.jinja2')
 
 def doLogout():
   logout_user()
   # Tell Flask-Principal the user is anonymous
   identity_changed.send(current_app._get_current_object(), identity=AnonymousIdentity())
   session.clear()
-
-# @app.route("/recreatedb")
-# def recreate_db():
-#     print('Dropping database(' + app.config['MONGO_DBNAME'] + ')....\n')
-#     c = Connection()
-#     c.drop_database(app.config['MONGO_DBNAME'])
-#     return redirect('/')
-
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 export_data_folder = os.path.join(APP_ROOT, 'uploads', 'export')

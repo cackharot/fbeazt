@@ -337,23 +337,34 @@
                                         <tr style="padding: 0; text-align: left; vertical-align: top;">
                                           <th style="Margin: 0; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; padding: 0; text-align: left;">Item</th>
                                           <th style="Margin: 0; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; padding: 0; text-align: right;">#</th>
-                                          <th style="Margin: 0; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; padding: 0; text-align: right;">Price</th>
+                                          <th style="Margin: 0; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; padding: 0; text-align: right;">Price(&#8377;)</th>
                                         </tr>
                                         {% for item in order['items'] %}
                                         <tr style="padding: 0; text-align: left; vertical-align: top;">
-                                          <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; word-wrap: break-word;">{{item['name']}}</td>
+                                          <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; word-wrap: break-word;">
+                                            {{item['name']}}
+                                            {% if 'price_detail' in item %}
+                                            <br/> <small>{{item['price_detail']['description']}}</small>
+                                            {% if item['price_detail']['discount'] > 0 %}
+                                              <small>({{item['price_detail']['discount']}}% discount)</small>
+                                            {% endif %}
+                                            {% elif item['discount'] > 0 %}
+                                              <br/>
+                                              <small>({{item['discount']}}% discount)</small>
+                                            {% endif %}
+                                          </td>
                                           <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: right; vertical-align: top; word-wrap: break-word;">{{item['quantity']}}</td>
-                                          <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: right; vertical-align: top; word-wrap: break-word;">{{item['price']*item['quantity']}}</td>
+                                          <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: right; vertical-align: top; word-wrap: break-word;">{{item['total']}}</td>
                                         </tr>
                                         {%endfor%}
                                         <tr style="padding: 0; text-align: left; vertical-align: top;">
                                           <td colspan="2" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; word-wrap: break-word;"><b>Delivery Charges:</b></td>
-                                          <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: right; vertical-align: top; word-wrap: break-word;">{{order['delivery_charges']}}</td>
+                                          <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: right; vertical-align: top; word-wrap: break-word;">&#8377; {{order['delivery_charges']}}</td>
                                         </tr>
                                         <tr style="padding: 0; text-align: left; vertical-align: top;">
                                           <td colspan="2" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: left; vertical-align: top; word-wrap: break-word;"><b>Total:</b></td>
                                           <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 19px; margin: 0; padding: 0; text-align: right; vertical-align: top; word-wrap: break-word;">
-                                              <strong>Rs. {{order['total']}}</strong>
+                                              <strong>&#8377; {{order['total']}}</strong>
                                           </td>
                                         </tr>
                                       </tbody>
