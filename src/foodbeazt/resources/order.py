@@ -110,32 +110,34 @@ class OrderApi(Resource):
 
   def post(self, _id):
     order = json_util.loads(request.data.decode('utf-8'))
-    self.log.debug("RECEIVED ORDER", order)
-    tenant_id = g.user.tenant_id
-    user_id = g.user.id
-    valid_order = {
-      'tenant_id': ObjectId(tenant_id),
-      'user_id': ObjectId(user_id)
-    }
-    validation_error, sanitized_items = self.validate_line_items(order)
+    self.log.debug("RECEIVED ORDER %s" % order)
 
-    if not validation_error is None:
+    validation_error, sanitized_items = self.validate_line_items(order)
+    if validation_error is not None:
       return dict(status='error', type='validation', message=validation_error), 421
-    valid_order['items'] = sanitized_items
 
     delivery_validation, delivery_details = self.validate_delivery_details(order)
-    if not delivery_validation is None:
+    if delivery_validation is not None:
       return dict(status='error', type='validation', message=delivery_validation), 422
-
-    valid_order['delivery_details'] = delivery_details
 
     payment_type = order.get('payment_type', 'cod')
     if payment_type not in ['cod','payumoney']:
       return dict(status='error', type='validation', message="Invalid Payment choosen"), 422
-    valid_order['payment_type'] = payment_type
+
+    tenant_id = g.user.tenant_id
+    user_id = g.user.id
+    valid_order = {
+      'tenant_id': ObjectId(tenant_id),
+      'user_id': ObjectId(user_id),
+      'items': sanitized_items,
+      'delivery_details': delivery_details,
+      'payment_type': payment_type
+    }
+
     if payment_type == 'cod':
       valid_order['payment_status'] = 'success'
     _id = None
+
     try:
       pincode = valid_order['delivery_details']['pincode']
       if not self.pincodeService.check_pincode(pincode):
@@ -174,9 +176,10 @@ class OrderApi(Resource):
       'total': total,
       'title': 'New Order'
     }
-    self.pushNotifyService.send_to_device(data,email='cackharot@gmail.com')
     self.pushNotifyService.send_to_device(data,email='foodbeazt@gmail.com')
     self.pushNotifyService.send_to_device(data,email='baraneetharan87@gmail.com')
+    self.pushNotifyService.send_to_device(data,email='vimalprabha87@gmail.com')
+    self.pushNotifyService.send_to_device(data,email='cackharot@gmail.com')
 
   def delete(self, _id):
     # item = self.service.get_by_id(_id)
@@ -220,7 +223,7 @@ class OrderApi(Resource):
     self.log.info("Sending email [%s] to %s" % (subject, email))
 
     if app.config['SEND_MAIL'] == False:
-      time.sleep(3)
+      # time.sleep(3)
       return
     try:
       mail.send(msg)
@@ -228,18 +231,18 @@ class OrderApi(Resource):
       self.log.exception(e)
 
   def validate_line_items(self, order):
-    validation_error = None
-    sanitized_items = []
-    if not 'items' in order or len(order['items']) == 0:
-        validation_error="Atleast one item is required to process the order"
+    if len(order.get('items', [])) == 0:
+      return "Atleast one item is required to process the order", []
     else:
       count = 1
+      validation_error = None
+      sanitized_items = []
       for item in order['items']:
-        if item['product_id'] is None:
+        if item.get('product_id') is None:
           validation_error = "Invalid product id"
           break
         else:
-          if item['quantity'] is None or float(item['quantity']) <= 0.0:
+          if float(item.get('quantity', 0)) <= 0.0:
             validation_error = "%(name)'s quantity should be atleast 1.0" % (item['name'])
             break
           else:
@@ -253,23 +256,32 @@ class OrderApi(Resource):
             else:
               qty = float(item['quantity'])
               price = float(product['sell_price'])
+              discount = float(product.get('discount',0.0))
               vi = {
                 'no': count,
                 'product_id': product['_id'],
                 'name': product['name'],
                 'description': product.get('description', None),
                 'price': price,
+                'discount': discount,
                 'quantity': qty,
-                'total': (qty*price),
+                'total': (qty * (price - price*discount/100.0)),
                 'category': product.get('category', None),
                 'store_id': product['store_id']
               }
               if 'price_detail' in item and 'no' in item['price_detail']:
-                pd = item['price_detail']
+                pd_no = int(item['price_detail']['no'])
+                pds = [x for x in product['price_table'] if x['no'] == pd_no]
+                if len(pds) != 1:
+                  validation_error = "Invalid price detail for the product '%s'" % (product['name'])
+                  break
+                pd = pds[0]
                 price = float(pd['price'])
-                vi['price_detail'] = { 'no': pd['no'], 'price': price, 'description': pd['description'] }
+                discount = float(pd.get('discount',0.0))
+                vi['price_detail'] = { 'no': pd['no'], 'price': price, 'description': pd['description'], 'discount': discount }
                 vi['price'] = price
-                vi['total'] = (qty * price)
+                vi['discount'] = discount
+                vi['total'] = (qty * (price - price*discount/100.0))
               sanitized_items.append(vi)
               count =  count + 1
       return validation_error, sanitized_items
@@ -284,6 +296,8 @@ class OrderApi(Resource):
       return "Invalid email address", None
     if delivery_details.get('phone',None) is None or len(delivery_details['phone']) != 10:
       return "Invalid phone number", None
+    elif delivery_details['phone'].startswith('0'):
+      return "Phone number should not start with '0'", None
     if delivery_details.get('pincode',None) is None or len(delivery_details['pincode']) != 6:
       return "Invalid pincode", None
     if delivery_details.get('address',None) is None or len(delivery_details['address']) < 6 or len(delivery_details['address']) > 500:

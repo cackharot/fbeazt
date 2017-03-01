@@ -8,7 +8,6 @@ from flask_mail import Mail
 from flask_pymongo import PyMongo
 from flask_restful import Api
 from flask_babel import Babel
-from flask_pymongo import MongoClient
 from werkzeug.utils import secure_filename
 from service.ProductService import ProductService
 from service.StoreService import StoreService
@@ -38,32 +37,27 @@ if os.environ.get('FOODBEAZT_CONFIG', None) is not None:
   logger.info("Loading config from %(logfile)s",{ 'logfile': os.environ.get('FOODBEAZT_CONFIG')})
   app.config.from_envvar('FOODBEAZT_CONFIG')
 
-logger.info("Setup CORS")
+# CORS
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-
-logger.info("Setup Mongodb")
-mongo = PyMongo(app)
-
-logger.info("Setup REST API")
+# Mongodb
+mongo = PyMongo()
+# monog.init_app(app)
 api = Api(app)
-
-logger.info("Setup EMAIL")
+# MAIL
 mail = Mail(app)
-
 # Setup Google Federated Auth
 auth = GoogleLogin(app)
-
-
 # load the extension
 principals = Principal(app)
-
 # Create a permission with a single Need, in this case a RoleNeed.
 admin_permission = Permission(RoleNeed('tenant_admin'))
-
-
 # localization
-logger.info("Setup Babel")
 babel = Babel(app)
+
+@app.before_first_request
+def init_mongo_db():
+  logger.info("Initializing mongodb")
+  mongo.init_app(app)
 
 @babel.localeselector
 def get_locale():
@@ -359,6 +353,20 @@ from foodbeazt.resources.pincodes import PincodeListApi, PincodeApi
 from foodbeazt.resources.myorders import MyOrdersApi
 from foodbeazt.resources.push_notify import RegisterPushNotify, UnRegisterPushNotify
 
+@app.route('/test_new_order_notify')
+def test_new_order_notify():
+  tenant_id = g.user.tenant_id
+  query = {'tenant_id': ObjectId(tenant_id)}
+  order = [x for x in mongo.db.order_collection.find(query).sort("created_at", -1)][0]
+
+  try:
+    api = OrderApi()
+    api.notify_new_order(order)
+    return json_util.dumps({'status': 'success','order': order})
+  except Exception as e:
+    logger.exception(e)
+    return json_util.dumps({'status':'error', 'message':"Error in generating PDF invoice"})
+
 api.add_resource(MyOrdersApi, '/api/my_orders')
 
 api.add_resource(ReportApi, '/api/reports/orders')
@@ -406,16 +414,4 @@ app.add_url_rule('/api/payment/success', view_func=PaymentSuccessView.as_view('p
 app.add_url_rule('/api/payment/failure', view_func=PaymentSuccessView.as_view('payment_failure'))
 app.add_url_rule('/api/payment/hook', view_func=PaymentWebHookView.as_view('payment_webhook'))
 
-@app.route('/test_new_order_notify')
-def test_new_order_notify():
-  tenant_id = g.user.tenant_id
-  query = {'tenant_id': ObjectId(tenant_id)}
-  order = [x for x in mongo.db.order_collection.find(query).sort("created_at", -1)][0]
-
-  try:
-    api = OrderApi()
-    api.notify_new_order(order)
-    return json_util.dumps({'status': 'success','order': order})
-  except Exception as e:
-    logger.exception(e)
-    return json_util.dumps({'status':'error', 'message':"Error in generating PDF invoice"})
+logger.info("APPLICATION LOADED SUCCESSFULLY!!")

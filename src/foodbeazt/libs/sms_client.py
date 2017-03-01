@@ -19,7 +19,7 @@ class SmsClient(object):
 
   def send(self, phoneno, message):
     if self.enabled == False:
-      self.log.warn("AWS SMS Client disabled!")
+      self.log.warning("AWS SMS Client disabled!")
       return
     phoneno = "+91%s" % (phoneno)
     params = {
