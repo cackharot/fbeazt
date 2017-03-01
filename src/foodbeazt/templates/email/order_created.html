@@ -345,10 +345,10 @@
                                             {{item['name']}}
                                             {% if 'price_detail' in item %}
                                             <br/> <small>{{item['price_detail']['description']}}</small>
-                                            {% if item['price_detail']['discount'] > 0 %}
+                                            {% if item['price_detail'].get('discount',0) > 0 %}
                                               <small>({{item['price_detail']['discount']}}% discount)</small>
                                             {% endif %}
-                                            {% elif item['discount'] > 0 %}
+                                            {% elif item.get('discount',0) > 0 %}
                                               <br/>
                                               <small>({{item['discount']}}% discount)</small>
                                             {% endif %}
