@@ -79,17 +79,28 @@
                         <div ng-repeat="store in getOrderStores(item)">
                             <h4>{{store}}</h4>
                             <table class="table order_table">
+                                <thead>
+                                    <tr>
+                                        <th>Item name</th>
+                                        <th class="price">Discount</th>
+                                        <th class="price">Price</th>
+                                        <th class="price">Total</td>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     <tr ng-repeat="dish in getOrderItems(item,store)">
                                         <td>
                                             <div class="product_name">
                                                 {{dish.name}}
                                                 <span ng-if="dish.price_detail && dish.price_detail.price > 0">
-                                                    ({{dish.price_detail.description}})
+                                                    <br/><small>{{dish.price_detail.description}}</small>
                                                 </span>
                                                 <!--<br/>-->
                                                 <!--<span class="store_name light"><i>from</i> {{dish.store.name}}</span>-->
                                             </div>
+                                        </td>
+                                        <td class="price">
+                                            {{dish.discount}}
                                         </td>
                                         <td class="quantity">
                                             {{dish.price}}x
