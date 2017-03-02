@@ -24,7 +24,7 @@
                         <th>Menu</th>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="item in stores">
+                        <tr ng-repeat="item in stores" ng-class="{'text-danger': !item.status}">
                             <td>
                                 <a href="#/store/{{item._id.$oid}}" title="Click to edit this store!">{{item.name}}</a>
                             </td>
@@ -35,7 +35,7 @@
                             </td>
                             <td>{{item.cuisines.join(',')}}</td>
                             <td><span ng-bind-html="item.food_type | show_food_type"></span></td>
-                            <td>{{item.expected_delivery_time}}</td>
+                            <td>{{item.deliver_time}}</td>
                             <td class="text-center">
                                 <a href="#/product?store_id={{item._id.$oid}}" title="Click to manage products"><em class="fa fa-tasks"></em></a>
                             </td>

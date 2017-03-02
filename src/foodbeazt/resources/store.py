@@ -2,7 +2,7 @@ from bson import ObjectId, json_util
 from flask import g, request
 from flask_restful import Resource
 from service.StoreService import StoreService, DuplicateStoreNameException
-from foodbeazt.fapp import mongo
+from foodbeazt.fapp import mongo, admin_permission
 import logging
 
 
@@ -21,6 +21,7 @@ class StoreListApi(Resource):
     filter_text = request.args.get('filter_text', None)
     user_pincode = request.args.get('user_pincode', None)
     user_location = request.args.get('user_location', None)
+    include_deactivated = admin_permission.can()
 
     try:
       items, total = self.service.search(
@@ -29,7 +30,8 @@ class StoreListApi(Resource):
           only_veg=only_veg,
           only_open=only_open,
           page_no=page_no,
-          page_size=page_size)
+          page_size=page_size,
+          include_deactivated = include_deactivated)
 
       offset = page_no*page_size
       result = {'items': items, 'total': total,

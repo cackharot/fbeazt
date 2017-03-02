@@ -14,7 +14,7 @@ class StoreService(object):
     self.popular_items = db.popular_stores_collections
     self.weekday_names = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
 
-  def search(self, tenant_id, filter_text=None, only_veg=False, only_open=False, page_no=1,page_size=10):
+  def search(self, tenant_id, filter_text=None, only_veg=False, only_open=False, page_no=1,page_size=10,include_deactivated=False):
     query = {"tenant_id": ObjectId(tenant_id)}
 
     if filter_text is not None and len(filter_text) > 2:
@@ -41,6 +41,8 @@ class StoreService(object):
           '$not': re.compile(day, re.IGNORECASE)
         }
       }
+    if not include_deactivated:
+      query['status'] = True
     # print(query)
     offset = (page_no - 1) * page_size
     if offset < 0: offset = 0
