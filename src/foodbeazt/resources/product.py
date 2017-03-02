@@ -3,7 +3,7 @@ from flask import g, request
 from flask_restful import Resource
 from service.ProductService import ProductService
 from service.StoreService import StoreService, DuplicateStoreNameException
-from foodbeazt.fapp import mongo
+from foodbeazt.fapp import mongo, admin_permission
 import logging
 
 
@@ -26,12 +26,14 @@ class ProductListApi(Resource):
     filter_text = request.args.get('filter_text', None)
     category = request.args.get('category', None)
     only_veg = request.args.get('only_veg', False)
+    include_deactivated = admin_permission.can()
 
     try:
       items, total = self.service.search(tenant_id=tenant_id, store_id=store_id, page_no=page_no,
                                           page_size=page_size, category=category,
                                           only_veg=only_veg,
-                                          filter_text=filter_text)
+                                          filter_text=filter_text,
+                                          include_deactivated=include_deactivated)
       if items and len(items) > 0:
         store_ids = [str(x['store_id']) for x in items]
         stores = self.storeService.search_by_ids(store_ids=store_ids)
@@ -42,7 +44,7 @@ class ProductListApi(Resource):
     except Exception as e:
       self.log.exception(e)
       return dict(status="error",
-                  message="Oops! Error while trying to delete product details! Please try again later"), 480
+                  message="Oops! Error while trying to searching product details! Please try again later"), 480
 
 
 class ProductActivateApi(Resource):
@@ -53,15 +55,15 @@ class ProductActivateApi(Resource):
   def put(self, store_id, _id):
     try:
       item = self.service.get_by_id(_id)
-      if item['store_id'] == ObjectId(store_id):
-        item['status'] = True
-        self.service.update(item)
-        return item
-      return None, 404
+      if item is None or item['store_id'] != ObjectId(store_id):
+        return None, 404
+      item['status'] = True
+      self.service.update(item)
+      return item
     except Exception as e:
       self.log.exception(e)
       return dict(status="error",
-                  message="Oops! Error while trying to delete product details! Please try again later"), 481
+                  message="Oops! Error while trying to activate product details! Please try again later"), 481
 
 
 class ProductApi(Resource):
@@ -88,7 +90,7 @@ class ProductApi(Resource):
     except Exception as e:
       self.log.exception(e)
       return dict(status="error",
-                  message="Oops! Error while trying to save product details! Please try again later"), 485
+                  message="Oops! Error while trying to update product details! Please try again later"), 485
 
   def post(self, store_id, _id):
     item = json_util.loads(request.data.decode('utf-8'))
@@ -101,12 +103,13 @@ class ProductApi(Resource):
     except Exception as e:
       self.log.exception(e)
       return dict(status="error",
-                  message="Oops! Error while trying to save product details! Please try again later"), 485
+                  message="Oops! Error while trying to create product details! Please try again later"), 485
 
   def delete(self, store_id, _id):
     try:
       item = self.service.get_by_id(_id)
-      if item is None: return None, 404
+      if item is None or item['store_id'] != ObjectId(store_id):
+        return None, 404
       item['status'] = False
       self.service.update(item)
     except Exception as e:

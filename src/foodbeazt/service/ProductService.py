@@ -32,7 +32,8 @@ class ProductService(object):
 
   def search(self, tenant_id, store_id,
     page_no=1, page_size=16,
-    category=None, filter_text=None, only_veg=False):
+    category=None, filter_text=None,
+    only_veg=False, include_deactivated=False):
     query = {}
     if tenant_id and tenant_id != '-1':
       query['tenant_id'] = ObjectId(tenant_id)
@@ -50,6 +51,9 @@ class ProductService(object):
 
     if only_veg:
       query['food_type'] = {'$elemMatch': {'$eq': 'veg'}}
+
+    if not include_deactivated:
+      query['status'] = True
 
     offset = (page_no - 1) * page_size
     if offset < 0: offset = 0
