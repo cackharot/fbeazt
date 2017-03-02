@@ -33,7 +33,8 @@ class PaymentListApi(Resource):
                             page_no=page_no,
                             page_size=page_size,
                             order_no=order_no,
-                            status=status)
+                            status=status,
+                            latest_first=True)
       offset = page_no*page_size
       result = {'items': items, 'total': total,
                 "status": status.split(','),
