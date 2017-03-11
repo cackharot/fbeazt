@@ -1,6 +1,6 @@
-var userApp = angular.module('fbeaztAdmin');
+var dataManageApp = angular.module('fbeaztAdmin');
 
-userApp.controller('dataManageCtrl', function($route, $scope, $http, $routeParams, $window){
+dataManageApp.controller('dataManageCtrl', function($route, $scope, $http, $routeParams, $window){
   $scope.model = [];
 
   $scope.reloadData = function() {

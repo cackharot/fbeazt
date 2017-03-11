@@ -13,6 +13,11 @@ angular.module('fbFilters', [])
       if(input && input.$date){
         var d = new Date(input.$date);
         return d.toLocaleDateString() +" "+ d.toLocaleTimeString();
+      }else if(input){
+        try{
+          var d = new Date(input);
+          return d.toLocaleDateString() +" "+ d.toLocaleTimeString();
+        }catch(e) {}
       }
       return input;
     }

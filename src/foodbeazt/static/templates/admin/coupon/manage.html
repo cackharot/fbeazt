@@ -1,0 +1,101 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false"
+     ng-controller="couponDetailCtrl">
+    <h3>
+        <div class="pull-right">
+            <a href="#/coupon" class="btn btn-default" title="Go back"><em class="fa fa-arrow-left"></em>&nbsp;Back</a>
+            <button class="btn btn-primary" type="submit" ng-click="save()" ng-disabled="frmCoupon.$invalid"><em
+                    class="fa fa-save"></em>&nbsp;Save
+            </button>
+        </div>
+        <span ng-if="model.id == '-1'">Add New Coupon</span>
+        <span ng-if="model.id != '-1'">Edit Coupon Details</span>
+    </h3>
+    <div class="row">
+        <form role="form" name="frmCoupon" id="frmCoupon" novalidate ng-submit="save()">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label" for="code">Name</label>
+                        <input class="form-control" type="text" name="code" id="code" ng-minlength="4"
+                               ng-class="{ 'parsley-error' : frmCoupon.code.$invalid && !frmCoupon.code.$pristine }"
+                               ng-model="model.code" required/>
+
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmCoupon.name.$dirty && frmCoupon.name.$invalid">
+                            <li class="parsley-required" ng-show="frmCoupon.code.$error.required">Code is
+                                required
+                            </li>
+                            <li class="parsley-required" ng-show="frmCoupon.code.$error.minlength">Code is should
+                                be at-least 4 characters
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="description">Description</label>
+                        <input class="form-control" type="text" id="email" name="description"
+                               ng-class="{ 'parsley-error' : frmCoupon.description.$invalid && !frmCoupon.description.$pristine }"
+                               ng-model="model.description" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmCoupon.description.$dirty && frmCoupon.description.$invalid">
+                            <li class="parsley-required">Description is required</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="start">Start Date</label>
+                        <input class="form-control" type="date" id="start"
+                               name="start" ng-model="model.start"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="end">End Date</label>
+                        <input class="form-control" type="date" id="end"
+                               name="end" ng-model="model.end"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Combine with other coupons</label><br/>
+                        <input type="checkbox" ng-model="model.canCombineWithOthers" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Active</label><br/>
+                        <input type="checkbox" ng-model="model.status" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Type</label><br/>
+                        <select ng-model="model.type" required>
+                          <option>FreeDelivery</option>
+                          <option>MaxAmountThresholdDiscount</option>
+                          <option>FlatDiscountWithCap</option>
+                          <option>FlatDiscountWithoutCap</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="discount">Discount</label>
+                        <input class="form-control" type="number" id="discount"
+                               name="discount" ng-model="model.discount"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="orderThreshold">Min order amount required without delivery fee to apply discount</label>
+                        <input class="form-control" type="number" id="orderThreshold"
+                               name="orderThreshold" ng-model="model.orderThreshold"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="maxDiscountAmount">Max discount amount</label>
+                        <input class="form-control" type="number" id="maxDiscountAmount"
+                               name="maxDiscountAmount" ng-model="model.maxDiscountAmount"/>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="clearfix">
+                        <div class="pull-left"></div>
+                        <div class="pull-right">
+                            <a class="btn btn-default" href="#/coupon" title="Go back!">Cancel</a>
+                            <button class="btn btn-primary" type="submit" ng-disabled="frmCoupon.$invalid"><em
+                                    class="fa fa-save"></em>&nbsp;Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
