@@ -18,6 +18,7 @@ class ValidateCouponApi(Resource):
     self.helper = OrderHelper(self.productService)
     self.coupon_api_url = app.config.get('COUPON_API_URL', None)
     if self.coupon_api_url is None:
+      self.log.error('COUPON_API_URL is required!')
       raise Exception('COUPON_API_URL is required!')
 
   def post(self):
