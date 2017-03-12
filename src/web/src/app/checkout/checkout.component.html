@@ -134,6 +134,16 @@
                   </td>
                   <td class="total">{{order.getDeliveryCharges()}}</td>
                 </tr>
+                <tr *ngIf="order.coupon_code">
+                  <td colspan="2">
+                    <a (click)="removeCoupon()" title="Remove applied coupon">
+                      <i class="fa fa-times-circle"></i>
+                    </a>
+                    {{order.coupon_code}}<br/>
+                    <small style="font-weight: lighter">coupon applied.</small>
+                  </td>
+                  <td class="total">{{order.getCouponDiscount()}}</td>
+                </tr>
                 <tr>
                   <td colspan="2">
                     Total:
@@ -142,6 +152,20 @@
                 </tr>
               </tfoot>
             </table>
+            <div class="row content__container" *ngIf="!order.coupon_code">
+              <div class="medium-9 small-9 columns">
+                <label for="coupon_code">Have coupon code?
+                  <input type="text" [(ngModel)]="coupon_code" name="coupon_code" id="coupon_code" minlength="4" maxlength="20"/>
+                  <span class="check">
+                    <em class="fa fa-check"></em>
+                  </span>
+                </label>
+              </div>
+              <div class="medium-3 small-3 columns end">
+                <br/>
+                <button type="button" (click)="applyCoupon()" class="button secondary">Apply</button>
+              </div>
+            </div>
             <div class="callout info" *ngIf="order.getSavingsAmount() > 0">
               You saved <b class="total rupee">{{order.getSavingsAmount()}}</b>
             </div>

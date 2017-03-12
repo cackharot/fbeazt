@@ -338,6 +338,7 @@ from foodbeazt.resources.user import UserApi, UserListApi
 from foodbeazt.resources.store import StoreApi, StoreListApi
 from foodbeazt.resources.product import ProductApi, ProductListApi, ProductActivateApi
 from foodbeazt.resources.order import OrderApi, TrackOrderApi
+from foodbeazt.resources.coupon import ValidateCouponApi
 from foodbeazt.resources.order_list import OrderListApi
 from foodbeazt.resources.order_status import OrderStatusApi
 from foodbeazt.resources.export_data import ExportDataApi
@@ -401,6 +402,8 @@ api.add_resource(OrderStatusApi, '/api/order_status/<string:_id>')
 api.add_resource(RegisterPushNotify, '/api/push_service/register')
 api.add_resource(UnRegisterPushNotify, '/api/push_service/unregister')
 
+api.add_resource(ValidateCouponApi, '/api/validate/coupon')
+
 from views.payment import PaymentListApi, PaymentRedirectView, PaymentSuccessView, PaymentWebHookView
 
 api.add_resource(PaymentListApi, '/api/payments')
@@ -409,5 +412,6 @@ app.add_url_rule('/api/payment/order', view_func=PaymentRedirectView.as_view('pa
 app.add_url_rule('/api/payment/success', view_func=PaymentSuccessView.as_view('payment_success'))
 app.add_url_rule('/api/payment/failure', view_func=PaymentSuccessView.as_view('payment_failure'))
 app.add_url_rule('/api/payment/hook', view_func=PaymentWebHookView.as_view('payment_webhook'))
+
 
 logger.info("APPLICATION LOADED SUCCESSFULLY!!")

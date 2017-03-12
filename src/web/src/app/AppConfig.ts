@@ -10,6 +10,7 @@ export class AppConfig {
   static TRACK_URL: string = AppConfig.BASE_URL + '/track';
   static PINCODE_URL: string = AppConfig.BASE_URL + '/pincodes';
   static MY_ORDERS_URL: string = AppConfig.BASE_URL + '/my_orders';
+  static VALIDATE_COUPON_URL: string = AppConfig.BASE_URL + '/validate/coupon';
 
   static ONLINE_PAYMENT_POST_URL: string = AppConfig.getPaymentUrl();
 

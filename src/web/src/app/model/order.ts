@@ -31,6 +31,8 @@ export class Order {
   payment_status: string;
   payment_error_no: string;
   payment_error_message: string;
+  coupon_code: string;
+  coupon_discount: number;
 
   static of(data) {
     if (data && data.constructor.name !== Order.name) {
@@ -133,7 +135,7 @@ export class Order {
   }
 
   getTotalAmount() {
-    return this.getDeliveryCharges() + this.getSubTotal();
+    return this.getDeliveryCharges() + this.getSubTotal() + this.getCouponDiscount();
   }
 
   getSubTotal() {
@@ -150,6 +152,10 @@ export class Order {
 
   getAcutalTotalAmount() {
     return this.getDeliveryCharges() + this.getActualSubTotal();
+  }
+
+  getCouponDiscount() {
+    return this.coupon_discount || 0.0;
   }
 
   private getActualSubTotal() {
@@ -301,5 +307,22 @@ export class PincodeDetail {
   constructor(data = {}) {
     Object.assign(this, data);
     this._id = ObjectId.of(this._id);
+  }
+}
+
+export class CouponResult {
+  coupon_code : string;
+  amount: number;
+  type: string;
+
+  static of(data) {
+    if (data && data.constructor.name !== CouponResult.name) {
+      return new CouponResult(data);
+    }
+    return data;
+  }
+
+  constructor(data = {}) {
+    Object.assign(this, data);
   }
 }

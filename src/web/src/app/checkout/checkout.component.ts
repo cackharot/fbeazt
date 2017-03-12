@@ -21,6 +21,7 @@ export class CheckoutComponent implements OnInit {
   @ViewChild('ordernotxt') orderNoTxt: ElementRef;
   payment_url: string = AppConfig.ONLINE_PAYMENT_POST_URL;
   order: Order;
+  coupon_code: string = '';
   orderSuccess: boolean = false;
   isRequesting: boolean = false;
   @LocalStorage() canSaveDeliveryDetails: boolean = false;
@@ -148,5 +149,27 @@ export class CheckoutComponent implements OnInit {
     } catch (e) {
       console.error(e);
     }
+  }
+
+  applyCoupon(){
+    this.orderService.applyCoupon(this.order, this.coupon_code)
+      .then(x=> {
+        if(x && x.coupon_code){
+          this.order.coupon_code = x.coupon_code;
+          this.order.coupon_discount = x.amount;
+          this.error = null;
+        }else{
+          this.error = "Invalid coupon code!";
+        }
+      },err=>{
+        console.error(err);
+        this.error = err || "Invalid coupon code!";
+      });
+  }
+
+  removeCoupon() {
+    this.error = null;
+    this.order.coupon_code = '';
+    this.order.coupon_discount = 0;
   }
 }

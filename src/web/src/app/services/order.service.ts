@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Subject }    from 'rxjs/Subject';
+import { Subject } from 'rxjs/Subject';
 import { Headers, URLSearchParams, Http } from '@angular/http';
 import { LocalStorage } from '../libs/WebStorage';
 import * as _ from 'lodash';
 
 import { ObjectId } from '../model/base';
 import { Product, PriceDetail } from '../model/product';
-import { Order, PincodeDetail, LineItem, DeliveryDetails } from '../model/order';
+import { Order, PincodeDetail, LineItem, DeliveryDetails, CouponResult } from '../model/order';
 import { AppConfig } from '../AppConfig';
 
 import { OAuthService } from 'angular2-oauth2/oauth-service';
@@ -278,6 +278,24 @@ export class OrderService {
       .then(response => {
         let data = response.json();
         let result = MyOrderSearchResult.of(data);
+        return result;
+      })
+      .catch(this.handleError);
+  }
+
+  public applyCoupon(tempOrder : Order, couponCode: string): Promise<CouponResult> {
+    let headers = {
+      headers: this.authHeaders()
+    };
+    let url = AppConfig.VALIDATE_COUPON_URL;
+    let order = Object.assign({}, tempOrder);
+    order.coupon_code = couponCode;
+    return this.http.post(url, order, headers)
+      .toPromise()
+      .then(response => {
+        let data = response.json();
+        let result = CouponResult.of(data);
+        console.log(result);
         return result;
       })
       .catch(this.handleError);
