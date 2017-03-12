@@ -1,10 +1,16 @@
 var couponApp = angular.module('fbeaztAdmin');
 
+function isLocalEnv() {
+    return (window.location.host.match(/localhost/)) !== null;
+}
+
+var COUPON_URL = isLocalEnv() ? 'http://localhost:5000/api/coupon' : '/api/coupon';
+
 couponApp.controller('couponListCtrl', function ($route, $scope, $http, $routeParams, $window) {
     $scope.coupons = [];
 
     $scope.reloadCoupons = function () {
-        $http.get('http://localhost:5000/api/coupon').success(function (d) {
+        $http.get(COUPON_URL).success(function (d) {
             $scope.coupons = d;
         }).error(function (e) {
             console.error(e);
@@ -18,7 +24,7 @@ couponApp.controller('couponListCtrl', function ($route, $scope, $http, $routePa
 couponApp.controller('couponDetailCtrl', function ($scope, $http, $routeParams, $location) {
     $scope.model = {};
 
-    $http.get('http://localhost:5000/api/coupon/' + $routeParams.id).success(function (d) {
+    $http.get(COUPON_URL + '/' + $routeParams.id).success(function (d) {
         if (!d){ d = {"status": true}}
         if (!d.id) {d.id = "-1";d.status=true;}
         if(d.start){
@@ -45,9 +51,9 @@ couponApp.controller('couponDetailCtrl', function ($scope, $http, $routeParams, 
 
         if (item.id == "-1") {
             item.id = null;
-            res = $http.post('http://localhost:5000/api/coupon', item);
+            res = $http.post(COUPON_URL, item);
         } else {
-            res = $http.put('http://localhost:5000/api/coupon/' + item.id, item);
+            res = $http.put(COUPON_URL + '/' + item.id, item);
         }
 
         res.success(function (data) {
