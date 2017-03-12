@@ -55,15 +55,15 @@ class PushNotificationService(object):
 
         if reg_ids and len(reg_ids) > 0:
             for device_reg_id in reg_ids:
-                self.log.info("Notifying device (%s) [%s]" % (
-                    email, device_reg_id))
+                self.log.info("Notifying device (%s) for #%s [%s]" %
+                              (email, data.get('order_no', '-'), device_reg_id))
                 try:
                     self.gcm.plaintext_request(
                         registration_id=device_reg_id, data=data)
                 except Exception as e:
                     self.log.exception(e)
                     if "Registration id is not valid anymore" in e.message:
-                      self.delete_by_registered_email(email)
+                        self.delete_by_registered_email(email)
             return True
         else:
             self.log.info("No device registered for %s" % (email))

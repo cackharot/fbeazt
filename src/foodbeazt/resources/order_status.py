@@ -43,6 +43,7 @@ class OrderStatusApi(Resource):
         order['notes'] = notes
 
       self.service.save(order)
+      self.log.info("Updating order #%s status to %s", order.get('order_no'), status)
 
       if status == 'DELIVERED':
         self.send_notification(order)
