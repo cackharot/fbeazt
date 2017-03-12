@@ -67,6 +67,9 @@ class ValidateCouponApi(Resource):
       return None
 
   def valid_coupon(self, coupon):
+    if not coupon.get('status', False):
+      self.log.info('Coupon code disabled %s', coupon.get('code'))
+      return False
     start = dtparse(coupon.get('start')).date()
     end = dtparse(coupon.get('end')).date()
     now = datetime.utcnow().date()
