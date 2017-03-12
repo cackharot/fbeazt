@@ -156,4 +156,13 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
     };
 
     $scope.fetchReports();
+
+    $scope.subTotal = function(order) {
+        var st = 0;
+        for(var i=0; i < order.items.length; ++i){
+            var item = order.items[i];
+            st = st + item.total;
+        }
+        return st;
+    }
 })

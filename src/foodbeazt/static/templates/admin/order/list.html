@@ -117,7 +117,7 @@
                                     <td class="text-right">
                                         Subtotal
                                     </td>
-                                    <td class="total">{{item.total - item.delivery_charges}}</td>
+                                    <td class="total">{{subTotal(item)}}</td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">
@@ -125,7 +125,14 @@
                                     </td>
                                     <td class="total">{{item.delivery_charges}}</td>
                                 </tr>
-                                    <tr>
+                                <tr ng-if="item.coupon_code && item.coupon_discount != 0">
+                                    <td class="text-right">
+                                        <b>{{item.coupon_code}}</b>
+                                        <small> coupon applied</small>
+                                    </td>
+                                    <td class="total">{{item.coupon_discount}}</td>
+                                </tr>
+                                <tr>
                                     <td class="text-right">
                                         Total
                                     </td>

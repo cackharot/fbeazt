@@ -38,10 +38,9 @@ class ValidateCouponApi(Resource):
       order['delivery_charges'] = self.service.get_delivery_charges(order)
       order['total'] = self.service.get_order_total(order)
 
-      r = requests.get(self.coupon_api_url,params={'code': coupon_code},timeout=3)
-      if r.status_code != 200 or len(r.json()) != 1:
+      coupon_data = self.fetch_coupon_data(coupon_code)
+      if coupon_data is None:
         return {'status':'error','message':'Invalid coupon code!'}, 474
-      coupon_data = r.json()[0]
 
       if not self.valid_coupon(coupon_data):
         return {'status':'error','message':'Coupon code was expired!'}, 473
@@ -56,6 +55,16 @@ class ValidateCouponApi(Resource):
     except Exception as e:
       self.log.exception(e)
       return {"status": "error", "message": "Error while validating coupon data"}, 471
+
+  def fetch_coupon_data(self, coupon_code):
+    try:
+      r = requests.get(self.coupon_api_url,params={'code': coupon_code},timeout=3)
+      if r.status_code != 200 or len(r.json()) != 1:
+        return None
+      return r.json()[0]
+    except Exception as e:
+      self.log.exception(e)
+      return None
 
   def valid_coupon(self, coupon):
     start = dtparse(coupon.get('start')).date()
@@ -91,7 +100,7 @@ class ValidateCouponApi(Resource):
     return 0.0
 
   def cal_delivery_charges(self, order):
-    return order.get('delivery_charges')
+    return order.get('delivery_charges', 0.0)
     
   def cal_order_total_without_delivery(self, order):
     return order.get('total') - self.cal_delivery_charges(order)

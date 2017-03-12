@@ -11,6 +11,7 @@ from service.StoreService import StoreService
 from service.SmsService import SmsService
 from libs.order_helper import OrderHelper
 from foodbeazt.fapp import mongo, app, mail
+from resources.coupon import ValidateCouponApi
 import logging
 
 from gcm import *
@@ -33,7 +34,8 @@ class OrderApi(Resource):
     self.pincodeService = PincodeService(mongo.db)
     self.pushNotifyService = PushNotificationService(mongo.db, app.config['GCM_API_KEY'])
     self.smsService = SmsService(mongo.db, app.config['SMS_USER'], app.config['SMS_API_KEY'])
-    self.helper = OrderHelper(productService)
+    self.helper = OrderHelper(self.productService)
+    self.validateCouponService = ValidateCouponApi()
 
   def get(self, _id):
     if _id == "-1": return None, 404
@@ -136,6 +138,26 @@ class OrderApi(Resource):
       'payment_type': payment_type
     }
 
+    valid_order['delivery_charges'] = self.service.get_delivery_charges(valid_order)
+    valid_order['total'] = self.service.get_order_total(valid_order)
+
+    coupon_code = order.get('coupon_code', None)
+    coupon_discount = 0.0
+    if coupon_code:
+      coupon_data = self.validateCouponService.fetch_coupon_data(coupon_code)
+      if coupon_data is None:
+        return dict(status='error', type='validation', message="Invalid coupon data!"), 422
+      if not self.validateCouponService.valid_coupon(coupon_data):
+        return dict(status='error', type='validation', message="Coupon code was expired!"), 422
+
+      coupon_discount = self.validateCouponService.calculate_discount(valid_order, coupon_data)
+      if coupon_discount <= 0.0:
+        self.log.info('Coupon code does not meet the conditions! %s', coupon_code)
+        return {'status':'error','type':'validation','message':'Coupon code does not meet the conditions!'}, 472
+      
+      valid_order['coupon_code'] = coupon_code
+      valid_order['coupon_discount'] = -coupon_discount
+
     if payment_type == 'cod':
       valid_order['payment_status'] = 'success'
     _id = None
@@ -145,8 +167,6 @@ class OrderApi(Resource):
       if not self.pincodeService.check_pincode(pincode):
         return {"status":"error","message":"Delivery not available for %s pincode!" % (pincode)}, 422
 
-      valid_order['delivery_charges'] = self.service.get_delivery_charges(valid_order)
-      valid_order['total'] = self.service.get_order_total(valid_order)
       self.check_spam_order(valid_order)
       valid_order['otp_status'] = self.send_otp(valid_order)
       _id = self.service.save(valid_order)

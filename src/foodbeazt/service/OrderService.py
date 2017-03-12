@@ -114,7 +114,10 @@ class OrderService(object):
     #   x['price'] = float(x['price'])
     #   x['quantity'] = float(x['quantity'])
     item_total = sum([x['total'] for x in order['items']])
-    return item_total + order['delivery_charges']
+    return item_total + order['delivery_charges'] + self.get_coupon_discount(order)
+
+  def get_coupon_discount(self, order):
+    return order.get('coupon_discount', 0.0)
 
   def generate_report(self, tenant_id):
     total = self.orders.count()
