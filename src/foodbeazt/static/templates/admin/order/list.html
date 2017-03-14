@@ -144,6 +144,9 @@
                     <div class="payment__details__container" ng-if="item.payment_type">
                         Payment mode: {{item.payment_type.toUpperCase()}}, Status: {{item.payment_status.toUpperCase()}}
                     </div>
+                    <div class="payment__details__container" ng-if="item.notes">
+                        Notes: {{item.notes}}
+                    </div>
                     <div class="status_row" ng-if="item.status !== 'CANCELLED' && item.status != 'DELIVERED'">
                         <span ng-click="updateStatus(item, 'PENDING')"  class="done">
                             PENDING
@@ -170,4 +173,25 @@
             </div>
         </div>
     </div>
+    <div class="modal fade in" ng-class="{'show': show_notes}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h2 class="modal-title">Order Notes</h2>
+                </header>
+                <div class="modal-body">
+                    <label for="order_notes">
+                        <textarea id="order_notes" class="text" name="order_notes"
+                         cols="60" rows="6"
+                         ng-model="notesText"></textarea>
+                    </label>
+                </div>
+                <footer class="modal-footer">
+                    <button type="button" class="btn btn-secondary" ng-click="cancelNotesModal();">Cancel</button>
+                    <button type="button" class="btn btn-purple" ng-click="updateStatus(notes_order, 'CANCELLED')">Submit</button>
+                </footer>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade in" ng-if="show_notes"></div>
 </div>

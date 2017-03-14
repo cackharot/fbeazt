@@ -67,3 +67,7 @@
 .total{
   font-weight: 600;
 }
+
+.modal-dialog{
+  top: 100px;
+}

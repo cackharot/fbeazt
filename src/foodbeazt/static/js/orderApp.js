@@ -17,6 +17,9 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
     $scope.previous = null;
     $scope.load_url = '/api/orders';
     $scope.report = { total: 0, pending: 0, preparing: 0, cancelled: 0, delivered: 0 };
+    $scope.notes_order = null;
+    $scope.show_notes = false;
+    $scope.notesText = '';
 
     $scope.reloadOrder = function (url) {
         if (!$scope.selected_store) return;
@@ -88,12 +91,36 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
                 return false;
             }
         }
-        $http.post('/api/order_status/' + item._id.$oid, { 'status': status })
+        var notes = '';
+        if(status == 'CANCELLED'){
+            if($scope.notes_order == null){
+                $scope.notes_order = item;
+                $scope.notesText = '';
+                $scope.show_notes = true;
+                return;
+            }else{
+                notes = ($scope.notesText || '').trim();
+                if(notes == ''){
+                    alert('Notes required!');
+                    return false;
+                }
+                $scope.notes_order = null;
+                $scope.show_notes = false;
+            }
+        }
+        $http.post('/api/order_status/' + item._id.$oid, { 'status': status, 'notes': notes })
             .success(function (d) {
                 item.status = status;
             }).error(function (e) {
                 alert(e.message);
             });
+    }
+
+    $scope.cancelNotesModal = function(){
+        $scope.show_notes = false;
+        $scope.notes_order = null;
+        $scope.notesText = '';
+        return true;
     }
 
     $scope.reloadStore = function () {
