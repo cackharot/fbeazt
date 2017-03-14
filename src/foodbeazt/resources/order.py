@@ -183,6 +183,7 @@ class OrderApi(Resource):
       self.send_email(valid_order)
       self.send_sms(valid_order)
       self.notify_new_order(valid_order)
+    self.log.info("%s order success!", valid_order.get('order_no'))
     return {"status": "success", "location": "/api/order/" + str(_id), "data": valid_order}
 
   def notify_new_order(self, order):
@@ -198,10 +199,13 @@ class OrderApi(Resource):
       'total': total,
       'title': 'New Order'
     }
-    self.pushNotifyService.send_to_device(data,email='foodbeazt@gmail.com')
-    self.pushNotifyService.send_to_device(data,email='baraneetharan87@gmail.com')
-    self.pushNotifyService.send_to_device(data,email='vimalprabha87@gmail.com')
-    self.pushNotifyService.send_to_device(data,email='cackharot@gmail.com')
+    try:
+      self.pushNotifyService.send_to_device(data,email='foodbeazt@gmail.com')
+      self.pushNotifyService.send_to_device(data,email='baraneetharan87@gmail.com')
+      self.pushNotifyService.send_to_device(data,email='vimalprabha87@gmail.com')
+      # self.pushNotifyService.send_to_device(data,email='cackharot@gmail.com')
+    except Exception as e:
+      self.log.exception(e)
 
   def delete(self, _id):
     # item = self.service.get_by_id(_id)

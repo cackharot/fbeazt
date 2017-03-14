@@ -37,9 +37,13 @@ class PushNotificationService(object):
         })
 
     def delete_by_registered_email(self, email):
-        return self.push_notify_store.remove({
-            email: email
-        })
+        try:
+            return self.push_notify_store.remove({
+                email: email
+            })
+        except Exception as e:
+            self.log.exception(e)
+            return 0
 
     def send_to_device(self, data, reg_id=None, email=None):
         if self.gcm is None:
