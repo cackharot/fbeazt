@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 from bson import ObjectId, json_util
 from flask import g, request
 from flask_mail import Message
@@ -201,6 +202,8 @@ class OrderApi(Resource):
             self.send_email(valid_order)
             self.send_sms(valid_order)
             self.notify_new_order(valid_order)
+
+        self.notify_store_contact(valid_order)
         self.log.info("%s order success!", valid_order.get('order_no'))
         return {"status": "success", "location": "/api/order/" + str(_id), "data": valid_order}
 
@@ -218,28 +221,50 @@ class OrderApi(Resource):
             'title': 'New Order'
         }
         try:
-            self.pushNotifyService.send_to_device(
-                data, email='foodbeazt@gmail.com')
-            self.pushNotifyService.send_to_device(
-                data, email='baraneetharan87@gmail.com')
-            self.pushNotifyService.send_to_device(
-                data, email='vimalprabha87@gmail.com')
+            self.pushNotifyService.send_to_device(data, email='foodbeazt@gmail.com')
+            self.pushNotifyService.send_to_device(data, email='baraneetharan87@gmail.com')
+            self.pushNotifyService.send_to_device(data, email='vimalprabha87@gmail.com')
             # self.pushNotifyService.send_to_device(data,email='cackharot@gmail.com')
         except Exception as e:
             self.log.exception(e)
 
+    def notify_store_contact(self, order):
+        try:
+            store_ids = set([x.get('store_id') for x in order.get('items')])
+            stores = self.storeService.search_by_ids(store_ids=store_ids)
+            store_status = dict()
+            for store in stores:
+                email = store.get('contact_email', None)
+                store_id = str(store.get('_id'))
+                sid = ObjectId()
+                store_status[store_id] = dict(sid=sid, status='PENDING', notified_at=datetime.now())
+                if email is None:
+                    self.log.info('Store %s does not have contact email', store.get('name'))
+                    continue
+                items = [x.get('quantity') for x in order.get('items') if x.get('store_id') == store_id]
+                item_count = len(items)
+                data = {
+                    'message': "New order %s items" % (item_count),
+                    'order_id': order['_id'],
+                    'order_no': order['order_no'],
+                    'order_date': order['created_at'],
+                    'total_quantity': sum(items),
+                    'sid': str(sid),
+                    'title': 'New Order'
+                }
+                self.pushNotifyService.send_to_device(data, email=email)
+            order['store_delivery_status'] = store_status
+            self.service.save(order)
+        except Exception as e:
+            self.log.exception(e)
+
     def delete(self, _id):
-        # item = self.service.get_by_id(_id)
-        # if item is None:
-        #     return None, 404
-        # item['status'] = False
-        # self.service.delete(item)
         return None, 204
 
     def send_otp(self, order):
         if order['payment_type'] == 'cod':
             return 'VERIFIED'
-        if app.config['SEND_OTP'] == False:
+        if app.config['SEND_OTP'] is False:
             return 'VERIFIED'
         number = order['delivery_details'].get('phone')
         if not self.smsService.verified_number(number):
@@ -271,8 +296,7 @@ class OrderApi(Resource):
         msg.html = order_created_template.render(order=order)
         self.log.info("Sending email [%s] to %s" % (subject, email))
 
-        if app.config['SEND_MAIL'] == False:
-            # time.sleep(3)
+        if app.config['SEND_MAIL'] is False:
             return
         try:
             mail.send(msg)

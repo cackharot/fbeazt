@@ -77,7 +77,7 @@
                     </div>
                     <div class="details__row">
                         <div ng-repeat="store in getOrderStores(item)">
-                            <h4>{{store}}</h4>
+                            <h4>{{store}} ({{getStoreStatus(item, store)}})</h4>
                             <table class="table order_table">
                                 <thead>
                                     <tr>

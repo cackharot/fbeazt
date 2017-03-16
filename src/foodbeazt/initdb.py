@@ -45,6 +45,8 @@ def create_sample_data(db, tenant_id):
         store_name = "My Store %d" % (i)
         store = {'tenant_id': tenant_id,
                  'name': store_name,
+                 'contact_name': 'test contact',
+                 'contact_email': 'test@test.com',
                  'address': 'sample address',
                  'phone': random.randint(600000, 6999999),
                  'food_type': food_types,
@@ -109,6 +111,7 @@ def setup_test_product(host='localhost', port=27017, dbname='foodbeaztDb'):
     p3 = product_service.create(
         test_item(tenant_id, store_id, 'test product3', 100.0, 3.3))
     return p1, p2, p3
+
 
 def test_item(tenant_id, store_id, name, price, discount, pd=None):
     return {

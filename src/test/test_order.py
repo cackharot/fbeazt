@@ -62,6 +62,11 @@ class CreateOrderTestCase(unittest.TestCase):
         self.assertEqual(order.get('total'), 90.0 + 333.0 + (100.0-(100.0*3.3/100.0)) + 40.0)
         self.assertEqual(order.get('payment_status'), 'success')
         self.assertEqual(order.get('status'), 'PENDING')
+        self.assertEqual(len(order.get('store_delivery_status')), 1)
+        for s, v in order.get('store_delivery_status').items():
+            self.assertEqual(v.get('status'), 'PENDING')
+            self.assertIsNotNone(v.get('sid'))
+            self.assertIsNotNone(v.get('notified_at'))
         return order.get('_id')
 
     def _get_order_data(self):

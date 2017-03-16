@@ -17,8 +17,9 @@
                         <th>Name</th>
                         <th>Address</th>
                         <th>Phone(s)</th>
+                        <th>Contact</th>
                         <th>Timings</th>
-                        <th>Cuisine</th>
+                        <!--<th>Cuisine</th>-->
                         <th>Veg/Non-Veg</th>
                         <th>Delivery (min)</th>
                         <th>Menu</th>
@@ -30,10 +31,11 @@
                             </td>
                             <td>{{item.address}}</td>
                             <td>{{item.phone}}</td>
+                            <td>{{item.contact_name}} {{item.contact_email}}</td>
                             <td>
                                 <span>{{item.open_time}} to {{item.close_time}} hrs</span>
                             </td>
-                            <td>{{item.cuisines.join(',')}}</td>
+                            <!--<td>{{item.cuisines.join(',')}}</td>-->
                             <td><span ng-bind-html="item.food_type | show_food_type"></span></td>
                             <td>{{item.deliver_time}}</td>
                             <td class="text-center">

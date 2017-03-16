@@ -58,7 +58,7 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
     $scope.getOrderStores = function (order) {
         var store_names = [];
         for (i = 0; i < order.items.length; ++i) {
-            var n =order.items[i].store.name;
+            var n = order.items[i].store.name;
             if(store_names.indexOf(n) == -1){
                 store_names.push(n);
             }
@@ -191,5 +191,22 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
             st = st + item.total;
         }
         return st;
+    }
+
+    $scope.getStoreStatus = function(order ,store_name) {
+        if(!order.store_delivery_status){
+            return 'NA';
+        }
+        for(var i =0; i< order.items.length; ++i) {
+            var store = order.items[i].store;
+            if(store.name === store_name){
+                var store_id = store._id.$oid;
+                var store_status = order.store_delivery_status[store_id];
+                if(store_status) {
+                    return store_status.status;
+                }
+            }
+        }
+        return 'NA';
     }
 })

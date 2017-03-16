@@ -69,6 +69,26 @@
                         </ul>
                     </div>
                     <div class="form-group">
+                        <label class="control-label" for="contact_name">Contact Name</label>
+                        <input type="text" maxlength="100" class="form-control" id="contact_name" name="contact_name"
+                               ng-class="{ 'parsley-error' : frmStore.contact_name.$invalid && !frmStore.contact_name.$pristine }"
+                               ng-model="model.contact_name" required></textarea>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmStore.contact_name.$dirty && frmStore.contact_name.$invalid">
+                            <li class="parsley-required">Contact name is required</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="contact_email">Contact Email</label>
+                        <input type="email" class="form-control" id="contact_email" name="contact_email"
+                               ng-class="{ 'parsley-error' : frmStore.contact_email.$invalid && !frmStore.contact_email.$pristine }"
+                               ng-model="model.contact_email"/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmStore.contact_email.$dirty && frmStore.contact_email.$invalid">
+                            <li class="parsley-required">Contact email is not valid</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label">Food Types</label><br/>
                         <label ng-repeat="type in food_types">
                             <input type="checkbox" checklist-model="model.food_type" checklist-value="type.id"> {{type.text}}

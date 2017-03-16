@@ -9,12 +9,9 @@ import logging
 import os
 import pdfkit
 
-order_delivered_email_template = app.jinja_env.get_template(
-    'email/order_delivered.html')
-order_invoice_pdf_template = app.jinja_env.get_template(
-    'email/order_invoice.html')
-order_delivered_sms_template = app.jinja_env.get_template(
-    'sms/order_delivered.txt')
+order_delivered_email_template = app.jinja_env.get_template('email/order_delivered.html')
+order_invoice_pdf_template = app.jinja_env.get_template('email/order_invoice.html')
+order_delivered_sms_template = app.jinja_env.get_template('sms/order_delivered.txt')
 
 
 class OrderStatusApi(Resource):
@@ -49,8 +46,7 @@ class OrderStatusApi(Resource):
                 order['notes'] = notes
 
             self.service.save(order)
-            self.log.info("Updating order #%s status to %s",
-                          order.get('order_no'), status)
+            self.log.info("Updating order #%s status to %s", order.get('order_no'), status)
 
             if status == 'DELIVERED':
                 self.send_notification(order)
@@ -90,7 +86,7 @@ class OrderStatusApi(Resource):
 
         self.log.info("Sending email [%s] to %s" % (subject, email))
 
-        if app.config['SEND_MAIL'] == False:
+        if app.config['SEND_MAIL'] is False:
             return
 
         try:
