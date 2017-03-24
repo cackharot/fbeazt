@@ -155,8 +155,7 @@ export class CheckoutComponent implements OnInit {
     this.orderService.applyCoupon(this.order, this.coupon_code)
       .then(x=> {
         if(x && x.coupon_code){
-          this.order.coupon_code = x.coupon_code;
-          this.order.coupon_discount = x.amount;
+          this.order.updateCouponCode(x.coupon_code, x.amount);
           this.error = null;
         }else{
           this.error = "Invalid coupon code!";

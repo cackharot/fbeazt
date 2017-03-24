@@ -88,6 +88,12 @@
           &#8377; {{order['delivery_charges']}}
         </td>
       </tr>
+      {% if order.get('coupon_code') %}
+      <tr>
+        <td>{{order['coupon_code']}}&nbsp;<small>coupon applied</small></td>
+        <td>&#8377; {{order['coupon_discount']}}</td>
+      </tr>
+      {% endif %}
       <tr>
         <td>
           Total

@@ -61,6 +61,12 @@ export class OrderService {
 
   constructor(private http: Http, private authService: OAuthService) {
     this.currentOrder = Order.of(this.currentOrder);
+    this.orderUpdated$.subscribe((x) => {
+      this.currentOrder.removeCouponCode();
+    });
+    this.itemAdded$.subscribe((x) => {
+      this.currentOrder.removeCouponCode();
+    });
   }
 
   private addLineItem(item: LineItem) {

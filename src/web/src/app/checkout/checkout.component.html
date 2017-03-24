@@ -102,9 +102,8 @@
                         <i *ngIf="item.price_detail.discount > 0">{{item.price_detail.discount}}% discount</i>
                       </small>
                       <small class="light" *ngIf="!item.price_detail && item.discount > 0">
-                        <i>{{item.discount}}% discount</i>
+                        <i>{{item.discount}}% discount</i><br/>
                       </small>
-                      <br/>
                       <span class="store_name light"><i>from</i> {{item.store.name}}</span>
                       <br/>
                       <small class="light text-alert" *ngIf="item.store.isClosed()">
@@ -209,7 +208,7 @@
     </div>
     <div class="medium-12 columns">
       <div class="align-center">
-        <button (click)="resetOrder()" class="button secondary">Cancel</button>
+        <button type="button" (click)="resetOrder()" class="button secondary">Cancel</button>
         <button type="submit" class="button primary" [disabled]="!orderForm.form.valid || !order.isValid()">
           Confirm
         </button>

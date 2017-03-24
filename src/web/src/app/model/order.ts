@@ -70,6 +70,18 @@ export class Order {
     }
   }
 
+  removeCouponCode(){
+    if(this.coupon_code){
+      this.coupon_code = null;
+      this.coupon_discount = 0;
+    }
+  }
+
+  updateCouponCode(code:string, discount: number){
+    this.coupon_code = code;
+    this.coupon_discount = discount;
+  }
+
   getStores() {
     let stores = this.getUnique(this.items.map(x => x.store));
     return stores;
