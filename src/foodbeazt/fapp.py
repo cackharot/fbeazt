@@ -335,7 +335,7 @@ def _jinja2_filter_datetime(value, fmt=None):
 from foodbeazt.resources.subscription import SubscriptionApi, SubscriptionListApi
 from foodbeazt.resources.tenant import TenantListApi, TenantApi
 from foodbeazt.resources.user import UserApi, UserListApi
-from foodbeazt.resources.store import StoreApi, StoreListApi
+from foodbeazt.resources.store import StoreApi, StoreListApi, StoreCuisineApi
 from foodbeazt.resources.product import ProductApi, ProductListApi, ProductActivateApi
 from foodbeazt.resources.order import OrderApi, TrackOrderApi
 from foodbeazt.resources.coupon import ValidateCouponApi
@@ -389,6 +389,7 @@ api.add_resource(UserListApi, '/api/users')
 
 api.add_resource(StoreApi, '/api/store/<string:_id>')
 api.add_resource(StoreListApi, '/api/stores')
+api.add_resource(StoreCuisineApi, '/api/stores/cuisines')
 
 api.add_resource(ProductApi, '/api/product/<string:store_id>/<string:_id>')
 api.add_resource(ProductActivateApi, '/api/product/activate/<string:store_id>/<string:_id>')

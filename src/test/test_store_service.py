@@ -6,6 +6,7 @@ from service.StoreService import StoreService, DuplicateStoreNameException
 
 
 class test_store_service(unittest.TestCase):
+
     def setUp(self):
         self.dbClient = MongoClient()
         self.db = self.dbClient.test_foodbeazt_database
@@ -16,7 +17,7 @@ class test_store_service(unittest.TestCase):
 
     def get_model(self, name):
         store_item = {'name': name, 'description': 'some desc', 'address': 'some address',
-                      'tenant_id': self.tenant_id,
+                      'tenant_id': self.tenant_id, 'cuisines': ['cuisineA', 'cuisineB'],
                       'contact_name': 'contact person name', 'contact_email': 'contact person email',
                       'contact_phone': 'contact person phone', 'website': 'website'}
         return store_item
@@ -57,3 +58,11 @@ class test_store_service(unittest.TestCase):
     def test_delete_store_by_id(self):
         id = self.test_create_store()
         self.service.delete(str(id))
+
+    def test_get_store_cuisines(self):
+        self.test_create_store()
+        cusines = self.service.get_cuisines(tenant_id=self.tenant_id)
+        assert cusines is not None
+        assert len(cusines) == 2
+        assert 'cuisineA' in cusines
+        assert 'cuisineB' in cusines
