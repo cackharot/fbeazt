@@ -3,10 +3,68 @@ from bson import ObjectId
 import re
 
 
+class FrequentStoreReviewException(Exception):
+
+    def __init__(self, message='Frequent review posting detected!'):
+        Exception.__init__(self, message)
+
+
 class DuplicateStoreNameException(Exception):
 
     def __init__(self, message='Store name already exits'):
         Exception.__init__(self, message)
+
+
+class StoreReviewService(object):
+
+    def __init__(self, db):
+        self.db = db
+        self.reviews = self.db.store_review_collection
+
+    def search(self, tenant_id, store_id, page_no=1, page_size=10):
+        query = {"tenant_id": ObjectId(tenant_id), "store_id": ObjectId(store_id), "status": True}
+        offset = (page_no - 1) * page_size
+        if offset < 0:
+            offset = 0
+        lst = self.reviews.find(query)
+        return [x for x in lst.sort("created_at", -1).skip(offset).limit(page_size)], lst.count()
+
+    def save(self, item):
+        if '_id' not in item or item['_id'] is None or item['_id'] == "-1":
+            item.pop('_id', None)
+            item['created_at'] = datetime.now()
+            item['status'] = True
+        else:
+            item['updated_at'] = datetime.now()
+
+        if 'store_id' not in item or 'user' not in item or 'email' not in item['user']:
+            raise Exception('Invalid review posted')
+
+        if self.check_frequent_posting(item.get('store_id'), item.get('user').get('email')):
+            raise FrequentStoreReviewException('Frequent posting detected')
+
+        return self.reviews.save(item)
+
+    def check_frequent_posting(self, store_id, email):
+        past_fifteen_mins = datetime.now() - timedelta(minutes=15)
+        query = self.reviews.find({'store_id': ObjectId(
+            store_id), 'user.email': email, 'created_at': {'$gt': past_fifteen_mins}})
+        res = [x for x in query]
+        print("^^" * 70, query, past_fifteen_mins, res, len(res), "#"*80)
+        return len(res) > 1
+
+    def get_by_email(self, store_id, email):
+        return self.reviews.find({'store_id': ObjectId(store_id), 'user.email': email})
+
+    def delete(self, _id):
+        item = self.reviews.find_one({'_id': ObjectId(_id)})
+        if item:
+            self.reviews.remove(item)
+            return True
+        return False
+
+    def get_by_id(self, _id):
+        return self.reviews.find_one({'_id': ObjectId(_id)})
 
 
 class StoreService(object):

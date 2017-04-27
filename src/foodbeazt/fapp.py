@@ -38,7 +38,7 @@ if os.environ.get('FOODBEAZT_CONFIG', None) is not None:
   app.config.from_envvar('FOODBEAZT_CONFIG')
 
 # CORS
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}}) #, send_wildcard=True)
 # Mongodb
 mongo = PyMongo()
 # monog.init_app(app)
@@ -336,6 +336,7 @@ from foodbeazt.resources.subscription import SubscriptionApi, SubscriptionListAp
 from foodbeazt.resources.tenant import TenantListApi, TenantApi
 from foodbeazt.resources.user import UserApi, UserListApi
 from foodbeazt.resources.store import StoreApi, StoreListApi, StoreCuisineApi
+from foodbeazt.resources.store_review import StoreReviewApi
 from foodbeazt.resources.product import ProductApi, ProductListApi, ProductActivateApi
 from foodbeazt.resources.order import OrderApi, TrackOrderApi
 from foodbeazt.resources.coupon import ValidateCouponApi
@@ -388,6 +389,7 @@ api.add_resource(UserApi, '/api/user/<string:_id>')
 api.add_resource(UserListApi, '/api/users')
 
 api.add_resource(StoreApi, '/api/store/<string:_id>')
+api.add_resource(StoreReviewApi, '/api/store/<string:store_id>/review')
 api.add_resource(StoreListApi, '/api/stores')
 api.add_resource(StoreCuisineApi, '/api/stores/cuisines')
 
