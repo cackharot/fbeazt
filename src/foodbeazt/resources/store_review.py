@@ -17,8 +17,20 @@ class StoreReviewApi(Resource):
             return []
         try:
             tenant_id = g.user.tenant_id
-            items, total = self.service.search(tenant_id, store_id)
-            return {'items': items, 'total': total}
+            page_no = int(request.args.get('page_no', 1))
+            page_size = int(request.args.get('page_size', 10))
+            items, total = self.service.search(
+                tenant_id=tenant_id, store_id=store_id,
+                page_no=page_no, page_size=page_size)
+            offset = page_no * page_size
+            result = {'items': items, 'total': total,
+                      "page_no": page_no, "page_size": page_size}
+            url = "/api/store/%s/review?page_no=%d&page_size=%d"
+            if total > offset:
+                result["next"] = url % (store_id, page_no + 1, page_size)
+            if page_no > 1:
+                result["previous"] = url % (store_id, page_no - 1, page_size)
+            return result
         except Exception as e:
             self.log.exception(e)
             return {"status": "error", "message": "Error on get store reviews with id %s" % store_id}, 461
@@ -41,7 +53,7 @@ class StoreReviewApi(Resource):
         item['tenant_id'] = ObjectId(tenant_id)
         try:
             _id = self.service.save(item)
-            return {"status": "success", "location": "/api/store/" + str(_id)}
+            return {"status": "success", "data": item, "location": "/api/store/" + str(_id)}
         except FrequentStoreReviewException as e:
             self.log.exception(e)
             return dict(status="error", message=str(e)), 464

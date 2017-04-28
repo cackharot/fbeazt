@@ -50,7 +50,7 @@ class StoreReviewService(object):
         query = self.reviews.find({'store_id': ObjectId(
             store_id), 'user.email': email, 'created_at': {'$gt': past_fifteen_mins}})
         res = [x for x in query]
-        print("^^" * 70, query, past_fifteen_mins, res, len(res), "#"*80)
+        # print("^^" * 70, query, past_fifteen_mins, res, len(res), "#"*80)
         return len(res) > 1
 
     def get_by_email(self, store_id, email):
