@@ -209,6 +209,7 @@ class StoreService(object):
             x['is_popular'] = True
             x['no'] = kv[x['_id']]
             popular.append(x)
+        popular.sort(key=lambda x: x['no'])
         return popular
 
     def get_cuisines(self, tenant_id):
