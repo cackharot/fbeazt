@@ -9,13 +9,19 @@ String.prototype.format = function() {
 
 angular.module('fbFilters', [])
 .filter('datetime', function() {
-    return function(input) {
+    return function(input, fmtString) {
       if(input && input.$date){
         var d = new Date(input.$date);
+        if(fmtString && fmtString.length > 0){
+          return moment(d).format(fmtString);
+        }
         return d.toLocaleDateString() +" "+ d.toLocaleTimeString();
       }else if(input){
         try{
           var d = new Date(input);
+          if(fmtString && fmtString.length > 0){
+            return moment(d).format(fmtString);
+          }
           return d.toLocaleDateString() +" "+ d.toLocaleTimeString();
         }catch(e) {}
       }

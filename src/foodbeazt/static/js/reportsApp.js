@@ -58,7 +58,7 @@ reportsApp.controller('reportsCtrl', function ($scope, $http) {
         } else {
           var tl = m['total'] || 0;
           var dc = m['delivery_charges'] || 0;
-          var p = (tl*0.07) + dc;
+          var p = (tl * 0.07) + dc;
           total.push(tl); profit.push(p); delivery_charges.push(dc);
         }
       }
@@ -68,6 +68,58 @@ reportsApp.controller('reportsCtrl', function ($scope, $http) {
     });
   };
 
+  var loadOrders = function (store_id, month) {
+    $scope.orders = [];
+    var month_index = $scope.months.indexOf(month) + 1;
+    $http.get('/api/reports/orders?report_type=load_orders&store_id=' + store_id + '&month=' + month_index).success(function (d) {
+      $scope.orders = d.orders;
+      $scope.orders_totals = d.totals;
+    }).error(function (e) {
+      alert(e);
+    });
+  };
+
+  $scope.reloadStore = function () {
+    $http.get('/api/stores', { params: { 'page_size': 200 } }).success(function (d) {
+      $scope.stores = d.items
+      if (!$scope.stores || $scope.stores.length == 0) {
+        $scope.stores = []
+        $scope.stores.push({ '_id': { "$oid": '' }, 'name': 'No stores available!' })
+      }
+      $scope.setStore($scope.stores[0]._id.$oid)
+    }).error(function (e) {
+      alert(e)
+    })
+  }
+
+  $scope.months = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  $scope.selected_month = $scope.months[new Date().getMonth()];
+
+  $scope.setStore = function (store_id) {
+    if (!store_id || store_id == '-1' || store_id == '') {
+      return false;
+    }
+    $scope.selected_store = store_id;
+
+    for (var i = 0; i < $scope.stores.length; ++i) {
+      var s = $scope.stores[i];
+      if (s._id.$oid == store_id) {
+        $scope.selected_store_name = s.name;
+      }
+    }
+
+    loadOrders($scope.selected_store, $scope.selected_month);
+    return false;
+  };
+
+  $scope.select_month = function (month) {
+    $scope.selected_month = month;
+    loadOrders($scope.selected_store, $scope.selected_month);
+  }
+
+  $scope.reloadStore();
   setupOrderTrendChart();
   setupRevenueChart();
 });

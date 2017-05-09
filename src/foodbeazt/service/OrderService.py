@@ -62,7 +62,8 @@ class OrderService(object):
         cnt = 0
         no = None
         while no is None or cnt <= 10:
-            no = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(9))
+            no = ''.join(random.SystemRandom().choice(
+                string.ascii_uppercase + string.digits) for _ in range(9))
             cnt = cnt + 1
             if self.get_by_number(no) is not None:
                 no = None
@@ -104,7 +105,7 @@ class OrderService(object):
         store_count = len(self.get_unique_stores(order))
         if store_count <= 1:
             return 40
-        return 40 + (25*(store_count-1))
+        return 40 + (25 * (store_count - 1))
 
     def get_unique_stores(self, order):
         store_ids = []
@@ -126,8 +127,10 @@ class OrderService(object):
 
     def generate_report(self, tenant_id):
         total = self.orders.count()
-        result = {'total': total, 'pending': 0, 'preparing': 0, 'cancelled': 0, 'delivered': 0}
-        data = self.orders.aggregate({'$group': {'_id': "$status", 'count': {"$sum": 1}}})
+        result = {'total': total, 'pending': 0,
+                  'preparing': 0, 'cancelled': 0, 'delivered': 0}
+        data = self.orders.aggregate(
+            {'$group': {'_id': "$status", 'count': {"$sum": 1}}})
         if data["ok"] == 1.0:
             for x in data["result"]:
                 result[x['_id'].lower()] = x['count']
@@ -137,7 +140,8 @@ class OrderService(object):
         result = {}
         data = self.orders.aggregate([
             {'$project': {'status': "$status", 'month': {'$month': "$created_at"}}},
-            {'$group': {'count': {'$sum': 1}, '_id': {'status': "$status", 'month': "$month"}}}
+            {'$group': {'count': {'$sum': 1}, '_id': {
+                'status': "$status", 'month': "$month"}}}
         ])
         if data["ok"] == 1.0:
             for x in data["result"]:
@@ -150,10 +154,28 @@ class OrderService(object):
     def revenue_trend(self, tenant_id):
         result = {}
         data = self.orders.aggregate([
-            {'$project': {'total': "$total", 'delivery_charges': "$delivery_charges", 'month': {'$month': "$created_at"}}},
-            {'$group': {'_id': {'month': "$month"}, 'delivery_charges': {"$sum": "$delivery_charges"}, 'total': {"$sum": "$total"}}}
+            {'$project': {'total': "$total", 'delivery_charges': "$delivery_charges",
+                          'month': {'$month': "$created_at"}}},
+            {'$group': {'_id': {'month': "$month"}, 'delivery_charges': {
+                "$sum": "$delivery_charges"}, 'total': {"$sum": "$total"}}}
         ])
         if data["ok"] == 1.0:
             for x in data["result"]:
-                result[x['_id']['month']] = {'total': x['total'], 'delivery_charges': x['delivery_charges']}
+                result[x['_id']['month']] = {'total': x[
+                    'total'], 'delivery_charges': x['delivery_charges']}
         return result
+
+    def load_orders(self, tenant_id, month=None, store_id=None):
+        query = {"tenant_id": ObjectId(tenant_id)}
+        if store_id is not None:
+            query['items.store_id'] = ObjectId(store_id)
+        if month is not None and month >= 0 and month <= 11:
+            today = datetime.now()
+            start_date = datetime(today.year, month, 1)
+            if month >= 12:
+                end_date = datetime(today.year + 1, 1, 1)
+            else:
+                end_date = datetime(today.year, month + 1, 1)
+            query['created_at'] = {'$gte': start_date, '$lt': end_date}
+        data = [x for x in self.orders.find(query)]
+        return data

@@ -1,27 +1,101 @@
 <div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false" ng-controller="reportsCtrl">
-	<h3>
-		Reports
-	</h3>
-	<div class="row">
-		<div class="panel panel-default">
-			<div class="panel-body">
-        <h4>Order trend</h4>
-				<canvas id="order-char" class="chart chart-line"
-          chart-colors="colors" 
-          chart-data="data" chart-labels="labels" chart-series="series" chart-options="options"
-					chart-dataset-override="datasetOverride" chart-click="onClick">
-				</canvas>
-			</div>
-		</div>
-	</div>
+  <h3>
+    <div class="pull-right">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            {{selected_month}} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right animated fadeInUpShort" role="menu">
+          <li ng-repeat="item in months">
+            <a ng-click="select_month(item)"><span ng-bind-html="item | show_check_mark: selected_month"></span> {{item}}</a>
+          </li>
+        </ul>
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            {{selected_store_name}} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right animated fadeInUpShort" role="menu">
+          <li ng-repeat="item in stores">
+            <a ng-click="setStore(item._id.$oid)"><span ng-bind-html="item._id.$oid | show_check_mark: selected_store"></span> {{item.name}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    Reports
+  </h3>
   <div class="row">
-		<div class="panel panel-default">
-			<div class="panel-body">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <h4>Order Data</h4>
+        <div class="callout info" ng-if="!orders || orders.length === 0">
+          {{selected_store_name}} Orders not available for {{selected_month}}
+        </div>
+        <table class="table table-striped table-bordered table-hover" ng-if="orders && orders.length > 0">
+          <thead>
+            <tr>
+              <th>No#</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Payment</th>
+              <th>Restaurants</th>
+              <th>Delivery Area</th>
+              <th class="text-right">Items</th>
+              <th class="text-right">Total</th>
+              <th class="text-right">Discount</th>
+              <th class="text-right">Net Amt</th>
+              <th class="text-right">Delivery Charge</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in orders">
+              <td>{{item.order_no}}</td>
+              <td>{{item.created_at | datetime:'DD/MM/YYYY'}}</td>
+              <td>{{item.created_at | datetime:'h:mm a'}}</td>
+              <td>{{item.payment_type}}</td>
+              <td>{{item.store_name}}</td>
+              <td>{{item.delivery_location}}</td>
+              <td class="text-right">{{item.items_count}}</td>
+              <td class="text-right">{{item.sub_total}}</td>
+              <td class="text-right">{{item.store_discount}}</td>
+              <td class="text-right">{{item.net_amt}}</td>
+              <td class="text-right">{{item.delivery_charges}}</td>
+              <td>{{item.status}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th class="text-right" colspan="6">Total:</th>
+              <td class="text-right">{{orders_totals.items_count}}</td>
+              <td class="price text-right">{{orders_totals.sub_total}}</td>
+              <td class="text-right"></td>
+              <td class="price text-right">{{orders_totals.net_amt}}</td>
+              <td class="price text-right">{{orders_totals.delivery_charges}}</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <h4>Order trend</h4>
+        <canvas id="order-char" class="chart chart-line" chart-colors="colors" chart-data="data" chart-labels="labels" chart-series="series"
+          chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick">
+        </canvas>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-body">
         <h4>Revenue trend</h4>
-				<canvas id="revenue-chart" class="chart chart-bar" chart-data="revenueData" 
-          chart-labels="revenueLabels" chart-series="revenueSeries">
-				</canvas>
-			</div>
-		</div>
-	</div>
+        <canvas id="revenue-chart" class="chart chart-bar" chart-data="revenueData" chart-labels="revenueLabels" chart-series="revenueSeries">
+        </canvas>
+      </div>
+    </div>
+  </div>
 </div>
