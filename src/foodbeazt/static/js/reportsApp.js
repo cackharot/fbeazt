@@ -68,10 +68,10 @@ reportsApp.controller('reportsCtrl', function ($scope, $http) {
     });
   };
 
-  var loadOrders = function (store_id, month) {
+  var loadOrders = function (store_id, year, month) {
     $scope.orders = [];
     var month_index = $scope.months.indexOf(month) + 1;
-    $http.get('/api/reports/orders?report_type=load_orders&store_id=' + store_id + '&month=' + month_index).success(function (d) {
+    $http.get('/api/reports/orders?report_type=load_orders&store_id=' + store_id + '&year=' + year + '&month=' + month_index).success(function (d) {
       $scope.orders = d.orders;
       $scope.orders_totals = d.totals;
     }).error(function (e) {
@@ -81,12 +81,12 @@ reportsApp.controller('reportsCtrl', function ($scope, $http) {
 
   $scope.reloadStore = function () {
     $http.get('/api/stores', { params: { 'page_size': 200 } }).success(function (d) {
-      $scope.stores = d.items
+      $scope.stores = d.items;
       if (!$scope.stores || $scope.stores.length == 0) {
-        $scope.stores = []
-        $scope.stores.push({ '_id': { "$oid": '' }, 'name': 'No stores available!' })
+        $scope.stores = [];
       }
-      $scope.setStore($scope.stores[0]._id.$oid)
+      $scope.stores.splice(0, 0, { '_id': { "$oid": '-1' }, 'name': 'All Stores' });
+      $scope.setStore($scope.stores[0]._id.$oid);
     }).error(function (e) {
       alert(e)
     })
@@ -95,12 +95,15 @@ reportsApp.controller('reportsCtrl', function ($scope, $http) {
   $scope.months = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
-  $scope.selected_month = $scope.months[new Date().getMonth()];
+  var today = new Date();
+  $scope.years = [];
+  for (var i = today.getFullYear(); i >= today.getFullYear() - 5; --i) {
+    $scope.years.push(i);
+  }
+  $scope.selected_year = $scope.years[0];
+  $scope.selected_month = $scope.months[today.getMonth()];
 
   $scope.setStore = function (store_id) {
-    if (!store_id || store_id == '-1' || store_id == '') {
-      return false;
-    }
     $scope.selected_store = store_id;
 
     for (var i = 0; i < $scope.stores.length; ++i) {
@@ -110,13 +113,17 @@ reportsApp.controller('reportsCtrl', function ($scope, $http) {
       }
     }
 
-    loadOrders($scope.selected_store, $scope.selected_month);
+    loadOrders($scope.selected_store, $scope.selected_year, $scope.selected_month);
     return false;
   };
 
   $scope.select_month = function (month) {
     $scope.selected_month = month;
-    loadOrders($scope.selected_store, $scope.selected_month);
+    loadOrders($scope.selected_store, $scope.selected_year, $scope.selected_month);
+  }
+  $scope.select_year = function (year) {
+    $scope.selected_year = year;
+    loadOrders($scope.selected_store, $scope.selected_year, $scope.selected_month);
   }
 
   $scope.reloadStore();

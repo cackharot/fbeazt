@@ -165,17 +165,20 @@ class OrderService(object):
                     'total'], 'delivery_charges': x['delivery_charges']}
         return result
 
-    def load_orders(self, tenant_id, month=None, store_id=None):
+    def load_orders(self, tenant_id, year=None, month=None, store_id=None):
+        today = datetime.now()
         query = {"tenant_id": ObjectId(tenant_id)}
         if store_id is not None:
             query['items.store_id'] = ObjectId(store_id)
+        if year is None:
+            year = today.year
         if month is not None and month >= 0 and month <= 11:
-            today = datetime.now()
-            start_date = datetime(today.year, month, 1)
+            start_date = datetime(year, month, 1)
             if month >= 12:
-                end_date = datetime(today.year + 1, 1, 1)
+                end_date = datetime(year + 1, 1, 1)
             else:
-                end_date = datetime(today.year, month + 1, 1)
+                end_date = datetime(year, month + 1, 1)
             query['created_at'] = {'$gte': start_date, '$lt': end_date}
+        # print("=" * 80, query)
         data = [x for x in self.orders.find(query)]
         return data

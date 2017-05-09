@@ -40,10 +40,15 @@ class ReportApi(Resource):
     def load_orders(self, tenant_id):
         store_id = request.args.get('store_id', None)
         month = request.args.get('month', None)
+        year = request.args.get('year', None)
+        if store_id is not None and store_id == '-1':
+            store_id = None
+        if year is not None:
+            year = int(year)
         if month is not None:
             month = int(month)
         orders = self.service.load_orders(
-            tenant_id=tenant_id, store_id=store_id, month=month)
+            tenant_id=tenant_id, store_id=store_id, year=year, month=month)
         store_ids = set([x['store_id'] for order in orders
                          for x in order['items']])
         stores = self.storeService.search_by_ids(store_ids=store_ids)
