@@ -113,6 +113,18 @@
                         </ul>
                     </div>
                     <div class="form-group">
+                        <label class="control-label" for="open_time">Given Discount to foodbeazt</label>
+                        <input class="form-control" type="number" id="given_discount" name="given_discount"
+                               ng-class="{ 'parsley-error' : frmStore.given_discount.$invalid && !frmStore.given_discount.$pristine }"
+                               ng-model="model.given_discount" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmStore.given_discount.$dirty && frmStore.given_discount.$invalid">
+                            <li class="parsley-required" ng-show="frmStore.given_discount.$error.required">
+                                Enter discount given to foodbeazt. e.g. 5 for 5%
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label" for="open_time">Open Time</label>
                         <input class="form-control" type="number" id="open_time" name="open_time"
                                ng-class="{ 'parsley-error' : frmStore.open_time.$invalid && !frmStore.open_time.$pristine }"

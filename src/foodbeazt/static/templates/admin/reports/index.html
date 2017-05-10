@@ -52,7 +52,7 @@
               <th>Delivery Area</th>
               <th class="text-right">Items</th>
               <th class="text-right">Total</th>
-              <th class="text-right">Discount</th>
+              <th class="text-right">Discount(%)</th>
               <th class="text-right">Net Amt</th>
               <th class="text-right">Delivery Charge</th>
               <th>Status</th>
@@ -76,7 +76,8 @@
           </tbody>
           <tfoot>
             <tr>
-              <th class="text-right" colspan="6">Total:</th>
+              <th class="text-right" colspan="2">Order count: {{orders.length}}</th>
+              <th class="text-right" colspan="4">Total:</th>
               <td class="text-right">{{orders_totals.items_count}}</td>
               <td class="price text-right">{{orders_totals.sub_total}}</td>
               <td class="text-right"></td>
