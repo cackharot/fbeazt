@@ -125,24 +125,37 @@ class OrderService(object):
     def get_coupon_discount(self, order):
         return order.get('coupon_discount', 0.0)
 
-    def generate_report(self, tenant_id):
-        total = self.orders.count()
-        result = {'total': total, 'pending': 0,
+    def generate_report(self, tenant_id, store_id, year, month):
+        match = {}
+        if year > 0:
+            match['year'] = year
+        result = {'total': 0, 'pending': 0,
                   'preparing': 0, 'cancelled': 0, 'delivered': 0}
-        data = self.orders.aggregate(
-            {'$group': {'_id': "$status", 'count': {"$sum": 1}}})
+        data = self.orders.aggregate([
+            {'$project': {'status': "$status",
+                          'month': {'$month': "$created_at"}, 'year': {'$year': '$created_at'}}},
+            {'$match': match},
+            {'$group': {'_id': "$status", 'count': {"$sum": 1}}}
+        ])
         if data["ok"] == 1.0:
             for x in data["result"]:
                 result[x['_id'].lower()] = x['count']
+                result['total'] = result['total'] + x['count']
         return result
 
-    def order_trend(self, tenant_id):
+    def order_trend(self, tenant_id, store_id, year, month):
         result = {}
-        data = self.orders.aggregate([
-            {'$project': {'status': "$status", 'month': {'$month': "$created_at"}}},
+        match = {}
+        if year > 0:
+            match['year'] = year
+        query = [
+            {'$project': {'status': "$status",
+                          'month': {'$month': "$created_at"}, 'year': {'$year': '$created_at'}}},
+            {'$match': match},
             {'$group': {'count': {'$sum': 1}, '_id': {
-                'status': "$status", 'month': "$month"}}}
-        ])
+                'status': "$status", 'month': "$month", 'year': '$year'}}}
+        ]
+        data = self.orders.aggregate(query)
         if data["ok"] == 1.0:
             for x in data["result"]:
                 status = x['_id']['status'].lower()
@@ -151,11 +164,15 @@ class OrderService(object):
                 result[status][x['_id']['month']] = x['count']
         return result
 
-    def revenue_trend(self, tenant_id):
+    def revenue_trend(self, tenant_id, store_id, year, month):
         result = {}
+        match = {}
+        if year > 0:
+            match['year'] = year
         data = self.orders.aggregate([
             {'$project': {'total': "$total", 'delivery_charges': "$delivery_charges",
-                          'month': {'$month': "$created_at"}}},
+                          'month': {'$month': "$created_at"}, 'year': {'$year': '$created_at'}}},
+            {'$match': match},
             {'$group': {'_id': {'month': "$month"}, 'delivery_charges': {
                 "$sum": "$delivery_charges"}, 'total': {"$sum": "$total"}}}
         ])
@@ -166,13 +183,10 @@ class OrderService(object):
         return result
 
     def load_orders(self, tenant_id, year=None, month=None, store_id=None):
-        today = datetime.now()
         query = {"tenant_id": ObjectId(tenant_id)}
         if store_id is not None:
             query['items.store_id'] = ObjectId(store_id)
-        if year is None:
-            year = today.year
-        if month is not None and month >= 0 and month <= 11:
+        if month is not None and month >= 1 and month <= 12:
             start_date = datetime(year, month, 1)
             if month >= 12:
                 end_date = datetime(year + 1, 1, 1)

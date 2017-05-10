@@ -37,11 +37,18 @@
   <div class="row">
     <div class="panel panel-default">
       <div class="panel-body">
-        <h4>Order Data</h4>
+        <h4>
+          <div class="pull-right">
+            <button class="btn btn-success" type="button" ng-click="tableToExcel('tblOrderReportData')"><em
+                    class="fa fa-download"></em>&nbsp;Export
+            </button>
+          </div>
+          Order Data
+        </h4>
         <div class="callout info" ng-if="!orders || orders.length === 0">
           {{selected_store_name}} Orders not available for {{selected_month}}
         </div>
-        <table class="table table-striped table-bordered table-hover" ng-if="orders && orders.length > 0">
+        <table id="tblOrderReportData" class="table table-striped table-bordered table-hover" ng-if="orders && orders.length > 0">
           <thead>
             <tr>
               <th>No#</th>
@@ -76,7 +83,7 @@
           </tbody>
           <tfoot>
             <tr>
-              <th class="text-right" colspan="2">Order count: {{orders.length}}</th>
+              <th class="text-right" colspan="2">Order count: {{orders_totals.orders_count}}</th>
               <th class="text-right" colspan="4">Total:</th>
               <td class="text-right">{{orders_totals.items_count}}</td>
               <td class="price text-right">{{orders_totals.sub_total}}</td>

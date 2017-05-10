@@ -27,7 +27,7 @@ reportsApp.controller('reportsCtrl', function ($scope, $http) {
       }
       return total;
     };
-    $http.get('/api/reports/orders?report_type=order_trend').success(function (d) {
+    $http.get('/api/reports/orders?report_type=order_trend&year=' + $scope.selected_year).success(function (d) {
       $scope.data[1] = fmtMonth(d, 'delivered');
       $scope.data[2] = fmtMonth(d, 'cancelled');
       $scope.data[3] = fmtMonth(d, 'pending');
@@ -47,7 +47,7 @@ reportsApp.controller('reportsCtrl', function ($scope, $http) {
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ];
-    $http.get('/api/reports/orders?report_type=revenue_trend').success(function (d) {
+    $http.get('/api/reports/orders?report_type=revenue_trend&year=' + $scope.selected_year).success(function (d) {
       var total = [];
       var profit = [];
       var delivery_charges = [];
@@ -58,7 +58,7 @@ reportsApp.controller('reportsCtrl', function ($scope, $http) {
         } else {
           var tl = m['total'] || 0;
           var dc = m['delivery_charges'] || 0;
-          var p = (tl * 0.07) + dc;
+          var p = ((tl * 0.07) + dc).toFixed(2);
           total.push(tl); profit.push(p); delivery_charges.push(dc);
         }
       }
@@ -124,9 +124,24 @@ reportsApp.controller('reportsCtrl', function ($scope, $http) {
   $scope.select_year = function (year) {
     $scope.selected_year = year;
     loadOrders($scope.selected_store, $scope.selected_year, $scope.selected_month);
+    setupOrderTrendChart();
+    setupRevenueChart();
   }
 
   $scope.reloadStore();
   setupOrderTrendChart();
   setupRevenueChart();
+
+  $scope.tableToExcel = (function () {
+    var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+      , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+      , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) };
+
+    return function (table, name) {
+      if (!table.nodeType) table = document.getElementById(table);
+      var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML };
+      window.location.href = uri + base64(format(template, ctx));
+    }
+  })();
 });

@@ -1,3 +1,4 @@
+from datetime import datetime
 from bson import ObjectId, json_util
 from flask import g, request
 from flask_restful import Resource
@@ -31,22 +32,19 @@ class ReportApi(Resource):
     def exec_report(self, report_type):
         result = {}
         try:
+            today = datetime.now()
             tenant_id = g.user.tenant_id
-            result = self.report_map[report_type](tenant_id)
+            store_id = request.args.get('store_id', None)
+            month = int(request.args.get('month', 0))
+            year = int(request.args.get('year', today.year))
+            if store_id == '' or store_id == '-1':
+                store_id = None
+            result = self.report_map[report_type](tenant_id, store_id, year, month)
         except Exception as e:
             self.log.exception(e)
         return result
 
-    def load_orders(self, tenant_id):
-        store_id = request.args.get('store_id', None)
-        month = request.args.get('month', None)
-        year = request.args.get('year', None)
-        if store_id is not None and store_id == '-1':
-            store_id = None
-        if year is not None:
-            year = int(year)
-        if month is not None:
-            month = int(month)
+    def load_orders(self, tenant_id, store_id, year, month):
         orders = self.service.load_orders(
             tenant_id=tenant_id, store_id=store_id, year=year, month=month)
         store_ids = set([x['store_id'] for order in orders
@@ -54,6 +52,7 @@ class ReportApi(Resource):
         stores = self.storeService.search_by_ids(store_ids=store_ids)
         pincodes = self.pincodeService.search(tenant_id)
         processed_orders = []
+        order_count = len(orders)
         for order in orders:
             osids = set([x['store_id'] for x in order['items']])
             store_cnt = 1
@@ -77,12 +76,13 @@ class ReportApi(Resource):
                         (data['sub_total'] * data['store_discount'] / 100.0)
                 processed_orders.append(data)
                 store_cnt = store_cnt + 1
-            totals = {
-                'items_count': sum([x['items_count'] for x in processed_orders if x['status'] == 'DELIVERED']),
-                'sub_total': sum([x['sub_total'] for x in processed_orders]),
-                'net_amt': sum([x['net_amt'] for x in processed_orders]),
-                'delivery_charges': sum([x['delivery_charges'] for x in processed_orders]),
-            }
+        totals = {
+            'orders_count': order_count,
+            'items_count': sum([x['items_count'] for x in processed_orders if x['status'] == 'DELIVERED']),
+            'sub_total': sum([x['sub_total'] for x in processed_orders]),
+            'net_amt': sum([x['net_amt'] for x in processed_orders]),
+            'delivery_charges': sum([x['delivery_charges'] for x in processed_orders]),
+        }
         return {"orders": processed_orders, "totals": totals}
 
     def process_order_for_report(self, order, sid):
