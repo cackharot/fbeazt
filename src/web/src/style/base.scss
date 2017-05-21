@@ -15,35 +15,35 @@ body{
   height: 0;
 }
 
-.no-localstorage,.no-sessionstorage,.no-boxsizing,.no-history{
-  header,footer,#main{
-    display: none !important;
-    height: 0;
-  }
-  #unsupported__browser{
-    display: table !important;
-    position: absolute;
-    padding: 20px;
-    width: 100%;
-    height:100%;
-    background: #3E50B4;
-    color: white;
-    text-align: center;
-    margin: 0 auto;
-    div{
-      display: table-cell;
-      vertical-align: middle;
-      line-height: normal;
-    }
-    ul{
-      list-style: none;
-      margin: 0 auto;
-      li{
-        display: block;
-      }
-    }
-  }
-}
+// .no-localstorage,.no-sessionstorage,.no-boxsizing,.no-history{
+//   header,footer,#main{
+//     display: none !important;
+//     height: 0;
+//   }
+//   #unsupported__browser{
+//     display: table !important;
+//     position: absolute;
+//     padding: 20px;
+//     width: 100%;
+//     height:100%;
+//     background: #3E50B4;
+//     color: white;
+//     text-align: center;
+//     margin: 0 auto;
+//     div{
+//       display: table-cell;
+//       vertical-align: middle;
+//       line-height: normal;
+//     }
+//     ul{
+//       list-style: none;
+//       margin: 0 auto;
+//       li{
+//         display: block;
+//       }
+//     }
+//   }
+// }
 
 #main{
   margin: 0 auto;
