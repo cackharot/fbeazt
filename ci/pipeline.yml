@@ -1,0 +1,14 @@
+resources:
+- name: fbeazt-src
+  type: git
+  source:
+    uri: https://github.com/cackharot/fbeazt.git
+    branch: master
+
+jobs:
+- name: build-fbeazt
+  plan:
+  - get: fbeazt-src
+    trigger: true
+  - task: src-package
+    file: fbeazt-src/ci/build.yml
