@@ -1,10 +1,13 @@
+---
 platform: linux
+
 image_resource:
   type: docker-image
   source: {repository: alpine}
 
 inputs:
   - name: fbeazt-src
+    # path: .
 
 run:
-  path: fbeazt-src/ci/scripts/build.sh
+  path: fbeazt-src/ci/scripts/tests.sh
