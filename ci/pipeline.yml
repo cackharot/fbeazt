@@ -1,5 +1,5 @@
 resources:
-- name: src-fbeazt
+- name: fbeazt-src
   type: git
   source:
     uri: https://github.com/cackharot/fbeazt.git
@@ -13,29 +13,31 @@ resources:
   type: docker-image
   source:
     repository: 51.15.85.110:30400/fbeazt/fbeazt-api:latest
+    insecure_registries:
+    - "51.15.85.110:30400"
 
 jobs:
 - name: fetch
   serial: true
   plan:
   # - aggregate:
-  - get: src-fbeazt
+  - get: fbeazt-src
     trigger: true
   # - get: base-img
 - name: tests
   plan:
-  - get: src-fbeazt
+  - get: fbeazt-src
     trigger: true
     passed: [fetch]
   - task: src-package
-    file: src-fbeazt/ci/tasks/tests.yml
+    file: fbeazt-src/ci/tasks/tests.yml
 - name: package
   plan:
-  - get: src-fbeazt
+  - get: fbeazt-src
     trigger: true
     passed: [tests]
   - put: fbeazt-image
     params:
       load_base: base-img
-      dockerfile: src-fbeazt/ci/docker/api/Dockerfile
-      # build: src-fbeazt
+      dockerfile: fbeazt-src/ci/docker/api/Dockerfile
+      # build: fbeazt-src
