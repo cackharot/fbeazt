@@ -26,7 +26,7 @@ class MyOrdersApi(Resource):
       page_size = int(request.args.get('page_size', 10))
       orders = []
       total = 0
-      if user_id is not None:
+      if user_id is not None and g.user.name != 'Guest':
         orders, total = self.service.search(tenant_id=tenant_id,
                             page_no=page_no,
                             page_size=page_size,

@@ -88,9 +88,10 @@ def on_identity_loaded(sender, identity):
 def create_or_update_user(user_info):
   user = get_or_create_user(user_info)
   user_mixin = getUserMixin(user)
-  login_user(user_mixin)
-  # Tell Flask-Principal the identity changed
-  identity_changed.send(current_app._get_current_object(), identity=Identity(str(user_mixin.id)))
+  if user_mixin.name != "Guest":
+    login_user(user_mixin)
+    # Tell Flask-Principal the identity changed
+    identity_changed.send(current_app._get_current_object(), identity=Identity(str(user_mixin.id)))
   return user_mixin
 
 def login_anonymous():
@@ -174,13 +175,15 @@ def request_loader(request):
     if authHeader.startswith('Bearer '):
       user_mixin = login_via_google_token(authHeader.replace('Bearer ', ''))
   if user_mixin is None and session and session.get('identity.id', None) is not None:
+    logger.info("[%s] Using session stored user. Id: %s" % (request.path, session['identity.id']))
     userid = str(session['identity.id'])
     user_mixin = getUserMixin(userService.get_by_id(userid))
   if user_mixin:
     login_user(user_mixin)
     identity_changed.send(current_app._get_current_object(), identity=Identity(str(user_mixin.id)))
+    logger.info("[%s] User login success: %s %s" % (request.path, user_mixin.id, user_mixin.name))
     return user_mixin
-  # print("Anonymous login initiated############### %s" % (request.path))
+  #logger.info("Anonymous login initiated############### %s" % (request.path))
   return login_anonymous()
 
 class User(UserMixin):

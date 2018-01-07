@@ -204,10 +204,10 @@ class PaymentSuccessView(View):
         self.orderView.send_email(order)
         self.orderView.send_sms(order)
         self.orderView.notify_new_order(order)
-    # print(order)
     try:
       self.service.save(order)
       self.paymentService.save(payment_details)
+      self.log.info("Order payment status [%s][%s] %s" % (order['order_no'], txnid, status))
     except Exception as e:
       self.log.exception(e)
 
