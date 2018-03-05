@@ -38,6 +38,7 @@ class PushNotificationService(object):
 
     def delete_by_registered_email(self, email):
         try:
+            self.log.info("Deleting invalid device registration id %s" % (email))
             return self.push_notify_store.remove({
                 email: email
             })
