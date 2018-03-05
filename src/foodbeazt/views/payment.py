@@ -197,7 +197,7 @@ class PaymentSuccessView(View):
       payment_details['cardnum'] = request.form.get('cardnum', None)
       payment_details['mihpayid'] = request.form.get('mihpayid', None)
       payment_details['net_amount_debit'] = request.form.get('net_amount_debit', None)
-      payment_details['amount'] = amount
+      payment_details['amount'] = float(amount)
       payment_details['additional_charges'] = additionalCharges
       if status in ['pending', 'success']:
         redirect_url = self.payment_success_url
