@@ -349,7 +349,7 @@ from foodbeazt.resources.export_data import ExportDataApi
 from foodbeazt.resources.popular_items import PopularItemsApi
 from foodbeazt.resources.popular_stores import PopularStoresApi
 from foodbeazt.resources.sms import SmsApi
-from foodbeazt.resources.report import ReportApi
+from foodbeazt.resources.report import ReportApi, PaymentReportApi
 from foodbeazt.resources.pincodes import PincodeListApi, PincodeApi
 from foodbeazt.resources.myorders import MyOrdersApi
 from foodbeazt.resources.push_notify import RegisterPushNotify, UnRegisterPushNotify
@@ -371,6 +371,7 @@ def test_new_order_notify():
 api.add_resource(MyOrdersApi, '/api/my_orders')
 
 api.add_resource(ReportApi, '/api/reports/orders')
+api.add_resource(PaymentReportApi, '/api/reports/payment')
 
 api.add_resource(SmsApi, '/api/sms')
 

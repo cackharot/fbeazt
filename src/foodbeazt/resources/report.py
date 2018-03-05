@@ -5,9 +5,23 @@ from flask_restful import Resource
 from service.OrderService import OrderService
 from service.PincodeService import PincodeService
 from service.StoreService import StoreService
+from service.PaymentService import PaymentService
 from foodbeazt.fapp import mongo
 import logging
 
+class PaymentReportApi(Resource):
+
+    def __init__(self):
+        self.log = logging.getLogger(__name__)
+        self.paymentService = PaymentService(mongo.db)
+
+    def get(self):
+        try:
+            year = int(request.args.get('year', datetime.now().year))
+            return self.paymentService.report_by_month(year=year)
+        except Exception as e:
+            self.log.exception(e)
+            return {"error":"true", "error_message": e}
 
 class ReportApi(Resource):
 

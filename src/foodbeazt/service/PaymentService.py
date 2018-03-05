@@ -12,6 +12,33 @@ class PaymentService(object):
     self.order_payments = self.db.order_payments_collection
     self.order_payments_webhook = self.db.order_payments_webhook_collection
 
+  def report_by_month(self, tenant_id=None, year=0):
+    match = {}
+    if year > 0:
+        match['year'] = year
+    query = [
+        {'$project': {'status': "$status", 'amount': "$amount",
+                      'month': {'$month': "$created_at"}, 'year': {'$year': '$created_at'}}},
+        {'$match': match},
+        {'$group': {'count': {'$sum': 1}, 'total': {'$sum': '$amount'}, '_id': {
+            'status': "$status", 'month': "$month", 'year': '$year'}}}
+    ]
+    data = self.order_payments.aggregate(query)
+    result = {}
+    if data["ok"] == 1.0:
+        for x in data["result"]:
+          key = x['_id']['status']
+          if not key in result:
+            result[key] = {}
+          result[key][x['_id']['month']] = {
+            'count': x['count'],
+            'status': x['_id']['status'],
+            'total': x['total'],
+            'year': x['_id']['year'],
+            'month': x['_id']['month']
+          }
+    return result
+
   def search(self, tenant_id,
               user_id=None,
               store_id=None,
