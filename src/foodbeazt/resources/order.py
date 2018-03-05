@@ -239,7 +239,7 @@ class OrderApi(Resource):
                 sid = ObjectId()
                 store_status[store_id] = dict(sid=sid, status='PENDING', notified_at=datetime.now())
                 if email is None:
-                    self.log.info('Store %s does not have contact email', store.get('name'))
+                    self.log.warn('Store %s does not have contact email', store.get('name'))
                     continue
                 items = [x.get('quantity') for x in order.get('items') if x.get('store_id') == store_id]
                 item_count = len(items)
@@ -252,6 +252,7 @@ class OrderApi(Resource):
                     'sid': str(sid),
                     'title': 'New Order'
                 }
+                self.log.info('Notifying Store %s for new order, email: %s', store.get('name'), email)
                 self.pushNotifyService.send_to_device(data, email=email)
             order['store_delivery_status'] = store_status
             self.service.save(order)
