@@ -192,6 +192,12 @@
                   Cash On Delivery
                 </label>
               </div>
+              <div>
+                <label>
+                  <input name="payment_type" type="radio" [(ngModel)]="order.payment_type" value="paytm"/>
+                  Paytm
+                </label>
+              </div>
               <div *ngIf="feature.onlinePaymentEnabled()">
                 <label>
                   <input name="payment_type"  type="radio" [(ngModel)]="order.payment_type" value="payumoney"/>
@@ -201,6 +207,11 @@
               <div class="callout" *ngIf="order.payment_type==='payumoney'">
                 Note we will redirect you to PayUMoney payment gateway to do the online transaction.
                 After successful transaction you will be redirected back to foodbeazt
+              </div>
+              <div class="callout" *ngIf="order.payment_type==='paytm'">
+                Scan/Upload the QR code shown in the next page in your Paytm mobile app
+                and enter the exact order amount to complete the payment. Your order will be cancelled
+                if we do not receive the payment via Paytm within 30 minutes.
               </div>
             </div>
           </div>

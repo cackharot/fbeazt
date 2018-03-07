@@ -117,6 +117,8 @@
           Mode:
           {% if order['payment_type'] == 'payumoney' %}
             Online payment via PayUMoney
+          {% elif order['payment_type'] == 'paytm' %}
+            Paytm
           {%else%}
             Cash On Delivery
           {%endif%}

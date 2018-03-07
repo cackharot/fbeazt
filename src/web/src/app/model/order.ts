@@ -93,7 +93,7 @@ export class Order {
   }
 
   isPaymentValid() {
-    if (this.payment_type === 'cod') {
+    if (['cod', 'paytm'].indexOf(this.payment_type) > -1) {
       return true;
     }
     if (this.payment_type === 'payumoney') {
@@ -170,16 +170,12 @@ export class Order {
     return this.coupon_discount || 0.0;
   }
 
-  private getActualSubTotal() {
-    return this.items.reduce((n, x) => n + x.getActualTotalPrice(), 0);
-  }
-
   isConfirmed() {
     return this.order_no && this.order_no.length > 0 && this.otp_status === 'VERIFIED'
       && (
         (this.payment_type === 'payumoney' && this.payment_status === 'success')
         ||
-        (this.payment_type === 'cod')
+        (['cod', 'paytm'].indexOf(this.payment_type) > -1)
       );
   }
 
@@ -210,6 +206,10 @@ export class Order {
   getHash() {
     let i = (this.items.length * 32 + this.getTotalAmount() * 32) << 2;
     return i.toString();
+  }
+
+  private getActualSubTotal() {
+    return this.items.reduce((n, x) => n + x.getActualTotalPrice(), 0);
   }
 
   private getUnique(data: any[]) {

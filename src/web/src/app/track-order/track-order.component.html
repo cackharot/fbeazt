@@ -71,6 +71,7 @@
         Total: <strong>Rs. {{order.total}}</strong><br/>
         Payment mode:
         <span *ngIf="order.payment_type==='cod'">Cash On Delivery</span>
+        <span *ngIf="order.payment_type==='paytm'">Paytm</span>
         <span *ngIf="order.payment_type==='payumoney'">Online via PayUMoney</span>
         <br/>
         <span *ngIf="order.payment_type==='payumoney'">

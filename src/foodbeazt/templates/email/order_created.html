@@ -273,8 +273,15 @@
                                     <h4 class="ot" style="Margin: 0; Margin-bottom: 10px; color: inherit; font-family: Helvetica, Arial, sans-serif; font-size: 24px; font-weight: lighter; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left; word-wrap: normal;">Order #{{order['order_no']}} is confirmed.</h4>
                                     <br>
                                     <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">Hey {{order['delivery_details']['name']}},</p>
+                                    {% if order['payment_type'] != 'paytm' %}
                                     <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">Giving you a heads up that we have successfully received your order!</p>
                                     <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">It will be processed and sent out for delivery in next 45 minutes.</p>
+                                    {%else%}
+                                    <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">
+                                      Giving you a heads up that we have successfully received your order and is on HOLD!
+                                      It will be processed and sent out for delivery after receiving payment via Paytm.
+                                    </p>
+                                    {%endif%}
                                     <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">Check the information below and make sure its correct.</p>
                                     <table class="spacer" style="border-collapse: collapse; border-spacing: 0; padding: 0; text-align: left; vertical-align: top; width: 100%;">
                                       <tbody>
@@ -297,6 +304,7 @@
                                                           <th style="Margin: 0; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; padding: 0; text-align: left;">
                                                             <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;"> <strong>Payment Method</strong><br>
                                                             {% if order['payment_type'] == 'cod' %}Cash On Delivery{%endif%}
+                                                            {% if order['payment_type'] == 'paytm' %}Paytm{%endif%}
                                                             {% if order['payment_type'] == 'payumoney' %}Online via PayUMoney{%endif%}
                                                             </p>
                                                             <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;"> <strong>Email Address</strong><br> {{order['delivery_details']['email']}} </p>
@@ -376,7 +384,10 @@
                                       </tbody>
                                     </table>
                                     <hr style="Margin: 20px auto; border-bottom: 1px solid #cacaca; border-left: 0; border-right: 0; border-top: 0; clear: both; height: 0; margin: 20px auto; max-width: 580px;">
-                                    <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">If anything's wrong, simple reply to this email ASAP and let us know what should be changed.</p>
+                                    {% if order['payment_type'] == 'paytm' %}
+                                    <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">Note: This order might be cancelled by us if we do not receive exact payment within 30 minutes.</p>
+                                    {% endif %}
+                                    <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">If anything's wrong, reply to this email ASAP and let us know what should be changed.</p>
                                     <h4 style="Margin: 0; Margin-bottom: 10px; color: inherit; font-family: Helvetica, Arial, sans-serif; font-size: 24px; font-weight: normal; line-height: 1.3; margin: 0; margin-bottom: 10px; padding: 0; text-align: left; word-wrap: normal;">What's Next?</h4>
                                     <p style="Margin: 0; Margin-bottom: 10px; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 19px; margin: 0; margin-bottom: 10px; padding: 0; text-align: left;">We're just as excited as you are. Check your order status <a href="http://www.foodbeazt.in/track/{{order['order_no']}}" style="Margin: 0; color: #2199e8; font-family: Helvetica, Arial, sans-serif; font-weight: normal; line-height: 1.3; margin: 0; padding: 0; text-align: left; text-decoration: none;">here</a></p>
                                     <br>

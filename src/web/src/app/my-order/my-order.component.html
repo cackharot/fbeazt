@@ -49,6 +49,7 @@
               <td>{{order.items.length}}</td>
               <td>
                 <span *ngIf="order.payment_type==='cod'">COD</span>
+                <span *ngIf="order.payment_type==='paytm'">Paytm</span>
                 <span *ngIf="order.payment_type==='payumoney'">Online</span>
               </td>
               <td class="text-right"><i class="rupee"></i>{{order.total}}</td>

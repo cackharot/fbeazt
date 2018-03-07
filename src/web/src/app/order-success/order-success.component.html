@@ -10,11 +10,21 @@
     <div class="medium-12 small-12 columns">
       <div class="callout success">
         <h3>Thanks {{order.delivery_details.name}},</h3>
-        <p>
-          Your order is successfull, kindly note the order number for further reference <b>{{order.order_no}}</b>.
-          An invoice email is on the way to your inbox.
+        <p *ngIf="order.payment_type!=='paytm'">
+          Your order is confirmed, kindly note the order number for further reference <b>{{order.order_no}}</b>.
+          An order confirmation email is on the way to your inbox.
         </p>
-        <p>
+        <div class="callout" *ngIf="order.payment_type==='paytm'">
+            Your order is on hold, kindly note the order number for further reference <b>{{order.order_no}}</b>.
+            <br/>
+            Scan/Upload the QR code shown below in the next page in you Paytm mobile app
+            and enter the exact order amount <b>Rs.{{order.total}}</b> to complete the confirmation of your order.
+            Your order will be cancelled if we do not receive exact payment via Paytm within 30 minutes.
+        </div>
+        <div class="text-center aligncenter" *ngIf="order.payment_type==='paytm'">
+          <img src="/images/FoodBeazt-Paytm-QRCode.jpg" alt="Paytm QR Code"/>
+        </div>
+        <p *ngIf="order.payment_type!=='paytm'">
           Enjoy your gourment meal!
         </p>
         <p>

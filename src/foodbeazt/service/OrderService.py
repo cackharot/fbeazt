@@ -7,6 +7,19 @@ import re
 import random
 import string
 
+import time
+import logging
+
+timeLog = logging.getLogger(__name__)
+
+def timeit(method):
+    def timed(*args, **kw):
+        ts = time.time()
+        result = method(*args, **kw)
+        te = time.time()
+        timeLog.info('%r (%r, %r) %2.2f ms' % (method.__name__, args, kw, (te-ts)*1000))
+        return result
+    return timed
 
 class DuplicateOrderException(Exception):
     pass
@@ -19,6 +32,7 @@ class OrderService(object):
         self.pincodeService = PincodeService(db)
         self.orders = self.db.order_collection
 
+    @timeit
     def search(self, tenant_id,
                user_id=None,
                store_id=None,
@@ -95,9 +109,11 @@ class OrderService(object):
             return True
         return False
 
+    @timeit
     def get_by_id(self, _id):
         return self.orders.find_one({'_id': ObjectId(_id)})
 
+    @timeit
     def get_by_number(self, order_no):
         return self.orders.find_one({"order_no": order_no})
 

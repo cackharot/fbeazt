@@ -140,7 +140,7 @@ class OrderApi(Resource):
             return dict(status='error', type='validation', message=delivery_validation), 422
 
         payment_type = order.get('payment_type', 'cod')
-        if payment_type not in ['cod', 'payumoney']:
+        if payment_type not in ['cod', 'payumoney', 'paytm']:
             return dict(status='error', type='validation', message="Invalid Payment choosen"), 422
 
         tenant_id = g.user.tenant_id
@@ -177,7 +177,7 @@ class OrderApi(Resource):
             valid_order['coupon_code'] = coupon_code
             valid_order['coupon_discount'] = -coupon_discount
 
-        if payment_type == 'cod':
+        if payment_type in ['cod', 'paytm']:
             valid_order['payment_status'] = 'success'
         _id = None
 
@@ -198,7 +198,7 @@ class OrderApi(Resource):
             return dict(status="error",
                         message="Oops! Error while trying to save order details! Please try again later"), 420
 
-        if valid_order['otp_status'] == 'VERIFIED' and payment_type == 'cod':
+        if valid_order['otp_status'] == 'VERIFIED' and payment_type in ['cod', 'paytm']:
             self.send_email(valid_order)
             self.send_sms(valid_order)
             self.notify_new_order(valid_order)
@@ -263,7 +263,7 @@ class OrderApi(Resource):
         return None, 204
 
     def send_otp(self, order):
-        if order['payment_type'] == 'cod':
+        if order['payment_type'] in ['cod', 'paytm']:
             return 'VERIFIED'
         if app.config['SEND_OTP'] is False:
             return 'VERIFIED'

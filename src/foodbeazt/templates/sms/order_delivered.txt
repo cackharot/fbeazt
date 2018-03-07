@@ -1,6 +1,8 @@
 You got it! Order #{{order['order_no']}} was delivered at {{order['delivered_at']|datetime}}.
 {% if order['payment_type'] == 'payumoney' %}
 Online payment of Rs. {{order['total']}} was made successfully.
+{% elif order['payment_type'] == 'paytm' %}
+Rs. {{order['total']}} was received via Paytm.
 {%else%}
 Cash of Rs. {{order['total']}} was collected.
 {%endif%}
