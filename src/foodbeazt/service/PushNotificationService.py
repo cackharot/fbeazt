@@ -67,7 +67,7 @@ class PushNotificationService(object):
                         registration_id=device_reg_id, data=data)
                 except Exception as e:
                     self.log.exception(e)
-                    if "Registration id is not valid anymore" in e.message:
+                    if "Registration id is not valid anymore" in str(e):
                         self.delete_by_registered_email(email)
             return True
         else:

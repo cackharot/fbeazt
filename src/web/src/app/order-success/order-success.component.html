@@ -22,7 +22,9 @@
             Your order will be cancelled if we do not receive exact payment via Paytm within 30 minutes.
         </div>
         <div class="text-center aligncenter" *ngIf="order.payment_type==='paytm'">
-          <img src="/images/FoodBeazt-Paytm-QRCode.jpg" alt="Paytm QR Code"/>
+          <a href="/images/FoodBeazt-Paytm-QRCode.jpg" download title="Click to download the Paytm QR code">
+            <img src="/images/FoodBeazt-Paytm-QRCode.jpg" alt="Paytm QR Code"/>
+          </a>
         </div>
         <p *ngIf="order.payment_type!=='paytm'">
           Enjoy your gourment meal!
