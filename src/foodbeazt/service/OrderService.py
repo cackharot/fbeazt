@@ -12,6 +12,7 @@ import logging
 
 timeLog = logging.getLogger(__name__)
 
+
 def timeit(method):
     def timed(*args, **kw):
         ts = time.time()
@@ -20,6 +21,7 @@ def timeit(method):
         timeLog.info('%r (%r, %r) %2.2f ms' % (method.__name__, args, kw, (te-ts)*1000))
         return result
     return timed
+
 
 class DuplicateOrderException(Exception):
     pass
@@ -119,17 +121,13 @@ class OrderService(object):
 
     def get_delivery_charges(self, order):
         store_count = len(self.get_unique_stores(order))
+        pincode_rate = self.pincodeService.get_rate(order['delivery_details'].get('pincode', ''))
         if store_count <= 1:
-            return 40
-        return 40 + (25 * (store_count - 1))
+            return pincode_rate
+        return pincode_rate + (25 * (store_count - 1))
 
     def get_unique_stores(self, order):
-        store_ids = []
-        for x in order['items']:
-            sid = x['store_id']
-            if sid not in store_ids:
-                store_ids.append(sid)
-        return store_ids
+        return set([x['store_id'] for x in order['items']])
 
     def get_order_total(self, order):
         # for x in order['items']:

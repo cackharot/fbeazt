@@ -39,6 +39,10 @@ export class CartSummaryComponent implements OnInit {
     });
   }
 
+  componentDidMount() {
+    this.update();
+  }
+
   canShow(): boolean {
     let currentPath = this.router.url;
     let count = ['/checkout', '/otp', '/order_success', '/track']

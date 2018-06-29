@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewChild, ElementRef, Renderer } from '@angular/core';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
-import { LocalStorage, SessionStorage } from '../libs/WebStorage';
+import { LocalStorage } from '../libs/WebStorage';
 
 import { OrderService } from '../services/order.service';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -25,7 +25,6 @@ export class CheckoutComponent implements OnInit {
   orderSuccess: boolean = false;
   isRequesting: boolean = false;
   @LocalStorage() canSaveDeliveryDetails: boolean = false;
-  @SessionStorage() availablePincodes: any[] = [];
   error: any = null;
 
   constructor(
@@ -45,7 +44,6 @@ export class CheckoutComponent implements OnInit {
     if (!this.feature.onlinePaymentEnabled()) {
       this.order.payment_type = 'cod';
     }
-    // this.fetchAvailablePincodes();
   }
 
   ngAfterViewInit() {
@@ -54,15 +52,10 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
-  // private fetchAvailablePincodes() {
-  //   if (this.availablePincodes.length > 0) {
-  //     return;
-  //   }
-  //   this.orderService.fetchAvailablePincodes()
-  //     .then(x => {
-  //       this.availablePincodes = x;
-  //     }).catch(e => { console.log(e); });
-  // }
+  componentWillUnmount() {
+    this.saveDeliveryDetails();
+    this.orderService.publishOrderUpdated();
+  }
 
   resetOrder() {
     this.orderService.resetOrder();
@@ -80,9 +73,11 @@ export class CheckoutComponent implements OnInit {
       );
       return;
     }
-    if (this.order.isOtpSent() && this.order.isValid()) {
-      this.router.navigate(['/otp']);
-    } else if (this.order.isConfirmed()) {
+    // if (this.order.isOtpSent() && this.order.isValid()) {
+    //   this.router.navigate(['/otp']);
+    // }
+
+    if (this.order.isConfirmed()) {
       this.router.navigate(['/order_success']);
     }
   }
@@ -92,17 +87,19 @@ export class CheckoutComponent implements OnInit {
     if (this.order.items.length > 0) {
       this.isRequesting = true;
       this.orderService.confirmOrder()
-        .then(updatedOrder => {
-          this.order = updatedOrder;
-          this.orderSuccess = true;
-          this.error = null;
-          this.navOrder();
-          this.isRequesting = false;
-        }, errorMsg => {
-          this.orderSuccess = false;
-          this.error = errorMsg;
-          this.isRequesting = false;
-        });
+        .then(
+          updatedOrder => {
+            this.order = updatedOrder;
+            this.orderSuccess = true;
+            this.error = null;
+            this.navOrder();
+            this.isRequesting = false;
+          },
+          errorMsg => {
+            this.orderSuccess = false;
+            this.error = errorMsg;
+            this.isRequesting = false;
+          });
     } else {
       this.error = 'Invalid order';
     }
@@ -114,6 +111,37 @@ export class CheckoutComponent implements OnInit {
 
   changeQuantity(item: LineItem, value: number) {
     this.orderService.updateQuantity(item, value);
+  }
+
+  isEmpty() {
+    return this.order && this.order.items.length === 0;
+  }
+
+  goBack(id: string) {
+    this.router.navigate([id]);
+  }
+
+  applyCoupon() {
+    this.orderService.applyCoupon(this.order, this.coupon_code)
+      .then(
+        x => {
+          if (x && x.coupon_code) {
+            this.order.updateCouponCode(x.coupon_code, x.amount);
+            this.error = null;
+          } else {
+            this.error = 'Invalid coupon code!';
+          }
+        },
+        err => {
+          console.error(err);
+          this.error = err || 'Invalid coupon code!';
+        });
+  }
+
+  removeCoupon() {
+    this.error = null;
+    this.order.coupon_code = '';
+    this.order.coupon_discount = 0;
   }
 
   private saveDeliveryDetails() {
@@ -129,14 +157,6 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
-  isEmpty() {
-    return this.order && this.order.items.length === 0;
-  }
-
-  goBack(id: string) {
-    this.router.navigate([id]);
-  }
-
   private restoreDeliveryDetails() {
     if (this.canSaveDeliveryDetails === false) {
       return;
@@ -149,26 +169,5 @@ export class CheckoutComponent implements OnInit {
     } catch (e) {
       console.error(e);
     }
-  }
-
-  applyCoupon(){
-    this.orderService.applyCoupon(this.order, this.coupon_code)
-      .then(x=> {
-        if(x && x.coupon_code){
-          this.order.updateCouponCode(x.coupon_code, x.amount);
-          this.error = null;
-        }else{
-          this.error = "Invalid coupon code!";
-        }
-      },err=>{
-        console.error(err);
-        this.error = err || "Invalid coupon code!";
-      });
-  }
-
-  removeCoupon() {
-    this.error = null;
-    this.order.coupon_code = '';
-    this.order.coupon_discount = 0;
   }
 }

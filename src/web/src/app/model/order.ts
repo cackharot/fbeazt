@@ -33,6 +33,7 @@ export class Order {
   payment_error_message: string;
   coupon_code: string;
   coupon_discount: number;
+  private _pincodes: PincodeDetail[];
 
   static of(data) {
     if (data && data.constructor.name !== Order.name) {
@@ -49,6 +50,18 @@ export class Order {
     this.created_at = Date.of(this.created_at);
     this.updated_at = Date.of(this.updated_at);
     this.delivered_at = Date.of(this.delivered_at);
+  }
+
+  setPincodes(pincodes: PincodeDetail[]) {
+    this._pincodes = pincodes;
+  }
+
+  unsetPincodes() {
+    delete this._pincodes;
+  }
+
+  getPincodes() {
+    return this._pincodes;
   }
 
   addItem(item: LineItem) {
@@ -70,14 +83,14 @@ export class Order {
     }
   }
 
-  removeCouponCode(){
-    if(this.coupon_code){
+  removeCouponCode() {
+    if (this.coupon_code) {
       this.coupon_code = null;
       this.coupon_discount = 0;
     }
   }
 
-  updateCouponCode(code:string, discount: number){
+  updateCouponCode(code: string, discount: number) {
     this.coupon_code = code;
     this.coupon_discount = discount;
   }
@@ -139,6 +152,12 @@ export class Order {
   }
 
   getMinDeliveryCharges(): number {
+    if (this._pincodes && this.delivery_details && this.delivery_details.pincode && this.delivery_details.pincode.length === 6) {
+      let matchedPincodes = this._pincodes.filter(x => x.pincode === this.delivery_details.pincode);
+      if (matchedPincodes && matchedPincodes.length > 0) {
+        return matchedPincodes[0].rate;
+      }
+    }
     return Order.MIN_DELIVERY_CHARGES;
   }
 
@@ -268,11 +287,15 @@ export class LineItem {
     return this.price * this.quantity;
   }
 
+  unsetStore() {
+    delete this.store;
+  }
+
   private getDiscountedPrice() {
-    if(this.discount <= 0.0){
+    if (this.discount <= 0.0) {
       return this.price;
     }
-    return this.price - (this.price * (this.discount/100.0));
+    return this.price - (this.price * (this.discount / 100.0));
   }
 }
 
@@ -323,7 +346,7 @@ export class PincodeDetail {
 }
 
 export class CouponResult {
-  coupon_code : string;
+  coupon_code: string;
   amount: number;
   type: string;
 

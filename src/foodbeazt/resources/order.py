@@ -263,17 +263,18 @@ class OrderApi(Resource):
         return None, 204
 
     def send_otp(self, order):
-        if order['payment_type'] in ['cod', 'paytm']:
-            return 'VERIFIED'
-        if app.config['SEND_OTP'] is False:
-            return 'VERIFIED'
-        number = order['delivery_details'].get('phone')
-        if not self.smsService.verified_number(number):
-            otp = self.smsService.generate_otp()
-            message = order_otp_sms_template.render(order=order, otp=otp)
-            return self.smsService.send_otp(number, otp, message)
-        else:
-            return 'VERIFIED'
+        return 'VERIFIED'
+        # if order['payment_type'] in ['cod', 'paytm']:
+        #     return 'VERIFIED'
+        # if app.config['SEND_OTP'] is False:
+        #     return 'VERIFIED'
+        # number = order['delivery_details'].get('phone')
+        # if not self.smsService.verified_number(number):
+        #     otp = self.smsService.generate_otp()
+        #     message = order_otp_sms_template.render(order=order, otp=otp)
+        #     return self.smsService.send_otp(number, otp, message)
+        # else:
+        #     return 'VERIFIED'
 
     def send_sms(self, order):
         number = order['delivery_details'].get('phone')

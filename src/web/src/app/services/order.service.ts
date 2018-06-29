@@ -67,6 +67,13 @@ export class OrderService {
     this.itemAdded$.subscribe((x) => {
       this.currentOrder.removeCouponCode();
     });
+    this.reloadPincodesForOrder();
+  }
+
+  publishOrderUpdated() {
+    if (this.currentOrder) {
+      this.orderUpdatedSource.next(this.currentOrder);
+    }
   }
 
   private addLineItem(item: LineItem) {
@@ -135,18 +142,33 @@ export class OrderService {
     return this.currentOrder;
   }
 
+  loadPincodes(): Promise<PincodeDetail[]> {
+    return this.fetchAvailablePincodes()
+      .catch(e => { console.log(e); });
+  }
+
+  reloadPincodesForOrder() {
+    this.loadPincodes().then(pincodes => {
+      this.currentOrder.setPincodes(pincodes);
+    });
+  }
+
   confirmOrder() {
-    // console.log(this.currentOrder);
+    let payload = new Order();
+    Object.assign(payload, this.currentOrder);
+    payload.unsetPincodes();
+    payload.items.forEach(x => {
+      x.unsetStore();
+    });
     return this.http.post(
       `${this.orderUrl}/-1`,
-      this.currentOrder,
+      payload,
       {
         headers: this.authHeaders()
       })
       .toPromise()
       .then(response => {
         let orderJson = response.json();
-        // console.log(orderJson);
         let updatedOrder = Order.of(orderJson.data);
 
         let stores = this.currentOrder.getStores();
@@ -157,14 +179,19 @@ export class OrderService {
         this.currentOrder = updatedOrder;
         this.orderConfirmedSource.next(this.currentOrder);
 
+        this.reloadPincodesForOrder();
+
         return updatedOrder;
       })
       .catch(this.handleError);
   }
 
   resetOrder() {
-    this.currentOrder = new Order();
-    this.orderResetedSource.next(this.currentOrder);
+    this.loadPincodes().then(pincodes => {
+      this.currentOrder = new Order();
+      this.currentOrder.setPincodes(pincodes);
+      this.orderResetedSource.next(this.currentOrder);
+    });
   }
 
   cancelOrder() {
@@ -204,7 +231,7 @@ export class OrderService {
       .catch(this.handleError);
   }
 
-  private handleError(error: any) {
+  handleError(error: any) {
     console.error('An error occurred', error);
     if (error.json === undefined) {
       return Promise.reject(error);
@@ -235,25 +262,16 @@ export class OrderService {
     if (no === undefined || no.length === 0) {
       return Promise.reject<Order>('Invalid order');
     }
-    return this.http.get(
-      `${AppConfig.TRACK_URL}/${no}`,
-      {
-        headers: this.authHeaders()
-      })
-      .toPromise()
-      .then(response => {
-        let data = response.json();
-        let order = Order.of(data);
-        if (!order.order_no || order.order_no.length === 0) {
-          return null;
-        }
+    return this.loadOrder(no).then(order => {
+      if (order) {
         this.currentOrder = order;
-        return order;
-      })
-      .catch(this.handleError);
+        this.reloadPincodesForOrder();
+      }
+      return order;
+    });
   }
 
-  fetchAvailablePincodes() {
+  fetchAvailablePincodes(): Promise<PincodeDetail[]> {
     return this.http.get(
       `${AppConfig.PINCODE_URL}`,
       {
@@ -289,7 +307,7 @@ export class OrderService {
       .catch(this.handleError);
   }
 
-  public applyCoupon(tempOrder : Order, couponCode: string): Promise<CouponResult> {
+  public applyCoupon(tempOrder: Order, couponCode: string): Promise<CouponResult> {
     let headers = {
       headers: this.authHeaders()
     };

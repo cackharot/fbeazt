@@ -1,5 +1,5 @@
 import { provide } from '@angular/core';
-import { bootstrap }    from '@angular/platform-browser-dynamic';
+import { bootstrap } from '@angular/platform-browser-dynamic';
 import { HTTP_PROVIDERS, RequestOptions } from '@angular/http';
 import { disableDeprecatedForms, provideForms } from '@angular/forms';
 import { LocalStorageService, LocalStorageSubscriber } from './libs/LocalStorageEmitter';
@@ -18,7 +18,7 @@ if (!/localhost/.test(document.location.host)) {
   enableProdMode();
 }
 
-let appPromise = bootstrap(AppComponent,[
+let appPromise = bootstrap(AppComponent, [
   appRouterProviders,
   disableDeprecatedForms(),
   provideForms(),
@@ -28,6 +28,6 @@ let appPromise = bootstrap(AppComponent,[
   provide(FeatureService, { useClass: FeatureService })
   // provide(RequestOptions, { useClass: MyHttpBaseRequestOptions })
 ])
-.catch((err: any) => console.error(err));
+  .catch((err: any) => console.error(err));
 
 LocalStorageSubscriber(appPromise);
