@@ -157,9 +157,6 @@ export class OrderService {
     let payload = new Order();
     Object.assign(payload, this.currentOrder);
     payload.unsetPincodes();
-    payload.items.forEach(x => {
-      x.unsetStore();
-    });
     return this.http.post(
       `${this.orderUrl}/-1`,
       payload,

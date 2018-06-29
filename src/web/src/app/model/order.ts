@@ -287,10 +287,6 @@ export class LineItem {
     return this.price * this.quantity;
   }
 
-  unsetStore() {
-    delete this.store;
-  }
-
   private getDiscountedPrice() {
     if (this.discount <= 0.0) {
       return this.price;
