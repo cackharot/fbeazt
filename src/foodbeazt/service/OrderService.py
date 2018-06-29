@@ -12,7 +12,6 @@ import logging
 
 timeLog = logging.getLogger(__name__)
 
-
 def timeit(method):
     def timed(*args, **kw):
         ts = time.time()
@@ -21,7 +20,6 @@ def timeit(method):
         timeLog.info('%r (%r, %r) %2.2f ms' % (method.__name__, args, kw, (te-ts)*1000))
         return result
     return timed
-
 
 class DuplicateOrderException(Exception):
     pass
@@ -45,8 +43,8 @@ class OrderService(object):
                filter_text=None,
                latest_first=False):
         query = {"tenant_id": ObjectId(tenant_id)}
-        if store_id:
-            query['items.store_id'] = ObjectId(store_id)
+        # if store_id:
+        #   query['store_id'] = ObjectId(store_id)
         if user_id:
             query['user_id'] = ObjectId(user_id)
         # query['otp_status'] = 'VERIFIED'

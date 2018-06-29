@@ -343,7 +343,7 @@ from foodbeazt.resources.store_review import StoreReviewApi
 from foodbeazt.resources.product import ProductApi, ProductListApi, ProductActivateApi
 from foodbeazt.resources.order import OrderApi, TrackOrderApi
 from foodbeazt.resources.coupon import ValidateCouponApi
-from foodbeazt.resources.order_list import OrderListApi, StoreOrderListApi
+from foodbeazt.resources.order_list import OrderListApi
 from foodbeazt.resources.order_status import OrderStatusApi
 from foodbeazt.resources.export_data import ExportDataApi
 from foodbeazt.resources.popular_items import PopularItemsApi
@@ -403,7 +403,6 @@ api.add_resource(ProductListApi, '/api/products/<string:store_id>')
 
 api.add_resource(OrderApi, '/api/order/<string:_id>')
 api.add_resource(OrderListApi, '/api/orders/')
-api.add_resource(StoreOrderListApi, '/api/store_orders/')
 api.add_resource(TrackOrderApi, '/api/track/<string:order_no>')
 api.add_resource(OrderStatusApi, '/api/order_status/<string:_id>')
 
