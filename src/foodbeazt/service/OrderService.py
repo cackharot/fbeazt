@@ -45,8 +45,8 @@ class OrderService(object):
                filter_text=None,
                latest_first=False):
         query = {"tenant_id": ObjectId(tenant_id)}
-        if store_id:
-            query['items.store_id'] = ObjectId(store_id)
+        # if store_id:
+        #     query['items.store_id'] = ObjectId(store_id)
         if user_id:
             query['user_id'] = ObjectId(user_id)
         # query['otp_status'] = 'VERIFIED'
