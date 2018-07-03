@@ -33,14 +33,14 @@ class PushNotificationService(object):
 
     def delete_by_device_token(self, device_token):
         return self.push_notify_store.remove({
-            device_token: device_token
+            "device_token": device_token
         })
 
     def delete_by_registered_email(self, email):
         try:
             self.log.info("Deleting invalid device registration id %s" % (email))
             return self.push_notify_store.remove({
-                email: email
+                "email": email
             })
         except Exception as e:
             self.log.exception(e)
@@ -68,7 +68,8 @@ class PushNotificationService(object):
                 except Exception as e:
                     self.log.exception(e)
                     if "Registration id is not valid anymore" in str(e):
-                        self.delete_by_registered_email(email)
+                        cnt = self.delete_by_registered_email(email)
+                        self.log.info("Deleting invalid device token, count %s", cnt)
             return True
         else:
             self.log.info("No device registered for %s" % (email))

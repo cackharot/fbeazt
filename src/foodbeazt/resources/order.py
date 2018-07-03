@@ -226,10 +226,10 @@ class OrderApi(Resource):
             'title': 'New Order'
         }
         try:
-            # self.pushNotifyService.send_to_device(data, email='foodbeazt@gmail.com')
-            # self.pushNotifyService.send_to_device(data, email='baraneetharan87@gmail.com')
-            # self.pushNotifyService.send_to_device(data, email='vimalprabha87@gmail.com')
-            self.pushNotifyService.send_to_device(data, email='cackharot@gmail.com')
+            self.pushNotifyService.send_to_device(data, email='foodbeazt@gmail.com')
+            self.pushNotifyService.send_to_device(data, email='baraneetharan87@gmail.com')
+            self.pushNotifyService.send_to_device(data, email='vimalprabha87@gmail.com')
+            # self.pushNotifyService.send_to_device(data, email='cackharot@gmail.com')
         except Exception as e:
             self.log.exception(e)
 
@@ -239,31 +239,35 @@ class OrderApi(Resource):
             store_id = item.get('store_id')
             store_orders_grp[store_id].append(item)
 
+        store_ids = store_orders_grp.keys()
+        stores = {x['_id']: x for x in self.storeService.search_by_ids(store_ids=store_ids)}
+
         for store_id in store_orders_grp:
+            store = stores[store_id]
+            email = store.get('contact_email', None)
+            if email is None:
+                self.log.warn('Store %s does not have contact email', store.get('name'))
+                continue
             items = store_orders_grp[store_id]
             store_order = {
                 'tenant_id': order['tenant_id'],
                 'store_id': store_id,
+                'order_id': order['_id'],
                 'order_no': order['order_no'],
                 'status': 'PENDING',
                 'items': items
             }
-            store = self.storeService.get_by_id(store_id)
-            email = store.get('contact_email', None)
             sid = self.storeOrderService.save(store_order)
-            if email is None:
-                self.log.warn('Store %s does not have contact email', store.get('name'))
-                continue
             data = {
                 'message': "New order %s items" % (len(items)),
                 'order_id': order['_id'],
-                'order_no': order['order_no'],
-                'order_date': order['created_at'],
+                'store_order_no': store_order['store_order_no'],
+                'order_date': store_order['created_at'],
                 'total_quantity': sum([x.get('quantity', 0) for x in items]),
                 'sid': str(sid),
                 'title': 'New Order'
             }
-            self.log.info('Notifying Store %s for new order %s, email: %s', store.get('name'), sid, email)
+            self.log.info('Notifying Store %s for new order #%s - %s, email: %s', store.get('name'), order['order_no'], sid, email)
             self.pushNotifyService.send_to_device(data, email=email)
 
     def delete(self, _id):

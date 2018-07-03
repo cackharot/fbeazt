@@ -3,6 +3,9 @@ from flask_restful import Resource
 from flask_mail import Message
 from bson import ObjectId, json_util
 from service.OrderService import OrderService
+from service.StoreService import StoreService
+from service.StoreOrderService import StoreOrderService
+from service.PushNotificationService import PushNotificationService
 from service.SmsService import SmsService
 from foodbeazt.fapp import mongo, app, mail, invoice_emails_folder
 import logging
@@ -19,6 +22,10 @@ class OrderStatusApi(Resource):
     def __init__(self):
         self.log = logging.getLogger(__name__)
         self.service = OrderService(mongo.db)
+        self.storeService = StoreService(mongo.db)
+        self.storeOrderService = StoreOrderService(mongo.db)
+        self.pushNotifyService = PushNotificationService(
+            mongo.db, app.config['GCM_API_KEY'])
         self.smsService = SmsService(
             mongo.db, app.config['SMS_USER'], app.config['SMS_API_KEY'])
 
@@ -41,15 +48,33 @@ class OrderStatusApi(Resource):
             if order['status'] == 'DELIVERED':
                 return {"status": "error", "message": "Order has been completed you cannot change anymore"}, 443
 
+            if order['status'] == 'CANCELLED':
+                return {"status": "error", "message": "Order has been cancelled you cannot change anymore"}, 443
+
             order['status'] = status
-            if notes is not None and len(notes) > 0:
+            if notes and len(notes) > 0:
                 order['notes'] = notes
 
-            self.service.save(order)
-            self.log.info("Updating order #%s status to %s", order.get('order_no'), status)
+            store_id = data.get('store_id', None)
+            store_order_no = data.get('store_order_no', None)
 
-            if status == 'DELIVERED':
-                self.send_notification(order)
+            if store_id and store_order_no:
+                store = self.storeService.get_by_id(store_id)
+                if not store:
+                    return {"status": "error", "messagee": "Invalid store id provided. Store not found"}, 443
+                store_order = self.storeOrderService.get_by_order_id(_id)
+                if not store_order:
+                    return {"status": "error", "messagee": "Invalid order id provided. Store Order not found"}, 443
+                store_order['status'] = status
+                if notes and len(notes) > 0:
+                    store_order['notes'] = notes
+                self.storeOrderService.save(store_order)
+                self.send_foodbeazt_notification(store, order, status, notes)
+            else:
+                self.service.save(order)
+                self.log.info("Updating order #%s status to %s", order.get('order_no'), status)
+                if status == 'DELIVERED':
+                    self.send_notification(order)
 
             return {'status': 'success', 'data': status}, 200
         except Exception as e:
@@ -105,5 +130,27 @@ class OrderStatusApi(Resource):
         message = order_delivered_sms_template.render(order=order)
         try:
             self.smsService.send(number, message, 'DELIVERED')
+        except Exception as e:
+            self.log.exception(e)
+
+    def send_foodbeazt_notification(self, store, order, status, notes):
+        address = order['delivery_details']['address']
+        pincode = order['delivery_details']['pincode']
+        data = {
+            'message': "Store %s - %s [#%s at %s - %s]" % (store['name'], status, order['order_no'], address, pincode),
+            'status': status,
+            'notes': notes,
+            'order_id': order['_id'],
+            'store_id': store['_id'],
+            'order_no': order['order_no'],
+            'order_date': order['created_at'],
+            'total': order['total'],
+            'title': 'Store Update'
+        }
+        try:
+            self.pushNotifyService.send_to_device(data, email='foodbeazt@gmail.com')
+            self.pushNotifyService.send_to_device(data, email='baraneetharan87@gmail.com')
+            self.pushNotifyService.send_to_device(data, email='vimalprabha87@gmail.com')
+            # self.pushNotifyService.send_to_device(data, email='cackharot@gmail.com')
         except Exception as e:
             self.log.exception(e)
