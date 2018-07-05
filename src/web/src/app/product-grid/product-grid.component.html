@@ -16,8 +16,7 @@
     <h4 class="dark">
       {{product.name}}
     </h4>
-    <!--<p class="light show-for-medium description"><i>{{product.description}}</i></p>-->
-    <!--<span class="price_tag rupee light">{{product.sell_price}}</span>-->
+    <p *ngIf="product.canShowDescription()" class="light show-for-medium description"><i><pre>{{product.description}}</pre></i></p>
     <price-table [product]="product"></price-table>
   </div>
   <div class="card-action align-center">
