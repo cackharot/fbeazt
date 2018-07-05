@@ -146,6 +146,10 @@ export class Product {
     }
     return this.sell_price - (this.sell_price * (this.discount / 100));
   }
+
+  canShowDescription(): boolean {
+    return this.category && this.category.toLocaleLowerCase() === 'combo';
+  }
 }
 
 export class Category {
