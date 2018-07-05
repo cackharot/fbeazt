@@ -1,8 +1,8 @@
 import { ObjectId, Date } from './base';
 import * as moment from 'moment';
 
-import {Restaurant} from './restaurant';
-import {AppConfig} from '../AppConfig';
+import { Restaurant } from './restaurant';
+import { AppConfig } from '../AppConfig';
 
 export class PriceDetail {
   no: number;
@@ -19,23 +19,23 @@ export class PriceDetail {
 
   constructor(data = {}) {
     Object.assign(this, data);
-    if(!this.discount || this.discount == NaN){
+    if (!this.discount || this.discount == NaN) {
       this.discount = 0;
     }
   }
 
   getDiscountedPrice() {
-    if(this.discount <= 0.0){
+    if (this.discount <= 0.0) {
       return this.price;
     }
-    return this.price - (this.price * (this.discount/100));
+    return this.price - (this.price * (this.discount / 100));
   }
 
   getFormattedPrice() {
-    if(this.discount <= 0.0){
-      return ''+this.price;
+    if (this.discount <= 0.0) {
+      return '' + this.price;
     }
-    return '<em class="strike">'+this.price+'</em> ' + this.getDiscountedPrice();
+    return '<em class="strike">' + this.price + '</em> ' + this.getDiscountedPrice();
   }
 }
 
@@ -134,29 +134,44 @@ export class Product {
   }
 
   getFormattedPrice() {
-    if(this.discount <= 0.0){
-      return ''+this.sell_price;
+    if (this.discount <= 0.0) {
+      return '' + this.sell_price;
     }
-    return '<em class="strike">'+this.sell_price+'</em> ' + this.getDiscountedPrice();
+    return '<em class="strike">' + this.sell_price + '</em> ' + this.getDiscountedPrice();
   }
 
   getDiscountedPrice() {
-    if(this.discount <= 0.0){
+    if (this.discount <= 0.0) {
       return this.sell_price;
     }
-    return this.sell_price - (this.sell_price * (this.discount/100));
+    return this.sell_price - (this.sell_price * (this.discount / 100));
   }
 }
 
 export class Category {
   name: string;
   products: Product[] = [];
+  order: number;
+  allCategories = ['starter', 'maincourse', 'riceandbread', 'pizza', 'snacks', 'specials', 'combo', 'deserts'];
+  displayCategories = ['Starter', 'main course', 'rice & bread', 'pizza', 'snacks', 'specials', 'combo', 'deserts'];
 
   constructor(data = {}) {
     Object.assign(this, data);
     if (this.products.length > 0) {
       this.products = this.products.map(x => new Product(x));
     }
+  }
+
+  getDisplayName() {
+    let idx = this.getOrder();
+    if (idx > -1) {
+      return this.displayCategories[idx].toLocaleUpperCase();
+    }
+    return this.name.toLocaleUpperCase();
+  }
+
+  getOrder() {
+    return this.allCategories.indexOf(this.name.toLocaleLowerCase());
   }
 
   addProduct(item: Product) {

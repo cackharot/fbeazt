@@ -1,5 +1,5 @@
 import { Component, NgZone, OnInit } from '@angular/core';
-import { FormBuilder, Validators  } from '@angular/common';
+import { FormBuilder, Validators } from '@angular/common';
 import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { Tab } from '../components/tab';
@@ -70,24 +70,30 @@ export class RestaurantDetailComponent implements OnInit {
   }
 
   getProducts() {
-    this.productService.search(this.storeId,this.searchText).then(items => {
+    this.productService.search(this.storeId, this.searchText).then(items => {
       this.products = items;
+      let tmpCategories = [];
       this.categories = [];
       if (this.onlyVeg) {
         this.products = this.products.filter(x => x.isVeg());
       }
       for (let i = 0; i < this.products.length; ++i) {
         let item = this.products[i];
-        let category = this.categories.find(c => c.name === item.category);
+        let category = tmpCategories.find(c => c.name === item.category);
         if (category === undefined) {
           let c = new Category({ name: item.category });
           c.addProduct(item);
-          this.categories.push(c);
+          tmpCategories.push(c);
         } else {
           category.addProduct(item);
         }
-        this.isRequesting = false;
       }
+      this.categories = tmpCategories.sort(function (a, b) {
+        if (a.getOrder() > b.getOrder()) { return 1; }
+        if (a.getOrder() < b.getOrder()) { return -1; }
+        return 0;
+      });
+      this.isRequesting = false;
     }).catch(errorMsg => {
       this.errorMsg = errorMsg;
       this.isRequesting = false;
