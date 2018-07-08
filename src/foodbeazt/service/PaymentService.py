@@ -42,10 +42,9 @@ class PaymentService(object):
         return result
 
     def get_by_order_no(self, order_no):
-        query = dict(order_no=order_no)
-        lst = self.order_payments.find(query)
-        if len(lst) == 1:
-            return lst
+        lst = self.order_payments.find({'order_no': order_no})
+        if lst.count() == 1:
+            return [x for x in lst][0]
         return None
 
     def search(self, tenant_id,

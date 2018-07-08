@@ -175,7 +175,7 @@ class PaymentSuccessView(View):
 
         order = self.service.get_by_number(txnid)
         redirect_url = self.payment_failure_url
-        payment_details = self.paymentService.get_by_order_no(txnid)
+        payment_details = self.paymentService.get_by_order_no(order['order_no'])
         if payment_details is None:
             payment_details = {
                 'order_no': order['order_no'],
