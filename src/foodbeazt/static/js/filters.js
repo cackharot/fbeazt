@@ -11,18 +11,18 @@ angular.module('fbFilters', [])
 .filter('datetime', function() {
     return function(input, fmtString) {
       if(input && input.$date){
-        var d = new Date(input.$date);
+        var d = moment(input.$date).utc();
         if(fmtString && fmtString.length > 0){
-          return moment(d).format(fmtString);
+          return d.format(fmtString);
         }
-        return d.toLocaleDateString() +" "+ d.toLocaleTimeString();
+        return d.calendar() + '  ' + d.format('DD/MM/YY LT');
       }else if(input){
         try{
-          var d = new Date(input);
+          var d = moment(input).utc();
           if(fmtString && fmtString.length > 0){
-            return moment(d).format(fmtString);
+            return d.format(fmtString);
           }
-          return d.toLocaleDateString() +" "+ d.toLocaleTimeString();
+          return d.calendar() + '  ' + d.format('DD/MM/YY LT');
         }catch(e) {}
       }
       return input;
