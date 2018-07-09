@@ -82,7 +82,7 @@ class OrderStatusApi(Resource):
             return {"status": "error", "message": "Error while finding the order"}, 444
 
     def is_valid_status(self, status):
-        return status is not None and status in ['PENDING', 'PREPARING', 'PROGRESS', 'DELIVERED', 'INVALID', 'CANCELLED']
+        return status is not None and status in ['PENDING', 'PREPARING', 'PROGRESS', 'DELIVERED', 'INVALID', 'CANCELLED', 'PAID']
 
     def send_notification(self, order):
         self.generate_pdf_invoice(order)
@@ -148,9 +148,9 @@ class OrderStatusApi(Resource):
             'title': 'Store Update'
         }
         try:
-            self.pushNotifyService.send_to_device(data, email='foodbeazt@gmail.com')
-            self.pushNotifyService.send_to_device(data, email='baraneetharan87@gmail.com')
-            self.pushNotifyService.send_to_device(data, email='vimalprabha87@gmail.com')
-            # self.pushNotifyService.send_to_device(data, email='cackharot@gmail.com')
+            # self.pushNotifyService.send_to_device(data, email='foodbeazt@gmail.com')
+            # self.pushNotifyService.send_to_device(data, email='baraneetharan87@gmail.com')
+            # self.pushNotifyService.send_to_device(data, email='vimalprabha87@gmail.com')
+            self.pushNotifyService.send_to_device(data, email='cackharot@gmail.com')
         except Exception as e:
             self.log.exception(e)

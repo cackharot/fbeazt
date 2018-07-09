@@ -226,10 +226,10 @@ class OrderApi(Resource):
             'title': 'New Order'
         }
         try:
-            self.pushNotifyService.send_to_device(data, email='foodbeazt@gmail.com')
-            self.pushNotifyService.send_to_device(data, email='baraneetharan87@gmail.com')
-            self.pushNotifyService.send_to_device(data, email='vimalprabha87@gmail.com')
-            # self.pushNotifyService.send_to_device(data, email='cackharot@gmail.com')
+            # self.pushNotifyService.send_to_device(data, email='foodbeazt@gmail.com')
+            # self.pushNotifyService.send_to_device(data, email='baraneetharan87@gmail.com')
+            # self.pushNotifyService.send_to_device(data, email='vimalprabha87@gmail.com')
+            self.pushNotifyService.send_to_device(data, email='cackharot@gmail.com')
         except Exception as e:
             self.log.exception(e)
 
