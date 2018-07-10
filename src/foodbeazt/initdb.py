@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 cuisines = ['north indian', 'south indian',
             'chineese', 'italian', 'english', 'american']
-category = ['starter', 'maincourse', 'deserts', 'specials']
+category = ['starter', 'maincourse', 'desserts', 'specials']
 food_types = ['veg', 'non-veg']
 weekdays = ['Monday', 'Tuesday', 'Wednesday',
             'Thursday', 'Friday', 'Saturday', 'Sunday']
