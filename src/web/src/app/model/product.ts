@@ -156,8 +156,8 @@ export class Category {
   name: string;
   products: Product[] = [];
   order: number;
-  allCategories = ['starter', 'maincourse', 'riceandbread', 'pizza', 'snacks', 'specials', 'combo', 'deserts'];
-  displayCategories = ['Starter', 'main course', 'rice & bread', 'pizza', 'snacks', 'specials', 'combo', 'deserts'];
+  allCategories = ['starter', 'maincourse', 'riceandbread', 'pizza', 'snacks', 'specials', 'combo', 'deserts', 'desserts'];
+  displayCategories = ['starter', 'main course', 'rice & bread', 'pizza', 'snacks', 'specials', 'combo', 'desserts', 'desserts'];
 
   constructor(data = {}) {
     Object.assign(this, data);
