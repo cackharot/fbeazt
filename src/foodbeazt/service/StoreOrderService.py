@@ -82,8 +82,8 @@ class StoreOrderService(object):
             return True
         return False
 
-    def get_by_id(self, _id):
-        return self.store_orders.find_one({'_id': ObjectId(_id)})
+    def get_by_id(self, _id, store_id):
+        return self.store_orders.find_one({'_id': ObjectId(_id), 'store_id': ObjectId(store_id)})
 
     def get_by_order_id(self, _id):
         return self.store_orders.find_one({'order_id': ObjectId(_id)})
