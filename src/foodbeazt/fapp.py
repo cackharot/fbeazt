@@ -429,7 +429,7 @@ api.add_resource(ProductListApi, '/api/products/<string:store_id>')
 
 api.add_resource(OrderApi, '/api/order/<string:_id>')
 api.add_resource(OrderListApi, '/api/orders/')
-api.add_resource(StoreOrderListApi, '/api/store_orders/')
+api.add_resource(StoreOrderListApi, '/api/store_orders/<string:store_id>')
 api.add_resource(TrackOrderApi, '/api/track/<string:order_no>')
 api.add_resource(OrderStatusApi, '/api/order_status/<string:_id>')
 

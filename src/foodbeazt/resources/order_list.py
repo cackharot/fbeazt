@@ -81,9 +81,9 @@ class StoreOrderListApi(Resource):
         self.storeOrderService = StoreOrderService(mongo.db)
         self.storeService = StoreService(mongo.db)
 
-    def get(self):
+    def get(self, store_id):
         tenant_id = g.user.tenant_id
-        store_id = request.args.get("store_id", None)
+        store_id = request.args.get("store_id", store_id)
         if store_id == '-1' or store_id == -1 or store_id is None or len(store_id) == 0:
             return {"status": "error", "message": "Store Identifier is required!"}, 420
 
@@ -98,6 +98,10 @@ class StoreOrderListApi(Resource):
             order_status = "PENDING,PREPARING,PROGRESS"
 
         try:
+            store_order_id = request.args.get('store_order_id', None)
+            if store_order_id is not None:
+                return self.storeOrderService.get_by_id(store_order_id, store_id)
+
             orders, total = self.storeOrderService.search(tenant_id=tenant_id,
                                                           store_id=store_id,
                                                           page_no=page_no,
