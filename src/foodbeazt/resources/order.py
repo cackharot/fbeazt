@@ -255,6 +255,7 @@ class OrderApi(Resource):
                 'order_id': order['_id'],
                 'order_no': order['order_no'],
                 'status': 'PENDING',
+                'status_timings': dict(PENDING=datetime.now()),
                 'items': items
             }
             sid = self.storeOrderService.save(store_order)
