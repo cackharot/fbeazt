@@ -368,7 +368,8 @@ from foodbeazt.resources.store_review import StoreReviewApi
 from foodbeazt.resources.product import ProductApi, ProductListApi, ProductActivateApi
 from foodbeazt.resources.order import OrderApi, TrackOrderApi
 from foodbeazt.resources.coupon import ValidateCouponApi
-from foodbeazt.resources.order_list import OrderListApi, StoreOrderListApi
+from foodbeazt.resources.order_list import OrderListApi
+from foodbeazt.resources.store_order_list import StoreOrderListApi
 from foodbeazt.resources.order_status import OrderStatusApi
 from foodbeazt.resources.export_data import ExportDataApi
 from foodbeazt.resources.popular_items import PopularItemsApi
@@ -378,6 +379,7 @@ from foodbeazt.resources.report import ReportApi, PaymentReportApi
 from foodbeazt.resources.pincodes import PincodeListApi, PincodeApi
 from foodbeazt.resources.myorders import MyOrdersApi
 from foodbeazt.resources.push_notify import RegisterPushNotify, UnRegisterPushNotify
+from foodbeazt.resources.store_order_status import StoreOrderStatusApi
 
 
 @app.route('/test_new_order_notify')
@@ -432,6 +434,7 @@ api.add_resource(OrderListApi, '/api/orders/')
 api.add_resource(StoreOrderListApi, '/api/store_orders/<string:store_id>')
 api.add_resource(TrackOrderApi, '/api/track/<string:order_no>')
 api.add_resource(OrderStatusApi, '/api/order_status/<string:_id>')
+api.add_resource(StoreOrderStatusApi, '/api/store_order_status')
 
 api.add_resource(RegisterPushNotify, '/api/push_service/register')
 api.add_resource(UnRegisterPushNotify, '/api/push_service/unregister')

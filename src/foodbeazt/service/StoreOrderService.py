@@ -65,7 +65,6 @@ class StoreOrderService(object):
             item.pop('_id', None)
             item['total'] = self.get_order_total(item)
             item['created_at'] = datetime.now()
-            item['status'] = 'PENDING'
             item['store_order_no'] = self.generate_order_no()
         else:
             item['updated_at'] = datetime.now()
