@@ -1,9 +1,10 @@
+from collections import defaultdict
 from flask import g, request
 from flask_restful import Resource
 from service.OrderService import OrderService
 from service.StoreService import StoreService
 from service.StoreOrderService import StoreOrderService
-from foodbeazt.fapp import mongo
+from foodbeazt.fapp import mongo, admin_permission
 import logging
 
 
@@ -14,6 +15,28 @@ class OrderListApi(Resource):
         self.service = OrderService(mongo.db)
         self.storeOrderService = StoreOrderService(mongo.db)
         self.storeService = StoreService(mongo.db)
+
+    def update_store_data(self, orders):
+        if not orders or len(orders) == 0:
+            return
+        store_ids = []
+        for order in orders:
+            store_ids = set([*store_ids, *[str(x['store_id']) for x in order['items']]])
+        stores = {str(x['_id']): x for x in self.storeService.search_by_ids(store_ids=store_ids)}
+        for order in orders:
+            for item in order['items']:
+                item['store'] = stores[str(item['store_id'])]
+
+    def update_store_status(self, orders):
+        if not orders or len(orders) == 0:
+            return
+        order_dict = {str(x['_id']): x for x in orders}
+        store_statuses = defaultdict(dict)
+        for x in self.storeOrderService.get_by_order_ids(order_dict.keys()):
+           oid = str(x['order_id'])
+           store_id = str(x['store_id'])
+           store_statuses[oid][store_id] = dict(no=x['store_order_no'], status_timings=x.get('status_timings',{}), status=x['status'])
+           order_dict[oid]['store_delivery_status'] = store_statuses[oid]
 
     def get(self):
         tenant_id = g.user.tenant_id
@@ -42,15 +65,9 @@ class OrderListApi(Resource):
                                                 filter_text=filter_text,
                                                 latest_first=latest)
 
-            if orders and len(orders) > 0:
-                store_ids = set()
-                for order in orders:
-                    for sid in [str(x.get('store_id')) for x in order['items']]:
-                        store_ids.add(sid)
-                stores = self.storeService.search_by_ids(store_ids=store_ids)
-                for order in orders:
-                    for item in order['items']:
-                        item['store'] = next((x for x in stores if x['_id'] == item['store_id']), None)
+            self.update_store_data(orders)
+            if admin_permission.can():
+                self.update_store_status(orders)
             offset = page_no*page_size
             result = {'items': orders, 'total': total,
                       'filter_text': filter_text,

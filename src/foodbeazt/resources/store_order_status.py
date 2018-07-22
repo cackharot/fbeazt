@@ -45,6 +45,8 @@ class StoreOrderStatusApi(Resource):
             store_order = self.storeOrderService.get_by_id(store_order_id, store_id)
             if store_order is None:
                 return {"status": "error", "messagee": "Invalid store order id provided. Order not found"}, 443
+            if store_order['status'] == 'DELIVERED':
+                return {"status": "error", "message": "Order has already been picked up by foodbeazt, you cannot change anymore"}, 443
             if store_order['status'] == 'PAID':
                 return {"status": "error", "message": "Order has been paid you cannot change anymore"}, 443
             if store_order['status'] == 'CANCELLED':

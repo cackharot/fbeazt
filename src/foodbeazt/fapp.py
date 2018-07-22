@@ -52,6 +52,7 @@ auth = GoogleLogin(app)
 principals = Principal(app)
 # Create a permission with a single Need, in this case a RoleNeed.
 admin_permission = Permission(RoleNeed('tenant_admin'))
+store_admin_permission = Permission(RoleNeed('store_admin'))
 # localization
 babel = Babel(app)
 
@@ -135,7 +136,7 @@ def get_or_create_user(item):
 
     tenant_id = default_tenantId()
 
-    if email == "cackharot@gmail.com":
+    if email == app.config['SUPER_ADMIN_EMAIL']:
         roles = ["tenant_admin", 'member']
     else:
         roles = ["member"]

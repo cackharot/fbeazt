@@ -1,3 +1,6 @@
+import time
+from datetime import datetime
+from collections import defaultdict
 from flask import g, request
 from flask_restful import Resource
 from flask_mail import Message
@@ -55,26 +58,12 @@ class OrderStatusApi(Resource):
             if notes and len(notes) > 0:
                 order['notes'] = notes
 
-            store_id = data.get('store_id', None)
-            store_order_no = data.get('store_order_no', None)
-
-            if store_id and store_order_no:
-                store = self.storeService.get_by_id(store_id)
-                if not store:
-                    return {"status": "error", "messagee": "Invalid store id provided. Store not found"}, 443
-                store_order = self.storeOrderService.get_by_order_id(_id)
-                if not store_order:
-                    return {"status": "error", "messagee": "Invalid order id provided. Store Order not found"}, 443
-                store_order['status'] = status
-                if notes and len(notes) > 0:
-                    store_order['notes'] = notes
-                self.storeOrderService.save(store_order)
-                self.send_foodbeazt_notification(store, order, status, notes)
-            else:
-                self.service.save(order)
-                self.log.info("Updating order #%s status to %s", order.get('order_no'), status)
-                if status == 'DELIVERED':
-                    self.send_notification(order)
+            self.service.save(order)
+            self.log.info("Updating order #%s status to %s", order.get('order_no'), status)
+            if status == 'DELIVERED':
+                self.send_notification(order) # customer notification
+            if status == 'PREPARING':
+                self.notify_store_contact(order) # store admin notification
 
             return {'status': 'success', 'data': status}, 200
         except Exception as e:
@@ -133,24 +122,42 @@ class OrderStatusApi(Resource):
         except Exception as e:
             self.log.exception(e)
 
-    def send_foodbeazt_notification(self, store, order, status, notes):
-        address = order['delivery_details']['address']
-        pincode = order['delivery_details']['pincode']
-        data = {
-            'message': "Store %s - %s [#%s at %s - %s]" % (store['name'], status, order['order_no'], address, pincode),
-            'status': status,
-            'notes': notes,
-            'order_id': order['_id'],
-            'store_id': store['_id'],
-            'order_no': order['order_no'],
-            'order_date': order['created_at'],
-            'total': order['total'],
-            'title': 'Store Update'
-        }
-        try:
-            # self.pushNotifyService.send_to_device(data, email='foodbeazt@gmail.com')
-            # self.pushNotifyService.send_to_device(data, email='baraneetharan87@gmail.com')
-            # self.pushNotifyService.send_to_device(data, email='vimalprabha87@gmail.com')
-            self.pushNotifyService.send_to_device(data, email='cackharot@gmail.com')
-        except Exception as e:
-            self.log.exception(e)
+    def notify_store_contact(self, order):
+        store_orders_grp = defaultdict(list)
+        for item in order.get('items'):
+            store_id = item.get('store_id')
+            store_orders_grp[store_id].append(item)
+
+        store_ids = store_orders_grp.keys()
+        stores = {x['_id']: x for x in self.storeService.search_by_ids(store_ids=store_ids)}
+
+        for store_id in store_orders_grp:
+            store = stores[store_id]
+            email = store.get('contact_email', None)
+            if email is None:
+                self.log.warn('Store %s does not have contact email', store.get('name'))
+                continue
+            items = store_orders_grp[store_id]
+            store_order = {
+                'tenant_id': order['tenant_id'],
+                'store_id': store_id,
+                'order_id': order['_id'],
+                'order_no': order['order_no'],
+                'status': 'PENDING',
+                'status_timings': dict(PENDING=datetime.now()),
+                'items': items
+            }
+            sid = self.storeOrderService.save(store_order)
+            data = {
+                'message': "New order %s items" % (len(items)),
+                'order_id': order['_id'],
+                'store_order_no': store_order['store_order_no'],
+                'store_order_id': str(store_order['_id']),
+                'order_date': store_order['created_at'],
+                'total_quantity': sum([x.get('quantity', 0) for x in items]),
+                'sid': str(sid),
+                'title': "New Order #%s" % (store_order['store_order_no'])
+            }
+            self.log.info('Notifying Store %s for new order #%s - %s, email: %s', store.get('name'), order['order_no'], sid, email)
+            self.pushNotifyService.send_to_device(data, email=email)
+

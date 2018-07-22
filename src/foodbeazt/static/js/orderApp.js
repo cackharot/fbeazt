@@ -193,9 +193,25 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
         return st;
     }
 
-    $scope.getStoreStatus = function(order ,store_name) {
+    $scope.getStoreStatus = function(order, store_name) {
+        let store_status = getStoreDeliveryStatus(order, store_name);
+        const displayNames = {
+            'PROGRESS': 'READY',
+            'DELIVERED': 'PICKED UP'
+        }
+        let st = store_status ? store_status.status : 'NA';
+        let displayName = displayNames[st];
+        return displayName ? displayName : st;
+    }
+
+    $scope.getStoreOrderNo = function(order, store_name) {
+        let store_status = getStoreDeliveryStatus(order, store_name);
+        return store_status ? store_status.no : 'NA';
+    }
+
+    let getStoreDeliveryStatus = function(order, store_name) {
         if(!order.store_delivery_status){
-            return 'NA';
+            return null;
         }
         for(var i =0; i< order.items.length; ++i) {
             var store = order.items[i].store;
@@ -203,10 +219,10 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
                 var store_id = store._id.$oid;
                 var store_status = order.store_delivery_status[store_id];
                 if(store_status) {
-                    return store_status.status;
+                    return store_status;
                 }
             }
         }
-        return 'NA';
+        return null;
     }
 })
