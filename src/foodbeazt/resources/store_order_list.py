@@ -3,7 +3,7 @@ from flask_restful import Resource
 from service.OrderService import OrderService
 from service.StoreService import StoreService
 from service.StoreOrderService import StoreOrderService
-from foodbeazt.fapp import mongo
+from foodbeazt.fapp import mongo, store_admin_permission, admin_permission
 import logging
 import itertools
 
@@ -27,11 +27,29 @@ class StoreOrderListApi(Resource):
             for item in order['items']:
                 item['store'] = stores[str(item['store_id'])]
 
+    def update_status_timings(self, store_order):
+        if not store_order:
+            return
+        if 'status_timings' not in store_order:
+            store_order['status_timings'] = {'PENDING': store_order['created_at']}
+        elif 'PENDING' not in store_order['status_timings']:
+            store_order['status_timings']['PENDING'] = store_order['created_at']
+
     def get(self, store_id):
         tenant_id = g.user.tenant_id
         store_id = request.args.get("store_id", store_id)
         if store_id == '-1' or store_id == -1 or store_id is None or len(store_id) == 0:
             return {"status": "error", "message": "Store Identifier is required!"}, 420
+
+        if not (store_admin_permission.can() or admin_permission.can()):
+            return {"status": "error", "message": "UnAuthorized! Your are not a store admin"}, 403
+
+        store = self.storeService.get_by_id(store_id)
+        if store is None:
+            return {"status": "error", "message": "Store Identifier is invalid!"}, 421
+
+        if not admin_permission.can() and store['contact_email'] != g.user.email:
+            return {"status": "error", "message": "You are not authozied to view this store!"}, 403
 
         page_no = int(request.args.get('page_no', 1))
         page_size = int(request.args.get('page_size', 50))
@@ -46,13 +64,9 @@ class StoreOrderListApi(Resource):
         try:
             store_order_id = request.args.get('store_order_id', None)
             if store_order_id is not None:
-                order = self.storeOrderService.get_by_id(store_order_id, store_id)
-                if order:
-                    if 'status_timings' not in order:
-                        order['status_timings'] = {'PENDING': order['created_at']}
-                    elif 'PENDING' not in order['status_timings']:
-                        order['status_timings']['PENDING'] = order['created_at']
-                return order
+                store_order = self.storeOrderService.get_by_id(store_order_id, store_id)
+                self.update_status_timings(store_order)
+                return store_order
 
             orders, total = self.storeOrderService.search(tenant_id=tenant_id,
                                                           store_id=store_id,

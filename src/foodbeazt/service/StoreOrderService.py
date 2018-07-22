@@ -87,6 +87,9 @@ class StoreOrderService(object):
     def get_by_order_id(self, _id):
         return self.store_orders.find_one({'order_id': ObjectId(_id)})
 
+    def get_by_order_ids(self, order_ids):
+        return [x for x in self.store_orders.find({'order_id': {'$in': [ObjectId(x) for x in order_ids]}})]
+
     def get_by_number(self, order_no):
         return self.store_orders.find_one({"store_order_no": order_no})
 

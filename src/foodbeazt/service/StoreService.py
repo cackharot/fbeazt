@@ -148,6 +148,9 @@ class StoreService(object):
     def get_by_name(self, name):
         return self.stores.find_one({'name': name})
 
+    def get_by_email(self, email):
+        return [x for x in self.stores.find({'contact_email': email})]
+
     def delete(self, _id):
         item = self.stores.find_one({'_id': ObjectId(_id)})
         if item:

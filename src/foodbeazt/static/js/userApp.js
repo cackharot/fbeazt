@@ -23,7 +23,7 @@ userApp.controller('userListCtrl', function($route, $scope, $http, $routeParams,
 
 userApp.controller('userDetailCtrl', function($scope, $http, $routeParams, $location){
 	$scope.model = {}
-	$scope.roles = [{'id': 'member', 'text': 'Member'}, {'id': 'tenant_admin', 'text': 'Tenant Admin'}]
+	  $scope.roles = [{'id': 'member', 'text': 'Member'}, {'id': 'tenant_admin', 'text': 'Tenant Admin'}, {'id': 'store_admin', 'text': 'Store Admin'}]
 
 	$http.get('/api/user/'+ $routeParams.id).success(function(d){
         if(!d._id || !d._id.$oid)
