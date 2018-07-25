@@ -61,7 +61,7 @@ class PushNotificationService(object):
         if reg_ids and len(reg_ids) > 0:
             for device_reg_id in reg_ids:
                 self.log.info("Notifying device (%s) for #%s [%s]" %
-                              (email, data.get('order_no', '-'), device_reg_id))
+                              (email, data.get('order_no', data.get('store_order_no', '-')), device_reg_id))
                 try:
                     self.gcm.plaintext_request(
                         registration_id=device_reg_id, data=data)

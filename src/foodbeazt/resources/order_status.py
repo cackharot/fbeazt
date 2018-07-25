@@ -138,26 +138,29 @@ class OrderStatusApi(Resource):
                 self.log.warn('Store %s does not have contact email', store.get('name'))
                 continue
             items = store_orders_grp[store_id]
-            store_order = {
-                'tenant_id': order['tenant_id'],
-                'store_id': store_id,
-                'order_id': order['_id'],
-                'order_no': order['order_no'],
-                'status': 'PENDING',
-                'status_timings': dict(PENDING=datetime.now()),
-                'items': items
-            }
-            sid = self.storeOrderService.save(store_order)
+            order_id = order['_id']
+            store_order = self.storeOrderService.get_by_order_id(store_id=store_id, order_id=order_id)
+            if store_order is None:
+                store_order = {
+                        'tenant_id': order['tenant_id'],
+                        'store_id': store_id,
+                        'order_id': order_id,
+                        'order_no': order['order_no'],
+                        'status': 'PENDING',
+                        'quantity': sum([x['quantity'] for x in items]),
+                        'status_timings': dict(PENDING=datetime.now()),
+                        'items': items
+                    }
+                self.storeOrderService.save(store_order)
+            sno = store_order['store_order_no']
             data = {
-                'message': "New order %s items" % (len(items)),
-                'order_id': order['_id'],
-                'store_order_no': store_order['store_order_no'],
+                'message': "%d items and %.2f quantity. Total Rs. %.2f" % (len(items), store_order['quantity'], store_order['total']),
+                'store_order_no': sno,
                 'store_order_id': str(store_order['_id']),
                 'order_date': store_order['created_at'],
                 'total_quantity': sum([x.get('quantity', 0) for x in items]),
-                'sid': str(sid),
-                'title': "New Order #%s" % (store_order['store_order_no'])
+                'title': "New Order #%s" % (sno)
             }
-            self.log.info('Notifying Store %s for new order #%s - %s, email: %s', store.get('name'), order['order_no'], sid, email)
+            self.log.info('Notifying Store %s for new order #%s - %s, email: %s', store.get('name'), order['order_no'], sno, email)
             self.pushNotifyService.send_to_device(data, email=email)
 

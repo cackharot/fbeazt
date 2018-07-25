@@ -77,7 +77,19 @@
                     </div>
                     <div class="details__row">
                         <div ng-repeat="store in getOrderStores(item)">
-                            <h4>{{store}} ({{getStoreOrderNo(item, store)}}: {{getStoreStatus(item, store)}})</h4>
+                            <h4>{{store}}
+                                <small>({{getStoreOrderNo(item, store)}}) <b>{{getStoreStatus(item, store)}}</b></small>
+                            </h4>
+                            <div>
+                                <div class="status_row" ng-if="getStoreDeliveryStatus(item, store).status !== 'CANCELLED' && getStoreDeliveryStatus(item, store).status != 'PAID'">
+                                    <span ng-if="getStoreDeliveryStatus(item, store).status === 'PROGRESS'" ng-click="updateStoreOrderStatus(item, store, 'DELIVERED')">
+                                       PICKUP
+                                    </span>
+                                    <span ng-if="getStoreDeliveryStatus(item, store).status === 'DELIVERED'" ng-click="updateStoreOrderStatus(item, store, 'PAID')">
+                                       PAY
+                                    </span>
+                                </div>
+                            </div>
                             <table class="table order_table">
                                 <thead>
                                     <tr>
