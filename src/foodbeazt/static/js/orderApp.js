@@ -1,16 +1,16 @@
-var orderApp = angular.module('fbeaztAdmin')
+var orderApp = angular.module('fbeaztAdmin');
 
 orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
-    $scope.stores = []
-    $scope.orders = []
+    $scope.stores = [];
+    $scope.orders = [];
     $scope.searchText = "";
     $scope.filter_pending = false;
     $scope.filter_preparing = false;
     $scope.filter_progress = false;
     $scope.filter_delivered = false;
     $scope.filter_cancelled = false;
-    $scope.selected_store = null
-    $scope.selected_store_name = 'Select Store'
+    $scope.selected_store = null;
+    $scope.selected_store_name = 'Select Store';
     $scope.page_no = 1;
     $scope.page_size = 10;
     $scope.next = null;
@@ -64,7 +64,7 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
             }
         }
         return store_names;
-    }
+    };
 
     $scope.getOrderItems = function (order, store_name) {
         var result = [];
@@ -74,7 +74,7 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
             }
         }
         return result;
-    }
+    };
 
     $scope.navigate = function (url) {
         $scope.reloadOrder(url);
@@ -97,7 +97,6 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
                 $scope.notes_order = item;
                 $scope.notesText = '';
                 $scope.show_notes = true;
-                return;
             }else{
                 notes = ($scope.notesText || '').trim();
                 if(notes == ''){
@@ -114,33 +113,34 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
             }).error(function (e) {
                 alert(e.message);
             });
-    }
+        return true;
+    };
 
     $scope.cancelNotesModal = function(){
         $scope.show_notes = false;
         $scope.notes_order = null;
         $scope.notesText = '';
         return true;
-    }
+    };
 
     $scope.reloadStore = function () {
         $http.get('/api/stores', { params: { 'page_size': 200 } }).success(function (d) {
             $scope.stores = d.items;
             if ($routeParams.store_id)
-                $scope.setStore($routeParams.store_id)
+                $scope.setStore($routeParams.store_id);
             else if ($scope.stores && $scope.stores.length > 0)
-                $scope.setStore($scope.stores[0]._id.$oid)
+                $scope.setStore($scope.stores[0]._id.$oid);
             if (!$scope.stores || $scope.stores.length == 0) {
-                $scope.stores = []
-                $scope.stores.push({ '_id': { "$oid": '' }, 'name': 'No stores available!' })
+                $scope.stores = [];
+                $scope.stores.push({ '_id': { "$oid": '' }, 'name': 'No stores available!' });
             }
 
         }).error(function (e) {
-            alert(e)
-        })
-    }
+            alert(e);
+        });
+    };
 
-    $scope.reloadStore()
+    $scope.reloadStore();
 
     $scope.resetSearch = function () {
         $scope.searchText = "";
@@ -159,18 +159,17 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
 
     $scope.setStore = function (store_id) {
         if (!store_id || store_id == '-1' || store_id == '') return
-        $scope.selected_store = store_id
+        $scope.selected_store = store_id;
 
         for (var i = 0; i < $scope.stores.length; ++i) {
-            var s = $scope.stores[i]
+            var s = $scope.stores[i];
             if (s._id.$oid == store_id) {
-                $scope.selected_store_name = s.name
+                $scope.selected_store_name = s.name;
             }
         }
 
-        $scope.reloadOrder()
-        return false
-    }
+        $scope.reloadOrder();
+    };
 
     $scope.fetchReports = function () {
         $http.get('/api/reports/orders')
@@ -191,38 +190,59 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
             st = st + item.total;
         }
         return st;
-    }
+    };
 
     $scope.getStoreStatus = function(order, store_name) {
-        let store_status = getStoreDeliveryStatus(order, store_name);
+        let store_status = $scope.getStoreDeliveryStatus(order, store_name);
         const displayNames = {
             'PROGRESS': 'READY',
             'DELIVERED': 'PICKED UP'
-        }
+        };
         let st = store_status ? store_status.status : 'NA';
         let displayName = displayNames[st];
         return displayName ? displayName : st;
-    }
+    };
 
     $scope.getStoreOrderNo = function(order, store_name) {
-        let store_status = getStoreDeliveryStatus(order, store_name);
+        let store_status = $scope.getStoreDeliveryStatus(order, store_name);
         return store_status ? store_status.no : 'NA';
-    }
+    };
 
-    let getStoreDeliveryStatus = function(order, store_name) {
+    $scope.getStoreDeliveryStatus = function(order, store_name) {
         if(!order.store_delivery_status){
             return null;
         }
+        const store = findStore(store_name, order);
+        const store_id = store._id.$oid;
+        const store_status = order.store_delivery_status[store_id];
+        console.log(`Found store status: ${store_status.status}`);
+        return store_status;
+    };
+
+    let findStore = function(store_name, order){
         for(var i =0; i< order.items.length; ++i) {
-            var store = order.items[i].store;
+            const store = order.items[i].store;
             if(store.name === store_name){
-                var store_id = store._id.$oid;
-                var store_status = order.store_delivery_status[store_id];
-                if(store_status) {
-                    return store_status;
-                }
+                return store;
             }
         }
         return null;
-    }
-})
+    };
+
+    $scope.updateStoreOrderStatus = function (order, store_name, status) {
+        if(['DELIVERED', 'PAID', 'CANCELLED'].indexOf(status) === -1){
+            alert('Invalid status');
+            return false;
+        }
+        const store = findStore(store_name, order);
+        const store_id = store._id.$oid;
+        $http.post('/api/store_order_status', {store_id, order_id: order._id.$oid, status, notes: '' })
+            .success(function (d) {
+                order.store_delivery_status[store_id].status = status;
+            })
+            .error(function (e) {
+                alert(e);
+            });
+        return true;
+    };
+});

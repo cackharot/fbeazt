@@ -7,7 +7,7 @@ from service.StoreService import StoreService
 from service.StoreOrderService import StoreOrderService
 from service.PushNotificationService import PushNotificationService
 from service.SmsService import SmsService
-from foodbeazt.fapp import mongo, app, mail, invoice_emails_folder
+from foodbeazt.fapp import mongo, app, mail, invoice_emails_folder, admin_permission
 from datetime import datetime
 import logging
 import os
@@ -28,13 +28,13 @@ class StoreOrderStatusApi(Resource):
             data = json_util.loads(request.data.decode('utf-8'))
             store_id = data.get('store_id', None)
             store_order_id = data.get('store_order_id', None)
+            order_id = data.get('order_id', None)
             status = data.get('status', None)
             notes = data.get('notes', None)
 
             if store_id is None or len(store_id) == 0:
                 return {"status": "error", "message": "Invalid store id provided"}, 443
-            if store_order_id is None or len(store_order_id) == 0:
-                return {"status": "error", "message": "Invalid store order id provided"}, 443
+
             if not self.is_valid_status(status):
                 return {"status": "error", "message": "Invalid status provided"}, 443
 
@@ -42,15 +42,25 @@ class StoreOrderStatusApi(Resource):
             if not store:
                 return {"status": "error", "messagee": "Invalid store id provided. Store not found"}, 443
 
-            store_order = self.storeOrderService.get_by_id(store_order_id, store_id)
+            if admin_permission.can():
+                if order_id is None or len(order_id) == 0:
+                    return {"status": "error", "message": "Invalid order id provided"}, 443
+                store_order = self.storeOrderService.get_by_order_id(store_id=store_id, order_id=order_id)
+            else:
+                if store_order_id is None or len(store_order_id) == 0:
+                    return {"status": "error", "message": "Invalid store order id provided"}, 443
+                store_order = self.storeOrderService.get_by_id(_id=store_order_id, store_id=store_id)
+
             if store_order is None:
                 return {"status": "error", "messagee": "Invalid store order id provided. Order not found"}, 443
-            if store_order['status'] == 'DELIVERED':
-                return {"status": "error", "message": "Order has already been picked up by foodbeazt, you cannot change anymore"}, 443
-            if store_order['status'] == 'PAID':
-                return {"status": "error", "message": "Order has been paid you cannot change anymore"}, 443
-            if store_order['status'] == 'CANCELLED':
-                return {"status": "error", "message": "Order has been cancelled you cannot change anymore"}, 443
+
+            if not admin_permission.can():
+                if store_order['status'] == 'DELIVERED':
+                    return {"status": "error", "message": "Order has already been picked up by foodbeazt, you cannot change anymore"}, 443
+                if store_order['status'] == 'PAID':
+                    return {"status": "error", "message": "Order has been paid you cannot change anymore"}, 443
+                if store_order['status'] == 'CANCELLED':
+                    return {"status": "error", "message": "Order has been cancelled you cannot change anymore"}, 443
 
             order = self.service.get_by_id(store_order['order_id'])
             if order is None:
@@ -86,7 +96,7 @@ class StoreOrderStatusApi(Resource):
             'order_no': order['order_no'],
             'order_date': order['created_at'],
             'total': order['total'],
-            'title': 'Store Update'
+            'title': 'Store Order Update'
         }
         try:
             # self.pushNotifyService.send_to_device(data, email='foodbeazt@gmail.com')

@@ -29,9 +29,13 @@ class StoreOrderService(object):
         if order_no is not None and len(order_no) > 0:
             query['order_no'] = order_no
         if order_status is not None and len(order_status) > 0:
-            query['status'] = {"$in": order_status.split(',')}
+            st = order_status.split(',')
+            if 'DELIVERED' in st:
+                st.append('PAID')
+                st.append('CANCELLED')
+            query['status'] = {"$in": st}
         else:
-            query['status'] = {"$not": {"$in": ['DELIVERED', 'CANCELLED']}}
+            query['status'] = {"$not": {"$in": ['DELIVERED', 'PAID', 'CANCELLED']}}
         if filter_text is not None and len(filter_text) > 0:
             search_val = re.compile(r".*%s.*" % (filter_text), re.IGNORECASE)
             query['store_order_no'] = search_val
@@ -84,8 +88,8 @@ class StoreOrderService(object):
     def get_by_id(self, _id, store_id):
         return self.store_orders.find_one({'_id': ObjectId(_id), 'store_id': ObjectId(store_id)})
 
-    def get_by_order_id(self, _id):
-        return self.store_orders.find_one({'order_id': ObjectId(_id)})
+    def get_by_order_id(self, store_id, order_id):
+        return self.store_orders.find_one({'store_id': ObjectId(store_id), 'order_id': ObjectId(order_id)})
 
     def get_by_order_ids(self, order_ids):
         return [x for x in self.store_orders.find({'order_id': {'$in': [ObjectId(x) for x in order_ids]}})]
