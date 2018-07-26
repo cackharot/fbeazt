@@ -19,9 +19,9 @@ class OrderListApi(Resource):
     def update_store_data(self, orders):
         if not orders or len(orders) == 0:
             return
-        store_ids = []
+        store_ids = set()
         for order in orders:
-            store_ids = set([*store_ids, *[str(x['store_id']) for x in order['items']]])
+            store_ids.update([str(x['store_id']) for x in order['items']])
         stores = {str(x['_id']): x for x in self.storeService.search_by_ids(store_ids=store_ids)}
         for order in orders:
             for item in order['items']:
