@@ -13,10 +13,10 @@ class UserStores(Resource):
     self.storeService = StoreService(mongo.db)
 
   def get(self):
+    tenant_id = g.user.tenant_id
     if not store_admin_permission.can():
       return dict(status="error", message="Unauthorized! Not a store admin!"), 403
 
-    tenant_id = g.user.tenant_id
     email = g.user.email
     stores = self.storeService.get_by_email(email)
 
