@@ -25,6 +25,7 @@ class StoreOrderStatusApi(Resource):
         self.admin_emails = app.config['ADMIN_EMAILS'].split(',')
 
     def post(self):
+        tenant_id = g.user.tenant_id
         try:
             data = json_util.loads(request.data.decode('utf-8'))
             store_id = data.get('store_id', None)
@@ -43,17 +44,17 @@ class StoreOrderStatusApi(Resource):
             if not store:
                 return {"status": "error", "messagee": "Invalid store id provided. Store not found"}, 443
 
-            if admin_permission.can():
-                if order_id is None or len(order_id) == 0:
-                    return {"status": "error", "message": "Invalid order id provided"}, 443
+            store_order = None
+            if admin_permission.can() and not order_id is None and len(order_id) > 0:
                 store_order = self.storeOrderService.get_by_order_id(store_id=store_id, order_id=order_id)
-            else:
-                if store_order_id is None or len(store_order_id) == 0:
-                    return {"status": "error", "message": "Invalid store order id provided"}, 443
+            elif store_order_id is None or len(store_order_id) == 0:
+                 return {"status": "error", "message": "Invalid store order id provided"}, 443
+
+            if store_order is None:
                 store_order = self.storeOrderService.get_by_id(_id=store_order_id, store_id=store_id)
 
             if store_order is None:
-                return {"status": "error", "messagee": "Invalid store order id provided. Order not found"}, 443
+                return {"status": "error", "messagee": "Invalid store order id provided. Order not found"}, 444
 
             if not admin_permission.can():
                 if store_order['status'] == 'DELIVERED':
@@ -65,7 +66,7 @@ class StoreOrderStatusApi(Resource):
 
             order = self.service.get_by_id(store_order['order_id'])
             if order is None:
-                return {"status": "error", "messagee": "Invalid order id provided. Order not found"}, 443
+                return {"status": "error", "messagee": "Invalid order id provided. Order not found"}, 445
 
             store_order['status'] = status
             status_timings = store_order.get('status_timings', {})
