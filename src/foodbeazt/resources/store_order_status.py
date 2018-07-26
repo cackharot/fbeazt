@@ -22,6 +22,7 @@ class StoreOrderStatusApi(Resource):
         self.storeOrderService = StoreOrderService(mongo.db)
         self.pushNotifyService = PushNotificationService(
             mongo.db, app.config['GCM_API_KEY'])
+        self.admin_emails = app.config['ADMIN_EMAILS'].split(',')
 
     def post(self):
         try:
@@ -99,9 +100,7 @@ class StoreOrderStatusApi(Resource):
             'title': 'Store Order Update'
         }
         try:
-            # self.pushNotifyService.send_to_device(data, email='foodbeazt@gmail.com')
-            # self.pushNotifyService.send_to_device(data, email='baraneetharan87@gmail.com')
-            # self.pushNotifyService.send_to_device(data, email='vimalprabha87@gmail.com')
-            self.pushNotifyService.send_to_device(data, email='cackharot@gmail.com')
+            for admin_email in self.admin_emails:
+                self.pushNotifyService.send_to_device(data, email=admin_email)
         except Exception as e:
             self.log.exception(e)

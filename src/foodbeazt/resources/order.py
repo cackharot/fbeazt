@@ -47,6 +47,7 @@ class OrderApi(Resource):
             mongo.db, app.config['SMS_USER'], app.config['SMS_API_KEY'])
         self.helper = OrderHelper(self.productService)
         self.validateCouponService = ValidateCouponApi()
+        self.admin_emails = app.config['ADMIN_EMAILS'].split(',')
 
     def get(self, _id):
         if _id == "-1":
@@ -221,10 +222,8 @@ class OrderApi(Resource):
             'title': 'New Order'
         }
         try:
-            # self.pushNotifyService.send_to_device(data, email='foodbeazt@gmail.com')
-            # self.pushNotifyService.send_to_device(data, email='baraneetharan87@gmail.com')
-            # self.pushNotifyService.send_to_device(data, email='vimalprabha87@gmail.com')
-            self.pushNotifyService.send_to_device(data, email='cackharot@gmail.com')
+            for admin_email in self.admin_emails:
+                self.pushNotifyService.send_to_device(data, email=admin_email)
         except Exception as e:
             self.log.exception(e)
 
