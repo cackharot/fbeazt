@@ -13,7 +13,7 @@ from service.StoreService import StoreService
 from service.StoreOrderService import StoreOrderService
 from service.SmsService import SmsService
 from libs.order_helper import OrderHelper
-from foodbeazt.fapp import mongo, app, mail
+from foodbeazt.fapp import mongo, app, mail, admin_permission
 from resources.coupon import ValidateCouponApi
 import logging
 
@@ -49,6 +49,22 @@ class OrderApi(Resource):
         self.validateCouponService = ValidateCouponApi()
         self.admin_emails = app.config['ADMIN_EMAILS'].split(',')
 
+    def update_store_data(self, order):
+        store_ids = set([str(x['store_id']) for x in order['items']])
+        stores = {str(x['_id']): x for x in self.storeService.search_by_ids(store_ids=store_ids)}
+        for item in order['items']:
+            item['store'] = stores[str(item['store_id'])]
+
+    def update_store_status(self, order):
+        order_dict = {}
+        order_dict[str(order['_id'])] = order
+        store_statuses = defaultdict(dict)
+        for x in self.storeOrderService.get_by_order_ids(order_dict.keys()):
+           oid = str(x['order_id'])
+           store_id = str(x['store_id'])
+           store_statuses[oid][store_id] = dict(no=x['store_order_no'], status_timings=x.get('status_timings',{}), status=x['status'])
+           order_dict[oid]['store_delivery_status'] = store_statuses[oid]
+
     def get(self, _id):
         if _id == "-1":
             return None, 404
@@ -59,11 +75,9 @@ class OrderApi(Resource):
             else:
                 order = self.service.get_by_id(_id)
             if order:
-                store_ids = [str(x['store_id']) for x in order['items']]
-                stores = self.storeService.search_by_ids(store_ids=store_ids)
-                for item in order['items']:
-                    item['store'] = next(
-                        (x for x in stores if x['_id'] == item['store_id']), None)
+                self.update_store_data(order)
+                if admin_permission.can():
+                    self.update_store_status(order)
                 return order, 200
             else:
                 return None, 404

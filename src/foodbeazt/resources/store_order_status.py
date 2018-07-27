@@ -56,13 +56,20 @@ class StoreOrderStatusApi(Resource):
             if store_order is None:
                 return {"status": "error", "messagee": "Invalid store order id provided. Order not found"}, 444
 
-            if not admin_permission.can():
-                if store_order['status'] == 'DELIVERED':
-                    return {"status": "error", "message": "Order has already been picked up by foodbeazt, you cannot change anymore"}, 443
-                if store_order['status'] == 'PAID':
-                    return {"status": "error", "message": "Order has been paid you cannot change anymore"}, 443
-                if store_order['status'] == 'CANCELLED':
-                    return {"status": "error", "message": "Order has been cancelled you cannot change anymore"}, 443
+            if not admin_permission.can() and status in ['DELIVERED', 'CANCELLED']:
+                return {"status": "Unauthorized! Cannot change status."}, 403
+
+            if store_order['status'] != 'DELIVERED' and status == 'PAID':
+                return {"status": "error", "message": "Cannot pay a undelivered order"}, 443
+
+            if store_order['status'] == 'DELIVERED' and status != 'PAID':
+                return {"status": "error", "message": "Order has already been picked up by foodbeazt, you cannot change anymore"}, 443
+
+            if store_order['status'] == 'PAID':
+                return {"status": "error", "message": "Order has been paid you cannot change anymore"}, 443
+
+            if store_order['status'] == 'CANCELLED':
+                return {"status": "error", "message": "Order has been cancelled you cannot change anymore"}, 443
 
             order = self.service.get_by_id(store_order['order_id'])
             if order is None:
@@ -74,7 +81,7 @@ class StoreOrderStatusApi(Resource):
             store_order['status_timings'] = status_timings
             if notes and len(notes) > 0:
                 store_order['notes'] = notes
-            self.log.info("Updating store order #%s to %s" % (store_order_id, status))
+            self.log.info("Updating store order #%s - #%s to %s" % (order['order_no'], store_order['store_order_no'], status))
             self.storeOrderService.save(store_order)
             self.send_foodbeazt_notification(store, order, status, notes)
 
@@ -87,6 +94,9 @@ class StoreOrderStatusApi(Resource):
         return status is not None and status in ['PENDING', 'PREPARING', 'PROGRESS', 'DELIVERED', 'INVALID', 'CANCELLED', 'PAID']
 
     def send_foodbeazt_notification(self, store, order, status, notes):
+        if status in ['DELIVERED', 'CANCELLED']:
+            self.log.info("Not notifying foodbeazt for %s - %s - %s" % (order['order_no'], store['name'], status))
+            return
         address = order['delivery_details']['address']
         pincode = order['delivery_details']['pincode']
         data = {
