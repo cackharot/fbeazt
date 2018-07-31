@@ -133,3 +133,23 @@ class StoreOrderService(object):
                 result['total'] = result['total'] + x['count']
         return result
 
+    def order_trend(self, tenant_id, store_id, year, month, day):
+        result = {}
+        match = {}
+        if year > 0:
+            match['year'] = year
+        query = [
+            {'$project': {'status': "$status",
+                          'month': {'$month': "$created_at"}, 'year': {'$year': '$created_at'}}},
+            {'$match': match},
+            {'$group': {'count': {'$sum': 1}, '_id': {
+                'status': "$status", 'month': "$month", 'year': '$year'}}}
+        ]
+        data = self.store_orders.aggregate(query)
+        if data["ok"] == 1.0:
+            for x in data["result"]:
+                status = x['_id']['status'].lower()
+                if status not in result:
+                    result[status] = {}
+                result[status][x['_id']['month']] = x['count']
+        return result

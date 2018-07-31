@@ -15,7 +15,8 @@ class StoreOrderReportApi(Resource):
         self.service = StoreOrderService(mongo.db)
         self.storeService = StoreService(mongo.db)
         self.report_map = {
-            'day_orders': self.service.generate_report
+            'day_orders': self.service.generate_report,
+            'order_trends': self.service.order_trend
         }
 
     def get(self, store_id):
