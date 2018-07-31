@@ -16,13 +16,16 @@ class StoreOrderListApi(Resource):
         self.storeOrderService = StoreOrderService(mongo.db)
         self.storeService = StoreService(mongo.db)
 
+    def build_store_data(self, x):
+        return dict(_id=x['_id'],name=x['name'],address=x['address'],image_url=x['image_url'],status=x['status'])
+
     def update_store_data(self, orders):
         if not orders or len(orders) == 0:
             return
         store_ids = set()
         for order in orders:
             store_ids.update([str(x['store_id']) for x in order['items']])
-        stores = {str(x['_id']): x for x in self.storeService.search_by_ids(store_ids=store_ids)}
+        stores = {str(x['_id']): self.build_store_data(x) for x in self.storeService.search_by_ids(store_ids=store_ids)}
         for order in orders:
             for item in order['items']:
                 item['store'] = stores[str(item['store_id'])]
@@ -57,6 +60,7 @@ class StoreOrderListApi(Resource):
         order_no = request.args.get('order_no', None)
         order_status = request.args.get('order_status', None)
         latest = request.args.get('latest', '1') in ['true', 'True', '1']
+        only_today = request.args.get('only_today', '1') in ['true', 'True', '1']
 
         if order_status is None or len(order_status) == 0:
             order_status = "PENDING,PREPARING,PROGRESS"
@@ -75,6 +79,7 @@ class StoreOrderListApi(Resource):
                                                           order_no=order_no,
                                                           order_status=order_status,
                                                           filter_text=filter_text,
+                                                          only_today=only_today,
                                                           latest_first=latest)
 
             self.update_store_data(orders)

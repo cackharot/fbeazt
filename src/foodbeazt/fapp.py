@@ -381,6 +381,7 @@ from foodbeazt.resources.pincodes import PincodeListApi, PincodeApi
 from foodbeazt.resources.myorders import MyOrdersApi
 from foodbeazt.resources.push_notify import RegisterPushNotify, UnRegisterPushNotify
 from foodbeazt.resources.store_order_status import StoreOrderStatusApi
+from foodbeazt.resources.store_order_report import StoreOrderReportApi
 from foodbeazt.resources.user_stores import UserStores
 
 
@@ -437,6 +438,7 @@ api.add_resource(StoreOrderListApi, '/api/store_orders/<string:store_id>')
 api.add_resource(TrackOrderApi, '/api/track/<string:order_no>')
 api.add_resource(OrderStatusApi, '/api/order_status/<string:_id>')
 api.add_resource(StoreOrderStatusApi, '/api/store_order_status')
+api.add_resource(StoreOrderReportApi, '/api/store_order_reports/<string:store_id>')
 api.add_resource(UserStores, '/api/user_stores')
 
 api.add_resource(RegisterPushNotify, '/api/push_service/register')

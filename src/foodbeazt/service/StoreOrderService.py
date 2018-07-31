@@ -1,11 +1,10 @@
-from datetime import datetime
+from datetime import datetime, time
 from bson import ObjectId
 
 import re
 import random
 import string
 
-import time
 import logging
 
 
@@ -22,6 +21,7 @@ class StoreOrderService(object):
                order_no=None,
                order_status=None,
                filter_text=None,
+               only_today=False,
                latest_first=False):
         query = {"tenant_id": ObjectId(tenant_id)}
         if store_id:
@@ -39,6 +39,10 @@ class StoreOrderService(object):
         if filter_text is not None and len(filter_text) > 0:
             search_val = re.compile(r".*%s.*" % (filter_text), re.IGNORECASE)
             query['store_order_no'] = search_val
+
+        if only_today:
+            d = datetime.combine(datetime.now().date(), time.min)
+            query['created_at'] = {"$gte": d, "$lte": datetime.now()}
 
         skip_records = (page_no - 1) * page_size
         if skip_records < 0:
@@ -99,3 +103,33 @@ class StoreOrderService(object):
 
     def get_order_total(self, order):
         return sum([x['total'] for x in order['items']])
+
+    def generate_report(self, tenant_id, store_id, year, month, day):
+        match = {"store_id": ObjectId(store_id)}
+        project = {
+            'status': '$status',
+            'store_id': '$store_id',
+            'month': {'$month': '$created_at'},
+            'year': {'$year': '$created_at'}
+        }
+        if year > 0:
+            match['year'] = year
+        if month > 0:
+            match['month'] = month
+        if day > 0:
+            match['day'] = day
+            project['day'] = {'$dayOfMonth': '$created_at'}
+        result = {'total': 0, 'pending': 0, 'paid': 0, 'progress': 0,
+                  'preparing': 0, 'cancelled': 0, 'delivered': 0}
+        query = [
+            {'$project': project},
+            {'$match': match},
+            {'$group': {'_id': "$status", 'count': {"$sum": 1}}}
+        ]
+        data = self.store_orders.aggregate(query)
+        if data["ok"] == 1.0:
+            for x in data["result"]:
+                result[x['_id'].lower()] = x['count']
+                result['total'] = result['total'] + x['count']
+        return result
+
