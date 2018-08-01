@@ -1,5 +1,6 @@
 from datetime import datetime, time
 from bson import ObjectId
+from collections import defaultdict
 
 import re
 import random
@@ -109,8 +110,14 @@ class StoreOrderService(object):
         project = {
             'status': '$status',
             'store_id': '$store_id',
+            'total': '$total',
             'month': {'$month': '$created_at'},
             'year': {'$year': '$created_at'}
+        }
+        group = {
+            '_id': '$status',
+            'count': {'$sum': 1},
+            'total': {'$sum': '$total'}
         }
         if year > 0:
             match['year'] = year
@@ -119,18 +126,24 @@ class StoreOrderService(object):
         if day > 0:
             match['day'] = day
             project['day'] = {'$dayOfMonth': '$created_at'}
-        result = {'total': 0, 'pending': 0, 'paid': 0, 'progress': 0,
-                  'preparing': 0, 'cancelled': 0, 'delivered': 0}
+
+        result = defaultdict(int, pending=0, progress=0, delivered=0, paid=0, cancelled=0)
+        amounts = defaultdict(int, pending=0, progress=0, delivered=0, paid=0, cancelled=0)
+
         query = [
             {'$project': project},
             {'$match': match},
-            {'$group': {'_id': "$status", 'count': {"$sum": 1}}}
+            {'$group': group}
         ]
         data = self.store_orders.aggregate(query)
         if data["ok"] == 1.0:
             for x in data["result"]:
-                result[x['_id'].lower()] = x['count']
+                status = x['_id'].lower()
+                sa = amounts[status]
+                result[status] = x['count']
                 result['total'] = result['total'] + x['count']
+                amounts[status] = sa + x['total']
+        result['amounts'] = amounts
         return result
 
     def order_trend(self, tenant_id, store_id, year, month, day):
