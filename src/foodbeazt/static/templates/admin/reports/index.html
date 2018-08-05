@@ -74,10 +74,10 @@
               <td>{{item.store_name}}</td>
               <td>{{item.delivery_location}}</td>
               <td class="text-right">{{item.items_count}}</td>
-              <td class="text-right">{{item.sub_total}}</td>
+              <td class="text-right">{{item.sub_total.toFixed(2)}}</td>
               <td class="text-right">{{item.store_discount}}</td>
-              <td class="text-right">{{item.net_amt}}</td>
-              <td class="text-right">{{item.delivery_charges}}</td>
+              <td class="text-right">{{item.net_amt.toFixed(2)}}</td>
+              <td class="text-right">{{item.delivery_charges.toFixed(2)}}</td>
               <td>{{item.status}}</td>
             </tr>
           </tbody>
@@ -86,10 +86,10 @@
               <th class="text-right" colspan="2">Order count: {{orders_totals.orders_count}}</th>
               <th class="text-right" colspan="4">Total:</th>
               <td class="text-right">{{orders_totals.items_count}}</td>
-              <td class="price text-right">{{orders_totals.sub_total}}</td>
+              <td class="price text-right">{{orders_totals.sub_total.toFixed(2)}}</td>
               <td class="text-right"></td>
-              <td class="price text-right">{{orders_totals.net_amt}}</td>
-              <td class="price text-right">{{orders_totals.delivery_charges}}</td>
+              <td class="price text-right">{{orders_totals.net_amt.toFixed(2)}}</td>
+              <td class="price text-right">{{orders_totals.delivery_charges.toFixed(2)}}</td>
               <td></td>
             </tr>
           </tfoot>
