@@ -149,6 +149,7 @@ class OrderStatusApi(Resource):
                         'status': 'PENDING',
                         'quantity': sum([x['quantity'] for x in items]),
                         'status_timings': dict(PENDING=datetime.now()),
+                        'store_discount': store.get('given_discount', 5.0),
                         'items': items
                     }
                 self.storeOrderService.save(store_order)

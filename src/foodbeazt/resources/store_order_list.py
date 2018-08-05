@@ -16,28 +16,6 @@ class StoreOrderListApi(Resource):
         self.storeOrderService = StoreOrderService(mongo.db)
         self.storeService = StoreService(mongo.db)
 
-    def build_store_data(self, x):
-        return dict(_id=x['_id'],name=x['name'],address=x['address'],image_url=x['image_url'],status=x['status'])
-
-    def update_store_data(self, orders):
-        if not orders or len(orders) == 0:
-            return
-        store_ids = set()
-        for order in orders:
-            store_ids.update([str(x['store_id']) for x in order['items']])
-        stores = {str(x['_id']): self.build_store_data(x) for x in self.storeService.search_by_ids(store_ids=store_ids)}
-        for order in orders:
-            for item in order['items']:
-                item['store'] = stores[str(item['store_id'])]
-
-    def update_status_timings(self, store_order):
-        if not store_order:
-            return
-        if 'status_timings' not in store_order:
-            store_order['status_timings'] = {'PENDING': store_order['created_at']}
-        elif 'PENDING' not in store_order['status_timings']:
-            store_order['status_timings']['PENDING'] = store_order['created_at']
-
     def get(self, store_id):
         tenant_id = g.user.tenant_id
         store_id = request.args.get("store_id", store_id)
@@ -69,7 +47,6 @@ class StoreOrderListApi(Resource):
             store_order_id = request.args.get('store_order_id', None)
             if store_order_id is not None:
                 store_order = self.storeOrderService.get_by_id(store_order_id, store_id)
-                self.update_status_timings(store_order)
                 return store_order
 
             orders, total = self.storeOrderService.search(tenant_id=tenant_id,
@@ -82,7 +59,6 @@ class StoreOrderListApi(Resource):
                                                           only_today=only_today,
                                                           latest_first=latest)
 
-            self.update_store_data(orders)
             offset = page_no*page_size
             result = {'items': orders, 'total': total,
                       'filter_text': filter_text,

@@ -73,6 +73,7 @@ class StoreOrderService(object):
         if '_id' not in item or item['_id'] is None or item['_id'] == "-1":
             item.pop('_id', None)
             item['total'] = self.get_order_total(item)
+            item['payable'] = item['total'] - (item['total'] * item['store_discount'] / 100.0)
             item['created_at'] = datetime.now()
             item['store_order_no'] = self.generate_order_no()
         else:
@@ -110,7 +111,7 @@ class StoreOrderService(object):
         project = {
             'status': '$status',
             'store_id': '$store_id',
-            'total': '$total',
+            'total': '$payable',
             'month': {'$month': '$created_at'},
             'year': {'$year': '$created_at'}
         }

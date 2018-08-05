@@ -14,7 +14,7 @@ class UserStores(Resource):
 
   def get(self):
     tenant_id = g.user.tenant_id
-    if not store_admin_permission.can():
+    if not (store_admin_permission.can() or admin_permission.can()):
       return dict(status="error", message="Unauthorized! Not a store admin!"), 403
 
     email = g.user.email
@@ -23,5 +23,5 @@ class UserStores(Resource):
     return [self.response_data(x) for x in stores if x['status']]
 
   def response_data(self, store):
-    return dict(_id=store['_id'],name=store['name'],address=store['address'])
+    return dict(_id=store['_id'],name=store['name'],address=store['address'],given_discount=store.get('given_discount', 5.0))
 
