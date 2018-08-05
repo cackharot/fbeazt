@@ -215,7 +215,6 @@ orderApp.controller('orderListCtrl', function ($scope, $http, $routeParams) {
         const store = findStore(store_name, order);
         const store_id = store._id.$oid;
         const store_status = order.store_delivery_status[store_id];
-        console.log(`Found store status: ${store_status.status}`);
         return store_status;
     };
 

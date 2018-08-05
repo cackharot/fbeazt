@@ -180,12 +180,18 @@ class OrderService(object):
 
     def revenue_trend(self, tenant_id, store_id, year, month):
         result = {}
-        match = {}
+        match = {'status': 'DELIVERED'}
         if year > 0:
             match['year'] = year
+        project = {
+            'total': {'$subtract': ['$total', '$delivery_charges']},
+            'delivery_charges': "$delivery_charges",
+            'month': {'$month': "$created_at"},
+            'year': {'$year': '$created_at'},
+            'status': '$status'
+        }
         data = self.orders.aggregate([
-            {'$project': {'total': "$total", 'delivery_charges': "$delivery_charges",
-                          'month': {'$month': "$created_at"}, 'year': {'$year': '$created_at'}}},
+            {'$project': project},
             {'$match': match},
             {'$group': {'_id': {'month': "$month"}, 'delivery_charges': {
                 "$sum": "$delivery_charges"}, 'total': {"$sum": "$total"}}}

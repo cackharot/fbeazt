@@ -59,6 +59,9 @@ class StoreOrderStatusApi(Resource):
             if not admin_permission.can() and status in ['DELIVERED', 'CANCELLED']:
                 return {"status": "Unauthorized! Cannot change status."}, 403
 
+            if store_order['status'] != 'PREPARING' and status == 'PROGRESS':
+                return {"status": "error", "message": "Cannot make READY before cooking is done!"}, 443
+
             if store_order['status'] != 'DELIVERED' and status == 'PAID':
                 return {"status": "error", "message": "Cannot pay a undelivered order"}, 443
 
