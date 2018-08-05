@@ -63,8 +63,8 @@ class ReportApi(Resource):
             tenant_id=tenant_id, store_id=store_id, year=year, month=month)
         store_ids = set([x['store_id'] for order in orders
                          for x in order['items']])
-        stores = self.storeService.search_by_ids(store_ids=store_ids)
-        pincodes = self.pincodeService.search(tenant_id)
+        stores = {x['_id']: x for x in self.storeService.search_by_ids(store_ids=store_ids)}
+        pincodes = {x['pincode']: x for x in self.pincodeService.search(tenant_id)}
         processed_orders = []
         order_count = len(orders)
         for order in orders:
@@ -74,15 +74,12 @@ class ReportApi(Resource):
                 if store_id is not None and str(store_id) != str(sid):
                     continue
                 pincode = order['delivery_details']['pincode']
+                pincode_data = pincodes.get(pincode, {'area':'Not available!', 'rate': 40.0})
                 data = self.process_order_for_report(order, sid)
-                data['delivery_charges'] = self.cal_delivery_charges(
-                    order, store_cnt)
-                data['store_name'] = next(
-                    (x['name'] for x in stores if x['_id'] == sid), sid)
-                data['store_discount'] = next(
-                    (x.get('given_discount', 5) for x in stores if x['_id'] == sid), 5)
-                data['delivery_location'] = next(
-                    (x['area'] for x in pincodes if x['pincode'] == pincode), pincode)
+                data['delivery_charges'] = self.cal_delivery_charges(order['status'], store_cnt, pincode_data['rate'])
+                data['store_name'] = stores[sid]['name']
+                data['store_discount'] = stores[sid].get('given_discount', 5.0)
+                data['delivery_location'] = pincode_data['area']
                 if data['status'] != 'DELIVERED':
                     data['net_amt'] = 0.0
                 else:
@@ -105,8 +102,7 @@ class ReportApi(Resource):
                 'delivered_at': order.get('delivered_at'),
                 'payment_status': order.get('payment_status', 'SUCCESS'),
                 'total': order['total'], 'status': order['status']}
-        data['items_count'], data[
-            'sub_total'] = self.get_item_total(order, sid)
+        data['items_count'], data['sub_total'] = self.get_item_total(order, sid)
         return data
 
     def get_item_total(self, order, sid):
@@ -121,9 +117,9 @@ class ReportApi(Resource):
         total = price * qty
         return total - (total * discount / 100.0)
 
-    def cal_delivery_charges(self, order, store_cnt):
-        if order['status'] != 'DELIVERED':
+    def cal_delivery_charges(self, status, store_cnt, rate):
+        if status != 'DELIVERED':
             return 0.0
         if store_cnt == 1:
-            return 40.0
+            return rate
         return 25.0
