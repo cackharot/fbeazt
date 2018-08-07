@@ -23,6 +23,8 @@ class StoreOrderService(object):
                order_status=None,
                filter_text=None,
                only_today=False,
+               start_date=None,
+               end_date=None,
                latest_first=False):
         query = {"tenant_id": ObjectId(tenant_id)}
         if store_id:
@@ -44,6 +46,10 @@ class StoreOrderService(object):
         if only_today:
             d = datetime.combine(datetime.now().date(), time.min)
             query['created_at'] = {"$gte": d, "$lte": datetime.now()}
+        elif start_date is not None and end_date is not None:
+            start_date = datetime.combine(start_date, time.min)
+            end_date = datetime.combine(end_date, time.max)
+            query['created_at'] = {"$gte": start_date, "$lte": end_date}
 
         skip_records = (page_no - 1) * page_size
         if skip_records < 0:

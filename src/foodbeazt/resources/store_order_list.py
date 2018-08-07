@@ -1,4 +1,6 @@
 from flask import g, request
+from datetime import datetime
+from dateutil import parser as dtparser
 from flask_restful import Resource
 from service.OrderService import OrderService
 from service.StoreService import StoreService
@@ -39,6 +41,12 @@ class StoreOrderListApi(Resource):
         order_status = request.args.get('order_status', None)
         latest = request.args.get('latest', '1') in ['true', 'True', '1']
         only_today = request.args.get('only_today', '1') in ['true', 'True', '1']
+        start_date = None
+        end_date = None
+        if not only_today:
+            now = datetime.now().isoformat()
+            start_date = dtparser.parse(request.args.get('start_date', now)).date()
+            end_date = dtparser.parse(request.args.get('end_date', now)).date()
 
         if order_status is None or len(order_status) == 0:
             order_status = "PENDING,PREPARING,PROGRESS"
@@ -57,6 +65,8 @@ class StoreOrderListApi(Resource):
                                                           order_status=order_status,
                                                           filter_text=filter_text,
                                                           only_today=only_today,
+                                                          start_date=start_date,
+                                                          end_date=end_date,
                                                           latest_first=latest)
 
             offset = page_no*page_size
