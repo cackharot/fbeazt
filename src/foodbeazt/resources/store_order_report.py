@@ -1,5 +1,5 @@
 from datetime import datetime
-from dateutil import parser as dtparser
+from dateutil import parser as dtparser, tz
 from bson import ObjectId, json_util
 from flask import g, request
 from flask_restful import Resource
@@ -38,10 +38,14 @@ class StoreOrderReportApi(Resource):
             today_iso = today.isoformat()
             start_date = None
             end_date = None
+            from_zone = tz.tzutc()
+            to_zone = tz.tzlocal()
             if 'start_date' in request.args:
-                start_date = dtparser.parse(request.args.get('start_date')).date()
+                start_date = dtparser.parse(request.args.get('start_date'),ignoretz=True)
+                start_date = start_date.replace(tzinfo=from_zone).astimezone(to_zone).date()
             if 'end_date' in request.args:
-                end_date = dtparser.parse(request.args.get('end_date')).date()
+                end_date = dtparser.parse(request.args.get('end_date'),ignoretz=True)
+                end_date = end_date.replace(tzinfo=from_zone).astimezone(to_zone).date()
             result = self.report_map[report_type](tenant_id, store_id, start_date, end_date)
         except Exception as e:
             self.log.exception(e)

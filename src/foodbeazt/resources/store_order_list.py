@@ -1,6 +1,6 @@
 from flask import g, request
 from datetime import datetime
-from dateutil import parser as dtparser
+from dateutil import parser as dtparser, tz
 from flask_restful import Resource
 from service.OrderService import OrderService
 from service.StoreService import StoreService
@@ -44,9 +44,14 @@ class StoreOrderListApi(Resource):
         start_date = None
         end_date = None
         if not only_today:
-            now = datetime.now().isoformat()
-            start_date = dtparser.parse(request.args.get('start_date', now)).date()
-            end_date = dtparser.parse(request.args.get('end_date', now)).date()
+            if not 'start_date' in request.args or not 'end_date' in request.args:
+                return {"status": "error", "message": "start_date and end_date paramater is required!"}
+            from_zone = tz.tzutc()
+            to_zone = tz.tzlocal()
+            start_date = dtparser.parse(request.args.get('start_date'),ignoretz=True)
+            start_date = start_date.replace(tzinfo=from_zone).astimezone(to_zone).date()
+            end_date = dtparser.parse(request.args.get('end_date'),ignoretz=True)
+            end_date = end_date.replace(tzinfo=from_zone).astimezone(to_zone).date()
 
         if order_status is None or len(order_status) == 0:
             order_status = "PENDING,PREPARING,PROGRESS"
