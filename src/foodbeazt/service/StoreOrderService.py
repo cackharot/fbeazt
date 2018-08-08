@@ -112,27 +112,24 @@ class StoreOrderService(object):
     def get_order_total(self, order):
         return sum([x['total'] for x in order['items']])
 
-    def generate_report(self, tenant_id, store_id, year, month, day):
+    def generate_report(self, tenant_id, store_id, start_date, end_date):
         match = {"store_id": ObjectId(store_id)}
         project = {
             'status': '$status',
             'store_id': '$store_id',
             'total': '$payable',
-            'month': {'$month': '$created_at'},
-            'year': {'$year': '$created_at'}
+            'created_at': '$created_at'
         }
         group = {
             '_id': '$status',
             'count': {'$sum': 1},
             'total': {'$sum': '$total'}
         }
-        if year > 0:
-            match['year'] = year
-        if month > 0:
-            match['month'] = month
-        if day > 0:
-            match['day'] = day
-            project['day'] = {'$dayOfMonth': '$created_at'}
+
+        if start_date is not None and end_date is not None:
+            start_date = datetime.combine(start_date, time.min)
+            end_date = datetime.combine(end_date, time.max)
+            match['created_at'] = {"$gte": start_date, "$lte": end_date}
 
         result = defaultdict(int, pending=0, progress=0, delivered=0, paid=0, cancelled=0)
         amounts = defaultdict(int, pending=0, progress=0, delivered=0, paid=0, cancelled=0)
@@ -153,13 +150,15 @@ class StoreOrderService(object):
         result['amounts'] = amounts
         return result
 
-    def order_trend(self, tenant_id, store_id, year, month, day):
+    def order_trend(self, tenant_id, store_id, start_date, end_date):
         result = {}
         match = {}
-        if year > 0:
-            match['year'] = year
+        if start_date is not None and end_date is not None:
+            start_date = datetime.combine(start_date, time.min)
+            end_date = datetime.combine(end_date, time.max)
+            match['created_at'] = {"$gte": start_date, "$lte": end_date}
         query = [
-            {'$project': {'status': "$status",
+            {'$project': {'status': "$status", 'created_at': '$created_at',
                           'month': {'$month': "$created_at"}, 'year': {'$year': '$created_at'}}},
             {'$match': match},
             {'$group': {'count': {'$sum': 1}, '_id': {

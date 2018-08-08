@@ -25,14 +25,14 @@ class StoreOrderListApi(Resource):
             return {"status": "error", "message": "Store Identifier is required!"}, 420
 
         if not (store_admin_permission.can() or admin_permission.can()):
-            return {"status": "error", "message": "UnAuthorized! Your are not a store admin"}, 403
+            return {"status": "error", "message": "Unauthorized! Your are not a store admin"}, 403
 
         store = self.storeService.get_by_id(store_id)
         if store is None:
             return {"status": "error", "message": "Store Identifier is invalid!"}, 421
 
         if not admin_permission.can() and store['contact_email'] != g.user.email:
-            return {"status": "error", "message": "You are not authozied to view this store!"}, 403
+            return {"status": "error", "message": "You are unauthozied to view this store!"}, 403
 
         page_no = int(request.args.get('page_no', 1))
         page_size = int(request.args.get('page_size', 50))

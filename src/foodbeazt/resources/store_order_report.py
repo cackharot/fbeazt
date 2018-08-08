@@ -1,4 +1,5 @@
 from datetime import datetime
+from dateutil import parser as dtparser
 from bson import ObjectId, json_util
 from flask import g, request
 from flask_restful import Resource
@@ -34,10 +35,14 @@ class StoreOrderReportApi(Resource):
         try:
             today = datetime.now()
             tenant_id = g.user.tenant_id
-            day = int(request.args.get('day', 0))
-            month = int(request.args.get('month', 0))
-            year = int(request.args.get('year', today.year))
-            result = self.report_map[report_type](tenant_id, store_id, year, month, day)
+            today_iso = today.isoformat()
+            start_date = None
+            end_date = None
+            if 'start_date' in request.args:
+                start_date = dtparser.parse(request.args.get('start_date')).date()
+            if 'end_date' in request.args:
+                end_date = dtparser.parse(request.args.get('end_date')).date()
+            result = self.report_map[report_type](tenant_id, store_id, start_date, end_date)
         except Exception as e:
             self.log.exception(e)
             return dict(status="error", message="Error while generating store order reports"), 447
