@@ -44,7 +44,7 @@ class OrderHelper(object):
                                 'category': product.get('category', None),
                                 'store_id': product['store_id']
                             }
-                            if 'price_detail' in item and 'no' in item['price_detail']:
+                            if 'price_detail' in item and item['price_detail'] is not None and 'no' in item['price_detail']:
                                 pd_no = int(item['price_detail']['no'])
                                 pds = [x for x in product['price_table'] if x['no'] == pd_no]
                                 if len(pds) != 1:
