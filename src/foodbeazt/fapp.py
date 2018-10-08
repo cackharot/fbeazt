@@ -383,6 +383,7 @@ from foodbeazt.resources.push_notify import RegisterPushNotify, UnRegisterPushNo
 from foodbeazt.resources.store_order_status import StoreOrderStatusApi
 from foodbeazt.resources.store_order_report import StoreOrderReportApi
 from foodbeazt.resources.user_stores import UserStores
+from foodbeazt.resources.settings import SettingsApi
 
 
 @app.route('/test_new_order_notify')
@@ -445,6 +446,7 @@ api.add_resource(RegisterPushNotify, '/api/push_service/register')
 api.add_resource(UnRegisterPushNotify, '/api/push_service/unregister')
 
 api.add_resource(ValidateCouponApi, '/api/validate/coupon')
+api.add_resource(SettingsApi, '/api/settings')
 
 from views.payment import PaymentListApi, PaymentRedirectView, PaymentSuccessView, PaymentWebHookView
 

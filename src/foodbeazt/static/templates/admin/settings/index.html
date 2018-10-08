@@ -1,0 +1,49 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false" ng-controller="settingsController">
+    <h3>
+        <span>App Settings</span>
+    </h3>
+    <div class="row">
+        <form role="form" name="frmSettings" id="frmSettings" novalidate ng-submit="save()">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label" for="code">Delivery Diabled?</label>
+                        <input type="checkbox" ng-model="model.delivery_disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="delivery_disabled_reason">
+                            Delivery Disaled Reason
+                        </label>
+                        <span>Enter one or two sentence why delivery is disabled.</span>
+                        <input class="form-control" type="text" id="delivery_disabled_reason" name="delivery_disabled_reason"
+                            ng-model="model.delivery_disabled_reason" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="delivery_hours">
+                            Delivery Hours
+                        </label>
+                        <span>Enter 24 hour format. Do not enter AM/PM. Example: 7-22 or 7-11,16-22</span>
+                        <input class="form-control" type="text" id="delivery_hours" name="delivery_hours" ng-model="model.delivery_hours" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="disable_app_versions">
+                            Disabled App versions
+                        </label>
+                        <span>Enter comma seperated mobile app versions to disable. Example: 1.0.0,1.0.1</span>
+                        <input class="form-control" type="text" id="disable_app_versions" name="disable_app_versions"
+                            ng-model="model.disable_app_versions" />
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="clearfix">
+                        <div class="pull-left"></div>
+                        <div class="pull-right">
+                            <button class="btn btn-primary" type="submit"><em class="fa fa-save"></em>&nbsp;Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

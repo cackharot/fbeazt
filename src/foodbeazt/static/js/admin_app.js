@@ -15,6 +15,7 @@ menuItems.push({"title": "Pincode", "heading": false, "url": "/pincode", "icon":
 menuItems.push({"title": "SMS", "heading": false, "url": "/manage_sms", "icon": "fa fa-envelope", "templateUrl": '/static/templates/admin/sms/index.html'})
 menuItems.push({"title": "Reports", "heading": false, "url": "/reports", "icon": "fa fa-bar-chart", "templateUrl": '/static/templates/admin/reports/index.html'})
 menuItems.push({"title": "Coupons", "heading": false, "url": "/coupon", "icon": "fa fa-gift", "templateUrl": '/static/templates/admin/coupon/index.html'})
+menuItems.push({"title": "Settings", "heading": false, "url": "/settings", "icon": "fa fa-cog", "templateUrl": '/static/templates/admin/settings/index.html'})
 
 var custom_routes = []
 custom_routes.push({"title": "Manage Tenant", "heading": false, "url": "/tenant/:id", "templateUrl": '/static/templates/admin/tenant/manage.html'})
