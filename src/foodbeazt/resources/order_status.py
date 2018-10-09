@@ -10,7 +10,7 @@ from service.StoreService import StoreService
 from service.StoreOrderService import StoreOrderService
 from service.PushNotificationService import PushNotificationService
 from service.SmsService import SmsService
-from foodbeazt.fapp import mongo, app, mail, invoice_emails_folder
+from foodbeazt.fapp import mongo, app, mail, invoice_emails_folder, admin_permission
 import logging
 import os
 import pdfkit
@@ -33,6 +33,8 @@ class OrderStatusApi(Resource):
             mongo.db, app.config['SMS_USER'], app.config['SMS_API_KEY'])
 
     def post(self, _id):
+        if not admin_permission.can():
+            return "Unauthorized", 403
         if _id is None or len(_id) == 0:
             return {"status": "error", "message": "Invalid order id provided"}, 443
 

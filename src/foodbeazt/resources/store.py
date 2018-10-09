@@ -90,6 +90,8 @@ class StoreApi(Resource):
             return {"status": "error", "message": "Error on get retaurant with id %s" % _id}, 461
 
     def put(self, _id):
+        if not admin_permission.can():
+            return "Unauthorized", 403
         item = json_util.loads(request.data.decode('utf-8'))
         tenant_id = g.user.tenant_id
         item['tenant_id'] = ObjectId(tenant_id)
@@ -105,6 +107,8 @@ class StoreApi(Resource):
                         message="Oops! Error while trying to save store details! Please try again later"), 463
 
     def post(self, _id):
+        if not admin_permission.can():
+            return "Unauthorized", 403
         item = json_util.loads(request.data.decode('utf-8'))
         tenant_id = g.user.tenant_id
         item['tenant_id'] = ObjectId(tenant_id)
@@ -120,6 +124,8 @@ class StoreApi(Resource):
                         message="Oops! Error while trying to save store details! Please try again later"), 464
 
     def delete(self, _id):
+        if not admin_permission.can():
+            return "Unauthorized", 403
         try:
             self.service.delete(_id)
         except Exception as e:

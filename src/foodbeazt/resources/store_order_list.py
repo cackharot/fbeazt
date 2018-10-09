@@ -48,9 +48,9 @@ class StoreOrderListApi(Resource):
                 return {"status": "error", "message": "start_date and end_date paramater is required!"}
             from_zone = tz.tzutc()
             to_zone = tz.tzlocal()
-            start_date = dtparser.parse(request.args.get('start_date'),ignoretz=True)
+            start_date = dtparser.parse(request.args.get('start_date'), ignoretz=True)
             start_date = start_date.replace(tzinfo=from_zone).astimezone(to_zone).date()
-            end_date = dtparser.parse(request.args.get('end_date'),ignoretz=True)
+            end_date = dtparser.parse(request.args.get('end_date'), ignoretz=True)
             end_date = end_date.replace(tzinfo=from_zone).astimezone(to_zone).date()
 
         if order_status is None or len(order_status) == 0:

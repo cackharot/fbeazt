@@ -8,20 +8,19 @@ import logging
 
 class UserStores(Resource):
 
-  def __init__(self):
-    self.log= logging.getLogger(__name__)
-    self.storeService = StoreService(mongo.db)
+    def __init__(self):
+        self.log = logging.getLogger(__name__)
+        self.storeService = StoreService(mongo.db)
 
-  def get(self):
-    tenant_id = g.user.tenant_id
-    if not (store_admin_permission.can() or admin_permission.can()):
-      return dict(status="error", message="Unauthorized! Not a store admin!"), 403
+    def get(self):
+        tenant_id = g.user.tenant_id
+        if not (store_admin_permission.can() or admin_permission.can()):
+            return dict(status="error", message="Unauthorized! Not a store admin!"), 403
 
-    email = g.user.email
-    stores = self.storeService.get_by_email(email)
+        email = g.user.email
+        stores = self.storeService.get_by_email(email)
 
-    return [self.response_data(x) for x in stores if x['status']]
+        return [self.response_data(x) for x in stores if x['status']]
 
-  def response_data(self, store):
-    return dict(_id=store['_id'],name=store['name'],address=store['address'],given_discount=store.get('given_discount', 5.0))
-
+    def response_data(self, store):
+        return dict(_id=store['_id'], name=store['name'], address=store['address'], given_discount=store.get('given_discount', 5.0))

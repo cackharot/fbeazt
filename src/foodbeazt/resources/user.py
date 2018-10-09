@@ -39,6 +39,8 @@ class UserApi(Resource):
         return {"status": "error", "message": "Error on get user with id %s" % _id}, 451
 
     def put(self, _id):
+        if not admin_permission.can():
+            return "Unauthorized", 403
         item = json_util.loads(request.data.decode('utf-8'))
         # tenant_id = session.get('tenant_id', None)
         try:
@@ -56,6 +58,8 @@ class UserApi(Resource):
                         message="Oops! Error while trying to save user details! Please try again later"), 453
 
     def post(self, _id):
+        if not admin_permission.can():
+            return "Unauthorized", 403
         item = json_util.loads(request.data.decode('utf-8'))
         # tenant_id = session.get('tenant_id', None)
         item['username'] = item['email']
@@ -75,6 +79,8 @@ class UserApi(Resource):
                         message="Oops! Error while trying to save user details! Please try again later"), 454
 
     def delete(self, _id):
+        if not admin_permission.can():
+            return "Unauthorized", 403
         try:
             self.service.delete(_id)
         except UserServiceException as e:
