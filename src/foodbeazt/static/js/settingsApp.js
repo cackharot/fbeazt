@@ -11,6 +11,9 @@ settingsApp.controller('settingsController', function ($scope, $http) {
     $scope.success_msg = ''
     $scope.load = function () {
         $http.get('/api/settings').success(function (data) {
+            if (data == null) {
+                data = $scope.model
+            }
             if (data.disable_app_versions && data.disable_app_versions instanceof Array) {
                 data.disable_app_versions = data.disable_app_versions.join(",")
             }
