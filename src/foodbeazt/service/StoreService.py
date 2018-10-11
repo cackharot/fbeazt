@@ -97,7 +97,7 @@ class StoreService(object):
                             '$elemMatch': {'$regex': r".*%s.*" % cus.strip(), '$options': 'i'}
                         }
                     })
-            query['$and'] = cs
+            query['$or'] = cs
 
         if only_veg:
             query['food_type'] = {'$elemMatch': {'$eq': 'veg'}}
