@@ -33,6 +33,7 @@ class OrderService(object):
         self.db = db
         self.pincodeService = PincodeService(db)
         self.orders = self.db.order_collection
+        self.orders_metadata = self.db.orders_metadata_collection
 
     @timeit
     def search(self, tenant_id,
@@ -110,6 +111,10 @@ class OrderService(object):
             self.orders.remove(item)
             return True
         return False
+
+    def save_order_metadata(self, item):
+        item['created_at'] = datetime.now()
+        return self.orders_metadata.save(item)
 
     @timeit
     def get_by_id(self, _id):

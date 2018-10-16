@@ -205,6 +205,7 @@ class OrderApi(Resource):
             self.check_spam_order(valid_order)
             valid_order['otp_status'] = self.send_otp(valid_order)
             _id = self.service.save(valid_order)
+            self.save_order_metadata(_id, order.get('metadata', None))
         except DuplicateOrderException as e:
             self.log.exception(e)
             return dict(status="error", message="We identified frequent placement of order. \
@@ -243,6 +244,18 @@ class OrderApi(Resource):
 
     def delete(self, _id):
         return None, 204
+
+    def save_order_metadata(self, order_id, metadata):
+        if metadata is None or order_id is None:
+            return
+        entity = {
+            'order_id': order_id,
+            'metadata': metadata
+        }
+        try:
+            self.service.save_order_metadata(entity)
+        except Exception as e:
+            self.log.exception(e)
 
     def send_otp(self, order):
         return 'VERIFIED'
