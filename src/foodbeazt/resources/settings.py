@@ -22,7 +22,9 @@ class SettingsApi(Resource):
                     'delivery_disabled': False,
                     'delivery_hours': '',
                     'disable_app_versions': '',
-                    'delivery_disabled_reason': ''
+                    'delivery_disabled_reason': '',
+                    'adv_text': None,
+                    'adv_image_url': None
                 }
             return data
         except Exception as e:
@@ -37,11 +39,15 @@ class SettingsApi(Resource):
         delivery_hours = data.get('delivery_hours', None)
         disable_app_versions = data.get('disable_app_versions', [])
         delivery_disabled_reason = data.get('delivery_disabled_reason', '')
+        adv_text = data.get('adv_text', None)
+        adv_image_url = data.get('adv_image_url', None)
         item = {
             'delivery_disabled': delivery_disabled,
             'delivery_hours': delivery_hours,
             'disable_app_versions': disable_app_versions,
-            'delivery_disabled_reason': delivery_disabled_reason
+            'delivery_disabled_reason': delivery_disabled_reason,
+            'adv_text': adv_text,
+            'adv_image_url': adv_image_url
         }
         try:
             self.service.save(item)

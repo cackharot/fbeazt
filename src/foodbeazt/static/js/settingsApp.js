@@ -5,7 +5,9 @@ settingsApp.controller('settingsController', function ($scope, $http) {
         'delivery_disabled': false,
         'delivery_hours': '',
         'disable_app_versions': '',
-        'delivery_disabled_reason': ''
+        'delivery_disabled_reason': '',
+        'adv_text': '',
+        'adv_image_url': ''
     }
     $scope.error_msg = ''
     $scope.success_msg = ''
