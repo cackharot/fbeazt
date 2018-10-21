@@ -1,8 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from bson import ObjectId
-import re
-import random
-import string
 import logging
 
 
@@ -37,7 +34,9 @@ class PincodeService(object):
         return self.pincodes.find({"pincode": pincode}).count() > 0
 
     def check_duplicate_pincode(self, _id, pincode):
-        return self.pincodes.find({"_id": {"$not": {"$eq": ObjectId(_id)}}, "pincode": pincode}).count() > 0
+        query = self.pincodes.find({"_id": {"$not": {"$eq": ObjectId(_id)}}, "pincode": pincode})
+        print(query)
+        return query.count() > 0
 
     def save(self, item):
         _id = item.get("_id", None)

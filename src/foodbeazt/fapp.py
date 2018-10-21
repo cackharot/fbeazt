@@ -3,7 +3,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__))))
 from urllib.parse import unquote
 from uuid import uuid4
-from flask import Flask, session, render_template, send_file, make_response, request, redirect, g, current_app, flash
+from flask import Flask, session, render_template, send_file, make_response, request, redirect, g, current_app
 from flask_login import login_required, UserMixin, login_user, logout_user, current_user
 from flask_mail import Mail
 from flask_pymongo import PyMongo
@@ -17,7 +17,7 @@ from service.UserService import UserService
 from libs.flask_googlelogin import GoogleLogin
 from flask_principal import Principal, Permission, Identity, AnonymousIdentity
 from flask_principal import identity_loaded, identity_changed, RoleNeed, UserNeed
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from bson import ObjectId, json_util
 import json
 import pdfkit
@@ -240,6 +240,9 @@ def mjson(data, code, headers=None):
 def home():
     return redirect('/admin')
 
+@app.route("/login")
+def login():
+    return current_app.login_manager.unauthorized()
 
 @app.route("/test_order_email")
 def test_order_email():
@@ -310,6 +313,7 @@ def test_order_invoice():
 
 
 def allowed_files(filename):
+    print(filename)
     return '.' in filename and filename.split('.')[1] in ['jpg', 'png', 'gif', 'jpeg', 'bmp']
 
 
@@ -330,6 +334,8 @@ def upload_product_image(_id):
             file_body.save(os.path.join(product_upload_folder, filename))
             service.update(item)
             return json.dumps({"status": "success", "id": _id, "filename": filename})
+        else:
+            print("file type not allowed")
     return '', 404
 
 

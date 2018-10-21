@@ -8,7 +8,7 @@ from urllib.parse import urlencode, parse_qsl
 from functools import wraps
 
 from flask import request, redirect, abort, current_app, url_for
-from flask_login import LoginManager, make_secure_token
+from flask_login import LoginManager, encode_cookie
 
 import requests
 
@@ -77,8 +77,16 @@ class GoogleLogin(object):
     def redirect_scheme(self):
         return self.app.config.get('GOOGLE_LOGIN_REDIRECT_SCHEME', 'http')
 
+    def make_secure_token(self, **args):
+        l = [s if isinstance(s, bytes) else str.encode(args.get(s)) for s in args]
+        payload = b'\0'.join(l).decode()
+        token_value = encode_cookie(payload).split('|')[1]
+        if hasattr(token_value, 'decode'):  # pragma: no cover
+            token_value = token_value.decode('utf-8')  # ensure bytes
+        return token_value
+
     def sign_params(self, params):
-        return b64encode(urlencode(dict(sig=make_secure_token(**params),
+        return b64encode(urlencode(dict(sig=self.make_secure_token(**params),
                                         **params)).encode())
 
     def parse_state(self, state):
@@ -179,7 +187,7 @@ class GoogleLogin(object):
             # Check sig
             if 'state' in request.args:
                 params.update(**self.parse_state(request.args.get('state')))
-                if params.pop('sig', None) != make_secure_token(**params):
+                if params.pop('sig', None) != self.make_secure_token(**params):
                     return self.login_manager.unauthorized()
 
             code = request.args.get('code')

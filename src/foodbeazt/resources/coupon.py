@@ -3,7 +3,7 @@ from dateutil.parser import parse as dtparse
 from flask import g, request
 from service.OrderService import OrderService, DuplicateOrderException
 from service.ProductService import ProductService
-from flask.ext.restful import Resource
+from flask_restful import Resource
 from foodbeazt.fapp import mongo, app, mail, export_data_folder, import_data_folder
 from libs.order_helper import OrderHelper
 from bson import json_util

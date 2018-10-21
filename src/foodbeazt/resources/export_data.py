@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import g, request
 from service.ImportExportService import ImportExportService
-from flask.ext.restful import Resource
+from flask_restful import Resource
 from foodbeazt.fapp import mongo, app, mail, export_data_folder, import_data_folder, admin_permission
 import logging
 

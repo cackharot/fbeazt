@@ -92,8 +92,7 @@ def create_items(db, tenant_id, store_id):
     return item_count
 
 
-def setup_test_product(host='localhost', port=27017, dbname='foodbeaztDb'):
-    client = MongoClient(host=host, port=port)
+def setup_test_product(client, dbname='foodbeaztDb'):
     db = client[dbname]
     store_service = StoreService(db)
     product_service = ProductService(db)
@@ -133,10 +132,9 @@ def test_item(tenant_id, store_id, name, price, discount, pd=None):
     }
 
 
-def setup(host='localhost', port=27017, dbname='foodbeaztDb', sample_data=False, debug=True):
+def setup(client, dbname='foodbeaztDb', sample_data=False, debug=True):
     global log_enabled
     log_enabled = debug
-    client = MongoClient(host=host, port=port)
     db = client[dbname]
     log("Checking admin tenant")
     tenant_service = TenantService(db)
@@ -173,23 +171,28 @@ def setup(host='localhost', port=27017, dbname='foodbeaztDb', sample_data=False,
         create_sample_data(db, tenant_id)
 
 
-def drop_db(host='localhost', port=27017, dbname='test'):
-    log("Connecting to '%s':%d" % (host, port))
-    c = MongoClient(host=host, port=port)
+def drop_db(client, dbname):
     log('Dropping database...')
-    c.drop_database(dbname)
-    log('Drop successfull')
+    client.drop_database(dbname)
+    log('Dropped successfully!!')
 
 if __name__ == "__main__":
     sample_data = False
     host = os.environ.get('MONGO_HOST', 'localhost')
     port = int(os.environ.get('MONGO_PORT', 27017))
     dbname = os.environ.get('MONGO_DBNAME', 'foodbeaztDb')
+    username = os.environ.get('MONGO_USERNAME', None)
+    password = os.environ.get('MONGO_PASSWORD', None)
+    log("Connecting to '%s':%d" % (host, port))
+    uri = "mongodb://%s:%d" % (host,port)
+    if not username is None and not password is None:
+        uri = "mongodb://%s:%s@%s:%d" % (username,password,host,port)
+    mclient = MongoClient(uri)
     if len(sys.argv) > 1:
         if sys.argv[1] == "drop":
-            drop_db(host, port, dbname)
+            drop_db(mclient, dbname)
         if len(sys.argv) > 2 and sys.argv[2] == "test-data":
             sample_data = True
 
     log("Initializing database...")
-    setup(host, port, dbname, sample_data)
+    setup(mclient, dbname, sample_data, False)

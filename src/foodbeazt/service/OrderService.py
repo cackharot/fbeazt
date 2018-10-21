@@ -156,10 +156,9 @@ class OrderService(object):
             {'$match': match},
             {'$group': {'_id': "$status", 'count': {"$sum": 1}}}
         ])
-        if data["ok"] == 1.0:
-            for x in data["result"]:
-                result[x['_id'].lower()] = x['count']
-                result['total'] = result['total'] + x['count']
+        for x in data:
+            result[x['_id'].lower()] = x['count']
+            result['total'] = result['total'] + x['count']
         return result
 
     def order_trend(self, tenant_id, store_id, year, month):
@@ -175,12 +174,11 @@ class OrderService(object):
                 'status': "$status", 'month': "$month", 'year': '$year'}}}
         ]
         data = self.orders.aggregate(query)
-        if data["ok"] == 1.0:
-            for x in data["result"]:
-                status = x['_id']['status'].lower()
-                if status not in result:
-                    result[status] = {}
-                result[status][x['_id']['month']] = x['count']
+        for x in data:
+            status = x['_id']['status'].lower()
+            if status not in result:
+                result[status] = {}
+            result[status][x['_id']['month']] = x['count']
         return result
 
     def revenue_trend(self, tenant_id, store_id, year, month):
@@ -201,10 +199,9 @@ class OrderService(object):
             {'$group': {'_id': {'month': "$month"}, 'delivery_charges': {
                 "$sum": "$delivery_charges"}, 'total': {"$sum": "$total"}}}
         ])
-        if data["ok"] == 1.0:
-            for x in data["result"]:
-                result[x['_id']['month']] = {'total': x[
-                    'total'], 'delivery_charges': x['delivery_charges']}
+        for x in data:
+            result[x['_id']['month']] = {'total': x[
+                'total'], 'delivery_charges': x['delivery_charges']}
         return result
 
     def load_orders(self, tenant_id, year=None, month=None, store_id=None):

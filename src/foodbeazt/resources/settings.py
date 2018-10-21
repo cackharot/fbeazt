@@ -2,8 +2,7 @@ from datetime import datetime
 from bson import ObjectId, json_util
 from flask import request
 from service.SettingsService import SettingsService
-from flask.ext.mail import Message
-from flask.ext.restful import Resource
+from flask_restful import Resource
 from foodbeazt.fapp import mongo, admin_permission
 import logging
 

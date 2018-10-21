@@ -27,18 +27,17 @@ class PaymentService(object):
         ]
         data = self.order_payments.aggregate(query)
         result = {}
-        if data["ok"] == 1.0:
-            for x in data["result"]:
-                key = x['_id']['status']
-                if key not in result:
-                    result[key] = {}
-                result[key][x['_id']['month']] = {
-                    'count': x['count'],
-                    'status': x['_id']['status'],
-                    'total': x['total'],
-                    'year': x['_id']['year'],
-                    'month': x['_id']['month']
-                }
+        for x in data:
+            key = x['_id']['status']
+            if key not in result:
+                result[key] = {}
+            result[key][x['_id']['month']] = {
+                'count': x['count'],
+                'status': x['_id']['status'],
+                'total': x['total'],
+                'year': x['_id']['year'],
+                'month': x['_id']['month']
+            }
         return result
 
     def get_by_order_no(self, order_no):
