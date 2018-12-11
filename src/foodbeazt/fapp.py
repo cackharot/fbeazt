@@ -261,8 +261,9 @@ def test_order_delivered():
 
 
 @app.route("/admin")
-@login_required
 def admin_home():
+    if not current_user.is_authenticated():
+        return current_app.login_manager.unauthorized()
     if not admin_permission.can():
         doLogout()
         return "You are unauthorized to access this page! Sorry :(", 403
