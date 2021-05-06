@@ -6,7 +6,7 @@ Click==7.0
 colorama==0.2.5
 Flask==1.0.2
 Flask-Babel==0.9
-Flask-Cors==2.1.2
+Flask-Cors==3.0.9
 Flask-Login==0.4.1
 Flask-Mail==0.9.1
 Flask-Principal==0.4.0
